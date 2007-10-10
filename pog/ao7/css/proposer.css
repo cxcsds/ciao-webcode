@@ -1,0 +1,180 @@
+/*
+ * The Chandra X-Ray Center (CXC) is operated for NASA:
+ *   Smithsonian Astrophysical Observatory
+ *   60 Garden Street
+ *   Cambridge
+ *   MA 02138
+ *   USA
+ * Email: cxcweb@head-cfa.harvard.edu
+ *
+ * Smithsonian Institution, Copyright © 1998-2004. All rights reserved. 
+ */
+
+/*
+ * work around netscape 4 issues
+ * (trying to support ns4 does limiting the use of CSS)
+ */
+@import url("proposer.ns4hack.css");
+
+/*
+ * links:
+ *
+ *  .navbar     a:hover { background: #CCFFFF; }
+ *  .topbar     a:hover { background: #CCFFFF; }
+ *  .bottombar  a:hover { background: #CCFFFF; }
+ *
+ */
+a:hover  { background: #CCFFFF; }
+a:active { color: red; background: yellow; }
+
+/*
+ * change the pointer over "help" links
+ * Not convinced this is really useful
+ */
+a.helplink { cursor: help; }
+
+/*
+ * some links are placed in a table header which
+ * is set to a dark-blue colour, so the default
+ * link colours do not show too well. This is
+ * an attempt to get around this (should use better
+ * colours!)
+ */
+a.tablehead:link    { color: yellow; background: #666699; }
+a.tablehead:visited { color: silver; background: #666699; }
+a.tablehead:hover   { color: #666699; background: #CCCCCC; }
+a.tablehead:active  { color: red; background: yellow; }
+
+/*
+ * to make the selected navigation bar subject have a yellow background
+ * rather than grey try
+ .navbar .selectedheading { font-weight: bold; color: black; background: yellow; }
+ */
+
+.navbar { font-size: 90%; }
+.navbar a.indexlink { font-size: 115%; }
+
+.navbar .heading {
+  font-weight: bold;
+  color: black;
+}
+.navbar .selectedheading {
+  font-weight: bold;
+  color: black;
+  background: #CCCCCC;
+}
+
+/*
+ * control the colour of the table which contains the
+ * header, navbar, and main text.
+ * Should use CSS for placement of the text rather than
+ * use a table but we want to try and support netscape 4.7
+ * at the moment (can work around it but it still is not
+ * a perfect solution)
+ */
+td.navbar  { background: #99ccff; width: 20%; }
+td.mainbar { background: #ffffff; } /* width: 80%; */
+
+/*
+ * sort out the header and footer areas
+ */
+
+div.topbar     { width: 100%; }
+div.bottombar  { font-size: 90%; }
+
+div.lastmodbar, div.pdfbar, div.qlinkbar, div.searchbar {
+  font-size: 90%;
+}
+
+div.searchbar { float: right; }
+div#advancedsearch { text-align: right; }
+
+div.urlbar { display: none; }
+
+/* ensure that main text is below the header */
+div.mainbar { clear: both; }
+table.maintable { clear: both; }
+
+/* add spacing around the "main" part of the page */
+td.mainbar { padding: 1em 0 1em 0.5em; }
+
+/*
+ * try and make screen output nice
+ * - could do a lot with CSS but want it to work in Netscape 4
+ *   which limits us somewhat
+ * - actually, the fact that we use htmldoc to create the
+ *   PDF versions from specially-prepared versions of the web
+ *   page also limits the use of CSS in the main text
+ *
+ */
+/* pre.screenoutput { overflow: auto; } */
+pre.paramlist { font-size: 90%; }
+
+/*
+ * if we ever need to highlight a box
+ * (was introduced for the "search temporarily unavailable" 
+ *  boxes)
+ * [over-ridden for non netscape users]
+ */
+span.highlightbox {
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: larger;
+  font-weight: bold;
+  padding: 0.2em;
+  background: #99ccff;
+}
+
+/*
+ * used to hide information apart from non-CSS User Agents
+ */
+.hideme { display: none; }
+
+/*
+ * ahelp file styles
+ *
+ * I wanted to use the box-model/voice-family hack to avoid the padding
+ * in NS4 (see http://www.ericmeyeroncss.com/bonus/trick-hide.html)
+ * but it does not seem to work on NS 4.76
+ *
+ * the 'white-space: pre;' lines are needed by NS4
+ * and we over-ride te 'border: none' lines (which are
+ * needed to get the background color to display in NS4)
+ * in ciao.ns4hack.css
+ */
+
+/*
+ * highlight the odd row to disambiguate it from the header
+ * (which is neither odd nor even)
+ */
+tr.oddrow { background: #dddddd; }
+
+.ahelpsyntax pre, .ahelpverbatim pre, .ahelpequation pre {
+  background: #cccccc;
+  white-space: pre;
+  border: none;
+  padding:  0.5em;
+}
+
+.ahelpequation pre {
+  text-align: center;
+}
+
+/*
+ * apply the highlighting styles from ahelp to other pages
+ */
+
+.screen pre, pre.highlight {
+  background: #cccccc;
+  white-space: pre;
+  border: none;
+  padding:  0.5em;
+}
+
+div.highlighttext {
+  background: #cccccc;
+  border: none;
+  padding:  0.5em;
+  margin: 2em;
+}
+
+/* end of stylesheet */

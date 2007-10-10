@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE test>
+<test>
+Test 01: <why page="foo">foo foo</why>
+Test 02: <why page="foo" uc="1">foo foo</why>
+Test 03: <why page="foo" tt="1">foo foo</why>
+Test 04: <why page="foo" em="1">foo foo</why>
+Test 05: <why page="foo" uc="1" tt="1">foo foo</why>
+Test 06: <why page="foo" uc="1" em="1">foo foo</why>
+Test 07: <why page="foo" tt="1" em="1">foo foo</why>
+Test 08: <why page="foo" uc="1" tt="1" em="1">foo foo</why>
+Test 09: <why page="foo">foo foo</why>
+Test 10: <why page="foo" uc="1">foo foo</why>
+</test>

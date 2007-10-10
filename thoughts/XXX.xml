@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<foo>
+ <PARA>
+  This is some text
+  <EQUATION>One</EQUATION>
+  and more text
+ </PARA>
+ <PARA>
+   <EQUATION>1 one</EQUATION>
+   <EQUATION>1 two</EQUATION>
+   <EQUATION>1 three</EQUATION>
+ </PARA>
+ <PARA>
+  Some text.
+  <EQUATION>2 one</EQUATION>
+  <SYNTAX>syntax text</SYNTAX>
+  <EQUATION>3 one</EQUATION>
+  Bob.
+ </PARA>
+ <PARA>
+  Some text.
+  <EQUATION>4 one</EQUATION>
+  and now some annoying text that seems to mess up
+  the whole scheme
+  <EQUATION>5 one</EQUATION>
+  Bob.
+ </PARA>
+</foo>
+

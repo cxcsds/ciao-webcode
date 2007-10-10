@@ -1,0 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<h2><a name="history">History</a></h2><table class="history">
+<tr>
+<td class="historydate">02&#160;Jan&#160;2002</td>
+<td>A test string with a <tt><strong><a class="helplink" title="Ahelp (tools): This is a summary!" href="/ciao/ahelp/dmextract.html">link</a></strong></tt>.</td>
+</tr>
+<tr>
+<td class="historydate">23&#160;Mar&#160;2002</td>
+<td>Test string.</td>
+</tr>
+</table>

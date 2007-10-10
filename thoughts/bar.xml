@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<foo>
+ <bar>
+   <start>FOO</start>
+   <a>This is a1</a>
+   <b>This is b1</b>
+   <c>This is c1</c>
+   <a>This is a2</a>
+   <b>This is b2</b>
+   <c>This is c2</c>
+ </bar>
+</foo>
+

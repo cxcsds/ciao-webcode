@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE navbar>
+<navbar>
+<section id="foo" link="/ciao/index.html">
+ <dirs>
+  <dir/>
+  <dir>foo</dir>
+ </dirs>
+ <title>A title</title>
+ <list>
+  <li>a <cxclink href="link.html">link</cxclink></li>
+  <li>another <ahelp name="dmextract" tt="1">link</ahelp> and <strong>some text</strong>.</li>
+ </list>
+</section>
+</navbar>

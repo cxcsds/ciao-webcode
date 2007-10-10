@@ -1,0 +1,537 @@
+# 
+# The contents of this file are used by the publish script
+# (/data/da/Docs/web/publish.pl) to determine where the
+# output of publishing a page goes.
+#
+# Do not change unless you are *really* sure you know
+# what you're doing.
+#
+# Unless otherwise noted, directories should end in a /
+#
+# Note:
+#   perhaps should make all values, other than site
+#   a member of the version block. This would give us
+#   a lot of flexibility [at the expense of a longer
+#   config file]
+#
+
+# location of binary/executables
+#
+ldpath=/data/da/Docs/local/lib
+xsltproc=/data/da/Docs/local/bin/xsltproc
+htmldoc=/data/da/Docs/local/bin/htmldoc
+htmllib=/data/da/Docs/local/lib
+
+ahelp2html=/data/da/Docs/web/ahelp2html.pl
+
+# need to update the following to a more-permanent location
+listseealso=/data/da/Docs/web/list_seealso
+
+# what "site" (ie part of the web pages) are we creating?
++site ciao
+
+# the unix group the created files should be set to
+group=cxcweb_ciao
+
+# what "types" of publishing are allowed?
+# - perhaps these should be within the version block?
+#
+@types=live
+@types=test
+@types=trial
+
+# prefix should not end in a /
+# NOTE: changed from old "prefix" (added ciaoweb)
+prefix=/data/da/Docs/ciaoweb
+
+#
+# for the moment we provide the full set of options for each "version"
+# I cannot be bothered to be clever and have default/fall through
+# values
+#
+
++version ciao3
+number=3.0
+
+# main CSS location
+%css=live /ciao3.0/ciao.css
+%css=test /ciao3.0/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+# location of the news file for the "What's new" link
+%newsfile=live /proj/ascwww/AXAF/extra/science/htdocs/ciao3.0/news.html
+%newsfile=test /proj/asc_bak/AXAF/extra/science/htdocs/ciao3.0/news.html
+%newsfile=trial /data/asc8/iCXC/htdocs/sds/ciao_trial/news.html
+
+%newsurl=live /ciao3.0/news.html
+%newsurl=test /ciao3.0/news.html
+%newsurl=trial /sds/ciao_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciao3.0/watchout.html
+%watchouturl=test /ciao3.0/watchout.html
+%watchouturl=trial /sds/ciao_trial/watchout.html
+
+# location of the search ssi
+%searchssi=live /ciao3.0/ciao_search.ssi
+%searchssi=test /ciao3.0/ciao_search.ssi
+%searchssi=trial /sds/ciao_trial/ciao_search.ssi
+
+# logo/text to use for navbar
+logoimage=imgs/ciao_logo_navbar.gif
+logotext=CIAO Logo
+
+# location of the stylesheets
+# - may want to change these so that can have 3.0-specific stylesheets
+%stylesheets=live /data/da/Docs/web/ciao3.0/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao3.0/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+# what's the location for the output files?
+%outdir=live /proj/ascwww/AXAF/extra/science/htdocs/ciao3.0/
+%outdir=test /proj/asc_bak/AXAF/extra/science/htdocs/ciao3.0/
+%outdir=trial /data/asc8/iCXC/htdocs/sds/ciao_trial/
+
+%outurl=live http://cxc.harvard.edu/ciao3.0/
+%outurl=test http://asc-bak.cfa.harvard.edu/ciao3.0/
+%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+
+# location of the "storage" space
+%storage=live /data/da/Docs/ciaoweb/published/ciao30/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao30/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao30/trial/
+
+# where does the ahelp index file (created by ahelp2html.pl) live?
+# - note trial site uses test site index pages
+%ahelpindex=live /data/da/Docs/ciaoweb/published/ciao30/live/ahelp/seealso-index.xml
+%ahelpindex=test  /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/seealso-index.xml
+%ahelpindex=trial /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/seealso-index.xml
+
+# this file stores the text used to create the ahelp index page for
+# the web (ie http://cxc.harvard.edu/ciao/ahelp/) - for various
+# reasons it currently can't live in the actual ahelp directory
+# so we need this pointer. 
+ahelpindexfile=/data/da/Docs/web/ciao3.0/ahelpindexfile.xml
+
+# what navbar to use for the ahelp index pages
+ahelpindexnavbar=analysis
+
+-version
+
++version ciao23
+number=2.3
+locked=v1.4
+
+# location of the stylesheets
+%stylesheets=live /data/da/Docs/web/ciao2.3/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao2.3/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+# what's the location for the output files?
+%outdir=live /proj/ascwww/AXAF/extra/science/htdocs/ciao2.3/
+%outdir=test /proj/asc_bak/AXAF/extra/science/htdocs/ciao2.3/
+%outdir=trial /data/asc8/iCXC/htdocs/sds/ciao_trial/
+
+%outurl=live http://cxc.harvard.edu/ciao2.3/
+%outurl=test http://asc-bak.cfa.harvard.edu/ciao2.3/
+%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+
+# location of the "storage" space
+%storage=live /data/da/Docs/ciaoweb/published/ciao23/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao23/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao23/trial/
+
+-version
+
++version ciao221
+locked=v1.2
+# ahelpversion has changed to number for release > v1.2
+ahelpversion=2.2.1
+
+# location of the stylesheets
+%stylesheets=live /data/da/Docs/web/ciao2.2.1/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao2.2.1/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+# what's the location for the output files?
+%outdir=live /proj/ascwww/AXAF/extra/science/htdocs/ciao2.2.1/
+%outdir=test /proj/asc_bak/AXAF/extra/science/htdocs/ciao2.2.1/
+%outdir=trial /data/asc8/iCXC/htdocs/sds/ciao_trial/
+
+%outurl=live http://cxc.harvard.edu/ciao2.2.1/
+%outurl=test http://asc-bak.cfa.harvard.edu/ciao2.2.1/
+%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+
+# location of the "storage" space
+%storage=live /data/da/Docs/ciaoweb/published/ciao221/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao221/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao221/trial/
+
+-version
+
+# stylesheets needed for the conversion
+#
+# note:
+#  this doesn't conflict with the stylesheet location
+#  given above because that's within a version block
+#
+# ummm - really this should be version-specific
+#
+@stylesheets=list_root_node
+@stylesheets=page
+@stylesheets=list_navbar
+@stylesheets=navbar
+@stylesheets=redirect
+@stylesheets=list_softlink
+@stylesheets=list_faq
+@stylesheets=faq
+@stylesheets=list_dictionary
+@stylesheets=dictionary
+@stylesheets=list_register
+@stylesheets=register
+@stylesheets=register_live
+@stylesheets=ahelp
+@stylesheets=ahelp_index
+@stylesheets=ahelp_common
+@stylesheets=ahelp_main
+@stylesheets=ahelp_list_info
+@stylesheets=list_threadindex
+@stylesheets=threadindex
+@stylesheets=threadindex_common
+@stylesheets=list_thread
+@stylesheets=ciao_thread
+@stylesheets=ciao_thread_hard
+@stylesheets=list_thread
+@stylesheets=thread_common
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=myhtml
+@stylesheets=list_math
+
+-site  # end of ciao
+
++site chart
+
+group=cxcweb_ciao
+
+@types=live
+@types=test
+@types=trial
+
+prefix=/data/da/Docs/chartweb
+
++version internal
+# this number is currently meaningless (but does it appear in the headers?)
+number=1.0
+
+# main CSS location
+%css=live /ciao3.0/ciao.css
+%css=test /ciao3.0/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+# location of the news file for the "What's new" link
+# - use the CIAO 3.0 page (isn't actually used in chart as yet)
+#%newsfile=live /proj/ascwww/AXAF/extra/science/htdocs/ciao3.0/news.html
+#%newsfile=test /proj/asc_bak/AXAF/extra/science/htdocs/ciao3.0/news.html
+#%newsfile=trial /data/asc8/iCXC/htdocs/sds/ciao_trial/news.html
+
+#%newsurl=live /ciao3.0/news.html
+#%newsurl=test /ciao3.0/news.html
+#%newsurl=trial /sds/ciao_trial/news.html
+
+# location of the "watch out" page
+#%watchouturl=live /ciao3.0/watchout.html
+#%watchouturl=test /ciao3.0/watchout.html
+#%watchouturl=trial /sds/ciao_trial/watchout.html
+
+## currently no logo
+### logo/text to use for navbar
+##logoimage=imgs/ciao_logo_navbar.gif
+#logotext=ChaRT
+
+# location of the search ssi
+%searchssi=live /chart/chart_search.ssi
+%searchssi=test /chart/chart_search.ssi
+%searchssi=trial /sds/chart_trial/chart_search.ssi
+
+%stylesheets=live /data/da/Docs/web/chart/stylesheets/
+%stylesheets=test /data/da/Docs/web/chart/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+%outdir=live /proj/ascwww/AXAF/extra/science/htdocs/chart/
+%outdir=test /proj/asc_bak/AXAF/extra/science/htdocs/chart/
+%outdir=trial /data/asc8/iCXC/htdocs/sds/chart_trial/
+
+%outurl=live http://cxc.harvard.edu/chart/
+%outurl=test http://asc-bak.cfa.harvard.edu/chart/
+%outurl=trial http://icxc.harvard.edu/sds/chart_trial/
+
+%storage=live /data/da/Docs/chartweb/published/internal/live/
+%storage=test /data/da/Docs/chartweb/published/internal/test/
+%storage=trial /data/da/Docs/chartweb/published/internal/trial/
+
+# where does the ahelp index file (created by ahelp2html.pl) live?
+# - note trial site uses test site index pages
+# - and that we use the CIAO 3.0 versions for now
+%ahelpindex=live /data/da/Docs/ciaoweb/published/ciao30/live/ahelp/seealso-index.xml
+%ahelpindex=test  /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/seealso-index.xml
+%ahelpindex=trial /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/seealso-index.xml
+
+-version
+
+@stylesheets=list_root_node
+@stylesheets=page
+@stylesheets=list_navbar
+@stylesheets=navbar
+@stylesheets=redirect
+@stylesheets=list_softlink
+@stylesheets=chart_thread
+@stylesheets=chart_thread_hard
+@stylesheets=list_thread
+@stylesheets=thread_common
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=myhtml
+@stylesheets=list_math
+
+-site  # end of chart
+
++site sherpa
+
+group=cxcweb_ciao
+
+@types=live
+@types=test
+@types=trial
+
+prefix=/data/da/Docs/sherpaweb
+
+# make sherpa use the same stylesheets as CIAO, since sherpa
+# is part of CIAO (and so the web pages wil be updated at the
+# same time)
+#
+
+# version numbers match the CIAO release
++version ciao3
+number=3.0
+
+# main CSS location
+%css=live /ciao3.0/ciao.css
+%css=test /ciao3.0/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+# location of the news file for the "What's new" link
+# - use the CIAO 3.0 page
+%newsfile=live /proj/ascwww/AXAF/extra/science/htdocs/ciao3.0/news.html
+%newsfile=test /proj/asc_bak/AXAF/extra/science/htdocs/ciao3.0/news.html
+%newsfile=trial /data/asc8/iCXC/htdocs/sds/ciao_trial/news.html
+
+%newsurl=live /ciao3.0/news.html
+%newsurl=test /ciao3.0/news.html
+%newsurl=trial /sds/ciao_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciao3.0/watchout.html
+%watchouturl=test /ciao3.0/watchout.html
+%watchouturl=trial /sds/ciao_trial/watchout.html
+
+# logo/text to use for navbar
+logoimage=imgs/sherpa_logo_navbar.gif
+logotext=Sherpa Logo
+
+# location of the search ssi
+%searchssi=live /sherpa3.0/sherpa_search.ssi
+%searchssi=test /sherpa3.0/sherpa_search.ssi
+%searchssi=trial /sds/sherpa_trial/sherpa_search.ssi
+
+%stylesheets=live /data/da/Docs/web/ciao3.0/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao3.0/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+%outdir=live /proj/ascwww/AXAF/extra/science/htdocs/sherpa3.0/
+%outdir=test /proj/asc_bak/AXAF/extra/science/htdocs/sherpa3.0/
+%outdir=trial /data/asc8/iCXC/htdocs/sds/sherpa_trial/
+
+%outurl=live http://cxc.harvard.edu/sherpa3.0/
+%outurl=test http://asc-bak.cfa.harvard.edu/sherpa3.0/
+%outurl=trial http://icxc.harvard.edu/sds/sherpa_trial/
+
+%storage=live /data/da/Docs/sherpaweb/published/ciao30/live/
+%storage=test /data/da/Docs/sherpaweb/published/ciao30/test/
+%storage=trial /data/da/Docs/sherpaweb/published/ciao30/trial/
+
+# where does the ahelp index file (created by ahelp2html.pl) live?
+# - note trial site uses test site index pages
+%ahelpindex=live  /data/da/Docs/ciaoweb/published/ciao30/live/ahelp/seealso-index.xml
+%ahelpindex=test  /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/seealso-index.xml
+%ahelpindex=trial /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/seealso-index.xml
+
+-version
+
+@stylesheets=list_root_node
+@stylesheets=page
+@stylesheets=list_navbar
+@stylesheets=navbar
+@stylesheets=redirect
+@stylesheets=list_softlink
+@stylesheets=list_threadindex
+@stylesheets=threadindex
+@stylesheets=threadindex_common
+@stylesheets=sherpa_thread
+@stylesheets=sherpa_thread_hard
+@stylesheets=list_thread
+@stylesheets=thread_common
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=myhtml
+@stylesheets=list_math
+
+-site  # end of sherpa
+
++site icxc
+
+group=cxcweb_ciao
+@types=test
+prefix=/data/asc8/iCXC/htdocs
+
+# use of version = sds is a bit of a hack just to avoid
+# special processing.
+#
++version sds
+# this is a dummy value
+number=1.0
+
+# text to use for navbar
+logotext=Science Data Systems
+
+# main CSS location
+%css=test /sds/ciao/ciao.css
+
+%stylesheets=test /data/da/Docs/web/stylesheets/
+
+# note: sds is added on here
+%outdir=test /data/asc8/iCXC/htdocs/sds/
+%outurl=test http://icxc.harvard.edu/sds/
+
+# no storage space for icxc
+
+# ugh - a hack; do not need ahelp here
+#
+%ahelpindex=test  /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/seealso-index.xml
+%ahelpindex=trial /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/seealso-index.xml
+
+-version
+
+@stylesheets=list_root_node
+@stylesheets=page
+@stylesheets=list_navbar
+@stylesheets=navbar
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=myhtml
+@stylesheets=list_math
+
+-site  # end of icxc
+
++site pog
+
+group=cxcweb_cdo
+
+@types=live
+@types=test
+
+prefix=/data/cdo1/threads
+
+# to account for the fact that there is no threads/ dir
+# for the XML files, we have to add depth_offset on to the
+# depth calculation
+#
+depth_offset=1
+
++version ao5
+
+# this number is currently meaningless (but does it appear in the headers?)
+number=1.0
+
+# main CSS location
+# (not used by ao5 pages - where should they live?)
+#%css=live /ciao3.0/ciao.css
+#%css=test /ciao3.0/ciao.css
+
+%stylesheets=live /data/cdo1/threads/stylesheets/
+%stylesheets=test /data/cdo1/threads/stylesheets/
+
+%outdir=live /proj/ascwww/AXAF/extra/science/htdocs/proposer/threads/
+%outdir=test /proj/asc_bak/AXAF/extra/science/htdocs/proposer/threads/
+
+%outurl=live http://cxc.harvard.edu/proposer/threads/
+%outurl=test http://asc-bak.cfa.harvard.edu/proposer/threads/
+
+# umm, don't really want this, but haven't the time to
+# sort out saying "no storage"
+# ie this is a temporary HACK
+#
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+
+-version
+
+# need to use the new stylesheets for ao6 - and set some things up
+#
+
++version ao6
+
+# this number appears in the hardcopy title (and the HTML head block)
+number=Cycle 6
+
+# main CSS location
+##%css=live /ciao3.0/ciao.css
+##%css=test /ciao3.0/ciao.css
+%css=live /proposer/threads/proposer.css
+%css=test /proposer/threads/proposer.css
+
+## location of the search ssi (added in CIAO 3.0; CfP 6)
+%searchssi=live /incl/search.html
+%searchssi=test /incl/search.html
+
+%stylesheets=live /data/cdo1/threads/stylesheets/
+%stylesheets=test /data/cdo1/threads/stylesheets/
+
+%outdir=live /proj/ascwww/AXAF/extra/science/htdocs/proposer/threads/
+##%outdir=test /proj/asc_bak/AXAF/extra/science/htdocs/proposer/threads/
+%outdir=test /proj/web-cxc-prev/htdocs/proposer/threads/
+
+# what is the test URL?
+%outurl=live http://cxc.harvard.edu/proposer/threads/
+%outurl=test http://not.sure.where/proposer/threads/
+
+# umm, don't really want this, but haven't the time to
+# sort out saying "no storage"
+# ie this is a temporary HACK
+#
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+
+# where does the ahelp index file (created by ahelp2html.pl) live?
+# - presumably the threads may link to some ahelp pages ;)
+#
+%ahelpindex=live  /data/da/Docs/ciaoweb/published/ciao30/live/ahelp/seealso-index.xml
+%ahelpindex=test  /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/seealso-index.xml
+
+-version
+
+@stylesheets=globalparams
+@stylesheets=globalparams_thread
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=list_math
+@stylesheets=list_root_node
+@stylesheets=list_thread
+@stylesheets=myhtml
+@stylesheets=pog_thread
+@stylesheets=pog_thread_hard
+@stylesheets=thread_common
+
+-site  # end of pog
+
+# END

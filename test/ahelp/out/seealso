@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<div class="ahelpseealso">
+<h2><a name="seealso">See Also</a></h2>
+<dl>
+<dt><em>chips:</em></dt>
+<dd><a href="foo.html">foo</a></dd>
+<dt><em>bob:</em></dt>
+<dd>
+<a href="foo.html">foo</a>, <a href="bar.html">bar</a>
+</dd>
+</dl>
+</div>

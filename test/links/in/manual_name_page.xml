@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE test>
+<test>
+Test 01: <manual page="foo" name="chips">foo foo</manual>
+Test 02: <manual page="foo" uc="1" name="chips">foo foo</manual>
+Test 03: <manual page="foo" tt="1" name="chips">foo foo</manual>
+Test 04: <manual page="foo" em="1" name="chips">foo foo</manual>
+Test 05: <manual page="foo" uc="1" tt="1" name="chips">foo foo</manual>
+Test 06: <manual page="foo" uc="1" em="1" name="chips">foo foo</manual>
+Test 07: <manual page="foo" tt="1" em="1" name="chips">foo foo</manual>
+Test 08: <manual page="foo" uc="1" tt="1" em="1" name="chips">foo foo</manual>
+Test 09: <manual page="foo" name="chips">foo foo</manual>
+Test 10: <manual page="foo" uc="1" name="chips">foo foo</manual>
+</test>

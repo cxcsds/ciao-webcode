@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE ahelpindex>
+<ahelpindex>
+<ahelplist>
+<ahelp><key>dmextract</key><context>tools</context><page>dmextract</page>
+<summary>This is a summary!</summary>
+<parameters>
+<parameter pos="1"><name>infile</name><synopsis>The parameter summary.</synopsis></parameter>
+</parameters>
+</ahelp></ahelplist>
+</ahelpindex>

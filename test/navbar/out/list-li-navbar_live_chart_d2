@@ -1,0 +1,7 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+
+  <dd>a <a href="../link.html">link</a>
+</dd>
+  <dd>another <tt><a class="helplink" title="Ahelp (tools): This is a summary!" href="/ciao/ahelp/dmextract.html">link</a></tt> and <strong>some text</strong>.</dd>
+

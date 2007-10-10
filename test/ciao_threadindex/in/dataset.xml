@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE threadindex>
+<threadindex>
+  <dataset obsid="3">
+    <object>Foo</object>
+    <instrument>FOO</instrument>
+    <thread>One</thread>
+  </dataset>
+  <dataset obsid="3">
+    <object>Foo</object>
+    <instrument>FOO</instrument>
+    <thread>One</thread>
+    <thread>Two</thread>
+  </dataset>
+  <dataset obsid="3" l2="1">
+    <object>Foo</object>
+    <instrument>FOO</instrument>
+    <thread>One</thread>
+  </dataset>
+  <dataset obsid="3" l1.5="1">
+    <object>Foo</object>
+    <instrument>FOO</instrument>
+    <thread>One</thread>
+  </dataset>
+  <dataset obsid="3" l1="1">
+    <object>Foo</object>
+    <instrument>FOO</instrument>
+    <thread>One</thread>
+  </dataset>
+  <dataset obsid="3" aspect="1">
+    <object>Foo</object>
+    <instrument>FOO</instrument>
+    <thread>One</thread>
+  </dataset>
+  <dataset obsid="3" ephem="1">
+    <object>Foo</object>
+    <instrument>FOO</instrument>
+    <thread>One</thread>
+  </dataset>
+  <dataset obsid="3" l2="1" l1.5="1" l1="1" aspect="1" ephem="1">
+    <object>Foo</object>
+    <instrument>FOO</instrument>
+    <thread>One</thread>
+  </dataset>
+</threadindex>

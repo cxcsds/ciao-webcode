@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<div class="ahelpbugs">
+<h2><a name="bugs">Bugs</a></h2>
+<h3 class="ahelpparatitle"><a name="A_title">A title</a></h3>
+<p>A paragraph.</p>
+<p>
+A paragraph with <a href="http://www.foo.com/">a link</a>.
+</p>
+  </div>

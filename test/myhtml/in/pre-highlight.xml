@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE test>
+<test>
+
+<pre highlight='1'>Foo <p>some text</p> baR</pre>
+</test>

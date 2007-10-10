@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE navbar>
+<navbar>
+<news>
+ <item type="new" day="2" month="September" year="4">
+  Some text.
+ </item>
+ <item type="updated" day="26" month="August" year="2004">
+  <p>Some <em>emphasized</em> text in a paragraph.</p>
+ </item>
+ <item day="20" month="January" year="2002">
+  <p>Some <em>emphasized</em> text in a paragraph followed by a list.</p>
+  <list type="1">
+   <li>a <cxclink href="link.html">link</cxclink></li>
+   <li>another <ahelp name="dmextract" tt="1">link</ahelp> and <strong>some text</strong>.</li>
+  </list>
+ </item>
+</news>
+</navbar>

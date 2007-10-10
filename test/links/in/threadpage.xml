@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE test>
+<test>
+Test 01: <threadpage>foo foo</threadpage>
+Test 02: <threadpage uc="1">foo foo</threadpage>
+Test 03: <threadpage tt="1">foo foo</threadpage>
+Test 04: <threadpage em="1">foo foo</threadpage>
+Test 05: <threadpage uc="1" tt="1">foo foo</threadpage>
+Test 06: <threadpage uc="1" em="1">foo foo</threadpage>
+Test 07: <threadpage tt="1" em="1">foo foo</threadpage>
+Test 08: <threadpage uc="1" tt="1" em="1">foo foo</threadpage>
+Test 09: <threadpage>foo foo</threadpage>
+Test 10: <threadpage uc="1">foo foo</threadpage>
+</test>

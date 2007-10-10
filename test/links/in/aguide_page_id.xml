@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE test>
+<test>
+Test 01: <aguide page="foo" id="foo-1">foo foo</aguide>
+Test 02: <aguide page="foo" uc="1" id="foo-1">foo foo</aguide>
+Test 03: <aguide page="foo" tt="1" id="foo-1">foo foo</aguide>
+Test 04: <aguide page="foo" id="foo-1" em="1">foo foo</aguide>
+Test 05: <aguide page="foo" uc="1" tt="1" id="foo-1">foo foo</aguide>
+Test 06: <aguide page="foo" uc="1" id="foo-1" em="1">foo foo</aguide>
+Test 07: <aguide page="foo" tt="1" id="foo-1" em="1">foo foo</aguide>
+Test 08: <aguide page="foo" uc="1" tt="1" id="foo-1" em="1">foo foo</aguide>
+Test 09: <aguide page="foo" id="foo-1">foo foo</aguide>
+Test 10: <aguide page="foo" uc="1" id="foo-1">foo foo</aguide>
+</test>

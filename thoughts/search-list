@@ -1,0 +1,7 @@
+
+find . -name SCCS -prune -o -name #\* -prune -o -name \*xml\* -exec xsltproc --stringparam fname {} /data/da/Docs/web/devel/thoughts/list-in-para.xsl {} \;
+
+Although we should just look for \*xml since
+  - other files are not complete XML files
+  - the processor should pick up these 'include' files anyway
+.

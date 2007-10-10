@@ -1,0 +1,192 @@
+#
+# $Id: config.dat,v 1.71 2004/12/03 18:11:01 dburke Exp $
+# 
+# The contents of this file are used by the publish script
+# to determine where the output of publishing a page goes.
+#
+# Do not change unless you are *really* sure you know
+# what you're doing.
+#
+# Unless otherwise noted, directories should end in a /
+#
+# This is a limited-content version of the file for the
+# CDO threads only
+#
+
+# location of binary/executables
+#
+ldpath=/data/da/Docs/local/lib/
+xsltproc=/data/da/Docs/local/bin/xsltproc
+htmldoc=/data/da/Docs/local/bin/htmldoc
+htmllib=/data/da/Docs/local/lib/
+
+listseealso=/data/da/Docs/web/list_seealso
+
+# what "site" (ie part of the web pages) are we creating?
++site pog
+
+group=cxcweb_cdo
+
+@types=live
+@types=test
+
+prefix=/data/cdo1/threads
+
+# to account for the fact that there is no threads/ dir
+# for the XML files, we have to add depth_offset on to the
+# depth calculation
+#
+depth_offset=1
+
++version ao7
+
+# there have been some small changes to the system between a06 and ao7
+#
+
+# this number appears in the hardcopy title (and the HTML head block)
+number=Cycle 7
+
+# the new (post AO-6) version has width=23, height=16
+# [but we have not copied that across to the pog area yet]
+#
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# main CSS location
+%css=live /proposer/threads/proposer.css
+%css=test /proposer/threads/proposer.css
+
+%cssprint=live /proposer/threads/proposer.print.css
+%cssprint=test /proposer/threads/proposer.print.css
+
+## location of the search ssi (added in CIAO 3.0; CfP 6)
+%searchssi=live /incl/search.html
+%searchssi=test /incl/search.html
+
+%stylesheets=live /data/cdo1/threads/stylesheets/
+%stylesheets=test /data/cdo1/threads/stylesheets/
+
+%outdir=live /proj/web-cxc/htdocs/proposer/threads/
+##%outdir=test /proj/asc_bak/AXAF/extra/science/htdocs/proposer/threads/
+%outdir=test /proj/web-cxc-prev/htdocs/proposer/threads/
+
+# what is the test URL?
+%outurl=live http://cxc.harvard.edu/proposer/threads/
+%outurl=test http://cxc-prev.cfa.harvard.edu/proposer/threads/
+
+# umm, don't really want this, but haven't the time to
+# sort out saying "no storage"
+# ie this is a temporary HACK
+#
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao32/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao32/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao32/trial/ahelp/
+
+-version
+
++version ao6
+
+# this number appears in the hardcopy title (and the HTML head block)
+number=Cycle 6
+
+# the new (post AO-6) version has width=23, height=16
+# [but we have not copied that across to the pog area yet]
+#
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=30
+imglinkiconheight=30
+
+# main CSS location
+##%css=live /ciao3.0/ciao.css
+##%css=test /ciao3.0/ciao.css
+%css=live /proposer/threads/proposer.css
+%css=test /proposer/threads/proposer.css
+
+%cssprint=live /proposer/threads/proposer.print.css
+%cssprint=test /proposer/threads/proposer.print.css
+
+## location of the search ssi (added in CIAO 3.0; CfP 6)
+%searchssi=live /incl/search.html
+%searchssi=test /incl/search.html
+
+%stylesheets=live /data/cdo1/threads/stylesheets/
+%stylesheets=test /data/cdo1/threads/stylesheets/
+
+%outdir=live /proj/web-cxc/htdocs/proposer/threads/
+##%outdir=test /proj/asc_bak/AXAF/extra/science/htdocs/proposer/threads/
+%outdir=test /proj/web-cxc-prev/htdocs/proposer/threads/
+
+# what is the test URL?
+%outurl=live http://cxc.harvard.edu/proposer/threads/
+%outurl=test http://cxc-prev.cfa.harvard.edu/proposer/threads/
+
+# umm, don't really want this, but haven't the time to
+# sort out saying "no storage"
+# ie this is a temporary HACK
+#
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao30/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao30/trial/ahelp/
+
+-version
+
++version ao5
+
+# this number is currently meaningless (but does it appear in the headers?)
+number=1.0
+
+# main CSS location
+# (not used by ao5 pages - where should they live?)
+#%css=live /ciao3.0/ciao.css
+#%css=test /ciao3.0/ciao.css
+
+%stylesheets=live /data/cdo1/threads/stylesheets/
+%stylesheets=test /data/cdo1/threads/stylesheets/
+
+%outdir=live /proj/web-cxc/htdocs/proposer/threads/
+%outdir=test /proj/asc_bak/AXAF/extra/science/htdocs/proposer/threads/
+
+%outurl=live http://cxc.harvard.edu/proposer/threads/
+%outurl=test http://cxc-test.harvard.edu/proposer/threads/
+
+# umm, don't really want this, but haven't the time to
+# sort out saying "no storage"
+# ie this is a temporary HACK
+#
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+
+-version
+
+@stylesheets=globalparams
+@stylesheets=globalparams_thread
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=list_math
+@stylesheets=list_root_node
+@stylesheets=list_thread
+@stylesheets=myhtml
+@stylesheets=pog_thread
+##@stylesheets=pog_thread_hard  # removed in CIAO 3.1/CfP7
+@stylesheets=thread_common
+
+-site  # end of pog
+
+# END

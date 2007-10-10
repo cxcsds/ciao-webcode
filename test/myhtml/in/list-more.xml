@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE test>
+<test>
+
+<list><li>some text</li><li>some <em>more</em> text</li></list>
+</test>

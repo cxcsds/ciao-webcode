@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<foo>
+<p>
+ <list>
+   <title>FOO</title>
+   <item>This is a1</item>
+   <item>This is b1</item>
+   <sublist>
+      <item>This is c1</item>
+    </sublist>
+   <item>This is a2</item>
+   <sublist>This is b2</sublist>
+ </list>
+</p>
+</foo>

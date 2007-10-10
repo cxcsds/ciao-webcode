@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE test>
+<test>
+
+<scriptlist>
+ <category name="Foo">
+  <script name="foo" day="29" month="1" year="1971">
+   <desc>A description</desc>
+   <thread>
+    Should test links, but <cxclink href="/foo/bar.html">hard to do</cxclink>.
+   </thread>
+  </script>
+  <script name="bar" lang="S-Lang" updated="yes" day="29" month="1" year="1971">
+   <desc>More description</desc>
+   <thread>
+    Should test links, but <cxclink href="/foo/bar.html">hard to do</cxclink>.
+   </thread>
+  </script>
+ </category>
+ <category name="BAR BAR">
+  <script name="ihavenowool" new="yes" day="29" month="1" year="1971" ver="1.2">
+   <desc>A description</desc>
+   <thread>
+    Should test links, but <cxclink href="/foo/bar.html">hard to do</cxclink>.
+   </thread>
+  </script>
+ </category>
+</scriptlist>
+
+</test>

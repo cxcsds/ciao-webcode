@@ -1,0 +1,38 @@
+/*
+ * Here we add styles that we want hidden from Netscape v4
+ *
+ * The Chandra X-Ray Center (CXC) is operated for NASA:
+ *   Smithsonian Astrophysical Observatory
+ *   60 Garden Street
+ *   Cambridge
+ *   MA 02138
+ *   USA
+ * Email: cxcweb@head-cfa.harvard.edu
+ *
+ * Smithsonian Institution, Copyright © 1998-2004. All rights reserved. 
+ */
+
+/* navbar */
+.navbar dd { margin-left: 1em; }
+
+/* add border for non-netscape users */
+span.highlightbox {
+  border-width: thin;
+  border-style: solid;
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: larger;
+  font-weight: bold;
+  padding: 0.2em;
+  background: #99ccff;
+}
+
+.ahelpsyntax pre, .ahelpverbatim pre, .ahelpequation pre {
+  border: thin solid black ! important;
+}
+
+.screen pre, pre.highlight, div.highlighttext {
+  border: thin solid black ! important;
+}
+
+
+/* end of stylesheet */

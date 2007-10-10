@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE seealso>
+<seealso>
+<dl>
+<dt><em>chips:</em></dt>
+<dd><a href="foo.html">foo</a></dd>
+<dt><em>bob:</em></dt>
+<dd>
+<a href="foo.html">foo</a>, <a href="bar.html">bar</a>
+</dd>
+</dl>
+</seealso>

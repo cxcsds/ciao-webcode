@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE test>
+<test>
+Test 01: <ahelp name="dmextract"/>
+Test 02: <ahelp uc="1" name="dmextract"/>
+Test 03: <ahelp tt="1" name="dmextract"/>
+Test 04: <ahelp em="1" name="dmextract"/>
+Test 05: <ahelp uc="1" tt="1" name="dmextract"/>
+Test 06: <ahelp uc="1" em="1" name="dmextract"/>
+Test 07: <ahelp tt="1" em="1" name="dmextract"/>
+Test 08: <ahelp uc="1" tt="1" em="1" name="dmextract"/>
+Test 09: <ahelp name="dmextract">test text</ahelp>
+Test 10: <ahelp uc="1" name="dmextract">test text</ahelp>
+</test>

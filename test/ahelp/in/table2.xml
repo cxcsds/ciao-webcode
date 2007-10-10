@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE cxchelptopics>
+<cxchelptopics>
+<ENTRY key="foofoo" context="baabaa" refkeywords="foo bar mary poppins"
+seealsogroups="foogroup">
+<TABLE>
+  <ROW><DATA>foo</DATA></ROW>
+  <ROW><DATA></DATA><DATA>foo</DATA><DATA>baa baa</DATA></ROW>
+</TABLE>
+</ENTRY></cxchelptopics>

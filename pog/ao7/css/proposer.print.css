@@ -1,0 +1,78 @@
+/*
+ * The 'print' version of the stylesheet (it will be much-more
+ * powerful when we use more CSS on the main page, i.e. when
+ * we drop support for the NS4 browser)
+ *
+ * The Chandra X-Ray Center (CXC) is operated for NASA:
+ *   Smithsonian Astrophysical Observatory
+ *   60 Garden Street
+ *   Cambridge
+ *   MA 02138
+ *   USA
+ * Email: cxcweb@head-cfa.harvard.edu
+ *
+ * Smithsonian Institution, Copyright © 1998-2004. All rights reserved. 
+ */
+
+/*
+ * From the CXC header/footer items
+ * (need to add these classes to the SSI files)
+ */
+div.cxcfooterlinks { display: none; }
+td.cxcsitemap { display: none; }
+
+/*
+ * hide various bits of information
+ */
+.hideme   { display: none; }
+.navbar   { display: none; }
+.noprint  { display: none; }
+
+div.searchbar { display: none; }
+div.pdfbar    { display: none; }
+div.qlinkbar  { display: none; }
+
+/*
+ * move some info to the top-right of the page
+ * - need to improve the mark-up for these sections
+ *   so the display is more natural
+ */
+div.lastmodbar {
+  font-weight: bold;
+  position: absolute;
+  right: 1em;
+  top: 1em;
+}
+div.urlbar {
+  display: block;
+  font-weight: bold;
+  font-size: 90%;
+  position: absolute;
+  right: 1em;
+  top: 2em;
+}
+
+div.bottombar { display: none; }
+
+/*
+ * set up the links; we do not try and disambiguate 'ahelp' links
+ * from any other links
+ * - the underline does not work (at least in safari v1.2)
+ */
+
+a:link, a:visited {
+        text-decoration: underline;
+        font-weight: bold;
+}
+
+pre.paramlist { font-size: 90%; }
+
+/*
+ * targetted removal of the 'Archive Search' link in the
+ * thread data table
+ */
+table#threaddatatable a.tablehead {
+  display: none;
+}
+
+/* end of stylesheet */

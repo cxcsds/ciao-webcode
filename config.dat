@@ -1,0 +1,1974 @@
+#
+# $Id: config.dat,v 1.105 2007/09/26 16:54:50 egalle Exp $
+# 
+# The contents of this file are used by the publish script
+# (/data/da/Docs/web/publish.pl) to determine where the
+# output of publishing a page goes.
+#
+# Do not change unless you are *really* sure you know
+# what you're doing.
+#
+# Unless otherwise noted, directories should end in a /
+#
+# Note:
+#   perhaps should make all values, other than site
+#   a member of the version block. This would give us
+#   a lot of flexibility [at the expense of a longer
+#   config file]
+#
+
+# location of binary/executables
+#
+ldpath=/data/da/Docs/local/lib/
+xsltproc=/data/da/Docs/local/bin/xsltproc
+htmldoc=/data/da/Docs/local/bin/htmldoc
+htmllib=/data/da/Docs/local/lib/
+
+listseealso=/data/da/Docs/web/list_seealso
+
+# what "site" (ie part of the web pages) are we creating?
++site ciao
+
+# the unix group the created files should be set to
+group=cxcweb_ciao
+
+# what "types" of publishing are allowed?
+# - perhaps these should be within the version block?
+#
+@types=live
+@types=test
+@types=trial
+@types=dist
+
+# prefix should not end in a /
+# NOTE: changed from old "prefix" (added ciaoweb)
+prefix=/data/da/Docs/ciaoweb
+
+# setting this to 0 makes some of the code a little easier
+depth_offset=0
+
+#
+# for the moment we provide the full set of options for each "version"
+# I cannot be bothered to be clever and have default/fall through
+# values
+#
+
++version 40beta
+number=4.0 Beta 2
+
+# icon used to signify an 'image link' in threads
+# This is a holdout from the old design and should probably be removed
+# (can perhaps use CSS instead?)
+#
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# hyphen was moved to the XSL at CIAO 3.4
+headtitlepostfix=CIAO 4.0 Beta 2
+texttitlepostfix=CIAO 4.0 Beta 2
+
+version_string=4.0 Beta 2
+
+# main CSS location
+%css=live /ciaobeta/ciao.css
+%css=test /ciaobeta/ciao.css
+%css=trial /sds/ciao_beta_trial/ciao.css
+
+%cssprint=live /ciaobeta/ciao.print.css
+%cssprint=test /ciaobeta/ciao.print.css
+%cssprint=trial /sds/ciao_beta_trial/ciao.print.css
+
+# location of the news file for the "What's new" link
+%newsfile=live /proj/web-cxc/htdocs/ciaobeta/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciaobeta/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_beta_trial/news.html
+
+%newsurl=live /ciaobeta/news.html
+%newsurl=test /ciaobeta/news.html
+%newsurl=trial /sds/ciao_beta_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciaobeta/watchout.html
+%watchouturl=test /ciaobeta/watchout.html
+%watchouturl=trial /sds/ciao_beta_trial/watchout.html
+
+# location of the search ssi
+%searchssi=live /ciaobeta/ciao_search.ssi
+%searchssi=test /ciaobeta/ciao_search.ssi
+%searchssi=trial /sds/ciao_beta_trial/ciao_search.ssi
+
+# logo/text to use for navbar
+logoimage=imgs/ciao_logo_navbar.gif
+logotext=CIAO Logo
+
+# location of the stylesheets
+%stylesheets=live /data/da/Docs/web/40beta/stylesheets/
+%stylesheets=test /data/da/Docs/web/40beta/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+# what's the location for the output files?
+%outdir=live /proj/web-cxc/htdocs/ciaobeta/
+%outdir=test /proj/web-cxc-test/htdocs/ciaobeta/
+%outdir=trial /proj/web-icxc/htdocs/sds/ciao_beta_trial/
+
+%outurl=live http://cxc.harvard.edu/ciaobeta/
+%outurl=test http://cxc-test.harvard.edu/ciaobeta/
+%outurl=trial http://icxc.harvard.edu/sds/ciao_beta_trial/
+
+# location of the "storage" space
+%storage=live /data/da/Docs/ciaoweb/published/40beta/live/
+%storage=test /data/da/Docs/ciaoweb/published/40beta/test/
+%storage=trial /data/da/Docs/ciaoweb/published/40beta/trial/
+
+## ahelp section
+#
+# where do the ahelp files (ie the XML files) live
+# - this would match $ASCDS_INSTALL in a normal installation
+#   ie looks for files in
+#     <ahelpfiles>/doc/xml
+#     <ahelpfiles>/contrib/doc/xml
+#
+# ahelp files should come from CIAOT 
+
+%ahelpfiles=live /data/da/Docs/sxml_manuals/crates/4.0/GENERATED/webxml/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/crates/4.0/GENERATED/webxml/
+%ahelpfiles=trial /proj/xena/ciao_bt/sun/
+
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+# - for the trial site we just use the version from the test site
+#   [it may be a problem in rare cases]
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/40beta/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
+
+# what navbar to use for the ahelp index pages
+ahelpindexnavbar=analysis
+
+-version
+
+
++version ciao34
+number=3.4
+
+# icon used to signify an 'image link' in threads
+# This is a holdout from the old design and should probably be removed
+# (can perhaps use CSS instead?)
+#
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# hyphen was moved to the XSL at CIAO 3.4
+headtitlepostfix=CIAO 3.4
+texttitlepostfix=CIAO 3.4
+
+version_string=3.4
+
+# main CSS location
+%css=live /ciao3.4/ciao.css
+%css=test /ciao3.4/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+%cssprint=live /ciao3.4/ciao.print.css
+%cssprint=test /ciao3.4/ciao.print.css
+%cssprint=trial /sds/ciao_trial/ciao.print.css
+
+# location of the news file for the "What's new" link
+%newsfile=live /proj/web-cxc/htdocs/ciao3.4/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciao3.4/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+
+%newsurl=live /ciao3.4/news.html
+%newsurl=test /ciao3.4/news.html
+%newsurl=trial /sds/ciao_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciao3.4/watchout.html
+%watchouturl=test /ciao3.4/watchout.html
+%watchouturl=trial /sds/ciao_trial/watchout.html
+
+# location of the search ssi
+%searchssi=live /ciao3.4/ciao_search.ssi
+%searchssi=test /ciao3.4/ciao_search.ssi
+%searchssi=trial /sds/ciao_trial/ciao_search.ssi
+
+# logo/text to use for navbar
+logoimage=imgs/ciao_logo_navbar.gif
+logotext=CIAO Logo
+
+# location of the stylesheets
+%stylesheets=live /data/da/Docs/web/ciao3.4/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao3.4/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+%stylesheets=dist /somewhere/
+
+# what's the location for the output files?
+%outdir=live /proj/web-cxc/htdocs/ciao3.4/
+%outdir=test /proj/web-cxc-test/htdocs/ciao3.4/
+%outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
+%outdir=dist /somewhere/
+
+%outurl=live http://cxc.harvard.edu/ciao3.4/
+%outurl=test http://cxc-test.harvard.edu/ciao3.4/
+%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+
+# location of the "storage" space
+%storage=live /data/da/Docs/ciaoweb/published/ciao34/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao34/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao34/trial/
+%storage=dist /somewhere/
+
+## ahelp section
+#
+# where do the ahelp files (ie the XML files) live
+# - this would match $ASCDS_INSTALL in a normal installation
+#   ie looks for files in
+#     <ahelpfiles>/doc/xml
+#     <ahelpfiles>/contrib/doc/xml
+#
+# ahelp files should come from CIAOT 
+
+%ahelpfiles=live /proj/xena/ciao_3.4/sun_t/
+%ahelpfiles=test /proj/xena/ciao_3.4/sun_t/
+%ahelpfiles=trial /proj/xena/ciao_3.4/sun_t/
+
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+# - for the trial site we just use the version from the test site
+#   [it may be a problem in rare cases]
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao34/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao34/test/ahelp/
+#%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao34/trial/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao34/test/ahelp/
+%ahelpindexdir=dist /somewhere/
+
+# what navbar to use for the ahelp index pages
+ahelpindexnavbar=analysis
+
+-version
+
++version ciao33
+number=3.3
+
+# icon used to signify an 'image link' in threads
+# This is a holdout from the old design and should probably be removed
+# (can perhaps use CSS instead?)
+#
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+headtitlepostfix=- CIAO 3.3
+texttitlepostfix=- CIAO 3.3
+
+version_string=3.3
+
+# main CSS location
+%css=live /ciao3.3/ciao.css
+%css=test /ciao3.3/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+%cssprint=live /ciao3.3/ciao.print.css
+%cssprint=test /ciao3.3/ciao.print.css
+%cssprint=trial /sds/ciao_trial/ciao.print.css
+
+# location of the news file for the "What's new" link
+%newsfile=live /proj/web-cxc/htdocs/ciao3.3/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciao3.3/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+
+%newsurl=live /ciao3.3/news.html
+%newsurl=test /ciao3.3/news.html
+%newsurl=trial /sds/ciao_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciao3.3/watchout.html
+%watchouturl=test /ciao3.3/watchout.html
+%watchouturl=trial /sds/ciao_trial/watchout.html
+
+# location of the search ssi
+%searchssi=live /ciao3.3/ciao_search.ssi
+%searchssi=test /ciao3.3/ciao_search.ssi
+%searchssi=trial /sds/ciao_trial/ciao_search.ssi
+
+# logo/text to use for navbar
+logoimage=imgs/ciao_logo_navbar.gif
+logotext=CIAO Logo
+
+# location of the stylesheets
+%stylesheets=live /data/da/Docs/web/ciao3.3/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao3.3/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+%stylesheets=dist /somewhere/
+
+# what's the location for the output files?
+%outdir=live /proj/web-cxc/htdocs/ciao3.3/
+%outdir=test /proj/web-cxc-test/htdocs/ciao3.3/
+%outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
+%outdir=dist /somewhere/
+
+%outurl=live http://cxc.harvard.edu/ciao3.3/
+%outurl=test http://cxc-test.harvard.edu/ciao3.3/
+%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+
+# location of the "storage" space
+%storage=live /data/da/Docs/ciaoweb/published/ciao33/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao33/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao33/trial/
+%storage=dist /somewhere/
+
+## ahelp section
+#
+# where do the ahelp files (ie the XML files) live
+# - this would match $ASCDS_INSTALL in a normal installation
+#   ie looks for files in
+#     <ahelpfiles>/doc/xml
+#     <ahelpfiles>/contrib/doc/xml
+#
+# ahelp files should come from CIAOT 
+
+%ahelpfiles=live /proj/xena3/ciao_3.3/sun_t/
+%ahelpfiles=test /proj/xena3/ciao_3.3/sun_t/
+%ahelpfiles=trial /proj/xena3/ciao_3.3/sun_t/
+
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+# - for the trial site we just use the version from the test site
+#   [it may be a problem in rare cases]
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao33/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao33/test/ahelp/
+#%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao33/trial/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao33/test/ahelp/
+%ahelpindexdir=dist /somewhere/
+
+# what navbar to use for the ahelp index pages
+ahelpindexnavbar=analysis
+
+-version
+
++version ciao32
+number=3.2
+
+# icon used to signify an 'image link' in threads
+# This is a holdout from the old design and should probably be removed
+# (can perhaps use CSS instead?)
+#
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+headtitlepostfix=- CIAO 3.2
+texttitlepostfix=- CIAO 3.2
+
+version_string=3.2
+
+# main CSS location
+%css=live /ciao3.2/ciao.css
+%css=test /ciao3.2/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+%cssprint=live /ciao3.2/ciao.print.css
+%cssprint=test /ciao3.2/ciao.print.css
+%cssprint=trial /sds/ciao_trial/ciao.print.css
+
+# location of the news file for the "What's new" link
+%newsfile=live /proj/web-cxc/htdocs/ciao3.2/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciao3.2/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+
+%newsurl=live /ciao3.2/news.html
+%newsurl=test /ciao3.2/news.html
+%newsurl=trial /sds/ciao_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciao3.2/watchout.html
+%watchouturl=test /ciao3.2/watchout.html
+%watchouturl=trial /sds/ciao_trial/watchout.html
+
+# location of the search ssi
+%searchssi=live /ciao3.2/ciao_search.ssi
+%searchssi=test /ciao3.2/ciao_search.ssi
+%searchssi=trial /sds/ciao_trial/ciao_search.ssi
+
+# logo/text to use for navbar
+logoimage=imgs/ciao_logo_navbar.gif
+logotext=CIAO Logo
+
+# location of the stylesheets
+%stylesheets=live /data/da/Docs/web/ciao3.2/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao3.2/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+%stylesheets=dist /somewhere/
+
+# what's the location for the output files?
+%outdir=live /proj/web-cxc/htdocs/ciao3.2/
+%outdir=test /proj/web-cxc-test/htdocs/ciao3.2/
+%outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
+%outdir=dist /somewhere/
+
+%outurl=live http://cxc.harvard.edu/ciao3.2/
+%outurl=test http://cxc-test.harvard.edu/ciao3.2/
+%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+
+# location of the "storage" space
+%storage=live /data/da/Docs/ciaoweb/published/ciao32/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao32/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao32/trial/
+%storage=dist /somewhere/
+
+## ahelp section
+#
+# where do the ahelp files (ie the XML files) live
+# - this would match $ASCDS_INSTALL in a normal installation
+#   ie looks for files in
+#     <ahelpfiles>/doc/xml
+#     <ahelpfiles>/contrib/doc/xml
+#
+#%ahelpfiles=live /soft/ciao/
+##%ahelpfiles=test /soft/ciao/
+##%ahelpfiles=trial /soft/ciao/
+
+# need to over-ride since we want to remove the mkacisrmf help file
+# from the distribution for CIAO 3.1
+#
+%ahelpfiles=live /proj/ciaox/
+%ahelpfiles=test /proj/ciaox/
+%ahelpfiles=trial /proj/ciaox/
+##%ahelpfiles=dist /somewhere/
+
+#%ahelpfiles=live /data/da/Docs/ciaoweb/ahelp/ciao32/
+#%ahelpfiles=test /data/da/Docs/ciaoweb/ahelp/ciao32/
+#%ahelpfiles=trial /data/da/Docs/ciaoweb/ahelp/ciao32/
+#%ahelpfiles=dist /somewhere/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+# - for the trial site we just use the version from the test site
+#   [it may be a problem in rare cases]
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao32/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao32/test/ahelp/
+#%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao32/trial/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao32/test/ahelp/
+%ahelpindexdir=dist /somewhere/
+
+# what navbar to use for the ahelp index pages
+ahelpindexnavbar=analysis
+
+-version
+
++version ciao31
+number=3.1
+
+# icon used to signify an 'image link' in threads
+# This is a holdout from the old design and should probably be removed
+# (can perhaps use CSS instead?)
+#
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+headtitlepostfix=- CIAO 3.1
+texttitlepostfix=- CIAO 3.1
+
+version_string=3.1
+
+# main CSS location
+%css=live /ciao3.1/ciao.css
+%css=test /ciao3.1/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+%cssprint=live /ciao3.1/ciao.print.css
+%cssprint=test /ciao3.1/ciao.print.css
+%cssprint=trial /sds/ciao_trial/ciao.print.css
+
+# location of the news file for the "What's new" link
+%newsfile=live /proj/web-cxc/htdocs/ciao3.1/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciao3.1/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+
+%newsurl=live /ciao3.1/news.html
+%newsurl=test /ciao3.1/news.html
+%newsurl=trial /sds/ciao_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciao3.1/watchout.html
+%watchouturl=test /ciao3.1/watchout.html
+%watchouturl=trial /sds/ciao_trial/watchout.html
+
+# location of the search ssi
+%searchssi=live /ciao3.1/ciao_search.ssi
+%searchssi=test /ciao3.1/ciao_search.ssi
+%searchssi=trial /sds/ciao_trial/ciao_search.ssi
+
+# logo/text to use for navbar
+logoimage=imgs/ciao_logo_navbar.gif
+logotext=CIAO Logo
+
+# location of the stylesheets
+%stylesheets=live /data/da/Docs/web/ciao3.1/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao3.1/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+%stylesheets=dist /somewhere/
+
+# what's the location for the output files?
+%outdir=live /proj/web-cxc/htdocs/ciao3.1/
+%outdir=test /proj/web-cxc-test/htdocs/ciao3.1/
+%outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
+%outdir=dist /somewhere/
+
+%outurl=live http://cxc.harvard.edu/ciao3.1/
+%outurl=test http://cxc-test.harvard.edu/ciao3.1/
+%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+
+# location of the "storage" space
+%storage=live /data/da/Docs/ciaoweb/published/ciao31/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao31/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao31/trial/
+%storage=dist /somewhere/
+
+## ahelp section
+#
+# where do the ahelp files (ie the XML files) live
+# - this would match $ASCDS_INSTALL in a normal installation
+#   ie looks for files in
+#     <ahelpfiles>/doc/xml
+#     <ahelpfiles>/contrib/doc/xml
+#
+%ahelpfiles=live /soft/ciao/
+##%ahelpfiles=test /soft/ciao/
+##%ahelpfiles=trial /soft/ciao/
+
+# need to over-ride since we want to remove the mkacisrmf help file
+# from the distribution for CIAO 3.1
+#
+##%ahelpfiles=live /proj/ciaox/
+##%ahelpfiles=test /proj/ciaox/
+##%ahelpfiles=trial /proj/ciaox/
+##%ahelpfiles=dist /somewhere/
+%ahelpfiles=live /data/da/Docs/ciaoweb/ahelp/ciao31/
+%ahelpfiles=test /data/da/Docs/ciaoweb/ahelp/ciao31/
+%ahelpfiles=trial /data/da/Docs/ciaoweb/ahelp/ciao31/
+%ahelpfiles=dist /somewhere/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+# - for the trial site we just use the version from the test site
+#   [it may be a problem in rare cases]
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao31/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao31/test/ahelp/
+#%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao31/trial/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao31/test/ahelp/
+%ahelpindexdir=dist /somewhere/
+
+# what navbar to use for the ahelp index pages
+ahelpindexnavbar=analysis
+
+-version
+
++version ciao3
+number=3.0
+
+# icon used to signify an 'image link' in threads
+# This is a holdout from the old design and should probably be removed
+# (can perhaps use CSS instead?)
+#
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=30
+imglinkiconheight=30
+
+headtitlepostfix=- CIAO 3.0
+texttitlepostfix=- CIAO 3.0.2
+
+version_string=3.0.2
+
+# main CSS location
+%css=live /ciao3.0/ciao.css
+%css=test /ciao3.0/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+# location of the news file for the "What's new" link
+%newsfile=live /proj/web-cxc/htdocs/ciao3.0/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciao3.0/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+
+%newsurl=live /ciao3.0/news.html
+%newsurl=test /ciao3.0/news.html
+%newsurl=trial /sds/ciao_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciao3.0/watchout.html
+%watchouturl=test /ciao3.0/watchout.html
+%watchouturl=trial /sds/ciao_trial/watchout.html
+
+# location of the search ssi
+%searchssi=live /ciao3.0/ciao_search.ssi
+%searchssi=test /ciao3.0/ciao_search.ssi
+%searchssi=trial /sds/ciao_trial/ciao_search.ssi
+
+# logo/text to use for navbar
+logoimage=imgs/ciao_logo_navbar.gif
+logotext=CIAO Logo
+
+# location of the stylesheets
+# - may want to change these so that can have 3.0-specific stylesheets
+%stylesheets=live /data/da/Docs/web/ciao3.0/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao3.0/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+%stylesheets=dist /somewhere/
+
+# what's the location for the output files?
+%outdir=live /proj/web-cxc/htdocs/ciao3.0/
+%outdir=test /proj/web-cxc-test/htdocs/ciao3.0/
+%outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
+%outdir=dist /somewhere/
+
+%outurl=live http://cxc.harvard.edu/ciao3.0/
+%outurl=test http://cxc-test.harvard.edu/ciao3.0/
+%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+
+# location of the "storage" space
+%storage=live /data/da/Docs/ciaoweb/published/ciao30/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao30/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao30/trial/
+%storage=dist /somewhere/
+
+## ahelp section
+#
+# where do the ahelp files (ie the XML files) live
+# - this would match $ASCDS_INSTALL in a normal installation
+#   ie looks for files in
+#     <ahelpfiles>/doc/xml
+#     <ahelpfiles>/contrib/doc/xml
+#
+%ahelpfiles=live /soft/ciao/
+%ahelpfiles=test /soft/ciao/
+%ahelpfiles=trial /soft/ciao/
+%ahelpfiles=dist /somewhere/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+# - for the 'CIAO' site this is a directory within the storage space
+#   but for other sites we need a full directory, so we supply it here
+#   too
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao30/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao30/trial/ahelp/
+%ahelpindexdir=dist /somewhere/
+
+# what navbar to use for the ahelp index pages
+ahelpindexnavbar=analysis
+
+-version
+
++version ciao23
+number=2.3
+locked=v1.4
+
+# location of the stylesheets
+%stylesheets=live /data/da/Docs/web/ciao2.3/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao2.3/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+# what's the location for the output files?
+%outdir=live /proj/web-cxc/htdocs/ciao2.3/
+%outdir=test /proj/web-cxc-test/htdocs/ciao2.3/
+%outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
+
+%outurl=live http://cxc.harvard.edu/ciao2.3/
+%outurl=test http://cxc-test.harvard.edu/ciao2.3/
+%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+
+# location of the "storage" space
+%storage=live /data/da/Docs/ciaoweb/published/ciao23/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao23/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao23/trial/
+
+-version
+
++version ciao221
+locked=v1.2
+# ahelpversion has changed to number for release > v1.2
+ahelpversion=2.2.1
+
+# location of the stylesheets
+%stylesheets=live /data/da/Docs/web/ciao2.2.1/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao2.2.1/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+# what's the location for the output files?
+%outdir=live /proj/web-cxc/htdocs/ciao2.2.1/
+%outdir=test /proj/web-cxc-test/htdocs/ciao2.2.1/
+%outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
+
+%outurl=live http://cxc.harvard.edu/ciao2.2.1/
+%outurl=test http://cxc-test.harvard.edu/ciao2.2.1/
+%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+
+# location of the "storage" space
+%storage=live /data/da/Docs/ciaoweb/published/ciao221/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao221/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao221/trial/
+
+-version
+
+# stylesheets needed for the conversion
+#
+# note:
+#  this doesn't conflict with the stylesheet location
+#  given above because that's within a version block
+#
+# ummm - really this should be version-specific
+#
+@stylesheets=list_root_node
+@stylesheets=page
+@stylesheets=list_navbar
+@stylesheets=navbar
+@stylesheets=navbar_main
+@stylesheets=redirect
+@stylesheets=list_softlink
+@stylesheets=bugs
+@stylesheets=list_faq
+@stylesheets=faq
+@stylesheets=list_dictionary
+@stylesheets=dictionary
+##@stylesheets=list_register # removed in CIAO 3.1
+##@stylesheets=register      # removed in CIAO 3.1
+@stylesheets=register_live
+@stylesheets=ahelp
+@stylesheets=ahelp_index
+@stylesheets=ahelp_common
+@stylesheets=ahelp_main
+@stylesheets=ahelp_list_info
+@stylesheets=list_threadindex
+@stylesheets=threadindex
+@stylesheets=threadindex_common
+@stylesheets=list_thread
+@stylesheets=ciao_thread
+##@stylesheets=ciao_thread_hard  # removed in CIAO 3.1
+@stylesheets=list_thread
+@stylesheets=thread_common
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=myhtml
+@stylesheets=list_math
+
+-site  # end of ciao
+
++site chart
+
+group=cxcweb_ciao
+
+@types=live
+@types=test
+@types=trial
+
+prefix=/data/da/Docs/chartweb
+
+# setting this to 0 makes some of the code a little easier
+depth_offset=0
+
++version internal
+# this number is currently meaningless (but does it appear in the headers?)
+number=1.0
+
+# main CSS location
+# - should we use the versioned file name rather than the /ciao/
+#   soft link?
+# - for CIAO 3.1 we made changes to the layout and organisation of
+#   the pages so need to use a versioned directory name
+# - changed back to unversioned in CIAO 3.3; this is now handled
+#   with softlinks in the /data/da/Docs/web directory
+
+%css=live /ciao/ciao.css
+%css=test /ciao/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+%cssprint=live /ciao/ciao.print.css
+%cssprint=test /ciao/ciao.print.css
+%cssprint=trial /sds/ciao_trial/ciao.print.css
+
+# location of the news file for the "What's new" link
+# - use the CIAO 3.0 page (isn't actually used in chart as yet)
+#%newsfile=live /proj/web-cxc/htdocs/ciao3.0/news.html
+#%newsfile=test /proj/web-cxc-test/htdocs/ciao3.0/news.html
+#%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+
+#%newsurl=live /ciao3.0/news.html
+#%newsurl=test /ciao3.0/news.html
+#%newsurl=trial /sds/ciao_trial/news.html
+
+# location of the "watch out" page
+#%watchouturl=live /ciao3.0/watchout.html
+#%watchouturl=test /ciao3.0/watchout.html
+#%watchouturl=trial /sds/ciao_trial/watchout.html
+
+## currently no logo
+### logo/text to use for navbar
+##logoimage=imgs/ciao_logo_navbar.gif
+#logotext=ChaRT
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# location of the search ssi
+%searchssi=live /chart/chart_search.ssi
+%searchssi=test /chart/chart_search.ssi
+%searchssi=trial /sds/chart_trial/chart_search.ssi
+
+%stylesheets=live /data/da/Docs/web/chart/stylesheets/
+%stylesheets=test /data/da/Docs/web/chart/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+%outdir=live /proj/web-cxc/htdocs/chart/
+%outdir=test /proj/web-cxc-test/htdocs/chart/
+%outdir=trial /proj/web-icxc/htdocs/sds/chart_trial/
+
+%outurl=live http://cxc.harvard.edu/chart/
+%outurl=test http://cxc-test.harvard.edu/chart/
+%outurl=trial http://icxc.harvard.edu/sds/chart_trial/
+
+%storage=live /data/da/Docs/chartweb/published/internal/live/
+%storage=test /data/da/Docs/chartweb/published/internal/test/
+%storage=trial /data/da/Docs/chartweb/published/internal/trial/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao30/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao30/trial/ahelp/
+
+-version
+
+@stylesheets=list_root_node
+@stylesheets=page
+@stylesheets=list_navbar
+@stylesheets=navbar
+@stylesheets=redirect
+@stylesheets=list_softlink
+@stylesheets=chart_thread
+##@stylesheets=chart_thread_hard   # removed in CIAO 3.1
+@stylesheets=list_thread
+@stylesheets=thread_common
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=myhtml
+@stylesheets=list_math
+
+-site  # end of chart
+
++site sherpa
+
+group=cxcweb_ciao
+
+@types=live
+@types=test
+@types=trial
+
+prefix=/data/da/Docs/sherpaweb
+
+# setting this to 0 makes some of the code a little easier
+depth_offset=0
+
+# make sherpa use the same stylesheets as CIAO, since sherpa
+# is part of CIAO (and so the web pages wil be updated at the
+# same time)
+#
+
+# version numbers match the CIAO release
+
++version 40beta
+number=4.0 Beta
+
+# icon used to signify an 'image link' in threads
+# This is a holdout from the old design and should probably be removed
+# (can perhaps use CSS instead?)
+#
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# hyphen was moved to the XSL at CIAO 3.4
+headtitlepostfix=Sherpa 4.0 Beta
+texttitlepostfix=Sherpa 4.0 Beta
+
+version_string=4.0 Beta
+
+# main CSS location
+%css=live /ciaobeta/ciao.css
+%css=test /ciaobeta/ciao.css
+%css=trial /sds/ciao_beta_trial/ciao.css
+
+%cssprint=live /ciaobeta/ciao.print.css
+%cssprint=test /ciaobeta/ciao.print.css
+%cssprint=trial /sds/ciao_beta_trial/ciao.print.css
+
+# location of the news file for the "What's new" link
+%newsfile=live /proj/web-cxc/htdocs/ciaobeta/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciaobeta/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_beta_trial/news.html
+
+%newsurl=live /ciaobeta/news.html
+%newsurl=test /ciaobeta/news.html
+%newsurl=trial /sds/ciao_beta_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciaobeta/watchout.html
+%watchouturl=test /ciaobeta/watchout.html
+%watchouturl=trial /sds/ciao_beta_trial/watchout.html
+
+# logo/text to use for navbar
+logoimage=imgs/sherpa_logo_navbar.gif
+logotext=Sherpa Logo
+
+# location of the search ssi
+%searchssi=live /sherpabeta/sherpa_search.ssi
+%searchssi=test /sherpabeta/sherpa_search.ssi
+%searchssi=trial /sds/sherpa_beta_trial/sherpa_search.ssi
+
+# location of the stylesheets
+%stylesheets=live /data/da/Docs/web/40beta/stylesheets/
+%stylesheets=test /data/da/Docs/web/40beta/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+# what's the location for the output files?
+%outdir=live /proj/web-cxc/htdocs/sherpabeta/
+%outdir=test /proj/web-cxc-test/htdocs/sherpabeta/
+%outdir=trial /proj/web-icxc/htdocs/sds/sherpa_beta_trial/
+
+%outurl=live http://cxc.harvard.edu/sherpabeta/
+%outurl=test http://cxc-test.harvard.edu/sherpabeta/
+%outurl=trial http://icxc.harvard.edu/sds/sherpa_beta_trial/
+
+# location of the "storage" space
+%storage=live /data/da/Docs/sherpaweb/published/40beta/live/
+%storage=test /data/da/Docs/sherpaweb/published/40beta/test/
+%storage=trial /data/da/Docs/sherpaweb/published/40beta/trial/
+
+## ahelp section
+#
+# where do the ahelp files (ie the XML files) live
+# - this would match $ASCDS_INSTALL in a normal installation
+#   ie looks for files in
+#     <ahelpfiles>/doc/xml
+#     <ahelpfiles>/contrib/doc/xml
+#
+# ahelp files should come from CIAOT 
+
+%ahelpfiles=live /data/da/Docs/sxml_manuals/sherpa/4.0/GENERATED/webxml/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/sherpa/4.0/GENERATED/webxml/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/sherpa/4.0/GENERATED/webxml/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+# - for the trial site we just use the version from the test site
+#   [it may be a problem in rare cases]
+#
+%ahelpindexdir=live /data/da/Docs/sherpaweb/published/40beta/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/sherpaweb/published/40beta/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/sherpaweb/published/40beta/test/ahelp/
+
+# what navbar to use for the ahelp index pages
+ahelpindexnavbar=analysis
+
+-version
+
+
++version ciao34
+number=3.4
+
+# hyphen was moved to the XSL at CIAO 3.4
+headtitlepostfix=CIAO 3.4
+texttitlepostfix=CIAO 3.4
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# main CSS location
+%css=live /ciao3.4/ciao.css
+%css=test /ciao3.4/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+%cssprint=live /ciao3.4/ciao.print.css
+%cssprint=test /ciao3.4/ciao.print.css
+%cssprint=trial /sds/ciao_trial/ciao.print.css
+
+# location of the news file for the "What's new" link
+#
+%newsfile=live /proj/web-cxc/htdocs/ciao3.4/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciao3.4/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+
+%newsurl=live /ciao3.4/news.html
+%newsurl=test /ciao3.4/news.html
+%newsurl=trial /sds/ciao_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciao3.4/watchout.html
+%watchouturl=test /ciao3.4/watchout.html
+%watchouturl=trial /sds/ciao_trial/watchout.html
+
+# logo/text to use for navbar
+logoimage=imgs/sherpa_logo_navbar.gif
+logotext=Sherpa Logo
+
+# location of the search ssi
+%searchssi=live /sherpa3.4/sherpa_search.ssi
+%searchssi=test /sherpa3.4/sherpa_search.ssi
+%searchssi=trial /sds/sherpa_trial/sherpa_search.ssi
+
+%stylesheets=live /data/da/Docs/web/ciao3.4/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao3.4/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+%outdir=live /proj/web-cxc/htdocs/sherpa3.4/
+%outdir=test /proj/web-cxc-test/htdocs/sherpa3.4/
+%outdir=trial /proj/web-icxc/htdocs/sds/sherpa_trial/
+
+%outurl=live http://cxc.harvard.edu/sherpa3.4/
+%outurl=test http://cxc-test.harvard.edu/sherpa3.4/
+%outurl=trial http://icxc.harvard.edu/sds/sherpa_trial/
+
+%storage=live /data/da/Docs/sherpaweb/published/ciao34/live/
+%storage=test /data/da/Docs/sherpaweb/published/ciao34/test/
+%storage=trial /data/da/Docs/sherpaweb/published/ciao34/trial/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+# - for the trial site we just use the version from the test site
+#   [it may be a problem in rare cases]
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao34/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao34/test/ahelp/
+#%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao34/trial/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao34/test/ahelp/
+
+-version
+
++version ciao33
+number=3.3
+
+headtitlepostfix=- CIAO 3.3
+texttitlepostfix=- CIAO 3.3
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# main CSS location
+%css=live /ciao3.3/ciao.css
+%css=test /ciao3.3/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+%cssprint=live /ciao3.3/ciao.print.css
+%cssprint=test /ciao3.3/ciao.print.css
+%cssprint=trial /sds/ciao_trial/ciao.print.css
+
+# location of the news file for the "What's new" link
+#
+%newsfile=live /proj/web-cxc/htdocs/ciao3.3/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciao3.3/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+
+%newsurl=live /ciao3.3/news.html
+%newsurl=test /ciao3.3/news.html
+%newsurl=trial /sds/ciao_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciao3.3/watchout.html
+%watchouturl=test /ciao3.3/watchout.html
+%watchouturl=trial /sds/ciao_trial/watchout.html
+
+# logo/text to use for navbar
+logoimage=imgs/sherpa_logo_navbar.gif
+logotext=Sherpa Logo
+
+# location of the search ssi
+%searchssi=live /sherpa3.3/sherpa_search.ssi
+%searchssi=test /sherpa3.3/sherpa_search.ssi
+%searchssi=trial /sds/sherpa_trial/sherpa_search.ssi
+
+%stylesheets=live /data/da/Docs/web/ciao3.3/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao3.3/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+%outdir=live /proj/web-cxc/htdocs/sherpa3.3/
+%outdir=test /proj/web-cxc-test/htdocs/sherpa3.3/
+%outdir=trial /proj/web-icxc/htdocs/sds/sherpa_trial/
+
+%outurl=live http://cxc.harvard.edu/sherpa3.3/
+%outurl=test http://cxc-test.harvard.edu/sherpa3.3/
+%outurl=trial http://icxc.harvard.edu/sds/sherpa_trial/
+
+%storage=live /data/da/Docs/sherpaweb/published/ciao33/live/
+%storage=test /data/da/Docs/sherpaweb/published/ciao33/test/
+%storage=trial /data/da/Docs/sherpaweb/published/ciao33/trial/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+# - for the trial site we just use the version from the test site
+#   [it may be a problem in rare cases]
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao33/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao33/test/ahelp/
+#%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao33/trial/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao33/test/ahelp/
+
+-version
+
++version ciao32
+number=3.2
+
+headtitlepostfix=- CIAO 3.2
+texttitlepostfix=- CIAO 3.2
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# main CSS location
+%css=live /ciao3.2/ciao.css
+%css=test /ciao3.2/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+%cssprint=live /ciao3.2/ciao.print.css
+%cssprint=test /ciao3.2/ciao.print.css
+%cssprint=trial /sds/ciao_trial/ciao.print.css
+
+# location of the news file for the "What's new" link
+#
+%newsfile=live /proj/web-cxc/htdocs/ciao3.2/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciao3.2/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+
+%newsurl=live /ciao3.2/news.html
+%newsurl=test /ciao3.2/news.html
+%newsurl=trial /sds/ciao_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciao3.2/watchout.html
+%watchouturl=test /ciao3.2/watchout.html
+%watchouturl=trial /sds/ciao_trial/watchout.html
+
+# logo/text to use for navbar
+logoimage=imgs/sherpa_logo_navbar.gif
+logotext=Sherpa Logo
+
+# location of the search ssi
+%searchssi=live /sherpa3.2/sherpa_search.ssi
+%searchssi=test /sherpa3.2/sherpa_search.ssi
+%searchssi=trial /sds/sherpa_trial/sherpa_search.ssi
+
+%stylesheets=live /data/da/Docs/web/ciao3.2/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao3.2/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+%outdir=live /proj/web-cxc/htdocs/sherpa3.2/
+%outdir=test /proj/web-cxc-test/htdocs/sherpa3.2/
+%outdir=trial /proj/web-icxc/htdocs/sds/sherpa_trial/
+
+%outurl=live http://cxc.harvard.edu/sherpa3.2/
+%outurl=test http://cxc-test.harvard.edu/sherpa3.2/
+%outurl=trial http://icxc.harvard.edu/sds/sherpa_trial/
+
+%storage=live /data/da/Docs/sherpaweb/published/ciao32/live/
+%storage=test /data/da/Docs/sherpaweb/published/ciao32/test/
+%storage=trial /data/da/Docs/sherpaweb/published/ciao32/trial/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+# - for the trial site we just use the version from the test site
+#   [it may be a problem in rare cases]
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao32/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao32/test/ahelp/
+#%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao32/trial/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao32/test/ahelp/
+
+-version
+
++version ciao31
+number=3.1
+
+headtitlepostfix=- CIAO 3.1
+texttitlepostfix=- CIAO 3.1
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# main CSS location
+%css=live /ciao3.1/ciao.css
+%css=test /ciao3.1/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+%cssprint=live /ciao3.1/ciao.print.css
+%cssprint=test /ciao3.1/ciao.print.css
+%cssprint=trial /sds/ciao_trial/ciao.print.css
+
+# location of the news file for the "What's new" link
+#
+%newsfile=live /proj/web-cxc/htdocs/ciao3.1/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciao3.1/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+
+%newsurl=live /ciao3.1/news.html
+%newsurl=test /ciao3.1/news.html
+%newsurl=trial /sds/ciao_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciao3.1/watchout.html
+%watchouturl=test /ciao3.1/watchout.html
+%watchouturl=trial /sds/ciao_trial/watchout.html
+
+# logo/text to use for navbar
+logoimage=imgs/sherpa_logo_navbar.gif
+logotext=Sherpa Logo
+
+# location of the search ssi
+%searchssi=live /sherpa3.1/sherpa_search.ssi
+%searchssi=test /sherpa3.1/sherpa_search.ssi
+%searchssi=trial /sds/sherpa_trial/sherpa_search.ssi
+
+%stylesheets=live /data/da/Docs/web/ciao3.1/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao3.1/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+%outdir=live /proj/web-cxc/htdocs/sherpa3.1/
+%outdir=test /proj/web-cxc-test/htdocs/sherpa3.1/
+%outdir=trial /proj/web-icxc/htdocs/sds/sherpa_trial/
+
+%outurl=live http://cxc.harvard.edu/sherpa3.1/
+%outurl=test http://cxc-test.harvard.edu/sherpa3.1/
+%outurl=trial http://icxc.harvard.edu/sds/sherpa_trial/
+
+%storage=live /data/da/Docs/sherpaweb/published/ciao31/live/
+%storage=test /data/da/Docs/sherpaweb/published/ciao31/test/
+%storage=trial /data/da/Docs/sherpaweb/published/ciao31/trial/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+# - for the trial site we just use the version from the test site
+#   [it may be a problem in rare cases]
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao31/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao31/test/ahelp/
+#%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao31/trial/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao31/test/ahelp/
+
+-version
+
++version ciao3
+number=3.0
+
+headtitlepostfix=- CIAO 3.0
+texttitlepostfix=- CIAO 3.0.2
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# main CSS location
+%css=live /ciao3.0/ciao.css
+%css=test /ciao3.0/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+# location of the news file for the "What's new" link
+# - use the CIAO 3.0 page
+%newsfile=live /proj/web-cxc/htdocs/ciao3.0/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciao3.0/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+
+%newsurl=live /ciao3.0/news.html
+%newsurl=test /ciao3.0/news.html
+%newsurl=trial /sds/ciao_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciao3.0/watchout.html
+%watchouturl=test /ciao3.0/watchout.html
+%watchouturl=trial /sds/ciao_trial/watchout.html
+
+# logo/text to use for navbar
+logoimage=imgs/sherpa_logo_navbar.gif
+logotext=Sherpa Logo
+
+# location of the search ssi
+%searchssi=live /sherpa3.0/sherpa_search.ssi
+%searchssi=test /sherpa3.0/sherpa_search.ssi
+%searchssi=trial /sds/sherpa_trial/sherpa_search.ssi
+
+%stylesheets=live /data/da/Docs/web/ciao3.0/stylesheets/
+%stylesheets=test /data/da/Docs/web/ciao3.0/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+%outdir=live /proj/web-cxc/htdocs/sherpa3.0/
+%outdir=test /proj/web-cxc-test/htdocs/sherpa3.0/
+%outdir=trial /proj/web-icxc/htdocs/sds/sherpa_trial/
+
+%outurl=live http://cxc.harvard.edu/sherpa3.0/
+%outurl=test http://cxc-test.harvard.edu/sherpa3.0/
+%outurl=trial http://icxc.harvard.edu/sds/sherpa_trial/
+
+%storage=live /data/da/Docs/sherpaweb/published/ciao30/live/
+%storage=test /data/da/Docs/sherpaweb/published/ciao30/test/
+%storage=trial /data/da/Docs/sherpaweb/published/ciao30/trial/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao30/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao30/trial/ahelp/
+
+-version
+
+@stylesheets=list_root_node
+@stylesheets=page
+@stylesheets=list_navbar
+@stylesheets=navbar
+@stylesheets=redirect
+@stylesheets=list_softlink
+@stylesheets=list_threadindex
+@stylesheets=threadindex
+@stylesheets=threadindex_common
+@stylesheets=sherpa_thread
+##@stylesheets=sherpa_thread_hard  # removed in CIAO 3.1
+@stylesheets=list_thread
+@stylesheets=thread_common
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=myhtml
+@stylesheets=list_math
+
+-site  # end of sherpa
+
++site chips
+
+group=cxcweb_ciao
+
+@types=live
+@types=test
+@types=trial
+
+# prefix should not end in a /
+prefix=/data/da/Docs/chipsweb
+
+# setting this to 0 makes some of the code a little easier
+depth_offset=0
+
+# make chips use the same stylesheets as CIAO and Sherpa
+
++version 40beta
+number=4.0 Beta
+
+# hyphen was moved to the XSL at CIAO 3.4
+headtitlepostfix=ChIPS 4.0 Beta
+texttitlepostfix=ChIPS 4.0 Beta
+
+version_string=4.0 Beta
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# main CSS location
+%css=live /ciaobeta/ciao.css
+%css=test /ciaobeta/ciao.css
+%css=trial /sds/ciao_beta_trial/ciao.css
+
+%cssprint=live /ciaobeta/ciao.print.css
+%cssprint=test /ciaobeta/ciao.print.css
+%cssprint=trial /sds/ciao_beta_trial/ciao.print.css
+
+# location of the news file for the "What's new" link
+%newsfile=live /proj/web-cxc/htdocs/ciaobeta/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciaobeta/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_beta_trial/news.html
+
+%newsurl=live /ciaobeta/news.html
+%newsurl=test /ciaobeta/news.html
+%newsurl=trial /sds/ciao_beta_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciaobeta/watchout.html
+%watchouturl=test /ciaobeta/watchout.html
+%watchouturl=trial /sds/ciao_beta_trial/watchout.html
+
+# logo/text to use for navbar
+logoimage=imgs/chips_logo_navbar.gif
+logotext=ChIPS Logo
+
+# location of the search ssi
+%searchssi=live /chipsbeta/chips_search.ssi
+%searchssi=test /chipsbeta/chips_search.ssi
+%searchssi=trial /sds/chips_beta_trial/chips_search.ssi
+
+# location of the stylesheets
+%stylesheets=live /data/da/Docs/web/40beta/stylesheets/
+%stylesheets=test /data/da/Docs/web/40beta/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+# what's the location for the output files?
+%outdir=live /proj/web-cxc/htdocs/chipsbeta/
+%outdir=test /proj/web-cxc-test/htdocs/chipsbeta/
+%outdir=trial /proj/web-icxc/htdocs/sds/chips_beta_trial/
+
+%outurl=live http://cxc.harvard.edu/chipsbeta/
+%outurl=test http://cxc-test.harvard.edu/chipsbeta/
+%outurl=trial http://icxc.harvard.edu/sds/chips_beta_trial/
+
+# location of the "storage" space
+%storage=live /data/da/Docs/chipsweb/published/40beta/live/
+%storage=test /data/da/Docs/chipsweb/published/40beta/test/
+%storage=trial /data/da/Docs/chipsweb/published/40beta/trial/
+
+## ahelp section
+#
+# where do the ahelp files (ie the XML files) live
+# - this would match $ASCDS_INSTALL in a normal installation
+#   ie looks for files in
+#     <ahelpfiles>/doc/xml
+#     <ahelpfiles>/contrib/doc/xml
+#
+# ahelp files should come from CIAOT 
+
+%ahelpfiles=live /data/da/Docs/sxml_manuals/chips/4.0/GENERATED/webxml/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/chips/4.0/GENERATED/webxml/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/chips/4.0/GENERATED/webxml/
+
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+# - for the trial site we just use the version from the test site
+#   [it may be a problem in rare cases]
+#
+%ahelpindexdir=live /data/da/Docs/chipsweb/published/40beta/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/chipsweb/published/40beta/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/chipsweb/published/40beta/test/ahelp/
+
+# what navbar to use for the ahelp index pages
+ahelpindexnavbar=ahelp
+
+-version
+
+@stylesheets=list_root_node
+@stylesheets=page
+@stylesheets=list_navbar
+@stylesheets=navbar
+@stylesheets=redirect
+@stylesheets=list_softlink
+@stylesheets=list_threadindex
+@stylesheets=threadindex
+@stylesheets=threadindex_common
+##@stylesheets=chips_thread
+@stylesheets=list_thread
+@stylesheets=thread_common
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=myhtml
+@stylesheets=list_math
+
+-site  # end of chips
+
+
+
++site caldb
+
+#
+# support for the CALDB web pages was added with the CIAO 3.1 release
+# we have a slight mis-match below: some directories are labelled
+# as caldb2 and some are not
+#
+
+group=cxcweb_caldb
+
+# no live site for now
+@types=live
+@types=test
+@types=trial
+
+prefix=/data/da/Docs/caldbweb
+
+# setting this to 0 makes some of the code a little easier
+depth_offset=0
+
+# we use the same stylesheets as the main CIAO site
+#
+
++version caldb2
+
+# we do not have a 'number' variable since that is used to indicate
+# the version of CIAO being used and we (probably) want the CALDB
+# area to be independent of this
+#
+##number=3.0
+
+# umm, do we want the CALDB version in or just that it's CALDB or CALDB 2?
+#
+headtitlepostfix=CALDB 2
+##texttitlepostfix=- CALDB 2
+
+# main CSS location
+# - see discussion in ChaRT section over versioned directory names
+#
+%css=live /ciao/ciao.css
+%css=test /ciao/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+%cssprint=live /ciao/ciao.print.css
+%cssprint=test /ciao/ciao.print.css
+%cssprint=trial /sds/ciao_trial/ciao.print.css
+
+# note:
+#  we probably want to keep the following concepts but make them
+#  CALDB specific (ie "What's new" in the CALDB). Which will
+#  probably mean some re-design of the stylesheets
+#
+%newsfile=live /proj/web-cxc/htdocs/caldb/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/caldb/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/caldb/news.html
+
+%newsurl=live /caldb/news.html
+%newsurl=test /caldb/news.html
+%newsurl=trial /sds/caldb_trial/news.html
+
+## location of the "watch out" page
+#%watchouturl=live /ciao3.0/watchout.html
+#%watchouturl=test /ciao3.0/watchout.html
+#%watchouturl=trial /sds/ciao_trial/watchout.html
+
+## logo/text to use for navbar
+#logoimage=imgs/sherpa_logo_navbar.gif
+#logotext=Sherpa Logo
+
+# location of the search ssi
+# - use a 'versioned' directory name for the live site but
+#   not the test one
+#
+%searchssi=live /caldb2/caldb_search.ssi
+%searchssi=test /caldb/caldb_search.ssi
+%searchssi=trial /sds/caldb_trial/caldb_search.ssi
+
+%stylesheets=live /data/da/Docs/web/caldb/stylesheets/
+%stylesheets=test /data/da/Docs/web/caldb/stylesheets/
+%stylesheets=trial /data/da/Docs/web/devel/
+
+# we have a versioned directory name for the live site
+# but not the test one (since I only realised I needed a
+# 'versioned' name here after testing had begun)
+#
+%outdir=live /proj/web-cxc/htdocs/caldb2/
+%outdir=test /proj/web-cxc-test/htdocs/caldb/
+%outdir=trial /proj/web-icxc/htdocs/sds/caldb_trial/
+
+%outurl=live http://cxc.harvard.edu/caldb/
+%outurl=test http://cxc-test.harvard.edu/caldb/
+%outurl=trial http://icxc.harvard.edu/sds/caldb_trial/
+
+%storage=live /data/da/Docs/caldbweb/published/caldb2/live/
+%storage=test /data/da/Docs/caldbweb/published/caldb2/test/
+%storage=trial /data/da/Docs/caldbweb/published/caldb2/trial/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+# - for the trial site we just use the version from the test site
+#   [it may be a problem in rare cases]
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao31/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao31/test/ahelp/
+#%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao31/trial/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao31/test/ahelp/
+
+-version
+
+@stylesheets=list_root_node
+@stylesheets=page
+@stylesheets=list_navbar
+@stylesheets=navbar
+@stylesheets=redirect
+@stylesheets=list_softlink
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=myhtml
+@stylesheets=list_math
+
+-site  # end of caldb
+
++site icxc
+
+group=cxcweb_ciao
+@types=test
+prefix=/proj/web-icxc/htdocs
+
+# setting this to 0 makes some of the code a little easier
+depth_offset=0
+
+# use of version = sds is a bit of a hack just to avoid
+# special processing.
+#
++version sds
+# this is a dummy value
+number=1.0
+
+# text to use for navbar
+logotext=Science Data Systems
+
+# main CSS location
+%css=test /sds/ciao.css
+%cssprint=test /sds/ciao.print.css
+
+## currently not sure who is using /daya/da/Docs/web/stylesheet
+## link, so we link to an explicit version
+##
+#%stylesheets=test /data/da/Docs/web/stylesheets/
+%stylesheets=test /data/da/Docs/web/icxc/stylesheets/
+
+# note: sds is added on here
+%outdir=test /proj/web-icxc/htdocs/sds/
+%outurl=test http://icxc.harvard.edu/sds/
+
+# no storage space for icxc
+
+# ugh - a hack; do not need ahelp here
+#
+##%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao31/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao31/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao31/test/ahelp/
+
+-version
+
+@stylesheets=list_root_node
+@stylesheets=page
+@stylesheets=list_navbar
+@stylesheets=navbar
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=myhtml
+@stylesheets=list_math
+
+-site  # end of icxc
+
++site pog
+
+group=cxcweb_cdo
+
+@types=live
+@types=test
+
+prefix=/data/cdo1/threads
+
+# to account for the fact that there is no threads/ dir
+# for the XML files, we have to add depth_offset on to the
+# depth calculation
+#
+depth_offset=1
+
++version cyc9
+
+# this number appears in the hardcopy title (and the HTML head block)
+number=Cycle 9
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# main CSS location
+%css=live /proposer/threads/proposer.css
+%css=test /proposer/threads/proposer.css
+
+%cssprint=live /proposer/threads/proposer.print.css
+%cssprint=test /proposer/threads/proposer.print.css
+
+## location of the search ssi
+%searchssi=live /incl/search.html
+%searchssi=test /incl/search.html
+
+%stylesheets=live /data/cdo1/threads/stylesheets/
+%stylesheets=test /data/cdo1/threads/stylesheets/
+
+%outdir=live /proj/web-cxc/htdocs/proposer/threads/
+##%outdir=test /proj/web-cxc-test/htdocs/proposer/threads/
+%outdir=test /proj/web-cxc-prev/htdocs/proposer/threads/
+
+# what is the test URL?
+%outurl=live http://cxc.harvard.edu/proposer/threads/
+%outurl=test http://cxc-prev.cfa.harvard.edu/proposer/threads/
+
+# umm, don't really want this, but haven't the time to
+# sort out saying "no storage"
+# ie this is a temporary HACK
+#
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao34/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao34/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao34/trial/ahelp/
+
+-version
+
++version cyc8
+
+# CDO changed version from "ao8" to "cyc8" with this release
+# this number appears in the hardcopy title (and the HTML head block)
+number=Cycle 8
+
+# the new (post AO-6) version has width=23, height=16
+# [but we have not copied that across to the pog area yet]
+#
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# main CSS location
+%css=live /proposer/threads/proposer.css
+%css=test /proposer/threads/proposer.css
+
+%cssprint=live /proposer/threads/proposer.print.css
+%cssprint=test /proposer/threads/proposer.print.css
+
+## location of the search ssi
+%searchssi=live /incl/search.html
+%searchssi=test /incl/search.html
+
+%stylesheets=live /data/cdo1/threads/stylesheets/
+%stylesheets=test /data/cdo1/threads/stylesheets/
+
+%outdir=live /proj/web-cxc/htdocs/proposer/threads/
+##%outdir=test /proj/web-cxc-test/htdocs/proposer/threads/
+%outdir=test /proj/web-cxc-prev/htdocs/proposer/threads/
+
+# what is the test URL?
+%outurl=live http://cxc.harvard.edu/proposer/threads/
+%outurl=test http://cxc-prev.cfa.harvard.edu/proposer/threads/
+
+# umm, don't really want this, but haven't the time to
+# sort out saying "no storage"
+# ie this is a temporary HACK
+#
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao33/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao33/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao33/trial/ahelp/
+
+-version
+
++version ao7
+
+# there have been some small changes to the system between a06 and ao7
+#
+
+# this number appears in the hardcopy title (and the HTML head block)
+number=Cycle 7
+
+# the new (post AO-6) version has width=23, height=16
+# [but we have not copied that across to the pog area yet]
+#
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# main CSS location
+%css=live /proposer/threads/proposer.css
+%css=test /proposer/threads/proposer.css
+
+%cssprint=live /proposer/threads/proposer.print.css
+%cssprint=test /proposer/threads/proposer.print.css
+
+## location of the search ssi (added in CIAO 3.0; CfP 6)
+%searchssi=live /incl/search.html
+%searchssi=test /incl/search.html
+
+%stylesheets=live /data/cdo1/threads/stylesheets/
+%stylesheets=test /data/cdo1/threads/stylesheets/
+
+%outdir=live /proj/web-cxc/htdocs/proposer/threads/
+##%outdir=test /proj/web-cxc-test/htdocs/proposer/threads/
+%outdir=test /proj/web-cxc-prev/htdocs/proposer/threads/
+
+# what is the test URL?
+%outurl=live http://cxc.harvard.edu/proposer/threads/
+%outurl=test http://cxc-prev.cfa.harvard.edu/proposer/threads/
+
+# umm, don't really want this, but haven't the time to
+# sort out saying "no storage"
+# ie this is a temporary HACK
+#
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao32/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao32/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao32/trial/ahelp/
+
+-version
+
++version ao6
+
+# this number appears in the hardcopy title (and the HTML head block)
+number=Cycle 6
+
+# the new (post AO-6) version has width=23, height=16
+# [but we have not copied that across to the pog area yet]
+#
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=30
+imglinkiconheight=30
+
+# main CSS location
+##%css=live /ciao3.0/ciao.css
+##%css=test /ciao3.0/ciao.css
+%css=live /proposer/threads/proposer.css
+%css=test /proposer/threads/proposer.css
+
+%cssprint=live /proposer/threads/proposer.print.css
+%cssprint=test /proposer/threads/proposer.print.css
+
+## location of the search ssi (added in CIAO 3.0; CfP 6)
+%searchssi=live /incl/search.html
+%searchssi=test /incl/search.html
+
+%stylesheets=live /data/cdo1/threads/stylesheets/
+%stylesheets=test /data/cdo1/threads/stylesheets/
+
+%outdir=live /proj/web-cxc/htdocs/proposer/threads/
+##%outdir=test /proj/web-cxc-test/htdocs/proposer/threads/
+%outdir=test /proj/web-cxc-prev/htdocs/proposer/threads/
+
+# what is the test URL?
+%outurl=live http://cxc.harvard.edu/proposer/threads/
+%outurl=test http://cxc-prev.cfa.harvard.edu/proposer/threads/
+
+# umm, don't really want this, but haven't the time to
+# sort out saying "no storage"
+# ie this is a temporary HACK
+#
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao30/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao30/trial/ahelp/
+
+-version
+
++version ao5
+
+# this number is currently meaningless (but does it appear in the headers?)
+number=1.0
+
+# main CSS location
+# (not used by ao5 pages - where should they live?)
+#%css=live /ciao3.0/ciao.css
+#%css=test /ciao3.0/ciao.css
+
+%stylesheets=live /data/cdo1/threads/stylesheets/
+%stylesheets=test /data/cdo1/threads/stylesheets/
+
+%outdir=live /proj/web-cxc/htdocs/proposer/threads/
+%outdir=test /proj/web-cxc-test/htdocs/proposer/threads/
+
+%outurl=live http://cxc.harvard.edu/proposer/threads/
+%outurl=test http://cxc-test.harvard.edu/proposer/threads/
+
+# umm, don't really want this, but haven't the time to
+# sort out saying "no storage"
+# ie this is a temporary HACK
+#
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+
+-version
+
+@stylesheets=globalparams
+@stylesheets=globalparams_thread
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=list_math
+@stylesheets=list_root_node
+@stylesheets=list_thread
+@stylesheets=myhtml
+@stylesheets=pog_thread
+##@stylesheets=pog_thread_hard  # removed in CIAO 3.1/CfP7
+@stylesheets=thread_common
+
+-site  # end of pog
+
+# END

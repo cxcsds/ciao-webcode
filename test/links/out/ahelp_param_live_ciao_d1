@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+Test 01: <a class="helplink" title="Parameter (infile): The parameter summary." href="ahelp/dmextract.html#plist.infile">infile</a>
+Test 02: <a class="helplink" title="Parameter (infile): The parameter summary." href="ahelp/dmextract.html#plist.infile">INFILE</a>
+Test 03: <tt><a class="helplink" title="Parameter (infile): The parameter summary." href="ahelp/dmextract.html#plist.infile">infile</a></tt>
+Test 04: <em><a class="helplink" title="Parameter (infile): The parameter summary." href="ahelp/dmextract.html#plist.infile">infile</a></em>
+Test 05: <tt><a class="helplink" title="Parameter (infile): The parameter summary." href="ahelp/dmextract.html#plist.infile">INFILE</a></tt>
+Test 06: <em><a class="helplink" title="Parameter (infile): The parameter summary." href="ahelp/dmextract.html#plist.infile">INFILE</a></em>
+Test 07: <em><tt><a class="helplink" title="Parameter (infile): The parameter summary." href="ahelp/dmextract.html#plist.infile">infile</a></tt></em>
+Test 08: <em><tt><a class="helplink" title="Parameter (infile): The parameter summary." href="ahelp/dmextract.html#plist.infile">INFILE</a></tt></em>
+Test 09: <a class="helplink" title="Parameter (infile): The parameter summary." href="ahelp/dmextract.html#plist.infile">test text</a>
+Test 10: <a class="helplink" title="Parameter (infile): The parameter summary." href="ahelp/dmextract.html#plist.infile">test text</a>
+

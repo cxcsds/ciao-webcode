@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<br><table width="100%" border="0" bgcolor="#eeeeee"><tr><td>
+<h2><a name="overview"><font color="red">Overview</font></a></h2>
+<p><strong>Last Update:</strong> 23 Mar 2002 - Test string.</p>
+<p><strong>Synopsis:</strong></p>
+<div>Some text</div>
+<p><strong>Purpose:</strong></p>
+<p>Some <em>more text</em>, with a <a href="bob.html">link</a>
+or <strong><a class="helplink" title="Ahelp (tools): This is a summary!" href="../ahelp/dmextract.html">two</a></strong>.</p>
+<div class="noprint"><p><strong>
+	  Proceed to the <a href="index.html#start-thread">HTML</a> or
+	  hardcopy (PDF:
+	  <a title="PDF (A4 format) version of the page" href="test.a4.pdf">A4</a> | <a title="PDF (US Letter format) version of the page" href="test.letter.pdf">letter</a>)
+	  version of the thread.
+	</strong></p></div>
+</td></tr></table><br><hr size="5" noshade><br>

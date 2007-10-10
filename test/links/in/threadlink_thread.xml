@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE thread>
+<thread>
+Test 01: <threadlink>foo foo</threadlink>
+Test 02: <threadlink uc="1">foo foo</threadlink>
+Test 03: <threadlink tt="1">foo foo</threadlink>
+Test 04: <threadlink em="1">foo foo</threadlink>
+Test 05: <threadlink uc="1" tt="1">foo foo</threadlink>
+Test 06: <threadlink uc="1" em="1">foo foo</threadlink>
+Test 07: <threadlink tt="1" em="1">foo foo</threadlink>
+Test 08: <threadlink uc="1" tt="1" em="1">foo foo</threadlink>
+Test 09: <threadlink>foo foo</threadlink>
+Test 10: <threadlink uc="1">foo foo</threadlink>
+</thread>

@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE test>
+<test>
+Test 01: <caveat id="foo-1">foo foo</caveat>
+Test 02: <caveat uc="1" id="foo-1">foo foo</caveat>
+Test 03: <caveat tt="1" id="foo-1">foo foo</caveat>
+Test 04: <caveat id="foo-1" em="1">foo foo</caveat>
+Test 05: <caveat uc="1" tt="1" id="foo-1">foo foo</caveat>
+Test 06: <caveat uc="1" id="foo-1" em="1">foo foo</caveat>
+Test 07: <caveat tt="1" id="foo-1" em="1">foo foo</caveat>
+Test 08: <caveat uc="1" tt="1" id="foo-1" em="1">foo foo</caveat>
+Test 09: <caveat id="foo-1">foo foo</caveat>
+Test 10: <caveat uc="1" id="foo-1">foo foo</caveat>
+</test>

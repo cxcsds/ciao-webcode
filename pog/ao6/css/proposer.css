@@ -1,0 +1,51 @@
+/*
+ * Since Netscape v4 does not supprt CSS particularly well
+ * and a lot of users still appear to be using this browser,
+ * we do not use CSS for much at the moment.
+ *
+ * The Chandra X-Ray Center (CXC) is operated for NASA:
+ *   Smithsonian Astrophysical Observatory
+ *   60 Garden Street
+ *   Cambridge
+ *   MA 02138
+ *   USA
+ * Email: cxcweb@head-cfa.harvard.edu
+ *
+ * Smithsonian Institution, Copyright © 1998-2003. All rights reserved. 
+ *
+ * A subset of the CIAO 3.0 rules
+ */
+
+a:hover  { background: #CCFFFF; }
+a:active { color: red; background: yellow; }
+
+a.helplink { cursor: help; }
+
+a.tablehead:link    { color: yellow; background: #666699; }
+a.tablehead:visited { color: silver; background: #666699; }
+a.tablehead:hover   { color: #666699; background: #CCCCCC; }
+a.tablehead:active  { color: red; background: yellow; }
+
+td.mainbar { background: #ffffff; }
+
+.topbar     { font-size: 90%; width: 100%; }
+.bottombar  { font-size: 90%; }
+
+div.searchbar { float: right; }
+div.mainbar { clear: both; }
+table.maintable { clear: both; }
+td.mainbar { padding: 1em 0 1em 0.5em; }
+
+pre.paramlist { font-size: 90%; }
+
+span.highlightbox {
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: larger;
+  font-weight: bold;
+  padding: 0.2em;
+  background: #99ccff;
+}
+
+.hideme { display: none; }
+
+/* end of stylesheet */

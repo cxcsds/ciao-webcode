@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE test>
+<test>
+
+<h1><id name="example">Some Text</id></h1>
+</test>

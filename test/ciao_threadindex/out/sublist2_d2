@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<div class="threadlist"><ul>
+  <li><div class="threadsublist">
+<h4>A sublist
+</h4>
+<ul>
+<li>
+<a class="threadlink" href="example/">A rather long title, for the top of the thread</a><br>Uses:
+      
+    the <tt>script1</tt>
+    script; 
+    the <tt>script2.sl</tt> S-Lang
+    script<br><img src="../imgs/new.gif" alt="[New]">
+    (<strong>29 May 2003</strong>)
+  <br><img src="../imgs/updated.gif" alt="[Updated]">
+    (<strong>29 May 2003</strong>)
+  </li>
+<li><div class="threadsublist">
+<h4>A nested sublist
+</h4>
+<ul>
+<li>
+      <p>
+       In a nested sublist.
+       Some <a href="foo.html">test</a> code.
+       A <em><tt><a class="helplink" title="Ahelp (tools): This is a summary!" href="../ahelp/dmextract.html">dmextract</a></tt></em> link.
+      </p>
+     </li>
+<li>
+<a class="threadlink" href="example/">A rather long title, for the top of the thread</a><br>Uses:
+      
+    the <tt>script1</tt>
+    script; 
+    the <tt>script2.sl</tt> S-Lang
+    script<br><img src="../imgs/new.gif" alt="[New]">
+    (<strong>29 May 2003</strong>)
+  <br><img src="../imgs/updated.gif" alt="[Updated]">
+    (<strong>29 May 2003</strong>)
+  </li>
+</ul>
+<br>
+</div></li>
+<li>
+     <p>
+      Some <a href="foo.html">test</a> code.
+      A <tt><a class="helplink" title="Ahelp (tools): This is a summary!" href="../ahelp/dmextract.html">dmextract</a></tt> link.
+     </p>
+    </li>
+</ul>
+</div></li>
+ </ul></div>

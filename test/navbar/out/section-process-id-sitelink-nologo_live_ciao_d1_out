@@ -1,0 +1,16 @@
+
+
+<!-- THIS FILE IS CREATED AUTOMATICALLY - DO NOT EDIT MANUALLY -->
+<!-- SEE: foo.xml -->
+
+<!--htdig_noindex-->
+<div>
+<dl>
+<dt><a class="selectedheading" href="/ciao/index.html">A title</a></dt>
+  <dd>a <a href="link.html">link</a>
+</dd>
+  <dd>another <tt><a class="helplink" title="Ahelp (tools): This is a summary!" href="ahelp/dmextract.html">link</a></tt> and <strong>some text</strong>.</dd>
+ </dl>
+<br>
+</div><!--/htdig_noindex-->
+

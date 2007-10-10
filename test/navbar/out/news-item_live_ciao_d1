@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<hr><div>
+<table width="100%" align="left" cellspacing="2" cellpadding="2"><tr><th bgcolor="#666699" align="center">
+<font size="+2" color="#ffffff">News</font><br><a class="tablehead" href="/ciao9.9/news.html">Previous Items</a>
+</th></tr></table>
+<br><br><br><div>
+<p align="left"><strong>2 Sep 2004</strong> <img src="imgs/new.gif" alt="[New]"></p>
+  Some text.
+ <hr width="80%" align="center">
+</div>
+<div>
+<p align="left"><strong>26 Aug 2004</strong> <img src="imgs/updated.gif" alt="[Updated]"></p>
+  <p>Some <em>emphasized</em> text in a paragraph.</p>
+ <hr width="80%" align="center">
+</div>
+<div>
+<p align="left"><strong>20 Jan 2002</strong> </p>
+  <p>Some <em>emphasized</em> text in a paragraph followed by a list.</p>
+  <ol type="1">
+   <li>a <a href="link.html">link</a>
+</li>
+   <li>another <tt><a class="helplink" title="Ahelp (tools): This is a summary!" href="ahelp/dmextract.html">link</a></tt> and <strong>some text</strong>.</li>
+  </ol>
+ <hr width="80%" align="center">
+</div>
+</div>

@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<table id="threaddatatable" align="center" width="90%" bgcolor="#666699" cellspacing="0" cellpadding="2">
+<tr><td bgcolor="#666699" align="center"><font size="+1" color="#ffffff"><strong>Data Used in Threads</strong><br><br><a class="tablehead" href="archivedownload/">How to Download Chandra Data from the Archive</a></font></td></tr>
+<tr><td><table border="0" bgcolor="#eeeeee" width="100%" cellpadding="6" cellspacing="0">
+<tr><th colspan="4" align="center">Sorted by OBSID</th></tr>
+<tr>
+<th align="center">OBSID</th>
+<th align="center">Object</th>
+<th align="center">Instrument</th>
+<th align="center">Threads</th>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">Foo</td>
+<td align="center">FOO</td>
+<td align="center">One</td>
+</tr>
+<tr><th colspan="4"><hr></th></tr>
+<tr><th colspan="4" align="center">Sorted by Thread</th></tr>
+<tr>
+<th colspan="3" align="center">File</th>
+<th align="center">Thread</th>
+</tr>
+<tr>
+<td colspan="3" align="center"><tt><a href="data/user_mms.tar.gz">user_mms.tar.gz</a></tt></td>
+<td align="center"><p>
+    Some text.
+    And a <a href="foo.html">link</a>.
+    And <a class="helplink" title="Ahelp (tools): This is a summary!" href="../ahelp/dmextract.html">another one</a>.
+   </p></td>
+</tr>
+<tr><td colspan="4" align="center"><br></td></tr>
+</table></td></tr>
+</table>

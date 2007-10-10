@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+<!DOCTYPE thread>
+<thread>
+<info><name>test</name><version>3.0</version>
+<title><long>Long Title</long><short>short</short></title>
+<history>
+<entry day="2" month="January" year="2002" who="bob">A test string with a <ahelp name="dmextract" tt="1" strong="1">link</ahelp>.</entry>
+<entry day="23" month="March" year="2" who="tester">Test string.</entry>
+</history>
+</info>
+<text>
+<sectionlist>
+ <section id="bob">
+  <title>A title</title>
+  <filetypelist>
+   <filetype>evt1</filetype>
+   <filetype>asol1</filetype>
+  </filetypelist>
+ </section>
+</sectionlist>
+</text>
+</thread>

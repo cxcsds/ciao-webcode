@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<br><div class="sectionlist">
+<div class="section">
+<h2><a name="foo">1 - 111 is a title</a></h2>
+ <p>A paragraph before the sub-sections.</p>
+ <div class="subsectionlist">
+<div class="subsection">
+<h3><a name="foo-bar">A title</a></h3>
+   
+   <p>A paragraph with a <a href="link.html">link</a>.</p>
+  </div>
+<div class="subsection">
+<h3><a name="foo-baz">Another title</a></h3>
+   
+   <p>A paragraph with a <tt><a class="helplink" title="Ahelp (tools): This is a summary!" href="/ciao/ahelp/dmextract.html">link</a></tt>.</p>
+  </div>
+</div>
+</div>
+<div class="section">
+<h2><a name="bar">2 - Boo</a></h2>
+<p>Some text with a <a class="helplink" title="CIAO Dictionary" href="/ciao/dictionary/bob.html">dictionary link</a> in it.</p>
+</div>
+</div><br>
