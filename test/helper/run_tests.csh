@@ -3,9 +3,22 @@
 # Test helper stylesheets
 #
 
-set head     = /data/da/Docs/local
-set xsltproc = ${head}/bin/xsltproc
-set ldpath   = ${head}/lib
+# Should check for unknown systems
+#
+set PLATFORM = `uname`
+switch ($PLATFORM)
+
+  case SunOS
+    set head     = /data/da/Docs/local
+    set xsltproc = /usr/bin/env LD_LIBRARY_PATH=${head}/lib ${head}/bin/xsltproc
+    unset head
+  breaksw
+
+  case Darwin
+    set xsltproc = xsltproc
+  breaksw
+
+endsw
 
 ## clean up xslt files
 #
@@ -32,7 +45,7 @@ foreach id ( \
   set h = ${id}_${type}_${site}_d${depth}
   set out = out/xslt.$h
   if ( -e $out ) rm -f $out
-  /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam sourcedir $srcdir --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml > $out
+  $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam sourcedir $srcdir --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml > $out
   diff out/${h} $out
   if ( $status == 0 ) then
     printf "OK:   %3d  [%s]\n" $ctr $h
@@ -60,7 +73,7 @@ foreach id ( \
     set h = ${id}_${type}_${site}_d${depth}
     set out = out/xslt.$h
     if ( -e $out ) rm -f $out
-    /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml > $out
+    $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml > $out
     diff out/$h $out
     if ( $status == 0 ) then
       printf "OK:   %3d  [%s]\n" $ctr $h
@@ -87,7 +100,7 @@ foreach id ( \
 	set h = ${id}_${type}_${site}_d${depth}
 	set out = out/xslt.$h
 	if ( -e $out ) rm -f $out
-	/usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml > $out
+	$xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml > $out
 	diff out/${h} $out
 	if ( $status == 0 ) then
 	  printf "OK:   %3d  [%s]\n" $ctr $h
@@ -118,7 +131,7 @@ foreach id ( \
     set out = out/xslt.$h
     if ( -e $out ) rm -f $out
     # NOTE the piping of stderr as well as stdout here
-    /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml >& $out
+    $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml >& $out
     diff out/${h} $out
     if ( $status == 0 ) then
       printf "OK:   %3d  [%s]\n" $ctr $h
