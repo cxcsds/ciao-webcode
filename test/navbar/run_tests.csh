@@ -3,9 +3,25 @@
 # Test navbar stylesheets
 #
 
-set head     = /data/da/Docs/local
-set xsltproc = ${head}/bin/xsltproc
-set ldpath   = ${head}/lib
+# Should check for unknown systems
+#
+set PLATFORM = `uname`
+switch ($PLATFORM)
+
+  case SunOS
+    set head     = /data/da/Docs/local
+    set xsltproc = /usr/bin/env LD_LIBRARY_PATH=${head}/lib ${head}/bin/xsltproc
+    unset head
+
+    set diffprog = /data/dburke2/local32/bin/diff
+  breaksw
+
+  case Darwin
+    set xsltproc = xsltproc
+    set diffprog = diff
+  breaksw
+
+endsw
 
 ## clean up xslt files
 #
@@ -31,8 +47,8 @@ foreach id ( \
         set out = out/xslt.$h
 
         if ( -e $out ) rm -f $out
-        /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > $out
-        /data/dburke2/local32/bin/diff -u out/${h} $out
+        $xsltproc --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > $out
+        $diffprog -u out/${h} $out
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s]\n" $ctr $h
           rm -f $out
@@ -65,12 +81,12 @@ foreach id ( \
         set out = out/navbar_main.incl
 
         if ( -e $out ) rm -f $out
-        /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam install out/ --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > /dev/null
+        $xsltproc --stringparam install out/ --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > /dev/null
         if ( ! -e $out ) then
           # fake a file so that code below works
           touch $out
         endif
-        /data/dburke2/local32/bin/diff -u out/${h} $out
+        $diffprog -u out/${h} $out
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s]\n" $ctr $h
           rm -f $out
@@ -106,12 +122,12 @@ foreach id ( \
 
         if ( -e $out1 ) rm -f $out1
         if ( -e $out2 ) rm -f $out2
-        /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam install out/ --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > /dev/null
+        $xsltproc --stringparam install out/ --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > /dev/null
         if ( ! -e $out1 ) then
           # fake a file so that code below works
           touch $out1
         endif
-        /data/dburke2/local32/bin/diff -u out/${h}_out $out1
+        $diffprog -u out/${h}_out $out1
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s] [out]\n" $ctr $h
           rm -f $out1
@@ -127,7 +143,7 @@ foreach id ( \
           # fake a file so that code below works
           touch $out2
         endif
-        /data/dburke2/local32/bin/diff -u out/${h}_out_foo $out2
+        $diffprog -u out/${h}_out_foo $out2
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s] [out/foo]\n" $ctr $h
           rm -f $out2
