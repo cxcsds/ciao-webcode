@@ -3,9 +3,22 @@
 # Test redirect stylesheets
 #
 
-set head     = /data/da/Docs/local
-set xsltproc = ${head}/bin/xsltproc
-set ldpath   = ${head}/lib
+# Should check for unknown systems
+#
+set PLATFORM = `uname`
+switch ($PLATFORM)
+
+  case SunOS
+    set head     = /data/da/Docs/local
+    set xsltproc = /usr/bin/env LD_LIBRARY_PATH=${head}/lib ${head}/bin/xsltproc
+    unset head
+  breaksw
+
+  case Darwin
+    set xsltproc = xsltproc
+  breaksw
+
+endsw
 
 ## clean up xslt files
 #
@@ -27,7 +40,7 @@ foreach id ( \
 
   set out = out/xslt.$id
   if ( -e $out ) rm -f $out
-  /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc $xsl in/$id.xml > $out
+  $xsltproc $xsl in/$id.xml > $out
   set statusa = $status
   set statusb = 1
   if ( $statusa == 0 ) then
