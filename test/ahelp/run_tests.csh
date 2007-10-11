@@ -3,9 +3,22 @@
 # Test ahelp stylesheets
 #
 
-set head     = /data/da/Docs/local
-set xsltproc = ${head}/bin/xsltproc
-set ldpath   = ${head}/lib
+# Should check for unknown systems
+#
+set PLATFORM = `uname`
+switch ($PLATFORM)
+
+  case SunOS
+    set head     = /data/da/Docs/local
+    set xsltproc = /usr/bin/env LD_LIBRARY_PATH=${head}/lib ${head}/bin/xsltproc
+    unset head
+  breaksw
+
+  case Darwin
+    set xsltproc = xsltproc
+  breaksw
+
+endsw
 
 ## clean up xslt files
 #
@@ -22,7 +35,6 @@ set fail = ""
 set type  = test
 set site  = ciao
 set depth = 1
-set srcdir = /data/da/Docs/web/devel/test/ahelp
 
 foreach id ( \
  para-pcdata  para-pcdata-title  equation-para  href-para  \
@@ -35,7 +47,7 @@ foreach id ( \
 
   set out = out/xslt.$id
   if ( -e $out ) rm -f $out
-  /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam hardcopy 0 --stringparam bocolor foo --stringparam bgcolor bar in/${id}.xsl in/${id}.xml > $out
+  $xsltproc --stringparam hardcopy 0 --stringparam bocolor foo --stringparam bgcolor bar in/${id}.xsl in/${id}.xml > $out
   diff out/${id} $out
   if ( $status == 0 ) then
     printf "OK:   %3d  [%s]\n" $ctr $id
@@ -53,8 +65,10 @@ end # foreach: id
 # do these individually
 #
 
+set srcdir = `pwd`/in
+
   if ( -e out/xslt.no-seealso ) rm -f out/xslt.no-seealso
-  /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam hardcopy 0 --stringparam bocolor foo --stringparam bgcolor bar --stringparam seealsofile /data/da/Docs/web/devel/test/ahelp/in/seealso.empty.xml \
+  $xsltproc --stringparam hardcopy 0 --stringparam bocolor foo --stringparam bgcolor bar --stringparam seealsofile $srcdir/seealso.empty.xml \
     in/no-seealso.xsl in/no-seealso.xml > out/xslt.no-seealso
   diff out/no-seealso out/xslt.no-seealso
   if ( $status == 0 ) then
@@ -69,7 +83,7 @@ end # foreach: id
 
 
   if ( -e out/xslt.seealso ) rm -f out/xslt.seealso
-  /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam hardcopy 0 --stringparam bocolor foo --stringparam bgcolor bar --stringparam seealsofile /data/da/Docs/web/devel/test/ahelp/in/seealso.full.xml \
+  $xsltproc --stringparam hardcopy 0 --stringparam bocolor foo --stringparam bgcolor bar --stringparam seealsofile $srcdir/seealso.full.xml \
     in/seealso.xsl in/seealso.xml > out/xslt.seealso
   diff out/seealso out/xslt.seealso
   if ( $status == 0 ) then
