@@ -3,9 +3,22 @@
 # Test thread stylesheets
 #
 
-set head     = /data/da/Docs/local
-set xsltproc = ${head}/bin/xsltproc
-set ldpath   = ${head}/lib
+# Should check for unknown systems
+#
+set PLATFORM = `uname`
+switch ($PLATFORM)
+
+  case SunOS
+    set head     = /data/da/Docs/local
+    set xsltproc = /usr/bin/env LD_LIBRARY_PATH=${head}/lib ${head}/bin/xsltproc
+    unset head
+  breaksw
+
+  case Darwin
+    set xsltproc = xsltproc
+  breaksw
+
+endsw
 
 ## clean up xslt files
 #
@@ -22,9 +35,10 @@ set fail = ""
 set type  = test
 set site  = ciao
 set depth = 1
-set srcdir = /data/da/Docs/web/devel/test/threads/
+##set srcdir = /data/da/Docs/web/devel/test/threads/
+set srcdir = `pwd`/
 
-set params = "--stringparam sourcedir /data/da/Docs/web/devel/test/threads/ --stringparam hardcopy 0 --stringparam depth 1 --stringparam imglinkicon foo.gif --stringparam imglinkiconwidth 10 --stringparam imglinkiconheight 12 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam site $site"
+set params = "--stringparam sourcedir $srcdir --stringparam hardcopy 0 --stringparam depth 1 --stringparam imglinkicon foo.gif --stringparam imglinkiconwidth 10 --stringparam imglinkiconheight 12 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam site $site"
 
 foreach id ( \
  imglink1  imglink3  imglink3-in-p  images-toc  \
@@ -36,7 +50,7 @@ foreach id ( \
 
   set out = out/xslt.$id
   if ( -e $out ) rm -f $out
-  /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc $params in/${id}.xsl in/${id}.xml > $out
+  $xsltproc $params in/${id}.xsl in/${id}.xml > $out
   set statusa = $status
   set statusb = 1
   if ( $statusa == 0 ) then
@@ -60,9 +74,8 @@ end # foreach: id
 ## multiple  tests
 #
 set type  = test
-set srcdir = /data/da/Docs/web/devel/test/threads/
 
-set params = "--stringparam sourcedir /data/da/Docs/web/devel/test/threads/ --stringparam hardcopy 0 --stringparam imglinkicon foo.gif --stringparam imglinkiconwidth 10 --stringparam imglinkiconheight 12 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml"
+set params = "--stringparam sourcedir $srcdir --stringparam hardcopy 0 --stringparam imglinkicon foo.gif --stringparam imglinkiconwidth 10 --stringparam imglinkiconheight 12 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml"
 
 foreach id ( \
  before  after  subsectionlist-nosep  subsectionlist-sepbar  \
@@ -78,7 +91,7 @@ foreach id ( \
       set out = out/xslt.$h
 
       if ( -e $out ) rm -f $out
-      /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam site $site --stringparam depth $depth $params in/${id}.xsl in/${id}.xml > $out
+      $xsltproc --stringparam site $site --stringparam depth $depth $params in/${id}.xsl in/${id}.xml > $out
       set statusa = $status
       set statusb = 1
       if ( $statusa == 0 ) then
