@@ -34,12 +34,12 @@ set fail = ""
 #
 set type   = live
 set site   = ciao
-set srcdir = /data/da/Docs/web/devel/test/threads/
 
-# note: set threadDir to test site even though testing live code since
-# want to use the example thread and that is only published to the test site
+# note: 
+#   copied over one version of the example thread
 #
-set params = "--stringparam sourcedir /data/da/Docs/web/devel/test/threads/ --stringparam threadDir /data/da/Docs/ciaoweb/published/test/threads/ --stringparam hardcopy 0 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam type $type --stringparam site $site "
+set threaddir = `pwd`/
+set params = "--stringparam sourcedir /data/da/Docs/web/devel/test/threads/ --stringparam threadDir $threaddir --stringparam hardcopy 0 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam type $type --stringparam site $site "
 
 foreach id ( \
  list  sublist  sublist2  title  \
@@ -76,7 +76,6 @@ end
 ## multiple site/depths
 #
 set type  = test
-set srcdir = /data/da/Docs/web/devel/test/threads/
 
 set params = "--stringparam sourcedir /data/da/Docs/web/devel/test/threads/ --stringparam hardcopy 0 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam type $type "
 

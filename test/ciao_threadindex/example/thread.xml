@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="us-ascii" ?>
+<!DOCTYPE thread>
+
+<!--*
+    * example thread: just to show a few things 
+    * - as with HTML and the AHELP xml files, alignment of the
+    *   tags isn't necessary, it can just help bring out the
+    *   structure of the document
+    *
+    * Note:
+    *  as well as being an example of how to write a thread,
+    *  this file is also used in the tests of the XML conversion
+    *  software. So don't edit it unless you're aware of how
+    *  it will affect the tests in /data/da/Docs/web/devel/test/
+    *
+    *-->
+
+<thread>
+  <!-- the info section contains "meta information" about the thread:
+       name, title, history record -->
+  <info>
+    <testonly/> <!--* indicate that this is for the test site only *-->
+    <!-- the value of example should match the directory name of the thread -->
+    <name>example</name>
+    <!-- version of CIAO this is for -->
+    <version>3.0</version>
+    <title>
+      <long>A rather long title, for the top of the thread</long>
+      <short>
+        this appears in title bar of browser, so should be short, and
+        not rambling on and on like this one.
+      </short>
+    </title>
+    <!--*
+        * The files section is used to list the scripts/packages
+        * that are associated with this script. The information is
+        * used to create the text of the thread "link" in the
+        * thread index pages.
+        *-->
+    <files>
+      <script>script1</script>
+      <script slang="1">script2.sl</script>
+      <!--* as of CIAO 3.1 we do not allow/want the package attribute 
+      <script slang="1" package="1">script3.sl</script>
+      <script package="1">script4.tar</script>
+      *-->
+    </files>
+    <!--* normally you wouldn't have both new and updated (this is for testing) *-->
+    <history new="1" updated="1">
+      <entry day="23" month="October" year="1" who="dburke">
+        Initial version for CIAO 2.2
+      </entry>
+      <entry day="17" month="November" year="1" who="dburke">
+        Fixed a link. PDF file now contains images.
+      </entry>
+      <entry day="18" month="November" year="1" who="fooble">
+        Note: the "last modified" date in the thread is set to the date
+        of the last entry, and <strong>not</strong> the date you last
+        edited the file to correct a really minor typo.
+      </entry>
+      <entry day="27" month="May" year="2003" who="dburke">
+	Updated for CIAO 3.0; added &lt;overview>...&lt;/overview>
+	section as an alternative to the introduction section.
+      </entry>
+      <entry day="29" month="May" year="2003" who="dburke">
+	Added &lt;obsidlist>...&lt;/obsidlist> and
+	&lt;filetypelist>...&lt;/filetypelist> tags.
+      </entry>
+    </history>
+  </info>
+  
+  <text number="1" separator="none">
+    <!--*
+        * Prior to CIAO 3.0 we only had the introduction section
+        * for threads. We can now instead have an overview section,
+        * which is essentially a 'marked up' introduction
+        *
+        * NOTE: You can *NOT* have both an introduction and an overview block
+        *-->
+    <overview>
+      <!--* synopsis, why, and when are all required *-->
+      <synopsis>Example of the contents of a thread</synopsis>
+      <why>To show how the XML thread format is converted into HTML &amp; PDF.</why>
+      <when>you are writing CIAO threads (it is also reasonably relevant to
+	Sherpa, ChaRT, and POG threads).</when>
+      <!--* this is optional *-->
+      <calinfo>
+	<caltext>
+	  <p>
+	    The &lt;calinfo>..&lt;/calinfo> section is used to give details on
+	    relevant CALDB changes/updates/... The <tt>caltext</tt> block
+	    - which is <em>optional</em> - gives the text before the list
+	    of calibration updates (and is what you are reading now).
+	  </p>
+	</caltext>
+	<calupdates>
+	  <calupdate version="2.8" day="13" month="September" year="2">
+	    new OSIP files now make it possible
+	    to analyze -120 degrees S3 grating data with the gainmaps and FEFs that
+	    were in the
+	    previous CALDB release.  If you are working with an observation taken
+	    under these conditions, you should run the
+	    <threadlink name="acisgainmap">Apply an ACIS Gain Map</threadlink>
+	    thread and this thread to
+	    ensure the use of the correct gainmap and OSIP files.
+	  </calupdate>
+	  <calupdate version="1.8.1" day="7" month="December" year="1">
+	    new (corrected) order-sorting
+	    tables were added to the CALDB. If your data was processed
+	    with an earlier CALDB version, run this thread to ensure usage of the
+	    correct calibration files (<threadlink id="start">Get Started</threadlink>
+	    shows how to check the CALDBVER).
+	  </calupdate>
+	</calupdates>
+      </calinfo>
+
+      <seealso>
+	<item>
+	  <extlink href="http://space.mit.edu/ASC/analysis/AGfCHRS/AGfCHRS.html">Analysis
+	    Guide for Chandra High Resolution Spectroscopy</extlink>: an in-depth discussion
+	  of grating analysis.</item>
+	<item><ahelp name="dmextract" tt="1">ahelp dmextract</ahelp></item>
+      </seealso>
+    </overview>
+
+    <sectionlist>
+      <!-- start with a "fake" section that's actually a link to another
+           thread -->
+      <section threadlink="psextract">
+        <title>A fake section (a link to another thread)</title>
+        <!-- note no extra text -->
+      </section>
+
+      <section id="introduction">
+	<title>Introduction</title>
+
+	<p>
+	  This information used to be - prior to CIAO 3.0 - in the
+	  <tt>introduction</tt> section that appeared above the 
+	  table of contents. Whilst you can still have such a beast there
+	  is an <tt>overview</tt> section which will prove more useful
+	  for many of our threads. This is what is used to 
+	  generate the "Overview" section above.
+	</p>
+
+	<p>
+	  And now for examples of common and useful thread-related items.
+	  Some of the text will only really make sense if you read the
+	  XML format as well.
+	</p>
+
+	<p>
+	  Perhaps you actually want to link to a help file - 
+	  <ahelp name="dmextract"/> for example. If you want the text of the
+	  link to read something other than the name of the ahelp file, then
+	  you can use the text attribute to say use
+	  "<ahelp name="dmextract">ahelp dmextract</ahelp>". There's also
+	  a uc attribute which converts the toolname to uppercase - useful
+	  for sherpa threads when you want to refer to the
+	  <ahelp name="exit" uc="1"/> command, for instance.
+	  But I'm not finished, let's assume you want the link text to be
+	  in bold, italic text: with the em and strong
+	  attributes that is indeed possible (or you could manually
+	  do it by surrounding the ahelp tag with the HTML codes..)
+	  - <ahelp name="dmcols" em="1" strong="1"/>. There's also
+	  a tt attribute.
+	</p>
+      
+	<p>
+	  If you thought that I was finished with ahelp, you were wrong:
+	  you can even link to the
+	  <ahelp name="dmextract" param="wmap">wmap parameter</ahelp>
+	  of dmextract.
+	  <strong>Note:</strong> you used to have to 'guess' the id to jump to
+	  here, but I've now introduced the <tt>param</tt> attribute
+	  to remove this.
+	  <br/>(<updated day="1" month="Aug" year="2"/>)
+	  <br/> [and there's even a way to create the <em>new</em> and <em>updated</em>
+	  images with the <tt>new</tt> and <tt>updated</tt> tags]
+	</p>
+
+	<p>In CIAO 3.0 the system now recognises when an ahelp page
+	  isn't actually known (you'll get a message during publishing), which
+	  is useful to catch typos. You can also use the <tt>context</tt>
+	  attribute to indicate which ahelp page you mean: is it the
+	  <ahelp name="print" context="chips">print command</ahelp>
+	  in ChIPS or the
+	  <!--* will prob have to change context to varmm soon *-->
+	  <ahelp name="print" context="varmm">VARMM print command</ahelp>
+	  that you want.
+	  And you use the <tt>ahelppage</tt> tag to link to the <ahelppage/>.
+	</p>
+      
+	<p>
+	  Or perhaps you want to link to a particular FAQ: eg
+	  if you need help determining the temperature of your observation, see
+	  <faq id="fp_temp"/> - or, if you don't like the default text of the
+	  link, you can
+	  <faq id="fp_temp">add your own</faq>.
+	  Or perhaps you want to use the dictionary to explain what an
+	  <dictionary id="arf">ARF</dictionary> is.
+	  As with the ahelp tag, you can make the link text for both the faq and
+	  dictionary tags 
+	  <strong>strong</strong>, <em>emphasised</em>, or <tt>computer-like</tt>
+	  (or combination of these) using the strong, em, and tt attributes.
+	</p>
+      
+	<p>
+	  And we can now even link to manuals, via the <em>amazing</em>
+	  manual tag: here's the <manual name="detect">detect manual</manual>,
+	  then there's the
+	  <manual name="detect" page="vtp_ref">VTP</manual>,
+	  and a
+	  <manual name="detect" page="vtp_ref" id="SECTION07140000000000000000">section</manual>
+	  of the VTP manual.
+	  You might have guessed you'd use the same tag to
+	  link to the <manualpage/>, but you'd have been wrong.
+	  For this you use the <tt>manualpage</tt> link.
+	</p>
+      
+	<p>
+	  Hey, more text. About now you'd be saying that this thread uses
+	  ObsID 666 (ACIS-I/HETG observation of the sun). Notice I'm
+	  adding end tags for the paragraphs, otherwise you'll get lots of
+	  complaints from the XML police.
+	</p>
+
+	<!--* include some often-used text:
+            * looks for the file ../include/example.xml 
+            * which gets inserted into the text.
+            *-->
+	<include>example</include>
+	
+	<!--* let's introduce the new math tag *-->
+	<p>
+	  And, on a different note, the radius <tt>r</tt> of a circle
+	  is given by:
+	</p>
+
+	<math>
+	  <name>example_radius</name>
+	  <latex>r^2 = x^2 + y^2</latex>
+	  <text>r^2 = x^2 + y^2</text>
+	</math>
+	
+	<p>
+	  where things have there usual meaning.
+	  Or we can go for something a tad more complicated, and centered:
+	</p>
+
+	<div align="center">
+	  <math>
+	    <name>example_complex</name>
+	    <latex>
+	      \delta(k,t) = \delta_k(t) =
+	      \frac{1}{V} \int_V \delta({\mbox{\boldmath x}},t) \, 
+	      e^{-i\, {\mbox{\boldmath k}}.{\mbox{\boldmath x}}}\, 
+	      \mbox{d{\boldmath x}} \, .
+	    </latex>
+	    <text>a complicated equation</text>
+	  </math>
+	</div>
+
+      </section>
+
+      <section id="start">
+        <title>Getting Started</title>
+
+	<!--* indicate what filetypes/datasets are being used *-->
+	<obsidlist>
+	  <obsid desc="HETG/ACIS-S, 3C 273">459</obsid>
+	  <obsid desc="LETG/HRC-I, Capella">007</obsid>
+	</obsidlist>
+	<filetypelist>
+	  <filetype>evt1</filetype><filetype>flt1</filetype><filetype>asol1</filetype>
+	</filetypelist>
+
+	<p>
+	  In reality you probably wouldn't have an introduction section
+	  <em>and</em> a getting started one.
+	</p>
+
+        <p>
+         Here we talk about getting started. Perhaps we want to link to
+         another thread: you use the threadlink tag for that.
+         So, let's link to the
+         <threadlink name="psextract" id="start">Getting Started</threadlink>
+         section of the
+         <threadlink name="psextract">psextract thread</threadlink>.
+         Later on we show how you use threadlink to link to a different
+         part of the same thread.
+        </p>
+
+	<p>
+	  Or perhaps you want to say that a thread uses the
+	  <tt>merge_all</tt> script, which is available
+	  from the <scriptpage/>.  With the new (CIAO 3.1) script
+	  set-up, you aren't allowed to link to a single script
+	  anymore (<tt>&lt;script name="..."</tt>), though.
+	</p>
+
+        <p>
+         <center>Are we having fun yet?</center>
+        </p>
+      </section>
+ 
+      <section id="part2">
+        <title>Let's have some subsections</title>
+
+        <subsectionlist type="A">
+          <subsection id="part2.one">
+            <title>a subsection</title>
+
+            <p>
+             Here we have a set of sections within a section, so
+             we use subsection tags and put them in a
+             subsectionlist tag.
+            </p>
+
+            <p>
+             The type attribute of the subsectionlist refers to
+             how the subsections are numbered. If the value is "A",
+             as here, then they're numbered using A, B, ... If it's
+             "1", then it's 1, 2, .... If there's no type attribute
+             then an "unordered list" is used - ie &lt;ul&gt;.
+             Note I had to write &amp;lt; etc to get the tag.
+            </p>
+
+          </subsection>
+
+          <subsection id="part2.two">
+            <title>More about links</title>
+
+            <p>
+             We've seen the <tt>extlink</tt> tag and I've 
+             <threadlink id="introduction">discussed the threadlink
+	     tag</threadlink>,
+	     but I know you're wondering about the 
+             <cxclink href="/caldb/">cxclink</cxclink>
+             tag (oh look, another pointless link!).
+             Well, you are if you're looking at the XML version of the
+             thread. This tag is used to link to other pages on the
+             <tt>cxc.harvard.edu</tt> server.
+            </p>
+
+	    <p>
+	      There is also the 
+	      <pog>pog tag</pog>, which takes you to the POG
+	      (it also has <tt>name</tt> and <tt>id</tt>
+	      attributes to allow you to get to a particular part
+	      of the POG).
+	    </p>
+
+          </subsection>
+        </subsectionlist>
+      </section>   
+
+      <section id="running.out.of.ideas">
+        <title>Let's talk about parameter files &amp; images</title>
+
+        <subsectionlist> <!-- note: no type attribute -->
+
+          <subsection id="rooi.alpha">
+             <title>Parameter files</title>
+
+             <p>
+               Say you've got some screen output and you want to
+               refer to the paramater list: you just use
+               &lt;screen&gt; and &lt;plist&gt;.
+
+<screen>
+unix% <ahelp name="dmstat"/> foo.fits &amp;
+lots and lots of text
+but please ensure you convert &lt; to &amp;lt;
+and &amp; to &amp;amp;, or you'll get nasty messages
+when you try to convert the thread to HTML!
+</screen>
+
+               and would you believe you can view the parameters
+               for this command with <plist name="dmstat"/>.
+               For the link to work you have to set up a
+               <tt>parameters</tt> block after the <tt>text</tt>
+               block in the XML file.
+               If you don't like the default text you can change the link to
+               <plist name="dmstat">say whatever you want</plist> (and
+               even add the same styles as with ahelp).
+             </p>
+
+	    <p>
+	      It's okay to change small parts of screen output so that
+	      &amp; and &lt; characters are converted, but it's a pain
+	      with a lot of text - or one that's often changing. That's
+	      where the <tt>file</tt> attribute of the screen tag comes into
+	      play [<updated day="5" month="Aug" year="2"/> <strong>used</strong>
+	      to be the name attribute].
+	      You create a file called foo.txt which contains the
+	      screen output - without any need to convert it - and
+	      then use &lt;screen file=&quot;foo&quot;/&gt; to include
+	      it. An example is:
+	    </p>
+
+	    <screen file="dmstat_output"/>
+	    
+             <p>
+               Note that the parameters are automatically listed in the
+               <threadlink id="toc">Table of Contents</threadlink>,
+               and that I sneakily add a ahelp tag to the screen output.
+             </p>
+
+           </subsection>
+
+          <subsection id="rooi.beta">
+	    <title>Images</title>
+
+	    <p>
+	      I know what you're thinking, you want an image.
+	      Well, how about one
+	      <imglink id="i1">stolen from the psextract thread</imglink>.
+	    </p>
+	    
+	    <p>
+	      And this appears in the 
+	      <threadlink id="toc">Table of Contents</threadlink> too.
+	      And did you notice this subsection isn't "numbered"?
+	    </p>
+	    
+	    <p>
+	      Say you wanted to include an image into the thread? Well,
+	      use the &lt;img&gt; tag - 
+	      <img src="image_button.gif" alt="[Image of button]"/> - and
+		don't forget the alt attribute!
+	    </p>
+	    
+	    <p>
+	      The images can include 
+	      <imglink id="i2">postscript versions</imglink>,
+	      although a gif/jpeg image is required. Note that the 
+	      image page includes extra text before and after the image.
+	    </p>
+
+	  </subsection>
+	  
+        </subsectionlist>
+      </section>
+     
+    </sectionlist>
+
+    <summary>
+      <p>
+       Nearly there. I'm shoe-horning a discussion of lists here.
+       Insetad of the li and ol tags, there's a single tag -
+       &lt;list&gt; - which has a type attribute
+       (set to A or 1 for ol-like behaviour, do not set for ul lists).
+       Elements are still wrapped with &lt;li&gt;:
+      </p>
+      
+      <list><li>One</li><li>Three</li></list>
+
+      <p>versus</p>
+      
+      <list type="A"><li>One</li><li>Three</li></list>
+
+      <p>or</p>
+      
+      <list type="1"><li>One</li><li>Three</li></list>
+
+      <p>
+       You'd probably actually want to link to
+       <threadlink name="pieces">another thread</threadlink> here.
+       Or at least end with some pleasantries.
+      </p>
+
+      <p>
+	And where would we be without a table?
+	<table border="1" align="center" cellpadding="5">
+	  <tr><th rowspan="3">A</th><th>table</th><th>foo</th></tr>
+	  <tr><td colspan="2">spans 2 columns</td></tr>
+	  <tr><td colspan="2"><ahelp name="dmextract"/> also spans 2 columns</td></tr>
+	</table>
+      </p>
+
+     <p><strong>Note:</strong> the summary is <em>optional</em>.</p>
+ 
+    </summary>
+  </text>
+
+  <images>
+    <image src="1.gif" id="i1">
+      <title>Stolen from psextract thread</title>
+    </image>
+    <image src="1.gif" ps="1.ps" id="i2">
+      <title>Copy of image 1</title>
+      <before>
+       <p>You may want text and links and ... <em>before</em> the image.</p>
+      </before>
+      <after>
+       <p>Or <strong>after</strong> it.</p>
+       <p>Note that we have a postscript version of this image
+	  (although in this example it doesn't match!).</p>
+      </after>
+
+    </image>
+  </images>
+
+  <parameters>
+    <!-- need to look at name and id tags for paramfile
+         do they make sense? -->
+    <paramfile name="dmstat">
+        infile = evt2_all.fits[sky=region(ds9.reg)][bin det=8] Input file specification
+     (centroid = yes)             Calculate centroid if image?
+       (median = no)              Calculate median value?
+        (sigma = yes)             Calculate the population standard deviation?
+         (clip = no)              Calculate stats using sigma clipping?
+       (nsigma = 3)               Number of sigma to clip
+      (maxiter = 20)              Maximum number of iterations
+         (mode = ql)
+    </paramfile>
+  </parameters>
+
+</thread>
