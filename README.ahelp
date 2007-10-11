@@ -1,0 +1,65 @@
+
+README.ahelp
+============
+
+NOTE:
+  the "dist" type, that generated HTML pages for the
+  distribution, is not used in CIAO 4, so should be
+  removed from the code. This may simplify some things
+  and allow others.
+
+Steps to publishing ahelp files on the web site:
+
+ 1) How do we generate the ahelp databases?
+ 2) How do we create the ahelp index files?
+ 3) How do we create the individual ahelp pages?
+
+1) How do we generate the ahelp databases?
+
+In order for the ahelp tags to work, a "database" file
+has to be generated that combines information about
+keys, concepts, and see-also sections. The use of the
+word database here is generous, as it is really just
+an XML file.
+
+The location of the database is determined by the
+%ahelpindexdir setting in the config.dat file, for instance:
+
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/40beta/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
+
+The ahelp files (in XML format) are given by the %ahelpfiles
+setting in the config.dat file, for instance:
+
+%ahelpfiles=live /data/da/Docs/sxml_manuals/crates/4.0/GENERATED/webxml/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/crates/4.0/GENERATED/webxml/
+%ahelpfiles=trial /proj/xena/ciao_bt/sun/
+
+These directories should contain doc/xml/*.xml files and will also
+find files in contrib/doc/xml/*xml
+
+The program to use is mk_ahelp_setup.pl
+
+# Usage:
+#   mk_ahelp_setup.pl
+#     --config=name
+#     --type=test|live|trial|dist
+#     --verbose
+#
+#   The default is --type=test, which sets up for test web site.
+#   The live option sets things up for the live (ie cxc.harvard.edu) site.
+#   The type=dist is for people building the HTML pages for the
+#   CIAO distribution.
+#   Don't use the trial option unless you know what it does.
+#
+#   The --config option gives the path to the configuration file; this
+#   defaults to config.dat in the same directory as the script.
+#
+#   The --verbose option is useful for testing/debugging the code.
+
+This script should be run in the ahelp/ directory of the web site,
+such as
+  /data/da/Docs/ciaoweb/40beta/ahelp/
+  /data/da/Docs/sherpaweb/40beta/ahelp/
+
