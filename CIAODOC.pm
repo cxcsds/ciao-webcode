@@ -1,5 +1,3 @@
-
-# $Id: CIAODOC.pm,v 1.7 2004/02/13 22:51:29 dburke Exp $
 #
 # Aim:
 #   Useful routines for the CIAO documentation system.
@@ -12,6 +10,12 @@
 #                multiple scripts & using the config file directly
 #  13 Feb 04 DJB removed warning message about protecting params as seems
 #                to work
+#  12 Oct 07 DJB removed ldpath and htmllib options; we now encode this
+#                information in the xsltproc and htmldoc options, which should
+#                give the 'correct' way to call the code. It means we lose
+#                the ability to check that the executable exists before
+#                processing files, but makes it easier to run on multiple
+#                OS's
 #
 
 #
@@ -19,9 +23,7 @@
 #   $configfile
 #   $verbose
 #   $group
-#   $ldpath
 #   $xsltproc
-#   $htmllib
 #   $htmldoc
 #   $site
 #
@@ -38,10 +40,13 @@ use IO::File;
 my @funcs_util =
   qw(
      fixme dbg check_dir mymkdir mycp myrm mysetmods
-     check_paths check_executables
+     check_paths check_executables check_executable_runs
      extract_filename
     );
-my @funcs_xslt = qw( make_params translate_file create_hardcopy );
+my @funcs_xslt =
+  qw(
+      make_params translate_file create_hardcopy
+   );
 my @funcs_cfg  =
   qw(
      parse_config find_site get_config_main get_config_site get_config_version
@@ -71,6 +76,7 @@ sub mysetmods ($);
 
 sub check_paths (@);
 sub check_executables (@);
+sub check_executable_runs ($$$);
 
 sub extract_filename ($);
 
@@ -128,6 +134,34 @@ sub check_dir ($$) {
 
 } # sub: check_dir()
 
+# Hide the OS location of these calls; should use POSIX module instead?
+#
+sub call_mkdir ($) {
+  my $dname = shift;
+  system "/bin/mkdir $dname" and die "Unable to mkdir $dname";
+}
+
+sub call_chmod ($$) {
+  my $opts = shift;
+  my $name = shift;
+  my $chmod = $^O eq "darwin" ? "/bin/chmod" : "/usr/bin/chmod";
+  system "$chmod $opts $name" and die "Unable to chmod $opts $name";
+}
+
+sub call_chgrp ($$) {
+  my $opts = shift;
+  my $name = shift;
+  system "/usr/bin/chgrp $opts $name" and die "Unable to chgrp $opts $name";
+}
+
+sub call_rm ($) {
+  my $name = shift;
+  my $rm = $^O eq "darwin" ? "/bin/rm" : "/usr/bin/rm";
+  system "$rm -f $name";
+  die "Error: been unable to delete $name\n"
+    if -e $name;
+}
+
 # mymkdir( $dname )
 #
 # Create the directory $dname, automatically creating any 'intermediate' directories
@@ -155,9 +189,9 @@ sub mymkdir ($) {
     foreach my $d ( @dirs ) {
 	 $dhead .= $d;
 	 unless ( $dhead eq "" or -d $dhead ) {
-	     system "/bin/mkdir $dhead" and die "Unable to mkdir $dhead";
-	     system "/usr/bin/chmod ug+w $dhead" and die "Unable to chmod ug+w $dhead";
-	     system "/usr/bin/chgrp $main::group $dhead" and die "Unable to chgrp $main::group $dhead";
+	     call_mkdir $dhead;
+	     call_chmod "ug+w", $dhead;
+	     call_chgrp $main::group, $dhead;
 	 }
 	 $dhead .= "/";
     }
@@ -194,9 +228,7 @@ sub myrm ($) {
     my $name = $_[0];
 
     return unless -e $name;
-    system "/usr/bin/rm -f $name";
-    die "Error: been unable to delete $name\n"
-      if -e $name;
+    call_rm $name;
 
 } # sub: myrm()
 
@@ -215,8 +247,8 @@ sub mysetmods ($) {
 
     return unless -e $name;
 
-    system "/usr/bin/chmod ugo-wx $name" and die "Unable to chmod ugo-wx $name";
-    system "/usr/bin/chgrp $main::group $name" and die "Unable to chgrp $main::group $name";
+    call_chmod "ugo-wx", $name;
+    call_chgrp $main::group, $name;
 
 } # sub: mysetmods()
 
@@ -227,9 +259,9 @@ sub mysetmods ($) {
 #
 sub check_paths (@) {
     foreach my $path ( @_ ) {
-	die "Error: unable to find the directory $path\n"
+	die "Error: unable to find the directory '$path'\n"
 	  unless -d $path;
-	die "Error: path $path does not end in a / character.\n"
+	die "Error: path '$path' does not end in a / character.\n"
 	  unless $path =~ /\/$/;
     }
     return;
@@ -247,6 +279,29 @@ sub check_executables (@) {
     }
     return;
 } # sub: check_exectuables()
+
+# check_executable_runs( $name, $bin, $arg )
+#
+# checks that you can run the command $bin with the supplied
+# argument and you get back status=0. Note that we use the
+# "simple" eval method (as a single string) so there are
+# security risks here.
+#
+sub check_executable_runs ($$$) {
+  my $name = shift;
+  my $exe  = shift;
+  my $arg  = shift;
+
+  my $retval = `$exe $arg`;
+  die <<"EOE" unless $? == 0;
+Error: Executable '$name' failed to run with argument
+       '$arg'
+       The return value was:
+$retval
+
+EOE
+  return;
+} # sub: check_executable_runs()
 
 # my $fname = extract_filename( $fullname );
 #
@@ -284,7 +339,7 @@ sub make_params (@) {
 
 # run the processor and return the screen output
 #
-# uses the global variables $xsltproc and $ldpath
+# uses the global variable $xsltproc
 # and we *always* add a --novalid option here
 # (since we don't have a proper catalog/location for the DTDs)
 #
@@ -331,7 +386,7 @@ sub translate_file ($$$) {
     }
     dbg "  *** params (end) ***";
 
-    my $retval = `/usr/bin/env LD_LIBRARY_PATH=$main::ldpath $main::xsltproc --novalid $params $stylesheet $xml_file`;
+    my $retval = `$main::xsltproc --novalid $params $stylesheet $xml_file`;
 
     die <<"EOE" unless $? == 0;
 Error: problems using $stylesheet
@@ -370,7 +425,7 @@ EOE
 # creates $dir/$head.[letter|a4].pdf
 # and deletes the hardcopy version of the file once it's finished with
 #
-# uses the global variables $main::htmldoc, $main::htmllib, and $main::verbose
+# uses the global variables $main::htmldoc and $main::verbose
 #
 # NOTE: there is now almost no screen output unless verbose is set
 #
@@ -397,7 +452,7 @@ sub create_hardcopy ($$;$) {
 	    }
 	    myrm $out;
 
-	    `/usr/bin/env LD_LIBRARY_PATH=$main::htmllib $main::htmldoc --webpage --duplex --size $size -f $out $in 2>&1 >/dev/null`;
+	    `$main::htmldoc --webpage --duplex --size $size -f $out $in 2>&1 >/dev/null`;
 	    # now get errors if text is too wide for page (which we have plenty
 	    # of), so don't bother checking -- other than whether the output was created
 	    #print "\nWARNING: problems using htmldoc\n\n" unless $? == 0;

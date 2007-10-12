@@ -1,7 +1,5 @@
 #!/data/da/Docs/local/perl/bin/perl -w
 #
-# $Id: mk_ahelp_setup.pl,v 1.8 2007/06/20 19:35:59 egalle Exp $
-#
 # Usage:
 #   mk_ahelp_setup.pl
 #     --config=name
@@ -35,6 +33,15 @@
 #
 # History:
 #  02 Oct 03 DJB Re-worked ahelp2html.pl into separate parts
+#  12 Oct 07 DJB Removed ldpath var as no longer used
+#                and updates to better support CIAO 4 changes
+#
+# Notes:
+#  - for CIAO 4 we assume that any multi-language files (eg chips,
+#    sherpa, crates) have been pre-processed so that there are *.sl.xml
+#    and *.py.xml versions in the directory (the actual file names do
+#    not matter, just that there are separate ones). We need to think
+#    about how to improve this in the long term.
 #
 # Future?:
 #  - include parameter names + synopsis for each ahelp file in the
@@ -66,6 +73,7 @@ use CIAODOC qw( :util :xslt :cfg );
 #
 
 sub get_ahelp_items ($@);
+sub get_ahelp_item_if_exists ($$);
 sub set_ahelp_item ($$$);
 sub check_multi_key ($\%);
 sub expand_seealso ($\%);
@@ -80,11 +88,10 @@ sub create_index_files ($\%\%\%);
 sub check_htmlname ($);
 
 ## set up variables that are also used in CIAODOC
-use vars qw( $configfile $verbose $group $ldpath $xsltproc $site );
+use vars qw( $configfile $verbose $group $xsltproc $site );
 $configfile = "$FindBin::Bin/config.dat";
 $verbose = 0;
 $group = "";
-$ldpath = "";
 $xsltproc = "";
 $site = "";
 
@@ -141,10 +148,10 @@ dbg "Parsed the config file";
 # Get the names of executable/library locations
 #
 my $listseealso;
-( $ldpath, $xsltproc, $listseealso ) = get_config_main( $config, qw( ldpath xsltproc listseealso ) );
+( $xsltproc, $listseealso ) = get_config_main( $config, qw( xsltproc listseealso ) );
 
-check_paths $ldpath;
-check_executables $xsltproc, $listseealso;
+check_executables $listseealso;
+check_executable_runs "xsltproc", $xsltproc, "--version";
 dbg "Found executable/library paths";
 
 # most of the config stuff is parsed below, but we need these two here
@@ -214,6 +221,12 @@ mymkdir $storage;
 # Find all the XML files we are interested in and get "interesting" info
 # about each file
 #
+# "See Also" handling has got more complicated in CIAO 4 since files can have 
+# seealsogroup and displayseealsogroups attributes, where the
+# latter means use these values but don't add the cuurent file
+# to any of those groups. For now I am going to process both
+# attributes, and see how that works.
+#
 my %out;
 my %multi_key;
 my %seealso;
@@ -233,6 +246,7 @@ foreach my $path ( map { "${ahelpfiles}$_"; } qw( /doc/xml/ /contrib/doc/xml/ ) 
 
 	my ( $key, $context, $groups, $htmlname ) =
 	  get_ahelp_items( $obj, "key", "context", "seealsogroups", "htmlname" );
+	my $dgroups = get_ahelp_item_if_exists ($obj, "displayseealsogroups") || [];
 
 	# NOTE:
 	#   rather than die on a multiple, we just ignore the
@@ -251,8 +265,13 @@ foreach my $path ( map { "${ahelpfiles}$_"; } qw( /doc/xml/ /contrib/doc/xml/ ) 
 	# safety check
 	check_htmlname( $obj );
 
-	# add to list of "see also" groups (if not known)
+	# add to list of "see also" groups (if not known);
+	# we now loop through both the seealsogroups and displayseealsogroups
+	# attributes
 	foreach my $grp ( @$groups ) {
+	    $seealso{$grp} = {} unless exists $seealso{$grp};
+	}
+	foreach my $grp ( @$dgroups ) {
 	    $seealso{$grp} = {} unless exists $seealso{$grp};
 	}
 
@@ -296,9 +315,15 @@ expand_seealso $listseealso, %seealso;
 #   (done here since we're looping through the XML files again and
 #    %multi_key should be up-to-date now)
 #
+# Hmmm, for CIAO 4 do we want to include the displayseealsogroups information
+# here as well? I would think so, since this is just creating the see also
+# section for the ahelp file, but am I sure?
+#
 foreach my $obj ( values %out ) {
     my ( $key, $context, $grplist ) = get_ahelp_items( $obj, "key", "context", "seealsogroups" );
     dbg( "Creating seealso info for $key/$context" );
+
+    # QUS: SHOULD I JUST MERGE SEEALSOGROUPS AND DISPLAYSEEALSOGROUPS HERE?
 
     # record how many matches this key has
     set_ahelp_item( $obj, "matchkey", $multi_key{$key} );
@@ -373,6 +398,18 @@ sub get_ahelp_items ($@) {
     return wantarray ? @out : $out[0];
 
 } # sub: get_ahelp_items
+
+# $val = get_ahelp_item_if_exists( $obj, $name );
+#
+# returns the item listed in the object, if it exists,
+# otherwise returns undef.
+#
+sub get_ahelp_item_if_exists ($$) {
+    my $obj = shift;
+    my $key = shift;
+
+    return exists $$obj{$key} ? $$obj{$key} : undef;
+} # sub: get_ahelp_item_if_exists
 
 # set_ahelp_item( $obj, $name, $newval );
 #

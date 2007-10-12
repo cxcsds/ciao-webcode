@@ -17,12 +17,11 @@
 #   config file]
 #
 
-# location of binary/executables
+# How to call the xsltproc and htmldoc executables; we no longer
+# have separate ldpath and htmllib values
 #
-ldpath=/data/da/Docs/local/lib/
-xsltproc=/data/da/Docs/local/bin/xsltproc
-htmldoc=/data/da/Docs/local/bin/htmldoc
-htmllib=/data/da/Docs/local/lib/
+xsltproc=/usr/bin/env LD_LIBRARY_PATH=/data/da/Docs/local/lib/ /data/da/Docs/local/bin/xsltproc
+htmldoc=/usr/bin/env LD_LIBRARY_PATH=/data/da/Docs/local/lib/ /data/da/Docs/local/bin/htmldoc
 
 listseealso=/data/da/Docs/web/list_seealso
 

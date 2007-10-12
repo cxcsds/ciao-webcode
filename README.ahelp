@@ -39,6 +39,11 @@ setting in the config.dat file, for instance:
 These directories should contain doc/xml/*.xml files and will also
 find files in contrib/doc/xml/*xml
 
+For CIAO 4, we have to create separate S-Lang and Python specific
+versions of the ahelp files - at least for those with multiple
+language support. Liz has code to do this <insert instructions here>.
+From now on we assume the ahelp XML files have been so processed.
+
 The program to use is mk_ahelp_setup.pl
 
 # Usage:
@@ -62,4 +67,35 @@ This script should be run in the ahelp/ directory of the web site,
 such as
   /data/da/Docs/ciaoweb/40beta/ahelp/
   /data/da/Docs/sherpaweb/40beta/ahelp/
+
+2) How do we create the ahelp index files?
+
+Once step 1 has been run, we use the mk_ahelp_indexes.pl script,
+which should again be run in the <site>/<version>/<type>/ahelp/
+directory.
+
+# Usage:
+#   mk_ahelp_indexes.pl
+#     --config=name
+#     --type=test|live|trial|dist
+#     --verbose
+
+3) How do we create the individual ahelp pages?
+
+After step 2, you use mk_ahelp_pages.pl to create the individual
+pages.
+
+# Usage:
+#   mk_ahelp_pages.pl [name1 ... namen]
+#     --config=name
+#     --type=test|live|trial|dist
+#     --verbose
+
+It must be run from the same directory as the previous programs. If
+called with no names then all xml files in the doc/xml/ and contrib/doc/xml
+directories will be processed (base location given by the %ahelpfiles
+directive in the config.dat file), otherwise just those named file(s)
+will be processed. When listing individual files the full path to these
+files should be included (this is to allow using updated or hacked files
+in case the need arises).
 

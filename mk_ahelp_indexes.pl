@@ -1,7 +1,5 @@
 #!/data/da/Docs/local/perl/bin/perl -w
 #
-# $Id: mk_ahelp_indexes.pl,v 1.9 2006/09/06 17:23:08 egalle Exp $
-#
 # Usage:
 #   mk_ahelp_indexes.pl
 #     --config=name
@@ -39,11 +37,16 @@
 #  14 May 04 DJB we now create the soft and hardcopy files separately
 #                support for media=print css file
 #  22 Aug 06 ECG make headtitlepostfix and texttitlepostfix available
+#  12 Oct 07 DJB Removed ldpath and htmllib vars as no longer used
+#                and updates to better support CIAO 4 changes
 #
 # To Do:
 #  - allow it to work for type=dist (currently it requires the
 #    locations of things - such as htmldoc and the searchssi - that
 #    are not needed for the distribution).
+#    Hmmm, as we no longer need type=dist this comment is not as
+#    useful, although it may be useful to run on htmldoc-less
+#    systems for testing/development purposes.
 #
 # Future?:
 #  -
@@ -66,13 +69,11 @@ use CIAODOC qw( :util :xslt :cfg );
 #
 
 ## set up variables that are also used in CIAODOC
-use vars qw( $configfile $verbose $group $ldpath $xsltproc $htmllib $htmldoc $site );
+use vars qw( $configfile $verbose $group $xsltproc $htmldoc $site );
 $configfile = "$FindBin::Bin/config.dat";
 $verbose = 0;
 $group = "";
-$ldpath = "";
 $xsltproc = "";
-$htmllib = "";
 $htmldoc = "";
 $site = "";
 
@@ -122,12 +123,11 @@ dbg "Parsed the config file";
 
 # Get the names of executable/library locations
 #
-my $listseealso;
-( $ldpath, $xsltproc, $listseealso, $htmldoc, $htmllib ) =
-  get_config_main( $config, qw( ldpath xsltproc listseealso htmldoc htmllib ) );
+( $xsltproc, $htmldoc ) = 
+  get_config_main( $config, qw( xsltproc htmldoc ) );
 
-check_paths $ldpath, $htmllib;
-check_executables $xsltproc, $htmldoc;
+check_executable_runs "xsltproc", $xsltproc, "--version";
+check_executable_runs "htmldoc", $htmldoc, "--version";
 dbg "Found executable/library paths";
 
 # most of the config stuff is parsed below, but we need these two here
@@ -155,13 +155,21 @@ my ( $version, $version_config, $dhead, $depth ) = check_location $site_config, 
 #
 $version = get_config_version $version_config, "version_string";
 
-my $storage     = get_config_type $version_config, "storage", $type;
+#my $storage     = get_config_type $version_config, "storage", $type;
 
 my $outdir      = get_config_type $version_config, "outdir", $type;
 my $outurl      = get_config_type $version_config, "outurl", $type;
 my $stylesheets = get_config_type $version_config, "stylesheets", $type;
 
-my $ahelpindex  = "${storage}ahelp/ahelpindex.xml";
+# We did have the following, but that did not work, and I do not understand
+# why I did not bother with the get_config_type call anyway...
+#
+# my $ahelpindex  = "${storage}ahelp/ahelpindex.xml";
+my $ahelpindex  = get_config_type $version_config, "ahelpindexdir", $type;
+$ahelpindex .= "ahelpindex.xml";
+
+die "ERROR: Unable to find ahelp index - has mk_ahelp_setup.pl been run?\n\n  ahelpindexdir=$ahelpindex\n"
+  unless -e $ahelpindex;
 
 # check we can find the needed stylesheets
 #
@@ -184,9 +192,7 @@ dbg "  stylesheets=$stylesheets";
 dbg "  ahelpindex=$ahelpindex";
 dbg " ---";
 dbg "  xsltproc=$xsltproc";
-dbg "  ldpath=$ldpath";
 dbg "  htmldoc=$htmldoc";
-dbg "  htmllib=$htmllib";
 dbg "*** CONFIG DATA (end) ***";
 
 # start work
