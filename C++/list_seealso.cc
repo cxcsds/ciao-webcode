@@ -2,7 +2,7 @@
  * $Id: list_seealso.cc,v 1.2 2003/05/15 15:32:36 dburke Exp $
  *
  * Usage:
- *   list_seealso seealsogrpup1 ... seealsogroupN
+ *   list_seealso seealsogroup1 ... seealsogroupN
  *
  * Aim:
  *   print to the screen the contents of the given seealso groups
@@ -15,10 +15,10 @@
  *     in the seealso section is allowed
  *
  * Requires;
- *   CIAO >= 3.0 to have been started
+ *   CIAO >= 4.0 to have been started
  */
 
-#include "Strings.hh"
+#include "AhelpStrings.hh"
 #include "AhelpDB.hh"
 
 void PrintSynopsis()
@@ -28,8 +28,8 @@ void PrintSynopsis()
 
 int main(int argc, char **argv)
 {
-  Strings group;
-  StringsList matchList;
+  AhelpStrings group;
+  AhelpStringsList matchList;
 
   AhelpDB * ahelpDB;
 
@@ -62,9 +62,9 @@ int main(int argc, char **argv)
     matchList.Sort(TRUE,TRUE);
 
     // try and parse the list
-    StringsListIterator matchIter( &matchList );
+    AhelpStringsListIterator matchIter( &matchList );
     for ( matchIter.First(); !matchIter.IsDone(); matchIter.Next() ) {
-      StringsList match = matchIter.GetCurrent().Split();
+      AhelpStringsList match = matchIter.GetCurrent().Split();
       cout << group << " " << match.GetFirst() << " " << match.GetLast() << endl;
     } 
 

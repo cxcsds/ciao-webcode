@@ -2,5 +2,7 @@ syntax: glob
 *~
 *.o
 
+list_seealso
+
 syntax: regexp
 (.*/)?\#[^/]*\#$

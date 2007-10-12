@@ -1,21 +1,34 @@
 #
 # Makefile
+#   - Use GNU Make (so gmake on solaris)
+#   - start up CIAO before using as we need the ASCDS_INSTALL
+#     environment set correctly
+#   - make sure that the CIAO environment contains at least the
+#     ciao-beta3-4.0-src-core.tar.gz file (cxcconfig.h) and
+#     run ./configure --with-compile to generate config.h
 #
-
-# can we getthis set from env var?
-ASCDS_INSTALL = /proj/ciaox
-
-RM         = rm -f
-
-C++        = /opt/SUNWspro_6.2/bin/CC
-C++FLAGS   = +w -I$(ASCDS_INSTALL)/include -I$(ASCDS_INSTALL)/src/include
-
-LINKCPP    =  $(C++) -L$(ASCDS_INSTALL)/lib 
 
 DSOTS      = $(ASCDS_INSTALL)/ots
 
-XERCES     = $(DSOTS)/xerces-c-src1_7_0
-XERCESLIB  = -L$(XERCES)/lib -lxerces-c1_7_0
+# Need to find cxcconfig.h and config.h, hence the complicated
+# set of includes.
+#
+INCDIR     = -I$(ASCDS_INSTALL)/include -I$(DSOTS)/include \
+		-I$(ASCDS_INSTALL)/src/include -I$(ASCDS_INSTALL)
+
+RM         = rm -f
+
+# Solaris (probably need to change the location of CC)
+#C++        = /opt/SUNWspro_6.2/bin/CC
+#C++FLAGS   = +w $(INCDIR)
+
+# OS-X and Linux
+C++        = g++
+C++FLAGS   = $(INCDIR)
+
+LINKCPP    =  $(C++) -L$(ASCDS_INSTALL)/lib 
+
+XERCESLIB  = -L$(DSOTS)/lib -lxerces-c
 
 LIBHELP    = -lASCHelp $(XERCESLIB)
 LIBGEN     = -lASCGen++ -lascgen
