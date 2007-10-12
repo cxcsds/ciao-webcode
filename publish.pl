@@ -1,7 +1,5 @@
 #!/data/da/Docs/local/perl/bin/perl -w
 #
-# $Id: publish.pl,v 1.103 2007/09/11 17:36:42 egalle Exp $
-#
 # Usage:
 #   publish.pl --type=test|live|trial <filename(s)>
 #     Default for type is test
@@ -56,8 +54,6 @@
 # Requires:
 #   The location searched for the stylesheets is defined
 #   in the config file, as are the actual stylesheets needed.
-#
-#  xsltproc executable in /data/da/Docs/local/bin
 #
 # Author:
 #  Doug Burke (dburke@cfa.harvard.edu)
@@ -136,7 +132,7 @@
 #                "$head.gif" 
 #  1.102 20070911 ecg - don't run "check_config_exists" on "number" for the 
 #                 caldb site 
-
+#  12 Oct 07 DJB Removed ldpath/htmllib env vars
  
 use strict;
 $|++;
@@ -158,14 +154,12 @@ sub process_xml   ($$);
 sub process_files ($$);
 
 ## set up variables that are also used in CIAODOC
-use vars qw( $configfile $verbose $group $ldpath $xsltproc $htmldoc $htmllib $site );
+use vars qw( $configfile $verbose $group $xsltproc $htmldoc $site );
 $configfile = "$FindBin::Bin/config.dat";
 $verbose = 0;
 $group = "";
-$ldpath = "";
 $xsltproc = "";
 $htmldoc = "";
-$htmllib = "";
 $site = "";
 
 ## Variables
@@ -220,10 +214,10 @@ my $config = parse_config( $configfile );
 
 # Get the names of executable/library locations
 #
-( $ldpath, $xsltproc, $htmldoc, $htmllib ) = get_config_main( $config, qw( ldpath xsltproc htmldoc htmllib ) );
+( $xsltproc, $htmldoc ) = get_config_main( $config, qw( xsltproc htmldoc ) );
 
-check_paths $ldpath, $htmllib;
-check_executables $xsltproc, $htmldoc;
+check_executable_runs "xsltproc", $xsltproc, "--version";
+check_executable_runs "htmldoc", $htmldoc, "--version";
 dbg "Found executable/library paths";
 
 # most of the config stuff is parsed below, but we need these two here
