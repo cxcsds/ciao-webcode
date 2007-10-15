@@ -1,8 +1,7 @@
 /*
- * $Id: list_seealso.cc,v 1.2 2003/05/15 15:32:36 dburke Exp $
- *
  * Usage:
  *   list_seealso seealsogroup1 ... seealsogroupN
+ *   list_seealso --version
  *
  * Aim:
  *   print to the screen the contents of the given seealso groups
@@ -21,9 +20,13 @@
 #include "AhelpStrings.hh"
 #include "AhelpDB.hh"
 
+/* found in src/install/ */
+#include "cxcds_version.h"
+
 void PrintSynopsis()
 {
   cerr << "Usage: list_seealso seealsogroup1 ... seealsogroupN" << endl;
+  cerr << "       list_seealso --version" << endl;
 };
 
 int main(int argc, char **argv)
@@ -36,9 +39,14 @@ int main(int argc, char **argv)
   int argIndx;
   int status = 0;
 
-  if ( argc < 2 ) {
+  if (argc == 1) {
     PrintSynopsis();
     return 1;
+  }
+
+  if (0 == strncmp ("--version", argv[1], 9)) {
+    cout << "Compiled against: " << CXCDS_VERSION_STRING << endl;
+    return 0;
   }
 
   ahelpDB = new AhelpDB(getenv("ASCDS_INSTALL"));

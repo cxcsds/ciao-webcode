@@ -23,8 +23,12 @@ RM         = rm -f
 #C++FLAGS   = +w $(INCDIR)
 
 # OS-X and Linux
+#
+# Some of the CIAO header files include depracated files (C++)
+# so we add the no-deprecated flag to clean up the compile output
+#
 C++        = g++
-C++FLAGS   = $(INCDIR)
+C++FLAGS   = $(INCDIR) -Wno-deprecated
 
 LINKCPP    =  $(C++) -L$(ASCDS_INSTALL)/lib 
 

@@ -150,8 +150,8 @@ dbg "Parsed the config file";
 my $listseealso;
 ( $xsltproc, $listseealso ) = get_config_main( $config, qw( xsltproc listseealso ) );
 
-check_executables $listseealso;
 check_executable_runs "xsltproc", $xsltproc, "--version";
+check_executable_runs "list_seealso", $listseealso, "--version";
 dbg "Found executable/library paths";
 
 # most of the config stuff is parsed below, but we need these two here
