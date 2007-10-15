@@ -41,7 +41,7 @@ my @funcs_util =
   qw(
      fixme dbg check_dir mymkdir mycp myrm mysetmods
      check_paths check_executables check_executable_runs
-     extract_filename
+     extract_filename get_ostype
     );
 my @funcs_xslt =
   qw(
@@ -49,8 +49,8 @@ my @funcs_xslt =
    );
 my @funcs_cfg  =
   qw(
-     parse_config find_site get_config_main get_config_site get_config_version
-     get_config_type
+     parse_config find_site get_config_main get_config_main_type
+     get_config_site get_config_version get_config_type
      check_config_exists check_type_known check_location get_group
     );
 
@@ -95,6 +95,8 @@ sub check_type_known ($$);
 
 sub check_location ($$);
 sub get_group ($);
+
+sub get_ostype ();
 
 ## Subroutines
 #
@@ -704,6 +706,39 @@ sub get_config_main ($@) {
 
 } # sub: get_config_main()
 
+# $val = get_config_main_type( $config, $name, $type );
+# ( $val1, $val2 ) = get_config_main( $config, $name1, $name2, $type );
+#
+# returns the value of the config variables from the "main" part
+# of the config file - ie the part that is not dependent upon the
+# site you are in - for the given type. This is for fields like
+#    %foo=typea vala
+#    %foo=typeb valb
+# and get_config_main_type($config, "foo", "typeb") will return
+# valb.
+#
+# Dies with an error if the requested value doesn't exist, or
+# isn't an associative array, or the type does not exist.
+#
+sub get_config_main_type ($@) {
+    my $config = shift;
+    my $type   = pop;
+    my @out;
+    foreach my $name ( @_ ) {
+	die "Error: $name not defined in config file ($main::configfile).\n"
+	  unless exists $$config{$name};
+	my $obj = $$config{$name};
+	my $ref = ref ($obj) || "SCALAR";
+	die "Error: the config file has $name as a $ref when it should be a HASH\n"
+	  unless $ref eq "HASH";
+	die "Error: $name option does not contain a value for type=$type\n"
+	  unless exists $$obj{$type};
+	push @out, $$obj{$type};
+    }
+    return wantarray ? @out : $out[0];
+
+} # sub: get_config_main_type()
+
 # $val = get_config_site( $site_config, $name );
 # ( $val1, $val2 ) = get_config_site( $site_config, $name1, $name2 );
 #
@@ -866,6 +901,26 @@ sub get_group ($) {
 } # sub: get_group()
 
 
+# $ostype = get_ostype;
+#
+# returns a string representing the OS that the system
+# is running:
+#     Return Value    System
+#     sun             Solaris
+#     lin             Linux
+#     osx             OS-X
+#
+# It does not, at least at present, care about the processor
+# type or version of the OS.
+#
+sub get_ostype () {
+  if ($^O eq "darwin")     { return "osx"; }
+  elsif ($^O eq "linux")   { return "lin"; }
+  elsif ($^O eq "solaris") { return "sun"; }
+  else {
+    die "Unrecognized OS: $^O\n";
+  }
+} # sub: get_ostype()
 
 ## End
 1;

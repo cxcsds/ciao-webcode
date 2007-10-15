@@ -35,6 +35,7 @@
 #  02 Oct 03 DJB Re-worked ahelp2html.pl into separate parts
 #  12 Oct 07 DJB Removed ldpath var as no longer used
 #                and updates to better support CIAO 4 changes
+#  15 Oct 07 DJB executables are now OS specific
 #
 # Notes:
 #  - for CIAO 4 we assume that any multi-language files (eg chips,
@@ -141,6 +142,10 @@ die $usage unless
   'type=s'   => \$type,
   'verbose!' => \$verbose;
 
+# what OS are we running?
+#
+my $ostype = get_ostype;
+
 # check the options
 my $config = parse_config( $configfile );
 dbg "Parsed the config file";
@@ -148,7 +153,7 @@ dbg "Parsed the config file";
 # Get the names of executable/library locations
 #
 my $listseealso;
-( $xsltproc, $listseealso ) = get_config_main( $config, qw( xsltproc listseealso ) );
+( $xsltproc, $listseealso ) = get_config_main_type( $config, qw( xsltproc listseealso ), $ostype );
 
 check_executable_runs "xsltproc", $xsltproc, "--version";
 check_executable_runs "list_seealso", $listseealso, "--version";

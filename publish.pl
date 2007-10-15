@@ -133,6 +133,8 @@
 #  1.102 20070911 ecg - don't run "check_config_exists" on "number" for the 
 #                 caldb site 
 #  12 Oct 07 DJB Removed ldpath/htmllib env vars
+#  15 Oct 07 DJB executables are now OS specific
+#
  
 use strict;
 $|++;
@@ -207,6 +209,10 @@ die $usage unless
   'force!'   => \$force,
   'verbose!' => \$verbose;
 
+# what OS are we running?
+#
+my $ostype = get_ostype;
+
 # check the options
 die "Error: the config option can not be blank\n"
   if $configfile eq "";
@@ -214,7 +220,7 @@ my $config = parse_config( $configfile );
 
 # Get the names of executable/library locations
 #
-( $xsltproc, $htmldoc ) = get_config_main( $config, qw( xsltproc htmldoc ) );
+( $xsltproc, $htmldoc ) = get_config_main_type( $config, qw( xsltproc htmldoc ), $ostype );
 
 check_executable_runs "xsltproc", $xsltproc, "--version";
 check_executable_runs "htmldoc", $htmldoc, "--version";

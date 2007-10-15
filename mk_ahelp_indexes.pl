@@ -39,6 +39,7 @@
 #  22 Aug 06 ECG make headtitlepostfix and texttitlepostfix available
 #  12 Oct 07 DJB Removed ldpath and htmllib vars as no longer used
 #                and updates to better support CIAO 4 changes
+#  15 Oct 07 DJB executables are now OS specific
 #
 # To Do:
 #  - allow it to work for type=dist (currently it requires the
@@ -117,6 +118,10 @@ die $usage unless
   'type=s'   => \$type,
   'verbose!' => \$verbose;
 
+# what OS are we running?
+#
+my $ostype = get_ostype;
+
 # check the options
 my $config = parse_config( $configfile );
 dbg "Parsed the config file";
@@ -124,7 +129,7 @@ dbg "Parsed the config file";
 # Get the names of executable/library locations
 #
 ( $xsltproc, $htmldoc ) = 
-  get_config_main( $config, qw( xsltproc htmldoc ) );
+  get_config_main_type( $config, qw( xsltproc htmldoc ), $ostype );
 
 check_executable_runs "xsltproc", $xsltproc, "--version";
 check_executable_runs "htmldoc", $htmldoc, "--version";
