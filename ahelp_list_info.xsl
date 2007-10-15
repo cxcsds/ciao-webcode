@@ -2,8 +2,6 @@
 <!DOCTYPE xsl:stylesheet>
 
 <!--*
-    * $Id: ahelp_list_info.xsl,v 1.4 2003/05/13 14:50:59 dburke Exp $ 
-    *
     * List useful information from an XML file whose root node is
     * cxchelptopcis and whose ENTRY/@key != "onapplication"
     *
@@ -14,6 +12,8 @@ E/@key E/@context E/ADDRESS/URL E/ADDRESS/URL [seealsogroup1 ... seealsogroupN] 
 
     *   
     * Recent changes:
+    *   2007/11/15 DJB
+    *      combine displayseealsogroups and seealsogroups
     *   v1.4 - no longer die if there are no ADDRESS blocks
     *   v1.3 - seealso group surrounded by [] and followed by syntax
     *          section (all on one line)
@@ -59,6 +59,8 @@ Number of ADDRESS/URL elements = <xsl:value-of select="$nURL"/>
     <!--* see also groups *-->
     <xsl:text>[</xsl:text>
     <xsl:value-of select="normalize-space(@seealsogroups)"/>
+    <xsl:text> </xsl:text>
+    <xsl:value-of select="normalize-space(@displayseealsogroups)"/>
     <xsl:text>] </xsl:text>
 
     <!--* synopsis *-->

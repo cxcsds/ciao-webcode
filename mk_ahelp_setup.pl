@@ -224,8 +224,9 @@ mymkdir $storage;
 # "See Also" handling has got more complicated in CIAO 4 since files can have 
 # seealsogroup and displayseealsogroups attributes, where the
 # latter means use these values but don't add the cuurent file
-# to any of those groups. For now I am going to process both
-# attributes, and see how that works.
+# to any of those groups. We have already smooshed the two together, so
+# we only have to bother with the seealsogroup list here; let's see how
+# that works.
 #
 my %out;
 my %multi_key;
@@ -246,7 +247,6 @@ foreach my $path ( map { "${ahelpfiles}$_"; } qw( /doc/xml/ /contrib/doc/xml/ ) 
 
 	my ( $key, $context, $groups, $htmlname ) =
 	  get_ahelp_items( $obj, "key", "context", "seealsogroups", "htmlname" );
-	my $dgroups = get_ahelp_item_if_exists ($obj, "displayseealsogroups") || [];
 
 	# NOTE:
 	#   rather than die on a multiple, we just ignore the
@@ -266,12 +266,7 @@ foreach my $path ( map { "${ahelpfiles}$_"; } qw( /doc/xml/ /contrib/doc/xml/ ) 
 	check_htmlname( $obj );
 
 	# add to list of "see also" groups (if not known);
-	# we now loop through both the seealsogroups and displayseealsogroups
-	# attributes
 	foreach my $grp ( @$groups ) {
-	    $seealso{$grp} = {} unless exists $seealso{$grp};
-	}
-	foreach my $grp ( @$dgroups ) {
 	    $seealso{$grp} = {} unless exists $seealso{$grp};
 	}
 
@@ -317,13 +312,13 @@ expand_seealso $listseealso, %seealso;
 #
 # Hmmm, for CIAO 4 do we want to include the displayseealsogroups information
 # here as well? I would think so, since this is just creating the see also
-# section for the ahelp file, but am I sure?
+# section for the ahelp file, but am I sure? Note that at present I
+# have added this info to the seealsogroups list so the code below does
+# not need to change
 #
 foreach my $obj ( values %out ) {
     my ( $key, $context, $grplist ) = get_ahelp_items( $obj, "key", "context", "seealsogroups" );
     dbg( "Creating seealso info for $key/$context" );
-
-    # QUS: SHOULD I JUST MERGE SEEALSOGROUPS AND DISPLAYSEEALSOGROUPS HERE?
 
     # record how many matches this key has
     set_ahelp_item( $obj, "matchkey", $multi_key{$key} );
@@ -537,7 +532,17 @@ sub expand_seealso ($\%) {
 # Obviously not an ideal solution - we need to come up with guidelines for
 # the ASSRESS/URL tags
 #
-
+# CIAO 4 introduced displayseealsogroups which are similar to the seealsogroups
+# values but do not add the current file to the group list. I do not think
+# we need to bother about this distinction, so I combine the two here
+# -- ie get_ahelp-item($obj,"seealsogroups") will return the contents
+# of both the seealsogroups and displayseealsogroups attributes
+#
+# NOTE: as no longer need the type=dist output this would be much
+# better/easier/cleaner/understandable if I used XML::LibXML to extract
+# the data directly from the XML file rather than have to bother with
+# parsing the output of stylesheets
+#
 sub inspect_xmlfile ($$$) {
 
   my $xmlfile  = shift;
@@ -572,7 +577,7 @@ sub inspect_xmlfile ($$$) {
       $htmlname = $filehead;
   }
 
-  # we are not guaranteed to have any seealso groups
+  # we are not guaranteed to have any seealso/displayseealso groups
   # or a summary block...
   ##$rest =~ m/^\s*\[([^\]]+)\] (.+)$/
   ##  or die "Error: expected line to look like '[...] ...' but found\n$rest\n";
