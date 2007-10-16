@@ -8,10 +8,11 @@
 ]>
 
 <!-- AHELP XML to HTML convertor using XSL Transformations -->
-<!-- $Id: ahelp_index.xsl,v 1.38 2006/08/22 18:56:18 egalle Exp $ -->
 
 <!--* 
     * Recent changes:
+    *  Oct 15 07 DJB
+    *    Updated to allow site-specific indexes
     *  v1.38 - changed page headers and index titles to use
     *	       htmltitlepostfix value 
     *  v1.37 - <html> changed to <html lang="en"> following
@@ -97,6 +98,10 @@
     *    if 0 then create the "softcopy" version, if 1 then the "hardcopy"
     *    version. Setting to 1 with type=dist is not valid so we die if this
     *    combination is set
+    *
+    *  . site - string, required
+    *    what site are we to generate the index for, should be
+    *    one of ciao, chips, or sherpa
     *
     *  these are required only if type != dist
     *
@@ -194,6 +199,8 @@
   <!--* parameters to be set by stylesheet processor *-->
   <xsl:param name="hardcopy" select="0"/>
 
+  <xsl:param name="site"/>
+
   <xsl:param name="cssfile"/>
   <xsl:param name="newsfile"    select='""'/>
   <xsl:param name="newsfileurl" select='""'/>
@@ -269,6 +276,13 @@
       <xsl:with-param name="allowed" select="$allowed-types"/>
     </xsl:call-template>
 
+    <xsl:call-template name="check-param">
+      <xsl:with-param name="pname"   select="'site'"/>
+      <xsl:with-param name="pvalue"  select="$site"/>
+      <xsl:with-param name="allowed" select="$allowed-sites"/>
+    </xsl:call-template>
+
+    <!--* type=dist is deprecated; remove un-needed code *-->
     <xsl:choose>
       <xsl:when test="$type = 'dist'">
 	<xsl:if test="$hardcopy != '0'">
@@ -322,6 +336,19 @@
     <xsl:if test="$logoimage != '' and $logotext = ''">
       <xsl:message terminate="yes">
   Error: logotext is unset but logoimage is set to '<xsl:value-of select="$logoimage"/>'
+      </xsl:message>
+    </xsl:if>
+
+    <!--*
+        * Check that we have some data:
+	*    ahelpindex/ahelplist/ahelp/site=$site
+	*    ahelpindex/alphabet[@site=$site]
+	*    ahelpindex/context[@site=$site]
+	* We only need to check one, so try the alphabetical list
+	*-->
+    <xsl:if test="count(//ahelpindex/alphabet[@site=$site])=0">
+      <xsl:message terminate="yes">
+  Error: no ahelp files found for site='<xsl:value-of select="$site"/>'
       </xsl:message>
     </xsl:if>
 
@@ -413,7 +440,7 @@
 
       <!--* loop through each 'letter' (within another dl list) *-->
       <xsl:text disable-output-escaping="yes">&lt;dl&gt;</xsl:text>
-      <xsl:for-each select="ahelpindex/alphabet/term">
+      <xsl:for-each select="ahelpindex/alphabet[@site=$site]/term">
 
 <xsl:text disable-output-escaping="yes">&lt;dt&gt;&lt;a class=&quot;heading&quot; name=&quot;navbar-</xsl:text>
 	<xsl:value-of select="name"/>
@@ -453,7 +480,7 @@
 
 	<xsl:text disable-output-escaping="yes">&amp;nbsp;&lt;br&gt;&lt;/dd&gt;</xsl:text>
 
-      </xsl:for-each> <!--* alphabet/term *-->
+      </xsl:for-each> <!--* alphabet[@site=$site]/term *-->
 
       <xsl:text disable-output-escaping="yes">&lt;/dl&gt;</xsl:text>
 
@@ -517,7 +544,7 @@
 
     <!--* links to the alphabetical sections below *-->
     <xsl:text disable-output-escaping="yes">&lt;dd&gt;</xsl:text>
-    <xsl:for-each select="ahelpindex/alphabet/term">
+    <xsl:for-each select="ahelpindex/alphabet[@site=$site]/term">
       <xsl:call-template name="add-link-to-text">
 	<xsl:with-param name="url" select="concat('#navbar-',name)"/>
 	<xsl:with-param name="txt" select="name"/>
@@ -569,7 +596,7 @@
 	      <a name="maintext"/>
 
 	      <!--* process the contents *-->
-	      <xsl:apply-templates select="ahelpindex/alphabet"/>
+	      <xsl:apply-templates select="ahelpindex/alphabet[@site=$site]"/>
 	    
 	    </td>
 	  </tr>
@@ -613,7 +640,7 @@
 
 	<body bgcolor="#ffffff">
 	  <!--* process the contents *-->
-	  <xsl:apply-templates select="ahelpindex/alphabet"/>
+	  <xsl:apply-templates select="ahelpindex/alphabet[@site=$site]"/>
 
 	</body>
       </html>
@@ -652,7 +679,7 @@
 	<xsl:call-template name="newline"/>
 
 	<!--* the main text (no 'navbar' in hardcopy) *-->
-	<xsl:apply-templates select="ahelpindex/alphabet"/>
+	<xsl:apply-templates select="ahelpindex/alphabet[@site=$site]"/>
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-cxc-footer-hardcopy">
@@ -684,10 +711,13 @@
   <!--*
       * Create the alphabetical index
       *
-      * Output also depends on the value of $type
+      * Output also depends on the value of $type.
+      * It *may* be that we can get away with assuming this is always going to
+      * have the correct site-specific alphabet list, but add separate rules to
+      * ensure this
       *
       *-->
-  <xsl:template match="alphabet">
+  <xsl:template match="alphabet[@site=$site]">
 
     <!--* title *-->
     <h2 align="center">Alphabetical list of Ahelp files for <xsl:value-of select="$headtitlepostfix"/></h2>
@@ -786,7 +816,16 @@
     <!--* jump back links only if not hardcopy *-->
     <xsl:if test="$hardcopy=0"><xsl:call-template name="add-alphabet-jump"/></xsl:if>
     
+  </xsl:template> <!--* match=alphabet[@site=$site] *-->
+
+  <xsl:template match="alphabet">
+<!--
+    <xsl:message terminate="yes">
+  Internal error: processing alphabet node that is not site='<xsl:value-of select="$site"/>'
+    </xsl:message>
+-->
   </xsl:template> <!--* match=alphabet *-->
+    
 
   <!--* 
       * create: index_context.html (Web)
@@ -829,7 +868,7 @@
 	      <a name="maintext"/>
 
 	      <!--* process the contents *-->
-	      <xsl:apply-templates select="ahelpindex/context"/>
+	      <xsl:apply-templates select="ahelpindex/context[@site=$site]"/>
 	      
 	    </td>
 	  </tr>
@@ -874,7 +913,7 @@
 	<body bgcolor="#ffffff">
 
 	  <!--* process the contents *-->
-	  <xsl:apply-templates select="ahelpindex/context"/>
+	  <xsl:apply-templates select="ahelpindex/context[@site=$site]"/>
 	      
 	</body>
       </html>
@@ -913,7 +952,7 @@
 	<xsl:call-template name="newline"/>
 
 	<!--* the main text (no 'navbar' in hardcopy) *-->
-	<xsl:apply-templates select="ahelpindex/context"/>
+	<xsl:apply-templates select="ahelpindex/context[@site=$site]"/>
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-cxc-footer-hardcopy">
@@ -932,9 +971,12 @@
       * Create the contextual index
       *
       * Output also depends on the value of $type
+      * It *may* be that we can get away with assuming this is always going to
+      * have the correct site-specific context list, but add separate rules to
+      * ensure this
       *
       *-->
-  <xsl:template match="context">
+  <xsl:template match="context[@site=$site]">
 
     <!--* title *-->
     <h2 align="center">Contextual list of Ahelp files for <xsl:value-of select="$headtitlepostfix"/></h2>
@@ -1019,6 +1061,14 @@
     
   </xsl:template> <!--* match=context *-->
 
+  <xsl:template match="context">
+<!--
+    <xsl:message terminate="yes">
+  Internal error: processing context node that is not site='<xsl:value-of select="$site"/>'
+    </xsl:message>
+-->
+  </xsl:template> <!--* match=context *-->
+
   <!--* taken from helper.xsl *-->
 
   <xsl:template name="newline">
@@ -1079,7 +1129,10 @@
       * - based on the code in helper.xsl
       *   taking advantage of the fact we know site == ciao
       *
+      * This template apparently only gets applied when $type=dist,
+      * which we no longer support.
       *-->
+
   <xsl:template name="add-whats-new">
 
     <!--* programming check *-->

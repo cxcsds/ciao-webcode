@@ -49,7 +49,8 @@
 #  22 Aug 06 ECG make headtitlepostfix and texttitlepostfix available
 #  12 Oct 07 DJB Removed ldpath and htmllib vars as no longer used
 #                and updates to better support CIAO 4 changes
-#  15 Oct 07 DJB executables are now OS specific
+#  15 Oct 07 DJB Executables are now OS specific
+#  16 Oct 07 DJB Handle site-specific pages
 #
 # To Do:
 #  - allow it to work for type=dist (currently it requires the
@@ -76,10 +77,13 @@ use FindBin;
 use lib $FindBin::Bin;
 use CIAODOC qw( :util :xslt :cfg );
 
+use XML::LibXML;
+
 ## Subroutines (see end of file)
 #
 
 sub read_ahelpindex ($);
+sub find_ahelpfiles ($$);
 
 ## set up variables that are also used in CIAODOC
 use vars qw( $configfile $verbose $group $xsltproc $htmldoc $site );
@@ -155,6 +159,7 @@ $config = undef; # DBG: just make sure no one is trying to access it
 dbg "Site = $site";
 
 check_type_known $site_config, $type;
+check_ahelp_site_valid $site;
 
 # Handle the remaining config values
 #
@@ -200,11 +205,6 @@ foreach my $name ( qw( ahelp ahelp_common ) ) {
       unless -e $x;
 }
 
-foreach my $name ( $ahelpindex_xml, $ahelpindex_dat ) {
-    die "Error: unable to find $name\n"
-      unless -e $name;
-}
-
 # now we can check on which files to process
 # - not 100% sure on what 'no arguments' means
 #   For now go with it implying the contents of
@@ -216,8 +216,17 @@ foreach my $name ( $ahelpindex_xml, $ahelpindex_dat ) {
 # AND we exclude any names inclding 'onapplication' - even if
 # the user specified them
 #
+# As of CIAO 4 this has got more complicated since we
+# store all the XML files within one directory but we publish
+# to separate sites. So we need to:
+#   user gives files to process => check files belong to this site
+#   no files given              => select the correct files
+#
+my @allowed_names = find_ahelpfiles $site, $ahelpindex_xml;
 my @names;
 if ( $#ARGV == -1 ) {
+
+=begin OLDCODE
 
     # check there's at least a doc/xml directory in ahelpfiles
     die "Error: ahelpfiles directory ($ahelpfiles) does not contain a doc/xml/ sub-directory\n"
@@ -229,13 +238,33 @@ if ( $#ARGV == -1 ) {
 	@names = ( @names, glob("${path}*.xml") ); # $path ends in a /
     }
 
+=end OLDCODE
+
+=cut
+
+  # Use the database to select the files to process
+  #
+  @names = @allowed_names;
+
 } else {
     @names = @ARGV;
+
+    # We only check on the file name, not the path, for these files.
+    # This could lead to problems but let's not bother with that for
+    # now.
+    #
+    my %check_names = map { my $f = (split "/",$_)[-1]; ($f,1); } @allowed_names;
+    foreach my $name (@names) {
+      my $t = (split "/", $name)[-1];
+      die "Error: file not known for site=$site: $t\n"
+	unless exists $check_names{$t};
+    }
 }
-die "Error: no ahelp files have been specified or found in the directory\n"
-  if $#names == -1;
 @names = map { s/\.xml$//; $_; }
   grep { !/onapplication/ } @names;
+die "Error: no ahelp files have been specified or found in the directory\n"
+  if $#names == -1;
+dbg "Found " . (1+$#names) . " ahelp files";
 
 #########################
 
@@ -439,6 +468,12 @@ exit;
 #                 seealso file name (with .xml but without path)
 #              ]
 #
+# Note:
+#   Now that we process the XML index proper, is this file still
+#   useful? At present it is, because we do not process the XML
+#   index if the user gives the files to process, but this could
+#   be changed.
+#
 sub read_ahelpindex ($) {
     my $infile = shift;
     my $fh = IO::File->new( "< $infile" )
@@ -459,3 +494,27 @@ sub read_ahelpindex ($) {
     return \%map;
 
 } # sub: read_ahelpindex
+
+# Usage:
+#   @filelist = find_ahelpfiles $site, $ahelpindex_xml;
+#
+# Returns a reference to a list of all the ahelp files to process
+# for the given site.
+#
+sub find_ahelpfiles ($$) {
+  my $site    = shift;
+  my $xmlfile = shift;
+
+  my $parser = XML::LibXML->new()
+    or die "Error: Unable to create XML::LibXML parser instance.\n";
+
+  my $dom = $parser->parse_file( $xmlfile )
+    or die "Error: unable to open $xmlfile via XML parser\n";
+  my $root = $dom->documentElement();
+  my @out;
+  dbg "Processing ahelp index to find pages in site=$site";
+  foreach my $node ($root->findnodes("/ahelpindex/ahelplist/ahelp[site='$site']")) {
+    push @out, $node->findvalue("xmlname");
+  }
+  return @out;
+} # sub: find_ahelpfiles

@@ -16,6 +16,7 @@
 #                the ability to check that the executable exists before
 #                processing files, but makes it easier to run on multiple
 #                OS's
+#  15 Oct 07 DJB Initial support for having ahelp pages in multiple sites.
 #
 
 #
@@ -42,6 +43,7 @@ my @funcs_util =
      fixme dbg check_dir mymkdir mycp myrm mysetmods
      check_paths check_executables check_executable_runs
      extract_filename get_ostype
+     list_ahelp_sites find_ahelp_site check_ahelp_site_valid
     );
 my @funcs_xslt =
   qw(
@@ -97,6 +99,8 @@ sub check_location ($$);
 sub get_group ($);
 
 sub get_ostype ();
+sub list_ahelp_sites ();
+sub find_ahelp_site ($$);
 
 ## Subroutines
 #
@@ -454,7 +458,11 @@ sub create_hardcopy ($$;$) {
 	    }
 	    myrm $out;
 
+	    dbg "Start htmldoc call";
+	    dbg "  $main::htmldoc --webpage --duplex --size $size -f $out $in";
 	    `$main::htmldoc --webpage --duplex --size $size -f $out $in 2>&1 >/dev/null`;
+	    dbg "End htmldoc call";
+
 	    # now get errors if text is too wide for page (which we have plenty
 	    # of), so don't bother checking -- other than whether the output was created
 	    #print "\nWARNING: problems using htmldoc\n\n" unless $? == 0;
@@ -921,6 +929,50 @@ sub get_ostype () {
     die "Unrecognized OS: $^O\n";
   }
 } # sub: get_ostype()
+
+# @sitelist = list_ahelp_sites();
+#
+# Returns an array reference listing all the sites we know
+# about (for the ahelp pages)
+#
+sub list_ahelp_sites () {
+  return qw( ciao chips sherpa );
+}
+
+# $site = find_ahelp_site $key, $context;
+#
+# returns the site in which the ahelp file is published,
+# where the ahelp file is referred to by key and context
+# values.
+#
+# The return value is one of
+#    ciao
+#    chips
+#    sherpa
+#
+sub find_ahelp_site ($$) {
+  my $key = shift;
+  my $con = shift;
+  if ($con =~ /chips$/) {
+    return "chips";
+  } elsif ($con =~ /sherpa$/) {
+    return "sherpa";
+  } else {
+    return "ciao";
+  }
+} # sub: find_ahelp_site()
+
+# check_ahelp_site $site;
+#
+# Dies if $site does not contain any ahelp files.
+#
+sub check_ahelp_site_valid ($) {
+  my $site = shift;
+  my %asites = map { ($_,1); } list_ahelp_sites;
+  die "ERROR: Unknown site <$site> for ahelp indexes; expected one of:\n\t" .
+    join (" ", list_ahelp_sites) . "\n"
+      unless exists $asites{$site};
+} # sub: check_ahelp_site_valid()
 
 ## End
 1;

@@ -8,6 +8,12 @@ NOTE:
   removed from the code. This may simplify some things
   and allow others.
 
+NOTE:
+  the PDF generation will hang if run on a non-networked
+  system, since we look for the CXC logo from the main
+  site rather than a local copy (possibly other info
+  too). This could be changed.
+
 Steps to publishing ahelp files on the web site:
 
  1) How do we generate the ahelp databases?
@@ -29,6 +35,9 @@ The location of the database is determined by the
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
 %ahelpindexdir=trial /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
 
+The same database file is used by the CIAO, ChIPS, and Sherpa sites,
+so the config lines should be the same for the three sites here.
+
 The ahelp files (in XML format) are given by the %ahelpfiles
 setting in the config.dat file, for instance:
 
@@ -43,6 +52,12 @@ For CIAO 4, we have to create separate S-Lang and Python specific
 versions of the ahelp files - at least for those with multiple
 language support. Liz has code to do this <insert instructions here>.
 From now on we assume the ahelp XML files have been so processed.
+
+Note that all the ahelp files are assumed to be in the same directory,
+or rather directory pointed to by the %ahelpfiles directive. So,
+apart from the post processing done by Liz to split up the 
+multi-language (ie S-Lang and Python) versions, %ahelpfiles could
+point to the value of the $ASCDS_INSTALL env. variable.
 
 The program to use is mk_ahelp_setup.pl
 
@@ -63,16 +78,16 @@ The program to use is mk_ahelp_setup.pl
 #
 #   The --verbose option is useful for testing/debugging the code.
 
-This script should be run in the ahelp/ directory of the web site,
-such as
-  /data/da/Docs/ciaoweb/40beta/ahelp/
-  /data/da/Docs/sherpaweb/40beta/ahelp/
+This script should be run in the ahelp/ directory of the CIAO web site,
+such as /data/da/Docs/ciaoweb/40beta/ahelp/. If run from any other site,
+such as ChIPS or Sherpa, it will die with an error.
 
 2) How do we create the ahelp index files?
 
 Once step 1 has been run, we use the mk_ahelp_indexes.pl script,
-which should again be run in the <site>/<version>/<type>/ahelp/
-directory.
+which should be run in the <site>/<version>/<type>/ahelp/
+directories. Unlike mk_ahelp_setup.pl, this script will run
+in the ChIPS and Sherpa web sites as well as the CIAO one.
 
 # Usage:
 #   mk_ahelp_indexes.pl
@@ -83,7 +98,8 @@ directory.
 3) How do we create the individual ahelp pages?
 
 After step 2, you use mk_ahelp_pages.pl to create the individual
-pages.
+pages. As with mk_ahelp_indexes.pl, this script will run in the
+ChIPS and Sherpa web sites as well as the CIAO one.
 
 # Usage:
 #   mk_ahelp_pages.pl [name1 ... namen]

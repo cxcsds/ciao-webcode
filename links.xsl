@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="us-ascii" ?>
 <!DOCTYPE xsl:stylesheet>
-<!-- $Id: links.xsl,v 1.82 2007/08/17 15:47:19 egalle Exp $ -->
 
 <!--* attempt to provide a common stylesheet for links *-->
 
 <!--*
     * Recent changes:
+    * 2007 Oct 15 DJB
+    *   Updated to account for ahelp files now existing under ciao,
+    *   sherpa, and chips web sites
     *  v1.81 - Links for chips site: faq, ahelp, ahelppage
     *  v1.80 - changed version in download link to ciao4b2
     *  v1.79 - changed version in download link to ciao4b1
@@ -114,8 +116,8 @@
     *   If a page uses the ahelp tag then the master/initial/control stylesheet
     *   needs to include something like
 
-    *  . ahelpindex=full path to ahelp index file created by ahelp2html.pl
-    *    something like /data/da/Docs/ciaoweb/published/ciao3/live/ahelp/seealso-index.xml
+    *  . ahelpindex=full path to ahelp index file created by mk_ahelp_setup.pl
+    *    something like /data/da/Docs/ciaoweb/published/ciao3/live/ahelp/ahelpindex.xml
     *    Used to work out the ahelp links
     *
 
@@ -173,7 +175,10 @@
   </xsl:template> <!-- a|A -->
 
   <!--*
-      * Link to the ahelp index page
+      * Link to the ahelp index page. If the site attribute is given
+      * then link to that site's index page, otherwise use the local
+      * index if in chips or sherpa sites, otherwise fall back to the
+      * CIAO site ahelp index.
       *
       * The only attributes it uses are the "style" attributes
       * - we complain if there's a name attribute to catch people
@@ -186,6 +191,10 @@
       *
       *   @id - optional, string
       *     the anchor on the page to link to
+      *
+      *   @site - optional, string
+      *     the site for the index page (should be "ciao", "sherpa", or
+      *     "chips" but it is not checked)
       *
       *-->
   <xsl:template match="ahelppage">
@@ -222,19 +231,23 @@
         * - if have a site attribute, then use that
         * - otherwise if site=ciao use that
         * - otherwise if site=chips use that
+        * - otherwise if site=sherpa use that
         * - otherwise assume the CIAO site
-        * 
+        *
+	* XXX TODO XXX
+	*    the problem with the site logic is that I want to go to /chipsbeta or /ciaobeta,
+	*    NOT /chips or /ciao; there are a number of cases like this, not just for ahelp,
+	*    so leave for now
         *-->
     <xsl:variable name="hrefstart"><xsl:choose>
 	<xsl:when test="boolean(@site)"><xsl:value-of select="concat('/',@site,'/ahelp/')"/></xsl:when>
-	<xsl:when test="$site != 'ciao' and $site != 'chips'">/ciao/ahelp/</xsl:when>
+	<xsl:when test="$site != 'ciao' and $site != 'chips' and $site != 'sherpa'">/ciao/ahelp/</xsl:when>
 	<xsl:otherwise><xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="0"/>
 	    <xsl:with-param name="depth"   select="$depth"/>
 	    <xsl:with-param name="dirname" select="'ahelp/'"/>
 	  </xsl:call-template></xsl:otherwise>
       </xsl:choose></xsl:variable>
-
 
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
@@ -292,7 +305,8 @@
       * We use the ahelp index file created by the ahelp publishing code to
       * map between key/context values and the HTML file name. We also use
       * this file to ensure that the key is a valid one (and that there
-      * aren't multiple matches)
+      * aren't multiple matches), as well as to determine what site the
+      * ahelp page belongs to.
       *
       * - just after CIAO 3.0 release we added the summary for the ahelp
       *   page as a title attribute: this is displayed by modern browsers
@@ -337,6 +351,10 @@
         * only do this for no matches: multiple matches would still die)
         * 
         * note: looks like we can't say @name on the RHS of tests in XPATH
+	* and get it to refer to the value of the name attribute of the
+	* current context node (ie that node that is current before the
+	* XPATH statement is evaluated), hence the introduction of the
+	* $name variable
         *-->
     <xsl:variable name="name" select="@name"/>
     <xsl:variable name="namematches" select="$ahelpindexfile//ahelp[key=$name]"/>
@@ -375,7 +393,6 @@
 
     <!--*
         * if this is a parameter link then check we know about this parameter
-        * - why can't we say $matches/parameters/paramater[name=@param]
         *-->
     <xsl:variable name="paramname" select="@param"/>
     <xsl:variable name="parammatch" select="$matches/parameters/parameter[name=$paramname]"/>
@@ -397,12 +414,16 @@
         * - if have a site attribute, then use that
         * - otherwise if site=ciao use that
         * - otherwise if site=chips use that
+        * - otherwise if site=sherpa use that
         * - otherwise assume the CIAO site
         * 
+	* XXX TODO XXX
+	*   remove @site/$site; should pick up the site from the ahelp
+	*   database
         *-->
     <xsl:variable name="hrefstart"><xsl:choose>
 	<xsl:when test="boolean(@site)"><xsl:value-of select="concat('/',@site,'/ahelp/')"/></xsl:when>
-	<xsl:when test="$site != 'ciao' and $site != 'chips'">/ciao/ahelp/</xsl:when>
+	<xsl:when test="$site != 'ciao' and $site != 'chips' and $site != 'sherpa'">/ciao/ahelp/</xsl:when>
 	<xsl:otherwise><xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="0"/>
 	    <xsl:with-param name="depth"   select="$depth"/>
@@ -437,10 +458,10 @@
 	  </xsl:choose>
 
 	  <xsl:attribute name="href">
-
-	  <xsl:value-of select="$hrefstart"/>
-
-	    <xsl:value-of select="$matches/page"/>.html<xsl:choose>
+	    <xsl:value-of select="$hrefstart"/>
+	    <xsl:value-of select="$matches/page"/>
+	    <xsl:text>.html</xsl:text>
+	    <xsl:choose>
 	      <xsl:when test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:when>
 	      <xsl:when test="boolean(@param)">#plist.<xsl:value-of select="@param"/></xsl:when>
 	    </xsl:choose>

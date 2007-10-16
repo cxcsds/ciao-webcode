@@ -2,10 +2,12 @@
 <!DOCTYPE xsl:stylesheet>
 
 <!-- AHELP XML to HTML convertor using XSL Transformations -->
-<!-- $Id: ahelp_common.xsl,v 1.24 2006/05/24 14:46:24 egalle Exp $ -->
 
 <!--* 
     * Recent changes:
+    *  Oct 15 2007 DJB
+    *    added $allowed-sites, removed dist from $allowed-types; copyright statement
+    *    now 2007
     *  v1.24 - updated copyright statement to "1998-2006"
     *  v1.23 - added br (hidden by CSS) between lastmodbar and urlbar
     *  v1.22 - only add the URL (v1.21) if it is not empty - NEED TO SORT
@@ -73,7 +75,8 @@
       * allowed values for these parameters (if there are any)
       * - see check-param-allowed template for why want spaces
       *-->
-  <xsl:variable name="allowed-types"   select="' live test trial dist '"/>
+  <xsl:variable name="allowed-types"   select="' live test trial '"/>
+  <xsl:variable name="allowed-sites"   select="' ciao chips sherpa '"/>
 
   <!--* I THINK SOMETHING IS GOING WRONG .... *-->
   <xsl:param name="depth" value="''"/>
@@ -639,7 +642,7 @@
 	    <br/>
 	    Smithsonian Institution, Copyright 
 	    <xsl:text disable-output-escaping="yes">&amp;copy;</xsl:text>
-	    1998-2006. All rights reserved. 
+	    1998-2007. All rights reserved. 
 	  </font>
 	</td>
 	<td align="right" valign="center">

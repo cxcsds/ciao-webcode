@@ -21,6 +21,9 @@
 #   Create the files needed to allow the creation of the ahelp HTML
 #   pages.
 #
+#   It should *only* be run from the CIAO site - ie not the Sherpa
+#   or ChIPS sites.
+#
 # Creates:
 #   Files in the storage location given in the config file
 #
@@ -35,7 +38,9 @@
 #  02 Oct 03 DJB Re-worked ahelp2html.pl into separate parts
 #  12 Oct 07 DJB Removed ldpath var as no longer used
 #                and updates to better support CIAO 4 changes
-#  15 Oct 07 DJB executables are now OS specific
+#  15 Oct 07 DJB Executables are now OS specific
+#                Indexes now contain site information on each ahelp page.
+#                This script should *only* be run from the ciao site
 #
 # Notes:
 #  - for CIAO 4 we assume that any multi-language files (eg chips,
@@ -85,8 +90,12 @@ sub protect_xml_chars_for_printf ($);
 sub parse_groups ($$$\%);
 sub print_seealso_list ($$$\%);
 sub create_index_files ($\%\%\%);
+sub create_seealso_files ($\%);
 
 sub check_htmlname ($);
+
+sub print_ahelplist_to_txtindex ($$);
+sub print_ahelplist_to_xmlindex ($$);
 
 ## set up variables that are also used in CIAODOC
 use vars qw( $configfile $verbose $group $xsltproc $site );
@@ -167,6 +176,9 @@ dbg "Site = $site";
 
 check_type_known $site_config, $type;
 
+die "ERROR: mk_ahelp_setup.pl should obly be run within site=ciao, not site=$site\n"
+  unless $site eq "ciao";
+
 # do we need the XML::LibXML stuff?
 #
 my $parser = undef;
@@ -238,7 +250,15 @@ my %multi_key;
 my %seealso;
 my %list_context;
 my %list_alphabet;
-my %list_dirs;
+##my %list_dirs;
+
+# Some, but not all, lists are organized by site
+#
+foreach my $site ( list_ahelp_sites ) {
+  $list_alphabet{$site} = {};
+  $list_context{$site} = {};
+  ##$list_dirs{$site} = {};
+}
 
 foreach my $path ( map { "${ahelpfiles}$_"; } qw( /doc/xml/ /contrib/doc/xml/ ) ) {
     dbg( "parsing xml files in $path for key/context/URL info" );
@@ -252,6 +272,8 @@ foreach my $path ( map { "${ahelpfiles}$_"; } qw( /doc/xml/ /contrib/doc/xml/ ) 
 
 	my ( $key, $context, $groups, $htmlname ) =
 	  get_ahelp_items( $obj, "key", "context", "seealsogroups", "htmlname" );
+
+	my $site = find_ahelp_site $key, $context;
 
 	# NOTE:
 	#   rather than die on a multiple, we just ignore the
@@ -283,23 +305,22 @@ foreach my $path ( map { "${ahelpfiles}$_"; } qw( /doc/xml/ /contrib/doc/xml/ ) 
 	# we use the same format of all these lists so that we can process
 	# them the same way later on
 	#
-	$list_context{$context} = {} unless exists $list_context{$context};
-	die "Error: have multiple matches for id=$id in context list $context\n"
-	  if exists ${ $list_context{$context} }{$id}; # this should be impossible
-	${ $list_context{$context} }{$id} = $obj;
+	my $lc = $list_context{$site};
+	$$lc{$context} = {} unless exists $$lc{$context};
+	${ $$lc{$context} }{$id} = $obj;
 
 	my $fchar = uc(substr($key,0,1));
-	$list_alphabet{$fchar} = {} unless exists $list_alphabet{$fchar};
-	die "Error: have multiple matches for id=$id in alphabetical list $fchar\n"
-	  if exists ${ $list_alphabet{$fchar} }{$id}; # this should be impossible
-	${ $list_alphabet{$fchar} }{$id} = $obj;
+	my $la = $list_alphabet{$site};
+	$$la{$fchar} = {} unless exists $$la{$fchar};
+	${ $$la{$fchar} }{$id} = $obj;
 
 	# it's useful to know what directories we are going to be storing the files in
 	#
-	my $dname = $htmlname;
-	$dname =~ s{[^/]+$}{};
-	$list_dirs{$dname} = {} unless exists $list_dirs{$dname};
-	${ $list_dirs{$dname} }{$id} = $obj;
+#	my $dname = $htmlname;
+#	$dname =~ s{[^/]+$}{};
+#	my $ld = $list_dirs{$site};
+#	$$ld{$dname} = {} unless exists $$ld{$dname};
+#	${ $$ld{$dname} }{$id} = $obj;
 
     } # foreach: $xmlfile
 
@@ -315,45 +336,7 @@ expand_seealso $listseealso, %seealso;
 #   (done here since we're looping through the XML files again and
 #    %multi_key should be up-to-date now)
 #
-# Hmmm, for CIAO 4 do we want to include the displayseealsogroups information
-# here as well? I would think so, since this is just creating the see also
-# section for the ahelp file, but am I sure? Note that at present I
-# have added this info to the seealsogroups list so the code below does
-# not need to change
-#
-foreach my $obj ( values %out ) {
-    my ( $key, $context, $grplist ) = get_ahelp_items( $obj, "key", "context", "seealsogroups" );
-    dbg( "Creating seealso info for $key/$context" );
-
-    # record how many matches this key has
-    set_ahelp_item( $obj, "matchkey", $multi_key{$key} );
-
-    # get the key/context values of all the files in the See Also
-    # section (excluding this file)
-    #
-    my ( $listref, $flag ) = parse_groups $key, $context, $grplist, %seealso;
-
-    my $seealso_head = "seealso.$context.$key.xml";
-    my $ofile = "${storage}$seealso_head";
-    dbg( " -- about to create $ofile" );
-    myrm( $ofile );
-    my $fh = IO::File->new( "> $ofile" )
-      or die "Error: Unable to create $ofile\n";
-
-    $fh->print( '<?xml version="1.0" encoding="us-ascii" ?>' . "\n" .
-		"<!DOCTYPE seealso>\n" );
-
-    if ( $flag ) { print_seealso_list $fh, $obj, $listref, %out; }
-    else         { $fh->print( "<seealso/>\n" ); }
-
-    $fh->close();
-    mysetmods( $ofile );
-
-    # store the name of the seealso file in the 'object'
-    #
-    set_ahelp_item( $obj, seealsofile => $ofile );
-
-} # foreach: $obj
+create_seealso_files $storage, %out;
 
 # write out the files which list all the ahelp files
 # and useful information about them (summary, parameter lists, ...)
@@ -737,6 +720,11 @@ sub protect_xml_chars_for_printf ($) {
 # 'empty' context groups: every context included in $listref
 # will have a non-empty see also lising.
 #
+# XXX TODO XXX
+#   the logic needs to be updated here to allow for multiple sites
+#   ie if there are pages that link to off-site ahelp pages;
+#   it is not clear if there are any that do this yet
+#
 sub print_seealso_list ($$$\%) {
     my $fh      = shift;
     my $obj     = shift;
@@ -804,12 +792,13 @@ sub print_seealso_list ($$$\%) {
 #
 sub my_alphabetical_sort { my $x=$a;my $y=$b; $x=~ s/_/zzz/g;$y=~ s/_/zzz/g; $x cmp $y; }
 
-sub print_list_to_index ($$$) {
+sub print_site_list_to_index ($$$$) {
     my $fh   = shift;
     my $name = shift;
+    my $site = shift;
     my $list = shift;
 
-    $fh->print( "<${name}>\n" );
+    $fh->print( "<${name} site='$site'>\n" );
 
     # we want '_' to come at the end, hence the 'amusing' sort function
     # - and we do this for both the 'containers' and the 'contents'
@@ -833,6 +822,21 @@ sub print_list_to_index ($$$) {
     $fh->print( "</${name}>\n" );
 
     return;
+
+} # sub: print_site_list_to_index
+
+# We only print out the list for a given site if it is not
+# empty.
+#
+sub print_list_to_index ($$$) {
+    my $fh   = shift;
+    my $name = shift;
+    my $list = shift;
+
+    foreach my $site ( keys %$list ) {
+      print_site_list_to_index $fh, $name, $site, $$list{$site}
+	if scalar keys %{$$list{$site}};
+    }
 
 } # sub: print_list_to_index
 
@@ -863,13 +867,62 @@ sub mangle ($$) {
     #   back from a mangled key/context pair to the separate values
     #
     return "${key}||${context}";
-}
+} # mangle
+
+# create_seealso_files $storage, \%out;
+#
+# creates
+#    $storage/seealso.<context>.<key>.xml
+#
+# Global variables:
+#    %multi_key
+#    %seealso
+#
+sub create_seealso_files ($\%) {
+  my $storage = shift;
+  my $objlist = shift;
+
+  foreach my $obj ( values %$objlist ) {
+    my ( $key, $context, $grplist ) = get_ahelp_items( $obj, "key", "context", "seealsogroups" );
+    dbg( "Creating seealso info for $key/$context" );
+
+    # record how many matches this key has
+    set_ahelp_item( $obj, "matchkey", $multi_key{$key} );
+    
+    # get the key/context values of all the files in the See Also
+    # section (excluding this file)
+    #
+    my ( $listref, $flag ) = parse_groups $key, $context, $grplist, %seealso;
+    
+    my $seealso_head = "seealso.$context.$key.xml";
+    my $ofile = "${storage}$seealso_head";
+    dbg( " -- about to create $ofile" );
+    myrm( $ofile );
+    my $fh = IO::File->new( "> $ofile" )
+      or die "Error: Unable to create $ofile\n";
+    
+    $fh->print( '<?xml version="1.0" encoding="us-ascii" ?>' . "\n" .
+		"<!DOCTYPE seealso>\n" );
+    
+    if ( $flag ) { print_seealso_list $fh, $obj, $listref, %$objlist; }
+    else         { $fh->print( "<seealso/>\n" ); }
+    
+    $fh->close();
+    mysetmods( $ofile );
+    
+    # store the name of the seealso file in the 'object'
+    #
+    set_ahelp_item( $obj, seealsofile => $ofile );
+    
+  } # foreach: $obj
+} # sub: create_seealso_files
+
 
 # create_index_files $dirname, \%out, \%list_alphabet, \%list_context;
 #
 # creates
 #    $dirname/ahelpindex.xml
-#    $dirname/ahelpindex.lis
+#    $dirname/ahelpindex.dat
 #
 # which lists all the info we need - in XML and text format - about the
 # XML files.
@@ -887,14 +940,20 @@ sub mangle ($$) {
 # file to actually do the conversion). This wouldn't be needed if
 # we forced XML::LibXML to be required for both type=web and type=dist
 # conversions, but I'm trying to avoid Jim having to install even more
-# software for the conversion.
+# software for the conversion. As of CIAO 4 we no longer support type=dist
+# so we could remove aheloindex.dat.
 #
 # Format of ahelpindex.dat
-#    <xml name>  <head of html name>  <seealso filename (without path)>
+#    <xml name>  <depth>  <head of html name>  <seealso filename (without path)>
+# (I do not believe that we need to encode site information in this file)
 #
 # NOTE:
 #   how do we handle the difference between contrib and main?
 #   - at the moment assume all the HTML files live in the same directory
+#
+#   It is okay if the depth attribute is '' for the ahelpindex/ahelplist/ahelp/page
+#   attribute, since here depth is the actual path fragment to use (eg
+#   '../') and not a numeric value
 #
 sub create_index_files ($\%\%\%) {
     my $dirname = shift;
@@ -907,76 +966,25 @@ sub create_index_files ($\%\%\%) {
 
     # create the index files
     dbg( "Creating the index files in: $dirname\n" );
-    myrm( $xmlfile );
-    myrm( $datfile );
 
+    # First handle the text version
+    #
+    print_ahelplist_to_txtindex $datfile, $objlist;
+
+    # Now the XML version
+    #
+    myrm( $xmlfile );
     my $xmlfh = IO::File->new( "> $xmlfile" )
       or die "Error: unable to open $xmlfile for writing\n";
-    my $datfh = IO::File->new( "> $datfile" )
-      or die "Error: unable to open $datfile for writing\n";
 
     $xmlfh->print( '<?xml version="1.0" encoding="us-ascii" ?>' . "\n" .
 		   "<!DOCTYPE ahelpindex>\n" .
 		   "<ahelpindex>\n"
 		 );
 
-    # print out the list of ahelp files (order does not matter
-    # although I guess it could do when searching)
+    # Print out the list of ahelp files.
     #
-    $xmlfh->print( "<ahelplist>\n" );
-    foreach my $out ( values %$objlist ) {
-	my ( $k, $c, $id, $h, $d, $s, $mkey, $xmlname,
-	     $paramlist, $seealso ) =
-	  get_ahelp_items( $out,
-			   "key", "context", "id", "htmlname",
-			   "depth", "summary", "matchkey",
-			   "filename", "paramlist", "seealsofile"
-			 );
-
-	# normalise the space in the summary - including within the string (not really necessary)
-	$s =~ s/\s+/ /g;
-
-	# NOTE:
-	#   key, context, and page are okay to print as is,
-	#   but we need to protect < and & in the summary
-	#   - there should be no reason why we can't change them
-	#     (although need care for & so &amp; isn't converted)
-	#
-	$s =~ s/</&lt;/g;
-	$s =~ s/&\s/&amp; /g;
-	$s =~ s/&$/&amp;/;
-
-	$xmlfh->printf( "<ahelp id='%s' samekey='%d'><key>%s</key><context>%s</context><page depth='%s'>%s</page>\n",
-		     $id, $mkey, $k, $c, '../' x ($d-1), $h );
-	$xmlfh->printf( "<summary>%s</summary>\n", $s );
-
-	# list the name and synopsis for each parameter
-	#
-	if ( $#$paramlist != -1 ) {
-	    $xmlfh->printf( "<parameters>\n" );
-	    my $ctr = 1;
-	    foreach my $param ( @$paramlist ) {
-		$xmlfh->printf( "<parameter pos='$ctr'><name>$$param[0]</name><synopsis>$$param[1]</synopsis></parameter>\n" );
-		$ctr++;
-	    }
-	    $xmlfh->printf( "</parameters>\n" );
-	} # if: $#$paramlist
-
-	$xmlfh->printf( "</ahelp>\n" );
-
-	# now print the data to the 'dat' file
-	# - note we do not want the full path of $xmlname or the seealso file
-	#
-	if ( $h =~ /^http/ ) {
-	    $h = extract_filename($xmlname);
-	    $d = 1;
-	}
-	$datfh->printf( "%s %d %s %s\n",
-			extract_filename $xmlname,
-			$d, $h,
-			extract_filename $seealso );
-    }
-    $xmlfh->print( "</ahelplist>\n" );
+    print_ahelplist_to_xmlindex $xmlfh, $objlist;
 
     # print out the alphabetical and contextual lists to the index file
     #
@@ -988,7 +996,111 @@ sub create_index_files ($\%\%\%) {
     $xmlfh->close();
 
     mysetmods( $xmlfile );
-    mysetmods( $datfile );
 
 } # sub: create_index_files()
 
+# print_ahelplist_to_txtindex $filename, $objlist;
+#
+# prints the list of ahelp files to the text file.
+# We do not have to bother about the site of the
+# ahelp file, at least for now.
+#
+# This has been separated out from the XML file index
+# file, to allow for future changes, although at
+# present it would be more efficient to process both
+# in the same loop.
+#
+sub print_ahelplist_to_txtindex ($$) {
+  my $datfile = shift;
+  my $objlist = shift;
+
+  myrm( $datfile );
+  my $datfh = IO::File->new( "> $datfile" )
+    or die "Error: unable to open $datfile for writing\n";
+  foreach my $out ( values %$objlist ) {
+
+    my ( $key, $context, $id, $h, $d, $xmlname, $seealso ) =
+      get_ahelp_items( $out,
+		       "key", "context", "id", "htmlname",
+		       "depth",
+		       "filename", "seealsofile"
+		     );
+      
+    # now print the data to the 'dat' file
+    # - note we do not want the full path of $xmlname or the seealso file
+    #
+    if ( $h =~ /^http/ ) {
+      $h = extract_filename($xmlname);
+      $d = 1;
+    }
+    $datfh->printf( "%s %d %s %s\n",
+		    extract_filename $xmlname,
+		    $d, $h,
+		    extract_filename $seealso );
+  }
+  $datfh->close();
+  mysetmods( $datfile );
+} # print_ahelplist_to_txtindex
+
+# print_ahelplist_to_xmlindex $xmlfh, $objlist;
+#
+# prints the list of ahelp files to the XML file
+# (order does not matter, although I guess it could
+# do when searching).
+#
+# As of CIAO 4 we have to worry about the site for the page.
+#
+sub print_ahelplist_to_xmlindex ($$) {
+  my $xmlfh   = shift;
+  my $objlist = shift;
+
+  $xmlfh->print( "<ahelplist>\n" );
+  foreach my $out ( values %$objlist ) {
+
+    my ( $key, $context, $id, $h, $d, $summary, $mkey, $paramlist, $fname ) =
+      get_ahelp_items( $out,
+		       "key", "context", "id", "htmlname",
+		       "depth", "summary", "matchkey",
+		       "paramlist", "filename"
+		     );
+
+    # what site are we: ciao, chips, or sherpa
+    #
+    my $ahelp_site = find_ahelp_site $key, $context;
+
+    # normalise the space in the summary - including within the string (not really necessary)
+    $summary =~ s/\s+/ /g;
+
+    # NOTE:
+    #   key, context, and page are okay to print as is,
+    #   but we need to protect < and & in the summary
+    #   - there should be no reason why we can't change them
+    #     (although need care for & so &amp; isn't converted)
+    #
+    $summary =~ s/</&lt;/g;
+    $summary =~ s/&\s/&amp; /g;
+    $summary =~ s/&$/&amp;/;
+
+    $xmlfh->printf( "<ahelp id='%s' samekey='%d'><key>%s</key><context>%s</context><site>%s</site><page depth='%s'>%s</page>\n",
+		    $id, $mkey, $key, $context, $ahelp_site, '../' x ($d-1), $h );
+    $xmlfh->printf( "<xmlname>%s</xmlname>\n", $fname );
+    $xmlfh->printf( "<summary>%s</summary>\n", $summary );
+
+    # list the name and synopsis for each parameter
+    #
+    if ( $#$paramlist != -1 ) {
+      $xmlfh->printf( "<parameters>\n" );
+      my $ctr = 1;
+      foreach my $param ( @$paramlist ) {
+	$xmlfh->printf( "<parameter pos='$ctr'><name>$$param[0]</name><synopsis>$$param[1]</synopsis></parameter>\n" );
+	$ctr++;
+      }
+      $xmlfh->printf( "</parameters>\n" );
+    } # if: $#$paramlist
+
+    $xmlfh->printf( "</ahelp>\n" );
+
+  }
+  $xmlfh->print( "</ahelplist>\n" );
+
+} # print_ahelplist_to_xmlindex

@@ -18,7 +18,7 @@
 #   The --verbose option is useful for testing/debugging the code.
 #
 # Aim:
-#   Create the alphabetical and contextual list pf ahelp files
+#   Create the alphabetical and contextual list of ahelp files
 #   as index pages.
 #
 # Creates:
@@ -39,7 +39,8 @@
 #  22 Aug 06 ECG make headtitlepostfix and texttitlepostfix available
 #  12 Oct 07 DJB Removed ldpath and htmllib vars as no longer used
 #                and updates to better support CIAO 4 changes
-#  15 Oct 07 DJB executables are now OS specific
+#  15 Oct 07 DJB Executables are now OS specific
+#                Handle site-specific index files
 #
 # To Do:
 #  - allow it to work for type=dist (currently it requires the
@@ -52,6 +53,8 @@
 # Future?:
 #  -
 #
+
+#XXX update to be site specific XXX
 
 use strict;
 $|++;
@@ -142,6 +145,7 @@ $config = undef; # DBG: just make sure no one is trying to access it
 dbg "Site = $site";
 
 check_type_known $site_config, $type;
+check_ahelp_site_valid $site;
 
 # now we can check the usage
 #
@@ -189,6 +193,7 @@ chomp $uname;
 
 dbg "*** CONFIG DATA (start) ***";
 dbg "  type=$type";
+dbg "  site=$site";
 dbg "  dname=$dname";
 dbg "  dhead=$dhead";
 dbg "  depth=$depth";

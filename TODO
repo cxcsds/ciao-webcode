@@ -1,0 +1,25 @@
+
+*** CURRENTLY ***
+
+updating links.xsl to allow linking between sites for ahelp tags
+
+*) ahelp tables
+
+The crates ahelp files have tables with empty columns; these are not displayed in
+ahelp and so should not be in the HTML output either.
+
+*) links.xsl and /<site>/ links
+
+There are links to /ciao/ (and sherpa/chips) which probably need to
+allow for the fact we may want them to go to /ciaobeta/ etc.
+
+Should they include the "version" value from the config.dat file for
+that site? The problem comes when you want to link to the latest version 
+of that page and not a particular version (as is most oftern the case apart
+from this beta release).
+
+*) download links
+
+should probably move the download link name into the config file file
+rather than update the links.xsl (and other?) pages at each release.
+
