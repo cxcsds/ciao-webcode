@@ -3,12 +3,12 @@
 <test>
 Test 01: <aguide id="foo-1">foo foo</aguide>
 Test 02: <aguide uc="1" id="foo-1">foo foo</aguide>
-Test 03: <aguide tt="1" id="foo-1">foo foo</aguide>
-Test 04: <aguide id="foo-1" em="1">foo foo</aguide>
-Test 05: <aguide uc="1" tt="1" id="foo-1">foo foo</aguide>
-Test 06: <aguide uc="1" id="foo-1" em="1">foo foo</aguide>
-Test 07: <aguide tt="1" id="foo-1" em="1">foo foo</aguide>
-Test 08: <aguide uc="1" tt="1" id="foo-1" em="1">foo foo</aguide>
+Test 03: <aguide id="foo-1" tt="1">foo foo</aguide>
+Test 04: <aguide em="1" id="foo-1">foo foo</aguide>
+Test 05: <aguide uc="1" id="foo-1" tt="1">foo foo</aguide>
+Test 06: <aguide em="1" uc="1" id="foo-1">foo foo</aguide>
+Test 07: <aguide em="1" id="foo-1" tt="1">foo foo</aguide>
+Test 08: <aguide em="1" uc="1" id="foo-1" tt="1">foo foo</aguide>
 Test 09: <aguide id="foo-1">foo foo</aguide>
 Test 10: <aguide uc="1" id="foo-1">foo foo</aguide>
 </test>

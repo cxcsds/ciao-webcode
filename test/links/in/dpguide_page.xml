@@ -4,11 +4,11 @@
 Test 01: <dpguide page="foo"/>
 Test 02: <dpguide page="foo" uc="1"/>
 Test 03: <dpguide page="foo" tt="1"/>
-Test 04: <dpguide page="foo" em="1"/>
+Test 04: <dpguide em="1" page="foo"/>
 Test 05: <dpguide page="foo" uc="1" tt="1"/>
-Test 06: <dpguide page="foo" uc="1" em="1"/>
-Test 07: <dpguide page="foo" tt="1" em="1"/>
-Test 08: <dpguide page="foo" uc="1" tt="1" em="1"/>
+Test 06: <dpguide em="1" page="foo" uc="1"/>
+Test 07: <dpguide em="1" page="foo" tt="1"/>
+Test 08: <dpguide em="1" page="foo" uc="1" tt="1"/>
 Test 09: <dpguide page="foo">test text</dpguide>
 Test 10: <dpguide page="foo" uc="1">test text</dpguide>
 </test>

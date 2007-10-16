@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='us-ascii' ?>
 <!DOCTYPE test>
 <test>
-Test 01: <manual id="foo" name="chips">foo foo</manual>
-Test 02: <manual uc="1" id="foo" name="chips">foo foo</manual>
-Test 03: <manual tt="1" id="foo" name="chips">foo foo</manual>
-Test 04: <manual id="foo" em="1" name="chips">foo foo</manual>
-Test 05: <manual uc="1" tt="1" id="foo" name="chips">foo foo</manual>
-Test 06: <manual uc="1" id="foo" em="1" name="chips">foo foo</manual>
-Test 07: <manual tt="1" id="foo" em="1" name="chips">foo foo</manual>
-Test 08: <manual uc="1" tt="1" id="foo" em="1" name="chips">foo foo</manual>
-Test 09: <manual id="foo" name="chips">foo foo</manual>
-Test 10: <manual uc="1" id="foo" name="chips">foo foo</manual>
+Test 01: <manual name="chips" id="foo">foo foo</manual>
+Test 02: <manual uc="1" name="chips" id="foo">foo foo</manual>
+Test 03: <manual name="chips" id="foo" tt="1">foo foo</manual>
+Test 04: <manual em="1" name="chips" id="foo">foo foo</manual>
+Test 05: <manual uc="1" name="chips" id="foo" tt="1">foo foo</manual>
+Test 06: <manual em="1" uc="1" name="chips" id="foo">foo foo</manual>
+Test 07: <manual em="1" name="chips" id="foo" tt="1">foo foo</manual>
+Test 08: <manual em="1" uc="1" name="chips" id="foo" tt="1">foo foo</manual>
+Test 09: <manual name="chips" id="foo">foo foo</manual>
+Test 10: <manual uc="1" name="chips" id="foo">foo foo</manual>
 </test>

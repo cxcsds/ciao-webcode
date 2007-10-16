@@ -6,9 +6,9 @@ Test 02: <scriptpage uc="1"/>
 Test 03: <scriptpage tt="1"/>
 Test 04: <scriptpage em="1"/>
 Test 05: <scriptpage uc="1" tt="1"/>
-Test 06: <scriptpage uc="1" em="1"/>
-Test 07: <scriptpage tt="1" em="1"/>
-Test 08: <scriptpage uc="1" tt="1" em="1"/>
+Test 06: <scriptpage em="1" uc="1"/>
+Test 07: <scriptpage em="1" tt="1"/>
+Test 08: <scriptpage em="1" uc="1" tt="1"/>
 Test 09: <scriptpage>test text</scriptpage>
 Test 10: <scriptpage uc="1">test text</scriptpage>
 </test>

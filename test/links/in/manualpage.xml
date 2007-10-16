@@ -6,9 +6,9 @@ Test 02: <manualpage uc="1"/>
 Test 03: <manualpage tt="1"/>
 Test 04: <manualpage em="1"/>
 Test 05: <manualpage uc="1" tt="1"/>
-Test 06: <manualpage uc="1" em="1"/>
-Test 07: <manualpage tt="1" em="1"/>
-Test 08: <manualpage uc="1" tt="1" em="1"/>
+Test 06: <manualpage em="1" uc="1"/>
+Test 07: <manualpage em="1" tt="1"/>
+Test 08: <manualpage em="1" uc="1" tt="1"/>
 Test 09: <manualpage>test text</manualpage>
 Test 10: <manualpage uc="1">test text</manualpage>
 </test>

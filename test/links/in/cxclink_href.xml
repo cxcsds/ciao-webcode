@@ -4,11 +4,11 @@
 Test 01: <cxclink href="foo.html">foo foo</cxclink>
 Test 02: <cxclink href="foo.html" uc="1">foo foo</cxclink>
 Test 03: <cxclink href="foo.html" tt="1">foo foo</cxclink>
-Test 04: <cxclink href="foo.html" em="1">foo foo</cxclink>
+Test 04: <cxclink em="1" href="foo.html">foo foo</cxclink>
 Test 05: <cxclink href="foo.html" uc="1" tt="1">foo foo</cxclink>
-Test 06: <cxclink href="foo.html" uc="1" em="1">foo foo</cxclink>
-Test 07: <cxclink href="foo.html" tt="1" em="1">foo foo</cxclink>
-Test 08: <cxclink href="foo.html" uc="1" tt="1" em="1">foo foo</cxclink>
+Test 06: <cxclink em="1" href="foo.html" uc="1">foo foo</cxclink>
+Test 07: <cxclink em="1" href="foo.html" tt="1">foo foo</cxclink>
+Test 08: <cxclink em="1" href="foo.html" uc="1" tt="1">foo foo</cxclink>
 Test 09: <cxclink href="foo.html">foo foo</cxclink>
 Test 10: <cxclink href="foo.html" uc="1">foo foo</cxclink>
 </test>

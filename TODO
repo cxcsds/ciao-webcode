@@ -1,8 +1,6 @@
 
 *** CURRENTLY ***
 
-updating links.xsl to allow linking between sites for ahelp tags
-
 *) ahelp tables
 
 The crates ahelp files have tables with empty columns; these are not displayed in
@@ -22,4 +20,6 @@ from this beta release).
 
 should probably move the download link name into the config file file
 rather than update the links.xsl (and other?) pages at each release.
+Actually, they do not hardcode the version; the problem here is that
+we have the string _ciao4b2_ (or b3) that is hardcoded.
 

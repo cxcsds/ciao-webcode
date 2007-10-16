@@ -4,11 +4,11 @@
 Test 01: <faq site="sherpa"/>
 Test 02: <faq site="sherpa" uc="1"/>
 Test 03: <faq site="sherpa" tt="1"/>
-Test 04: <faq site="sherpa" em="1"/>
+Test 04: <faq em="1" site="sherpa"/>
 Test 05: <faq site="sherpa" uc="1" tt="1"/>
-Test 06: <faq site="sherpa" uc="1" em="1"/>
-Test 07: <faq site="sherpa" tt="1" em="1"/>
-Test 08: <faq site="sherpa" uc="1" tt="1" em="1"/>
+Test 06: <faq em="1" site="sherpa" uc="1"/>
+Test 07: <faq em="1" site="sherpa" tt="1"/>
+Test 08: <faq em="1" site="sherpa" uc="1" tt="1"/>
 Test 09: <faq site="sherpa">test text</faq>
 Test 10: <faq site="sherpa" uc="1">test text</faq>
 </test>

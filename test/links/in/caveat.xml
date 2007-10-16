@@ -6,9 +6,9 @@ Test 02: <caveat uc="1">foo foo</caveat>
 Test 03: <caveat tt="1">foo foo</caveat>
 Test 04: <caveat em="1">foo foo</caveat>
 Test 05: <caveat uc="1" tt="1">foo foo</caveat>
-Test 06: <caveat uc="1" em="1">foo foo</caveat>
-Test 07: <caveat tt="1" em="1">foo foo</caveat>
-Test 08: <caveat uc="1" tt="1" em="1">foo foo</caveat>
+Test 06: <caveat em="1" uc="1">foo foo</caveat>
+Test 07: <caveat em="1" tt="1">foo foo</caveat>
+Test 08: <caveat em="1" uc="1" tt="1">foo foo</caveat>
 Test 09: <caveat>foo foo</caveat>
 Test 10: <caveat uc="1">foo foo</caveat>
 </test>

@@ -4,11 +4,11 @@
 Test 01: <extlink href="http://foo.bar/a/dir/foo.html">foo foo</extlink>
 Test 02: <extlink href="http://foo.bar/a/dir/foo.html" uc="1">foo foo</extlink>
 Test 03: <extlink href="http://foo.bar/a/dir/foo.html" tt="1">foo foo</extlink>
-Test 04: <extlink href="http://foo.bar/a/dir/foo.html" em="1">foo foo</extlink>
+Test 04: <extlink em="1" href="http://foo.bar/a/dir/foo.html">foo foo</extlink>
 Test 05: <extlink href="http://foo.bar/a/dir/foo.html" uc="1" tt="1">foo foo</extlink>
-Test 06: <extlink href="http://foo.bar/a/dir/foo.html" uc="1" em="1">foo foo</extlink>
-Test 07: <extlink href="http://foo.bar/a/dir/foo.html" tt="1" em="1">foo foo</extlink>
-Test 08: <extlink href="http://foo.bar/a/dir/foo.html" uc="1" tt="1" em="1">foo foo</extlink>
+Test 06: <extlink em="1" href="http://foo.bar/a/dir/foo.html" uc="1">foo foo</extlink>
+Test 07: <extlink em="1" href="http://foo.bar/a/dir/foo.html" tt="1">foo foo</extlink>
+Test 08: <extlink em="1" href="http://foo.bar/a/dir/foo.html" uc="1" tt="1">foo foo</extlink>
 Test 09: <extlink href="http://foo.bar/a/dir/foo.html">foo foo</extlink>
 Test 10: <extlink href="http://foo.bar/a/dir/foo.html" uc="1">foo foo</extlink>
 </test>

@@ -2,7 +2,7 @@
 <!DOCTYPE ahelpindex>
 <ahelpindex>
 <ahelplist>
-<ahelp><key>dmextract</key><context>tools</context><page>dmextract</page>
+<ahelp><key>dmextract</key><context>tools</context><site>ciao</site><page>dmextract</page>
 <summary>This is a summary!</summary>
 <parameters>
 <parameter pos="1"><name>infile</name><synopsis>The parameter summary.</synopsis></parameter>

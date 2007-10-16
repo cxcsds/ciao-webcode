@@ -3,12 +3,12 @@
 <test>
 Test 01: <script name="foo"/>
 Test 02: <script uc="1" name="foo"/>
-Test 03: <script tt="1" name="foo"/>
+Test 03: <script name="foo" tt="1"/>
 Test 04: <script em="1" name="foo"/>
-Test 05: <script uc="1" tt="1" name="foo"/>
-Test 06: <script uc="1" em="1" name="foo"/>
-Test 07: <script tt="1" em="1" name="foo"/>
-Test 08: <script uc="1" tt="1" em="1" name="foo"/>
+Test 05: <script uc="1" name="foo" tt="1"/>
+Test 06: <script em="1" uc="1" name="foo"/>
+Test 07: <script em="1" name="foo" tt="1"/>
+Test 08: <script em="1" uc="1" name="foo" tt="1"/>
 Test 09: <script name="foo">test text</script>
 Test 10: <script uc="1" name="foo">test text</script>
 </test>

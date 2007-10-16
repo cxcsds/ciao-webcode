@@ -26,13 +26,25 @@ use strict;
 
 use IO::File;
 
+sub call_touch ($) {
+  my $arg = shift;
+  my $t = $^O eq "darwin" ? "/usr/bin/touch" : "/usr/ucb/touch";
+  `$t $arg`;
+}
+
+sub call_rm ($) {
+  my $arg = shift;
+  my $rm = $^O eq "darwin" ? "/bin/rm" : "/usr/bin/rm";
+  `$rm $arg`;
+}
+
 sub cleanup_dirs (@) {
     foreach my $dir ( @_ ) {
 	die "Error: unable to find $dir\n" unless -d $dir;
 	# just to stop warning messages if the dir is empty
-	`/usr/ucb/touch $dir/delme.now`;
+	call_touch "$dir/delme.now";
 	# clear out
-	`/usr/bin/rm $dir/*`;
+	call_rm "$dir/*";
     }
 }
 
@@ -75,9 +87,22 @@ sub get_test_setup($) {
 # Test $name stylesheets
 #
 
-set head     = /data/da/Docs/local
-set xsltproc = \${head}/bin/xsltproc
-set ldpath   = \${head}/lib
+# Should check for unknown systems
+#
+set PLATFORM = `uname`
+switch (\$PLATFORM)
+
+  case SunOS
+    set head     = /data/da/Docs/local
+    set xsltproc = /usr/bin/env LD_LIBRARY_PATH=\${head}/lib \${head}/bin/xsltproc
+    unset head
+  breaksw
+
+  case Darwin
+    set xsltproc = xsltproc
+  breaksw
+
+endsw
 
 ## clean up xslt files
 #

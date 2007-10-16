@@ -3,12 +3,12 @@
 <test>
 Test 01: <threadpage id="foo-1">foo foo</threadpage>
 Test 02: <threadpage uc="1" id="foo-1">foo foo</threadpage>
-Test 03: <threadpage tt="1" id="foo-1">foo foo</threadpage>
-Test 04: <threadpage id="foo-1" em="1">foo foo</threadpage>
-Test 05: <threadpage uc="1" tt="1" id="foo-1">foo foo</threadpage>
-Test 06: <threadpage uc="1" id="foo-1" em="1">foo foo</threadpage>
-Test 07: <threadpage tt="1" id="foo-1" em="1">foo foo</threadpage>
-Test 08: <threadpage uc="1" tt="1" id="foo-1" em="1">foo foo</threadpage>
+Test 03: <threadpage id="foo-1" tt="1">foo foo</threadpage>
+Test 04: <threadpage em="1" id="foo-1">foo foo</threadpage>
+Test 05: <threadpage uc="1" id="foo-1" tt="1">foo foo</threadpage>
+Test 06: <threadpage em="1" uc="1" id="foo-1">foo foo</threadpage>
+Test 07: <threadpage em="1" id="foo-1" tt="1">foo foo</threadpage>
+Test 08: <threadpage em="1" uc="1" id="foo-1" tt="1">foo foo</threadpage>
 Test 09: <threadpage id="foo-1">foo foo</threadpage>
 Test 10: <threadpage uc="1" id="foo-1">foo foo</threadpage>
 </test>

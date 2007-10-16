@@ -1,7 +1,5 @@
 #!/data/da/Docs/local/perl/bin/perl -w
 #
-# $Id: make_tests.pl,v 1.34 2006/06/06 19:57:49 dburke Exp $
-#
 # Usage:
 #   make_tests.pl
 #
@@ -36,6 +34,8 @@
 #   04/05/16 DJB new linking code (well, the add-style-code) needs
 #                non-empty content (which is fine since the tags that
 #                were changed need a valid content)
+#   2007 Oct 16 DJB
+#     Updated to handle new site-specific ahelp versions for CIAO 4
 #
 
 use strict;
@@ -98,7 +98,7 @@ my $dotest = 1;
 #
 write_out get_xml_header("ahelpindex") .
 '<ahelplist>
-<ahelp><key>dmextract</key><context>tools</context><page>dmextract</page>
+<ahelp><key>dmextract</key><context>tools</context><site>ciao</site><page>dmextract</page>
 <summary>This is a summary!</summary>
 <parameters>
 <parameter pos="1"><name>infile</name><synopsis>The parameter summary.</synopsis></parameter>
@@ -107,9 +107,16 @@ write_out get_xml_header("ahelpindex") .
 </ahelpindex>
 ', "ahelpindexfile.xml";
 
+# How do we make the output link to 
+#   /<ciao|chips|sherpa>/ahelp/
+# when not in the correct site?
+#
 add_test "ahelp_home", "ahelppage",
   {},
-  { href => 'ahelp/', deftext => 'Ahelp page', styles => 'no_uc', title => 'Ahelp index' };
+  {
+   href => 'ahelp/', deftext => 'Ahelp page', styles => 'no_uc', title => 'Ahelp index',
+   site => 'ciao,sherpa'
+  };
 
 my $title = 'Ahelp (tools): This is a summary!';
 
@@ -161,20 +168,20 @@ add_test "dictionary_id", "dictionary",
 
 add_test "pog_home", "pog",
   {},
-  { href => '/proposer/POG/', deftext => 'the POG', styles => 'none', no_depth => 1, site => 'udocs', title => "The Proposer's Observatory Guide" };
+  { href => '/proposer/POG/', deftext => 'the POG', styles => 'none', no_depth => 1, site => 'udocs', title => "The Proposers' Observatory Guide" };
 
 # note: this isn't a suggested use (ie id attribute but no name attribute)
 add_test "pog_id", "pog",
   { id => 'foo-1'  },
-  { href => '/proposer/POG/#foo-1', deftext => 'the POG', styles => 'none', no_depth => 1, site => 'udocs', title => "The Proposer's Observatory Guide" };
+  { href => '/proposer/POG/#foo-1', deftext => 'the POG', styles => 'none', no_depth => 1, site => 'udocs', title => "The Proposers' Observatory Guide" };
 
 add_test "pog_name", "pog",
   { name => 'foo.html' },
-  { href => '/proposer/POG/html/foo.html', deftext => 'the POG', styles => 'none', no_depth => 1, site => 'udocs', title => "The Proposer's Observatory Guide" };
+  { href => '/proposer/POG/html/foo.html', deftext => 'the POG', styles => 'none', no_depth => 1, site => 'udocs', title => "The Proposers' Observatory Guide" };
 
 add_test "pog_name_id", "pog",
   { name => 'foo.html', id => 'foo-1'  },
-  { href => '/proposer/POG/html/foo.html#foo-1', deftext => 'the POG', styles => 'none', no_depth => 1, site => 'udocs', title => "The Proposer's Observatory Guide" };
+  { href => '/proposer/POG/html/foo.html#foo-1', deftext => 'the POG', styles => 'none', no_depth => 1, site => 'udocs', title => "The Proposers' Observatory Guide" };
 
 add_test "manualpage", "manualpage",
   {},
@@ -270,7 +277,7 @@ add_test "download_id", "download",
 
 add_test "download_type", "download",
   { type => 'linux6', @text },
-  { href => '/cgi-gen/ciao/download_ciao3.3_linux6.cgi', deftext => '', styles => 'no_uc', no_depth => 1, @text };
+  { href => '/cgi-gen/ciao/download_ciao4b2_linux6.cgi', deftext => '', styles => 'no_uc', no_depth => 1, @text };
 
 add_test "script_name", "script",
   { name => 'foo' },
@@ -660,7 +667,7 @@ EOD
         set out = out/xslt.$h
 
         if ( -e $out ) rm -f $out
-        /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml test.xsl in/${id}.xml > $out
+        $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml test.xsl in/${id}.xml > $out
         diff out/${h} $out
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s]\n" $ctr $h

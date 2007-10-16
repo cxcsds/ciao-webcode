@@ -6,9 +6,9 @@ Test 02: <helpdesk uc="1"/>
 Test 03: <helpdesk tt="1"/>
 Test 04: <helpdesk em="1"/>
 Test 05: <helpdesk uc="1" tt="1"/>
-Test 06: <helpdesk uc="1" em="1"/>
-Test 07: <helpdesk tt="1" em="1"/>
-Test 08: <helpdesk uc="1" tt="1" em="1"/>
+Test 06: <helpdesk em="1" uc="1"/>
+Test 07: <helpdesk em="1" tt="1"/>
+Test 08: <helpdesk em="1" uc="1" tt="1"/>
 Test 09: <helpdesk>test text</helpdesk>
 Test 10: <helpdesk uc="1">test text</helpdesk>
 </test>

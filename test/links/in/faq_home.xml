@@ -6,9 +6,9 @@ Test 02: <faq uc="1"/>
 Test 03: <faq tt="1"/>
 Test 04: <faq em="1"/>
 Test 05: <faq uc="1" tt="1"/>
-Test 06: <faq uc="1" em="1"/>
-Test 07: <faq tt="1" em="1"/>
-Test 08: <faq uc="1" tt="1" em="1"/>
+Test 06: <faq em="1" uc="1"/>
+Test 07: <faq em="1" tt="1"/>
+Test 08: <faq em="1" uc="1" tt="1"/>
 Test 09: <faq>test text</faq>
 Test 10: <faq uc="1">test text</faq>
 </test>

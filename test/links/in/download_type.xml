@@ -3,12 +3,12 @@
 <test>
 Test 01: <download type="linux6">foo foo</download>
 Test 02: <download uc="1" type="linux6">foo foo</download>
-Test 03: <download tt="1" type="linux6">foo foo</download>
+Test 03: <download type="linux6" tt="1">foo foo</download>
 Test 04: <download em="1" type="linux6">foo foo</download>
-Test 05: <download uc="1" tt="1" type="linux6">foo foo</download>
-Test 06: <download uc="1" em="1" type="linux6">foo foo</download>
-Test 07: <download tt="1" em="1" type="linux6">foo foo</download>
-Test 08: <download uc="1" tt="1" em="1" type="linux6">foo foo</download>
+Test 05: <download uc="1" type="linux6" tt="1">foo foo</download>
+Test 06: <download em="1" uc="1" type="linux6">foo foo</download>
+Test 07: <download em="1" type="linux6" tt="1">foo foo</download>
+Test 08: <download em="1" uc="1" type="linux6" tt="1">foo foo</download>
 Test 09: <download type="linux6">foo foo</download>
 Test 10: <download uc="1" type="linux6">foo foo</download>
 </test>

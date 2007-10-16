@@ -5,7 +5,7 @@
 
 <!--*
     * Recent changes:
-    * 2007 Oct 15 DJB
+    * 2007 Oct 16 DJB
     *   Updated to account for ahelp files now existing under ciao,
     *   sherpa, and chips web sites
     *  v1.81 - Links for chips site: faq, ahelp, ahelppage
@@ -126,9 +126,6 @@
 
     * 
     * 
-    * 
-    * 
-    * 
     * Thoughts:
     * - a number of links go to the 'index' page (eg ahelp)
     *   when no attribute is given whereas some tags have a separate
@@ -141,6 +138,10 @@
     * - a number of tags are essentially the same (eg dpguide, caveat, aguide, why)
     *   so they should all be thin wrappers around a single template
     *
+    * To do:
+    *   We link to /ciao/... or /$site/... when we may want to go to the
+    *   beta version of that page instead. How do we handle this?
+    *   Perhaps we need to consider ciaobeta a new site, etc.
     *-->
 
 <!--* 
@@ -194,7 +195,7 @@
       *
       *   @site - optional, string
       *     the site for the index page (should be "ciao", "sherpa", or
-      *     "chips" but it is not checked)
+      *     "chips")
       *
       *-->
   <xsl:template match="ahelppage">
@@ -224,7 +225,6 @@
       </xsl:message>
     </xsl:if>
 
-
     <!--*
         * complicated mess to work out where to link to
         * copied from FAQ section of XSL
@@ -234,10 +234,6 @@
         * - otherwise if site=sherpa use that
         * - otherwise assume the CIAO site
         *
-	* XXX TODO XXX
-	*    the problem with the site logic is that I want to go to /chipsbeta or /ciaobeta,
-	*    NOT /chips or /ciao; there are a number of cases like this, not just for ahelp,
-	*    so leave for now
         *-->
     <xsl:variable name="hrefstart"><xsl:choose>
 	<xsl:when test="boolean(@site)"><xsl:value-of select="concat('/',@site,'/ahelp/')"/></xsl:when>
@@ -254,7 +250,19 @@
       <xsl:with-param name="contents">
 	<a>
 	  <xsl:call-template name="add-whylink-style"/>
-	  <xsl:attribute name="title">Ahelp index</xsl:attribute>
+
+	  <!--* XXX TODO XXX
+	      *   - should improve the capitalisation of the site when sent in by the user
+	      *   - should indicate whether to main page, alphabetical, or contextual indexes
+	      *-->
+	  <xsl:attribute name="title">
+	    <xsl:text>Ahelp index (</xsl:text>
+	    <xsl:choose>
+	      <xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
+	      <xsl:when test="$site != 'ciao' and $site != 'chips' and $site != 'sherpa'">CIAO</xsl:when>
+	      <xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
+	    </xsl:choose>
+	    <xsl:text>)</xsl:text></xsl:attribute>
 
 	  <xsl:attribute name="href">
 	  <xsl:value-of select="$hrefstart"/>
@@ -313,10 +321,22 @@
       *   as a tool tip, but not by netscape 4
       *   Now added parameter SYNOPSIS for parameter links
       *
+      * I explicitly check for site attributes and die to make sure we 
+      * clean up the input documents (all part of the move to per-site
+      * ahelp files in the CIAO 4 series of releases).
       *-->
 
   <xsl:template match="ahelp">
     <xsl:param name="depth" select="1"/>
+
+    <!--* temporary check for the site attribute, as should not be used *-->
+    <xsl:if test="boolean(@site)=true()">
+      <xsl:message terminate="yes">
+ ERROR: ahelp link contains site='<xsl:value-of select="@site"/>' attribute
+   which should not be needed. Consult with Doug (after deleting the attribute
+   and seeing if things work correctly).
+      </xsl:message>
+    </xsl:if>
 
     <!--* safety check for old pages *-->
     <xsl:if test="boolean(@name)=false()">
@@ -391,6 +411,9 @@
       </xsl:message>
     </xsl:if>
 
+    <!--* what site is the ahelp page on? *-->
+    <xsl:variable name="ahelpsite" select="$matches/site"/>
+
     <!--*
         * if this is a parameter link then check we know about this parameter
         *-->
@@ -409,27 +432,16 @@
     </xsl:if>
 
     <!--*
-        * complicated mess to work out where to link to
-        * copied from FAQ section of XSL
-        * - if have a site attribute, then use that
-        * - otherwise if site=ciao use that
-        * - otherwise if site=chips use that
-        * - otherwise if site=sherpa use that
-        * - otherwise assume the CIAO site
-        * 
-	* XXX TODO XXX
-	*   remove @site/$site; should pick up the site from the ahelp
-	*   database
+        * The ahelp page is either in this site or another one
         *-->
     <xsl:variable name="hrefstart"><xsl:choose>
-	<xsl:when test="boolean(@site)"><xsl:value-of select="concat('/',@site,'/ahelp/')"/></xsl:when>
-	<xsl:when test="$site != 'ciao' and $site != 'chips' and $site != 'sherpa'">/ciao/ahelp/</xsl:when>
-	<xsl:otherwise><xsl:call-template name="add-start-of-href">
-	    <xsl:with-param name="extlink" select="0"/>
-	    <xsl:with-param name="depth"   select="$depth"/>
-	    <xsl:with-param name="dirname" select="'ahelp/'"/>
-	  </xsl:call-template></xsl:otherwise>
-      </xsl:choose></xsl:variable>
+      <xsl:when test="$site != $ahelpsite"><xsl:value-of select="concat('/',$ahelpsite,'/ahelp/')"/></xsl:when>
+      <xsl:otherwise><xsl:call-template name="add-start-of-href">
+	<xsl:with-param name="extlink" select="0"/>
+	<xsl:with-param name="depth"   select="$depth"/>
+	<xsl:with-param name="dirname" select="'ahelp/'"/>
+      </xsl:call-template></xsl:otherwise>
+    </xsl:choose></xsl:variable>
 
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
@@ -1197,6 +1209,10 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 		    <xsl:value-of select="concat('download/',@type,'.html')"/>
 		  </xsl:when>
 		  <xsl:otherwise>
+		    <!--*
+		        * XXX TODO XXX
+			* The hardcoded name ciao4b2 is less than ideal
+			*-->
 		    <xsl:value-of select="concat('/cgi-gen/ciao/download_ciao4b2_',@type,'.cgi')"/>
 		  </xsl:otherwise>
 		</xsl:choose>

@@ -168,6 +168,13 @@ sub call_rm ($) {
     if -e $name;
 }
 
+sub call_cp ($$) {
+  my $in = shift;
+  my $out = shift;
+  my $cp = $^O eq "darwin" ? "/bin/cp" : "/usr/bin/cp";
+  system "$cp $in $out" and die "Unable to cp $in to $out";
+}
+
 # mymkdir( $dname )
 #
 # Create the directory $dname, automatically creating any 'intermediate' directories
@@ -216,7 +223,7 @@ sub mycp ($$) {
     my $name = $_[0];
 
     myrm $out;
-    system "/usr/bin/cp $in $out" and die "Unable to cp $in to $out";
+    call_cp $in, $out;
     mysetmods $out;
 
 } # sub: mycp()

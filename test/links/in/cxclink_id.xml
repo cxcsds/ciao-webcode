@@ -3,12 +3,12 @@
 <test>
 Test 01: <cxclink id="foo-1">foo foo</cxclink>
 Test 02: <cxclink uc="1" id="foo-1">foo foo</cxclink>
-Test 03: <cxclink tt="1" id="foo-1">foo foo</cxclink>
-Test 04: <cxclink id="foo-1" em="1">foo foo</cxclink>
-Test 05: <cxclink uc="1" tt="1" id="foo-1">foo foo</cxclink>
-Test 06: <cxclink uc="1" id="foo-1" em="1">foo foo</cxclink>
-Test 07: <cxclink tt="1" id="foo-1" em="1">foo foo</cxclink>
-Test 08: <cxclink uc="1" tt="1" id="foo-1" em="1">foo foo</cxclink>
+Test 03: <cxclink id="foo-1" tt="1">foo foo</cxclink>
+Test 04: <cxclink em="1" id="foo-1">foo foo</cxclink>
+Test 05: <cxclink uc="1" id="foo-1" tt="1">foo foo</cxclink>
+Test 06: <cxclink em="1" uc="1" id="foo-1">foo foo</cxclink>
+Test 07: <cxclink em="1" id="foo-1" tt="1">foo foo</cxclink>
+Test 08: <cxclink em="1" uc="1" id="foo-1" tt="1">foo foo</cxclink>
 Test 09: <cxclink id="foo-1">foo foo</cxclink>
 Test 10: <cxclink uc="1" id="foo-1">foo foo</cxclink>
 </test>

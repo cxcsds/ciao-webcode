@@ -3,12 +3,12 @@
 <test>
 Test 01: <pog name="foo.html"/>
 Test 02: <pog uc="1" name="foo.html"/>
-Test 03: <pog tt="1" name="foo.html"/>
+Test 03: <pog name="foo.html" tt="1"/>
 Test 04: <pog em="1" name="foo.html"/>
-Test 05: <pog uc="1" tt="1" name="foo.html"/>
-Test 06: <pog uc="1" em="1" name="foo.html"/>
-Test 07: <pog tt="1" em="1" name="foo.html"/>
-Test 08: <pog uc="1" tt="1" em="1" name="foo.html"/>
+Test 05: <pog uc="1" name="foo.html" tt="1"/>
+Test 06: <pog em="1" uc="1" name="foo.html"/>
+Test 07: <pog em="1" name="foo.html" tt="1"/>
+Test 08: <pog em="1" uc="1" name="foo.html" tt="1"/>
 Test 09: <pog name="foo.html">test text</pog>
 Test 10: <pog uc="1" name="foo.html">test text</pog>
 </test>
