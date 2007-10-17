@@ -260,10 +260,6 @@ push @extra, ( logoimage => '../' x ($depth-1) . $logoimage )
 push @extra, ( logotext  => $logotext )
   if $logotext ne "";
 
-# what 'hardcopy' values do we loop through?
-#
-my @hardcopy = ( 0, 1 );
-
 # we 'hardcode' the output of the transformation
 # and ensure that any old files have been deleted
 #
@@ -285,12 +281,8 @@ my %paramlist = (
 		 version  => $version,
 		 @extra
 		);
-foreach my $hflag ( @hardcopy ) {
 
-  # run the processor, pipe the screen output to a file
-  $paramlist{hardcopy} = $hflag;
-  translate_file "${stylesheets}ahelp_index.xsl", $ahelpindex, \%paramlist;
-}
+translate_file_hardcopy "${stylesheets}ahelp_index.xsl", $ahelpindex, \%paramlist;
 
 # success or failure?
 foreach my $page ( @soft, @hard ) {

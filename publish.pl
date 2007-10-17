@@ -807,11 +807,7 @@ sub xml2html_page ($) {
     push @hardcopy, 1 unless $site eq "icxc";
 
     my %params = @flags;
-    foreach my $hflag ( @hardcopy ) {
-      # run the processor, pipe the screen output to a file
-      $params{hardcopy} = $hflag;
-      translate_file "$$opts{xslt}page.xsl", $in, \%params;
-    }
+    translate_file_hardcopy "$$opts{xslt}page.xsl", $in, \%params, \@hardcopy;
 
     # success or failure?
     check_for_page( @pages );
@@ -901,11 +897,7 @@ sub xml2html_bugs ($) {
     push @hardcopy, 1 unless $site eq "icxc";
 
     my %params = @flags;
-    foreach my $hflag ( @hardcopy ) {
-	# run the processor, pipe the screen output to a file
-	$params{hardcopy} = $hflag;
-	translate_file "$$opts{xslt}bugs.xsl", $in, \%params;
-    }
+    translate_file_hardcopy "$$opts{xslt}bugs.xsl", $in, \%params, \@hardcopy;
 
     # success or failure?
     check_for_page( @pages );
@@ -1060,10 +1052,7 @@ sub xml2html_register ($) {
     # as of CIAO 3.1
     #
     my %params = @flags;
-    foreach my $hflag ( qw ( 0 1 ) ) {
-	$params{hardcopy} = $hflag;
-	translate_file "$$opts{xslt}register_live.xsl", $in, \%params;
-    }
+    translate_file_hardcopy "$$opts{xslt}register_live.xsl", $in, \%params;
 
     # success or failure?
     check_for_page( @pages );
@@ -1162,11 +1151,7 @@ sub xml2html_multiple ($$$) {
       );
 
     my %params = @flags;
-    foreach my $hflag ( qw( 0 1 ) ) {
-	# run the processor [ignore the screen output here]
-	$params{hardcopy} = $hflag;
-	translate_file "$$opts{xslt}${pagename}.xsl", $in, \%params;
-    }
+    translate_file_hardcopy "$$opts{xslt}${pagename}.xsl", $in, \%params;
 
     # check the softcopy versions
     check_for_page( @soft );
@@ -1265,11 +1250,7 @@ sub xml2html_threadindex ($) {
       );
 
     my %params = @flags;
-    foreach my $hflag ( qw( 0 1 ) ) {
-	# run the processor [ignore the screen output here]
-	$params{hardcopy} = $hflag;
-	translate_file "$$opts{xslt}threadindex.xsl", $in, \%params;
-    }
+    translate_file_hardcopy "$$opts{xslt}threadindex.xsl", $in, \%params;
 
     # check the softcopy versions
     check_for_page( @soft );
@@ -1466,11 +1447,7 @@ sub xml2html_thread ($) {
       );
 
     my %params = @flags;
-    foreach my $hflag ( qw( 0 1 ) ) {
-	# run the processor [ignore the screen output here]
-	$params{hardcopy} = $hflag;
-	translate_file "$$opts{xslt}${site}_thread.xsl", $in, \%params;
-    }
+    translate_file_hardcopy "$$opts{xslt}${site}_thread.xsl", $in, \%params;
 
     # set the correct owner/permissions for the HTML files
     #

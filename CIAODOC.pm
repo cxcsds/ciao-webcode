@@ -65,7 +65,7 @@ my @funcs_util =
     );
 my @funcs_xslt =
   qw(
-      translate_file create_hardcopy
+      translate_file translate_file_hardcopy create_hardcopy
    );
 my @funcs_cfg  =
   qw(
@@ -101,6 +101,7 @@ sub check_executable_runs ($$$);
 sub extract_filename ($);
 
 sub translate_file ($$;$);
+sub translate_file_hardcopy ($$$;$);
 sub create_hardcopy ($$;$);
 
 sub parse_config ($);
@@ -397,6 +398,21 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     return $retval;
 
   } # sub: translate_file()
+
+  # This is a common enough pattern that it is worth abstracting out
+  # Note that the params assoc array will be changed by this routine.
+  #
+  sub translate_file_hardcopy ($$$;$) {
+    my $stylesheet = shift;
+    my $xml_file   = shift; # with/without trailing .xml
+    my $params     = shift;
+    my $hcopy      = shift || [0,1];
+
+    foreach my $hflag ( @$hcopy ) {
+      $$params{hardcopy} = $hflag;
+      translate_file $stylesheet, $xml_file, $params;
+    }
+  } # sub: translate_file_hardcopy()
 
 }
 
