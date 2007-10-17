@@ -2,10 +2,13 @@
 <!DOCTYPE xsl:stylesheet>
 
 <!-- AHELP XML to HTML convertor using XSL Transformations -->
-<!-- $Id: ahelp_main.xsl,v 1.26 2006/08/22 19:36:28 egalle Exp $ -->
 
 <!--* 
     * Recent changes:
+    *  2007 Oct 17 DJB 
+    *    Try and handle TABLE's the same way that ahelp does; if all rows (but the first)
+    *    of a column are empty then do not display that column.
+    *    Removed support for type=dist
     *  v1.26 - changed page headers and other items to use
     *	       htmltitlepostfix value 
     *  v1.25 - <html> changed to <html lang="en"> following
@@ -150,36 +153,6 @@
   </xsl:template> <!--* match=cxchelptopics mode=make-viewable *-->
 
   <!--* 
-      * create: $outname.html (Distribution)
-      *-->
-  <xsl:template match="cxchelptopics" mode="make-dist-viewable">
-
-    <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$outname"/>.html</xsl:variable>
-
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="us-ascii">
-      
-      <html lang="en">
-	<head>
-	  <title>Ahelp: <xsl:value-of select="ENTRY/@key"/> - <xsl:value-of select="$headtitlepostfix"/></title>
-	</head>
-
-	<body bgcolor="#ffffff">
-
-	  <!--* the main text *-->
-	  <xsl:apply-templates select="ENTRY" mode="viewable"/>
-
-	</body>
-      </html>
-
-    </xsl:document>
-  </xsl:template> <!--* match=cxchelptopics mode=make-dist-viewable *-->
-
-  <!--* 
       * create: $outname.hard.html
       *-->
   <xsl:template match="cxchelptopics" mode="make-hardcopy">
@@ -224,7 +197,7 @@
   <!--* begin DTD templates *-->
 
   <!--*
-      * create the viewable HTML contents (type=web/dist)
+      * create the viewable HTML contents
       * 
       * we use a pull-style approach here
       * 
@@ -838,18 +811,43 @@
       *   <!ELEMENT TABLE        ( CAPTION?, ROW*)>
       *
       * For CIAO 3.0 changed to have a border of 1 - previously had border = 0
-      *   and added frame="void"
+      *   and added frame="void". Should be done by CSS but kept in for
+      *   hardcopy version.
       *
       * Note: the 'hidden' rule is that the first row of the
       * table is taken to be a header row, even there is no
       * mark up to suggest  this (and it is not always required)
       * We follow this 'rule' here.
+      * Also, if all rows of a column EXCEPT the first are empty
+      * then we do not display that column.
       *-->
   <xsl:template match="TABLE">
+
+    <!-- true if the column contains data after the first row, false otherwise -->
+    <xsl:variable name="colflags">
+      <xsl:for-each select="ROW[1]/DATA">
+	<xsl:variable name="pos" select="position()"/>
+	<flag><xsl:value-of select="count(../../ROW[position()!=1]/DATA[position()=$pos and . != ''])!=0"/></flag>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <!--*
+        * There is the possibility of an empty table, but more likely one
+	* with only one row, which we would then consider as empty.
+	*-->
+    <xsl:if test="count(exsl:node-set($colflags)/flag[.='true']) = 0">
+      <xsl:message terminate="yes">
+ Found a TABLE that is either empty or only contains 1 row!
+      </xsl:message>
+    </xsl:if>
+
     <xsl:apply-templates select="CAPTION"/>
     <table border="1" frame="void">
-      <xsl:apply-templates select="ROW"/> <!--* make sure we don't process the CAPTION again *-->
+      <xsl:apply-templates select="ROW">
+	<xsl:with-param name="colflags" select="exsl:node-set($colflags)"/>
+      </xsl:apply-templates>
     </table>
+
   </xsl:template>
 
   <!--*
@@ -873,17 +871,46 @@
       *   <!ELEMENT ROW          (DATA*)>
       *
       * If this is the first row then we make it a header row
-      * through some chicanery
+      * through some chicanery. We also use a pull approach so that
+      * we can select which columns to process, given the
+      * colflags input (a set of <flag>true/false</flag> values,
+      * one for each column in the header). Note that there could be more or less
+      * columns than in the header, which we warn about.
+      *
+      * I am sure there are far-more elegant methods than the this.
       *-->
   <xsl:template match="ROW">
+    <xsl:param name="colflags"/>
+    <xsl:variable name="expected_ncols" select="count($colflags/flag)"/>
+    <xsl:variable name="found_ncols" select="count(DATA)"/>
+
+    <!--* only warn once per file (assuming always run with hardcopy=0) *-->
+    <xsl:if test="$found_ncols != $expected_ncols and $hardcopy = '0'">
+      <xsl:message>
+	<xsl:value-of select="concat('WARNING: ROW contains ',$found_ncols,
+	  ' DATA elements but expected to find ',$expected_ncols,' of them ',
+	  '(key=',//ENTRY/@key,' context=',//ENTRY/@context,')')"/>
+      </xsl:message>
+    </xsl:if>
+
     <tr>
       <xsl:choose>
 	<xsl:when test="position() = 1">
 	  <xsl:attribute name="class">headerrow</xsl:attribute>
-	  <xsl:apply-templates mode="headerrow"/>
+	  <xsl:for-each select="DATA">
+	    <xsl:variable name="pos" select="position()"/>
+	    <xsl:if test="$colflags/flag[$pos]='true'">
+	      <xsl:apply-templates mode="headerrow" select="."/>
+	    </xsl:if>
+	  </xsl:for-each>
 	</xsl:when>
 	<xsl:otherwise>
-	  <xsl:apply-templates/>
+	  <xsl:for-each select="DATA">
+	    <xsl:variable name="pos" select="position()"/>
+	    <xsl:if test="$colflags/flag[$pos]='true'">
+	      <xsl:apply-templates select="."/>
+	    </xsl:if>
+	  </xsl:for-each>
 	</xsl:otherwise>
       </xsl:choose>
     </tr>
@@ -1225,9 +1252,6 @@
   <!--*
       * Adds the "jump to" section to allow quick navigation
       *
-      * Use the same code for format=web and dist, with
-      * slightly different output
-      *
       * Takes advantage of variables defined in top-level style sheet
       *   eg format, have-desc, have-bugs, ...
       *
@@ -1241,10 +1265,6 @@
 	<tr>
 	  <td align="left">
 	    <strong>Jump to:</strong>
-	    <xsl:if test="$type='dist' and $hardcopy != 1">
-	      <xsl:text> </xsl:text><a title="Jump to the alphabetical list of ahelp pages" href="{$depth}index_alphabet.html">Index (alphabetical)</a>
-	      <xsl:text> </xsl:text><a title="Jump to the context list of ahelp  pages" href="{$depth}index_context.html">Index (context)</a>
-	    </xsl:if>
 	    <xsl:if test="$have-desc"><xsl:text> </xsl:text><a title="Jump to the description" href="#description">Description</a></xsl:if>
 	    <xsl:if test="$have-example"><xsl:text> </xsl:text><a title="Jump to the Example section" href="#examples">Example<xsl:if test="$nexample!=1">s</xsl:if></a></xsl:if>
 	    <xsl:if test="$have-param"><xsl:text> </xsl:text><a title="Jump to the parameter description" href="#ptable">Parameters</a></xsl:if>

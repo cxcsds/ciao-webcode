@@ -7,11 +7,6 @@ Check whether URLs printed out in the hardcopy versions of pages -
 in particular ahelp indexes - are correct. This is the URL value at the top
 of the page giving the location of the page being viewed.
 
-*) ahelp tables
-
-The crates ahelp files have tables with empty columns; these are not displayed in
-ahelp and so should not be in the HTML output either.
-
 *) links.xsl and /<site>/ links
 
 There are links to /ciao/ (and sherpa/chips) which probably need to
