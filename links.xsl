@@ -251,17 +251,9 @@
 	<a>
 	  <xsl:call-template name="add-whylink-style"/>
 
-	  <!--* XXX TODO XXX
-	      *   - should improve the capitalisation of the site when sent in by the user
-	      *   - should indicate whether to main page, alphabetical, or contextual indexes
-	      *-->
 	  <xsl:attribute name="title">
 	    <xsl:text>Ahelp index (</xsl:text>
-	    <xsl:choose>
-	      <xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
-	      <xsl:when test="$site != 'ciao' and $site != 'chips' and $site != 'sherpa'">CIAO</xsl:when>
-	      <xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
-	    </xsl:choose>
+	    <xsl:call-template name="process-site-name-for-text"/>
 	    <xsl:text>)</xsl:text></xsl:attribute>
 
 	  <xsl:attribute name="href">
@@ -282,6 +274,29 @@
     </xsl:call-template>
 
   </xsl:template> <!--* ahelppage *-->
+
+  <!--*
+      * The context node either contains a site attribute or we use the
+      * $site global symbol.
+      *-->
+  <xsl:template name="process-site-name-for-text">
+    <xsl:variable name="out"><xsl:choose>
+      <xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
+      <xsl:when test="$site != 'ciao' and $site != 'chips' and $site != 'sherpa'">CIAO</xsl:when>
+      <xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+    <xsl:variable name="outlc" select="translate($out,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+    <xsl:choose>
+      <xsl:when test="$outlc = 'ciao'">CIAO</xsl:when>
+      <xsl:when test="$outlc = 'sherpa'">Sherpa</xsl:when>
+      <xsl:when test="$outlc = 'chips'">ChIPS</xsl:when>
+      <xsl:otherwise>
+	<xsl:message terminate="yes">
+ Expected site=ciao, sherpa, or chips but sent '<xsl:value-of select="$outlc"/>'
+	</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
   <!--*
       * handle ahelp tags:

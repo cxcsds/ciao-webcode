@@ -114,7 +114,9 @@ write_out get_xml_header("ahelpindex") .
 add_test "ahelp_home", "ahelppage",
   {},
   {
-   href => 'ahelp/', deftext => 'Ahelp page', styles => 'no_uc', title => 'Ahelp index',
+   href => 'ahelp/', deftext => 'Ahelp page', styles => 'no_uc',
+   title => { ciao => 'Ahelp index (CIAO)', sherpa => 'Ahelp index (Sherpa)',
+	      chart => 'Ahelp index (CIAO)' },
    site => 'ciao,sherpa'
   };
 
@@ -445,6 +447,8 @@ sub is_set ($$) {
 #    no_fix => 0 or 1 - this appears to do nothing
 #
 #    title => foo means add a 'title="foo" attribute after the <a/class attributes
+#      it can also be an associative array, in which case there should be a string
+#      with a key set to each site value used in the test.
 #
 sub add_test ($$$$) {
     unless ( $dotest ) {
@@ -547,9 +551,15 @@ sub add_test ($$$$) {
 		      if exists $helplink_tags{$tag};
 
 		    # add 'title' attribute if available
+		    # VERY hacky way to have site-specific values
 		    #
 		    if ( exists $$attr{title}) {
 			my $text = $$attr{title};
+			if (ref $text eq "HASH") {
+			  die "Error: expected title hash to include a value for key=$site\n"
+			    unless exists $$text{$site};
+			  $text = $$text{$site}
+			}
 			if ( $text =~ /"/ ) {
 			    $out_string .= "title='$text' ";
 			} else {
