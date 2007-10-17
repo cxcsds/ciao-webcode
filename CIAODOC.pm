@@ -17,6 +17,7 @@
 #                processing files, but makes it easier to run on multiple
 #                OS's
 #  15 Oct 07 DJB Initial support for having ahelp pages in multiple sites.
+#  17 Oct 07 DJB Changed xslt processing to use XML::LibXSLT rather than xsltproc
 #
 
 #
@@ -24,7 +25,6 @@
 #   $configfile
 #   $verbose
 #   $group
-#   $xsltproc
 #   $htmldoc
 #   $site
 #
@@ -38,6 +38,24 @@ use Carp;
 use Cwd;
 use IO::File;
 
+use XML::LibXML;
+use XML::LibXSLT;
+
+# Set up XML/XSLT processors
+#
+my $parser = XML::LibXML->new()
+  or die "Error: Unable to create XML::LibXML parser instance.\n";
+$parser->validation(0);
+
+my $xslt = XML::LibXSLT->new()
+  or die "Error: Unable to create XML::LibXSLT instance.\n";
+
+# default depth is 250 but this causes problems with some style sheets
+# (eg wavdetect, tg_create_mask), so increase randomly until everything
+# compiles. Why did we not see this in the xsltproc command-line tool?
+#
+XML::LibXSLT->max_depth(750);
+
 my @funcs_util =
   qw(
      fixme dbg check_dir mymkdir mycp myrm mysetmods
@@ -47,7 +65,7 @@ my @funcs_util =
     );
 my @funcs_xslt =
   qw(
-      make_params translate_file create_hardcopy
+      translate_file create_hardcopy
    );
 my @funcs_cfg  =
   qw(
@@ -82,8 +100,7 @@ sub check_executable_runs ($$$);
 
 sub extract_filename ($);
 
-sub make_params (@);
-sub translate_file ($$$);
+sub translate_file ($$;$);
 sub create_hardcopy ($$;$);
 
 sub parse_config ($);
@@ -323,112 +340,65 @@ EOE
 #
 sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
 
-# utility routine to convert a hash of key/value pairs into
-# a string saying
-#  "--stringparam key1 value1 --stringparam key2 value2 ..."
-#
-sub make_params (@) {
-    my %hash = @_;
-    return join( "", map
-		 {
-		     my $parname = $_;
-		     my $parval  = $hash{$parname};
-
-		     print STDERR "--- parname $parname has no defined value\n" unless defined $parval;
-
-		     $parval = "''" if !defined($parval) or $parval eq "";
-#		     $parval = "''" if $parval eq "";
-
-		     # try and protect spaces in any arguments
-		     #
-		     if ( $parval =~ / / && $parval !~ /^['"]/ ) {
-			 $parval = "'${parval}'";
-##			 print STDERR "--- protecting parameter value [$parval]\n";
-		     }
-
-		     "--stringparam $parname $parval "
-		 } keys %hash );
-} # sub: make_params()
-
 # run the processor and return the screen output
 #
-# uses the global variable $xsltproc
-# and we *always* add a --novalid option here
-# (since we don't have a proper catalog/location for the DTDs)
+# We now (as of CIAO 4 beta 3) use XML::LibXSLT to process the file,
+# rather than call an external process (xsltproc)
 #
-# I have decided to go back to the "fail on error" condition
-# since it's more useful - we'll keep the old code around
-# since it may be useful (e.g. for testing)
-#
+{
+  # add parsed stylesheets to an internal repository
+  # in case they are needed again.
+  #
+  my %xslt_store;
 
-=begin ALLOWERROR
+  # Returns the parsed stylesheet, loading and storing
+  # it if it hasn't already been loaded.
+  #
+  sub _get_stylesheet ($) {
+    my $filename = shift;
+    return $xslt_store{$filename} if exists $xslt_store{$filename};
+    my $style = $xslt->parse_stylesheet_file ($filename) ||
+      die "ERROR: unable to parse stylesheet '$filename'\n";
+    $xslt_store{$filename} = $style;
+    return $xslt_store{$filename};
+  }
 
-# since we no longer die on error it can be easy to miss runs
-# that fail. Therefore we keep a counter that is used to determine
-# behaviour on exit (ie message to STDERR and exit(1) if there was an
-# error)
-#
-# We return undef on error (I guess this could be a valid return value
-# of the transformation, but i doubt it)
-#
-my $_translate_errors = 0;
-END {
-    if ( $_translate_errors ) {
-	print STDERR "\nERROR: $_translate_errors translations failed!\n";
-	exit( 1 );
-    }
-}
-
-=end ALLOWERROR
-
-=cut
-
-sub translate_file ($$$) {
-    my $params     = shift;
+  # TODO:
+  #   allow the return value to be XML and not assume plain text
+  #
+  sub translate_file ($$;$) {
     my $stylesheet = shift;
     my $xml_file   = shift; # with/without trailing .xml
     $xml_file .= ".xml" unless $xml_file =~ /\.xml$/;
 
+    my $params     = shift || {};
+    
     dbg "*** XSLT (start) ***";
     dbg "  in=$xml_file";
     dbg "  xslt=$stylesheet";
     dbg "  *** params (start) ***";
-    foreach my $p ( split /--/, $params ) {
-        next if $p =~ /^\s*$/;
-        dbg "    --$p";
+
+    my %newparams = XML::LibXSLT::xpath_to_string(%$params);
+    while (my ($parname, $parval) = each %newparams) {
+      dbg "    $parname=$parval";
     }
     dbg "  *** params (end) ***";
 
-    my $retval = `$main::xsltproc --novalid $params $stylesheet $xml_file`;
+    my $sheet = _get_stylesheet $stylesheet;
+    my $xml = $parser->parse_file ($xml_file)
+      or die "ERROR: unable to parse XML file '$xml_file'\n";
 
-    die <<"EOE" unless $? == 0;
-Error: problems using $stylesheet
-       error in XML file ($xml_file)?
-       return value was:
-$retval
-
-EOE
-
-=begin ALLOWERROR
-
-    unless ( $? == 0 ) {
-	$_translate_errors++;
-	print <<"EOE";
-Error: problems using $stylesheet
-       error in XML file ($xml_file)?
-       discading return value of "$retval"
-EOE
-	$retval = undef;
-    }
-
-=end
-
-=cut
+    # XXX TODO XXX
+    #   trap errors
+    my $results = $sheet->transform($xml, %newparams);
+    my $retval  = $sheet->output_string($results);
 
     dbg "*** XSLT (end) ***";
     return $retval;
 
-} # sub: translate_file()
+  } # sub: translate_file()
+
+}
 
 ## create the hardcopy versions of the files
 #

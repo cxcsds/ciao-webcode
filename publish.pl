@@ -156,11 +156,10 @@ sub process_xml   ($$);
 sub process_files ($$);
 
 ## set up variables that are also used in CIAODOC
-use vars qw( $configfile $verbose $group $xsltproc $htmldoc $site );
+use vars qw( $configfile $verbose $group $htmldoc $site );
 $configfile = "$FindBin::Bin/config.dat";
 $verbose = 0;
 $group = "";
-$xsltproc = "";
 $htmldoc = "";
 $site = "";
 
@@ -220,9 +219,8 @@ my $config = parse_config( $configfile );
 
 # Get the names of executable/library locations
 #
-( $xsltproc, $htmldoc ) = get_config_main_type( $config, qw( xsltproc htmldoc ), $ostype );
+$htmldoc = get_config_main_type( $config, "htmldoc", $ostype );
 
-check_executable_runs "xsltproc", $xsltproc, "--version";
 check_executable_runs "htmldoc", $htmldoc, "--version";
 dbg "Found executable/library paths";
 
@@ -659,10 +657,10 @@ sub xml2html_navbar ($) {
     print "Parsing [navbar]: $in"; # don't '\n' until skip check
 
     my @extra;
-    push @extra, ( logoimage => $logoimage )    if $logoimage ne "";
-    push @extra, ( logotext  => "'$logotext'" ) if $logotext  ne "";
+    push @extra, ( logoimage => $logoimage )  if $logoimage ne "";
+    push @extra, ( logotext  => $logotext )   if $logotext  ne "";
 
-    my $params = make_params
+    my %params = 
       (
 	  type => $$opts{type},
 	  site => $$opts{site},
@@ -687,7 +685,7 @@ sub xml2html_navbar ($) {
     #   (since we write protect them after creation so the processor
     #    can't actually create the new files)
     #
-    my $pages = translate_file $params, "$$opts{xslt}list_navbar.xsl", $in;
+    my $pages = translate_file "$$opts{xslt}list_navbar.xsl", $in, \%params;
     $pages =~ s/\s+/ /g;
     my @pages = split " ", $pages;
 
@@ -704,7 +702,7 @@ sub xml2html_navbar ($) {
     }
 
     # run the processor - ignore the screen output
-    translate_file $params, "$$opts{xslt}navbar.xsl", $in;
+    translate_file "$$opts{xslt}navbar.xsl", $in, \%params;
 
     foreach my $page ( @pages ) {
 	die "Error: transformation did not create $page\n"
@@ -747,7 +745,7 @@ sub xml2html_page ($) {
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
 
-    my $lastmod = "'$$opts{lastmod}'";
+    my $lastmod = $$opts{lastmod};
 
     # the navbarlink is currently not used by the code
     # - see the comments in helper.xsl
@@ -764,7 +762,7 @@ sub xml2html_page ($) {
 
     # how about math pages?
     #
-    my $math = translate_file "", "$$opts{xslt}list_math.xsl", $in;
+    my $math = translate_file "$$opts{xslt}list_math.xsl", $in;
     my @math = split " ", $math;
 
     # do we need to recreate (include the equations created by any math blocks)
@@ -807,10 +805,12 @@ sub xml2html_page ($) {
     #
     my @hardcopy = ( 0 );
     push @hardcopy, 1 unless $site eq "icxc";
+
+    my %params = @flags;
     foreach my $hflag ( @hardcopy ) {
-	# run the processor, pipe the screen output to a file
-	my $params = make_params( @flags, hardcopy => $hflag );
-	translate_file $params, "$$opts{xslt}page.xsl", $in;
+      # run the processor, pipe the screen output to a file
+      $params{hardcopy} = $hflag;
+      translate_file "$$opts{xslt}page.xsl", $in, \%params;
     }
 
     # success or failure?
@@ -839,7 +839,7 @@ sub xml2html_bugs ($) {
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
 
-    my $lastmod = "'$$opts{lastmod}'";
+    my $lastmod = $$opts{lastmod};
 
     # the navbarlink is currently not used by the code
     # - see the comments in helper.xsl
@@ -856,7 +856,7 @@ sub xml2html_bugs ($) {
 
     # how about math pages?
     #
-    my $math = translate_file "", "$$opts{xslt}list_math.xsl", $in;
+    my $math = translate_file "$$opts{xslt}list_math.xsl", $in;
     my @math = split " ", $math;
 
     # do we need to recreate (include the equations created by any math blocks)
@@ -899,10 +899,12 @@ sub xml2html_bugs ($) {
     #
     my @hardcopy = ( 0 );
     push @hardcopy, 1 unless $site eq "icxc";
+
+    my %params = @flags;
     foreach my $hflag ( @hardcopy ) {
 	# run the processor, pipe the screen output to a file
-	my $params = make_params( @flags, hardcopy => $hflag );
-	translate_file $params, "$$opts{xslt}bugs.xsl", $in;
+	$params{hardcopy} = $hflag;
+	translate_file "$$opts{xslt}bugs.xsl", $in, \%params;
     }
 
     # success or failure?
@@ -939,7 +941,7 @@ sub xml2html_redirect ($) {
 
     myrm $out;
 
-    translate_file "--stringparam filename $out", "$$opts{xslt}redirect.xsl", $in;
+    translate_file "$$opts{xslt}redirect.xsl", $in, { filename => $out };
 
     die "Error: unable to create $out\n" unless -e $out;
     mysetmods $out;
@@ -965,7 +967,7 @@ sub xml2html_softlink ($) {
     print "Parsing [softlink]: $in\n";
 
     # get the in/out list
-    my $pages = translate_file "", "$$opts{xslt}list_softlink.xsl", $in;
+    my $pages = translate_file "$$opts{xslt}list_softlink.xsl", $in;
     $pages =~ s/\s+/ /g;
     my %pages = split " ", $pages;
 
@@ -1001,7 +1003,7 @@ sub xml2html_register ($) {
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
 
-    my $lastmod = "'$$opts{lastmod}'";
+    my $lastmod = $$opts{lastmod};
 
     print "Parsing [register]: $in";
 
@@ -1012,7 +1014,7 @@ sub xml2html_register ($) {
 
     # check for math blocks (can't be bothered to handle in register blocks)
     #
-    my $math = translate_file "", "$$opts{xslt}list_math.xsl", $in;
+    my $math = translate_file "$$opts{xslt}list_math.xsl", $in;
     my @math = split " ", $math;
     die "Error: currently math blocks are not allowed in register pages (hassle Doug)\n"
       unless $#math == -1;
@@ -1057,9 +1059,10 @@ sub xml2html_register ($) {
     # we no longer need to create so-many different versions
     # as of CIAO 3.1
     #
+    my %params = @flags;
     foreach my $hflag ( qw ( 0 1 ) ) {
-	my $params = make_params( @flags, hardcopy => $hflag );
-	translate_file $params, "$$opts{xslt}register_live.xsl", $in;
+	$params{hardcopy} = $hflag;
+	translate_file "$$opts{xslt}register_live.xsl", $in, \%params;
     }
 
     # success or failure?
@@ -1101,7 +1104,7 @@ sub xml2html_multiple ($$$) {
     my $outurl = $$opts{outurl};
     my $site   = $$opts{site};
 
-    my $lastmod = "'$$opts{lastmod}'";
+    my $lastmod = $$opts{lastmod};
 
     # temporary
     site_check( $site, $pagename, $sitelist );
@@ -1109,19 +1112,19 @@ sub xml2html_multiple ($$$) {
     print "Parsing [$pagename]: $in";
 
     # get a list of the pages: we need this so that:
-    # - we can create the directrory if necessary
+    # - we can create the directory if necessary
     # - we can delete them [if they exist] before the processor runs
     #   (since we write protect them after creation so the processor
     #    can't actually create the new files)
     #
-    my $pages = translate_file "", "$$opts{xslt}list_${pagename}.xsl", $in;
+    my $pages = translate_file "$$opts{xslt}list_${pagename}.xsl", $in;
     $pages =~ s/\s+/ /g;
     my @soft = map { "${outdir}$_"; }split " ", $pages;
     my @hard = map { my $a = $_; $a =~ s/\.html$/.hard.html/; $a; } @soft;
 
     # how about math pages?
     #
-    my $math = translate_file "", "$$opts{xslt}list_math.xsl", $in;
+    my $math = translate_file "$$opts{xslt}list_math.xsl", $in;
     my @math = split " ", $math;
 
     # do we need to recreate
@@ -1158,10 +1161,11 @@ sub xml2html_multiple ($$$) {
        texttitlepostfix => $texttitlepostfix,
       );
 
+    my %params = @flags;
     foreach my $hflag ( qw( 0 1 ) ) {
 	# run the processor [ignore the screen output here]
-	my $params = make_params( @flags, hardcopy => $hflag );
-	translate_file $params, "$$opts{xslt}${pagename}.xsl", $in;
+	$params{hardcopy} = $hflag;
+	translate_file "$$opts{xslt}${pagename}.xsl", $in, \%params;
     }
 
     # check the softcopy versions
@@ -1199,7 +1203,7 @@ sub xml2html_threadindex ($) {
     my $outurl = $$opts{outurl};
     my $site   = $$opts{site};
 
-    my $lastmod = "'$$opts{lastmod}'";
+    my $lastmod = $$opts{lastmod};
 
     # temporary
     site_check( $site, "threadindex", [ "ciao", "sherpa", "chips" ] );
@@ -1215,14 +1219,14 @@ sub xml2html_threadindex ($) {
     # - note: the list of names returned by this stylesheet does not
     #         include the installation directory
     #
-    my $pages = translate_file "", "$$opts{xslt}list_threadindex.xsl", $in;
+    my $pages = translate_file "$$opts{xslt}list_threadindex.xsl", $in;
     $pages =~ s/\s+/ /g;
     my @soft = map { "${outdir}$_"; } split " ", $pages;
     my @hard = map { my $a = $_; $a =~ s/\.html$/.hard.html/; $a; } @soft;
 
     # do not allow math in the threadindex (for now)
     #
-    my $math = translate_file "", "$$opts{xslt}list_math.xsl", $in;
+    my $math = translate_file "$$opts{xslt}list_math.xsl", $in;
     my @math = split " ", $math;
     die "Error: found math blocks in $in - not allowed here\n"
       unless $#math == -1;
@@ -1260,10 +1264,11 @@ sub xml2html_threadindex ($) {
        texttitlepostfix => $texttitlepostfix,
       );
 
+    my %params = @flags;
     foreach my $hflag ( qw( 0 1 ) ) {
 	# run the processor [ignore the screen output here]
-	my $params = make_params( @flags, hardcopy => $hflag );
-	translate_file $params, "$$opts{xslt}threadindex.xsl", $in;
+	$params{hardcopy} = $hflag;
+	translate_file "$$opts{xslt}threadindex.xsl", $in, \%params;
     }
 
     # check the softcopy versions
@@ -1328,7 +1333,7 @@ sub xml2html_thread ($) {
 
     # find out information about this conversion
     #
-    my $list_files = translate_file "", "$$opts{xslt}list_thread.xsl", $in;
+    my $list_files = translate_file "$$opts{xslt}list_thread.xsl", $in;
 
     # split the list up into sections: html, image, screen, and file
     #
@@ -1362,7 +1367,7 @@ sub xml2html_thread ($) {
 
     # how about math pages?
     #
-    my $math = translate_file "", "$$opts{xslt}list_math.xsl", $in;
+    my $math = translate_file "$$opts{xslt}list_math.xsl", $in;
     my @math = split " ", $math;
 
     # do we need to recreate
@@ -1460,10 +1465,11 @@ sub xml2html_thread ($) {
        imglinkiconheight => $imglinkiconheight,
       );
 
+    my %params = @flags;
     foreach my $hflag ( qw( 0 1 ) ) {
 	# run the processor [ignore the screen output here]
-	my $params = make_params( @flags, hardcopy => $hflag );
-	translate_file $params, "$$opts{xslt}${site}_thread.xsl", $in;
+	$params{hardcopy} = $hflag;
+	translate_file "$$opts{xslt}${site}_thread.xsl", $in, \%params;
     }
 
     # set the correct owner/permissions for the HTML files
@@ -1546,7 +1552,7 @@ sub process_xml ($$) {
 
 	# what is the name of the root node?
 	# (plus we also check for the presence of the /*/info/testonly tag here)
-	my $roots = translate_file "", "${stylesheets}list_root_node.xsl", $in;
+	my $roots = translate_file "${stylesheets}list_root_node.xsl", $in;
 	chomp $roots;
 	my ( $root, $testonly ) = split " ", $roots;
 	$testonly ||= "";

@@ -41,6 +41,7 @@
 #                Handle site-specific index files
 #  16 Oct 07 DJB Removed support for type=dist and newsfile[url]/
 #                watchouturl params as not needed for ahelp files.
+#  17 Oct 07 DJB Removed support for xsltproc tool
 #
 # To Do:
 #  - 
@@ -66,11 +67,10 @@ use CIAODOC qw( :util :xslt :cfg );
 #
 
 ## set up variables that are also used in CIAODOC
-use vars qw( $configfile $verbose $group $xsltproc $htmldoc $site );
+use vars qw( $configfile $verbose $group $htmldoc $site );
 $configfile = "$FindBin::Bin/config.dat";
 $verbose = 0;
 $group = "";
-$xsltproc = "";
 $htmldoc = "";
 $site = "";
 
@@ -123,10 +123,8 @@ dbg "Parsed the config file";
 
 # Get the names of executable/library locations
 #
-( $xsltproc, $htmldoc ) = 
-  get_config_main_type( $config, qw( xsltproc htmldoc ), $ostype );
+$htmldoc = get_config_main_type( $config, "htmldoc", $ostype );
 
-check_executable_runs "xsltproc", $xsltproc, "--version";
 check_executable_runs "htmldoc", $htmldoc, "--version";
 dbg "Found executable/library paths";
 
@@ -193,7 +191,6 @@ dbg "  outdir=$outdir";
 dbg "  stylesheets=$stylesheets";
 dbg "  ahelpindex=$ahelpindex";
 dbg " ---";
-dbg "  xsltproc=$xsltproc";
 dbg "  htmldoc=$htmldoc";
 
 # start work
@@ -281,19 +278,18 @@ foreach my $page ( @soft, @hard ) {
     myrm( $page );
 }
 
+my %paramlist = (
+		 type     => $type eq "trial" ? "test" : $type,
+		 outdir   => $outdir,
+		 site     => $site,
+		 version  => $version,
+		 @extra
+		);
 foreach my $hflag ( @hardcopy ) {
-  my $params =
-    make_params(
-		type     => $type eq "trial" ? "test" : $type,
-		outdir   => $outdir,
-		site     => $site,
-		version  => $version,
-		hardcopy => $hflag,
-		@extra
-	       );
 
   # run the processor, pipe the screen output to a file
-  translate_file( $params, "${stylesheets}ahelp_index.xsl", $ahelpindex );
+  $paramlist{hardcopy} = $hflag;
+  translate_file "${stylesheets}ahelp_index.xsl", $ahelpindex, \%paramlist;
 }
 
 # success or failure?

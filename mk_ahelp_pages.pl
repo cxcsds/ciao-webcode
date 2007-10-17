@@ -50,6 +50,7 @@
 #  15 Oct 07 DJB Executables are now OS specific
 #  16 Oct 07 DJB Handle site-specific pages
 #                Removed support for type=dist
+#  17 Oct 07 DJB Removed support for xsltproc tool
 #
 # To Do:
 #  - 
@@ -80,11 +81,10 @@ sub read_ahelpindex ($);
 sub find_ahelpfiles ($$);
 
 ## set up variables that are also used in CIAODOC
-use vars qw( $configfile $verbose $group $xsltproc $htmldoc $site );
+use vars qw( $configfile $verbose $group $htmldoc $site );
 $configfile = "$FindBin::Bin/config.dat";
 $verbose = 0;
 $group = "";
-$xsltproc = "";
 $htmldoc = "";
 $site = "";
 
@@ -138,10 +138,8 @@ dbg "Parsed the config file";
 
 # Get the names of executable/library locations
 #
-( $xsltproc, $htmldoc ) =
-  get_config_main_type( $config, qw( xsltproc htmldoc ), $ostype );
+$htmldoc = get_config_main_type( $config, "htmldoc", $ostype );
 
-check_executable_runs "xsltproc", $xsltproc, "--version";
 check_executable_runs "htmldoc", $htmldoc, "--version";
 dbg "Found executable/library paths";
 
@@ -259,7 +257,6 @@ dbg "  ahelpindex_xml=$ahelpindex_xml";
 dbg "  ahelpindex_dat=$ahelpindex_dat";
 dbg "  version=$version";
 dbg " ---";
-dbg "  xsltproc=$xsltproc";
 dbg "  htmldoc=$htmldoc";
 
 # start work
@@ -330,6 +327,8 @@ dbg "*** CONFIG DATA (end) ***";
    texttitlepostfix => $texttitlepostfix,
   );
 
+my %paramlist = @extra;
+
 # what 'hardcopy' values do we loop through?
 #
 my @hardcopy = ( 0, 1 );
@@ -357,25 +356,17 @@ foreach my $in ( @names ) {
 	myrm( $page );
     }
 
+    $paramlist{outname} = $outname;
+    $paramlist{seealsofile} = "${ahelpstore}$seealso_name";
+    $paramlist{depth} = '../' x ($depth-1);
+
     # loop through the hardcopy flags
     #
     foreach my $hflag ( @hardcopy ) {
 
-	# set up the parameters for this file
-	#
-	my $params = make_params(
-				 outname     => $outname,
-				 seealsofile => "${ahelpstore}$seealso_name",
-				 depth       => '../' x ($depth-1),
-				 hardcopy    => $hflag,
-				 @extra
-				);
-
-	# run the processor
-	#
-	my $flag = translate_file( $params,
-				"${stylesheets}ahelp.xsl",
-				"${in}.xml" );
+      $paramlist{hardcopy} = $hflag;
+      my $flag = translate_file "${stylesheets}ahelp.xsl",
+	"${in}.xml", \%paramlist;
 
 	# we skip further processing on error
 	# - we might want to skip this file completely (ie if fail on hardcopy=0

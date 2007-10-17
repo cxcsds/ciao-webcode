@@ -40,6 +40,7 @@
 #                Indexes now contain site information on each ahelp page.
 #                This script should *only* be run from the ciao site
 #  16 Oct 07 DJB Removed support for type=dist
+#  17 Oct 07 DJB Removed support for xsltproc tool
 #
 # Notes:
 #  - for CIAO 4 we assume that any multi-language files (eg chips,
@@ -53,10 +54,8 @@
 #    index. This will be used by the web code to add title attribute to
 #    ahelp links. It's easiest to do this by using XML::LibXML to
 #    parse each XML file, which would imply using this, rather
-#    than a stylesheet (ahelp_list_info.xsl).
-#    This used to be problematic when supporting type=dist (ie
-#    HTML pages for the distribution), but this is no longer supported
-#    in CIAO 4
+#    than a stylesheet (ahelp_list_info.xsl), or have the stylesheet
+#    do the processing but return an XML document and not a text file.
 #
 
 use strict;
@@ -97,11 +96,10 @@ sub print_ahelplist_to_txtindex ($$);
 sub print_ahelplist_to_xmlindex ($$);
 
 ## set up variables that are also used in CIAODOC
-use vars qw( $configfile $verbose $group $xsltproc $site );
+use vars qw( $configfile $verbose $group $site );
 $configfile = "$FindBin::Bin/config.dat";
 $verbose = 0;
 $group = "";
-$xsltproc = "";
 $site = "";
 
 ## Variables
@@ -159,10 +157,8 @@ dbg "Parsed the config file";
 
 # Get the names of executable/library locations
 #
-my $listseealso;
-( $xsltproc, $listseealso ) = get_config_main_type( $config, qw( xsltproc listseealso ), $ostype );
+my $listseealso = get_config_main_type( $config, "listseealso", $ostype );
 
-check_executable_runs "xsltproc", $xsltproc, "--version";
 check_executable_runs "list_seealso", $listseealso, "--version";
 dbg "Found executable/library paths";
 
@@ -524,7 +520,8 @@ sub inspect_xmlfile ($$) {
 
   # note that the stylesheet cuts out 'onapplication' help files
   #
-  my $res = translate_file( "", "${styledir}ahelp_list_info.xsl", $xmlfile );
+  my $res = translate_file "${styledir}ahelp_list_info.xsl", $xmlfile;
+
   return ( undef, undef ) if $res =~ /^\s*$/;
   chomp $res;
 
