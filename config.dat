@@ -1,6 +1,4 @@
 #
-# $Id: config.dat,v 1.105 2007/09/26 16:54:50 egalle Exp $
-# 
 # The contents of this file are used by the publish script
 # (/data/da/Docs/web/publish.pl) to determine where the
 # output of publishing a page goes.
@@ -17,21 +15,19 @@
 #   config file]
 #
 
-# How to call the xsltproc and htmldoc executables; we no longer
-# have separate ldpath and htmllib values and we now have os
-# specific versions.
+# How to call the htmldoc and list_seealso executables.
+# As of CIAO 4 beta 3 we no longer use the xsltproc
+# executable, and we now support running on different
+# systems, so we make the values OS dependent.
 #
 # OS type values can be sun, lin, or osx
 #
-%xsltproc=sun /usr/bin/env LD_LIBRARY_PATH=/data/da/Docs/local/lib/ /data/da/Docs/local/bin/xsltproc
 %htmldoc=sun /usr/bin/env LD_LIBRARY_PATH=/data/da/Docs/local/lib/ /data/da/Docs/local/bin/htmldoc
 %listseealso=sun /data/da/Docs/web/list_seealso
 
 # specific to Doug's laptop, should be changed to more general values
-%xsltproc=osx /usr/bin/xsltproc
 %htmldoc=osx /usr/bin/env DYLD_LIBRARY_PATH= /Users/doug/local/bin/htmldoc
 %listseealso=osx /Users/doug/doc/ahelp/list_seealso
-
 
 # what "site" (ie part of the web pages) are we creating?
 +site ciao
