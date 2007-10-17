@@ -3,13 +3,11 @@
 # Usage:
 #   mk_ahelp_setup.pl
 #     --config=name
-#     --type=test|live|trial|dist
+#     --type=test|live|trial
 #     --verbose
 #
 #   The default is --type=test, which sets up for test web site.
 #   The live option sets things up for the live (ie cxc.harvard.edu) site.
-#   The type=dist is for people building the HTML pages for the
-#   CIAO distribution.
 #   Don't use the trial option unless you know what it does.
 #
 #   The --config option gives the path to the configuration file; this
@@ -41,6 +39,7 @@
 #  15 Oct 07 DJB Executables are now OS specific
 #                Indexes now contain site information on each ahelp page.
 #                This script should *only* be run from the ciao site
+#  16 Oct 07 DJB Removed support for type=dist
 #
 # Notes:
 #  - for CIAO 4 we assume that any multi-language files (eg chips,
@@ -55,11 +54,9 @@
 #    ahelp links. It's easiest to do this by using XML::LibXML to
 #    parse each XML file, which would imply using this, rather
 #    than a stylesheet (ahelp_list_info.xsl).
-#    It would mean Jim installing extra modules (XML::LibXML,
-#    XML::LibXML::Common, XML::SAX, XML::NmaeSpaceSupport) *and*
-#    this info isn't needed for the CIAO distribution.
-#    Could just use XML::LibXML for the parameter part, which is not
-#    as efficient but may be a useful compromise for now.
+#    This used to be problematic when supporting type=dist (ie
+#    HTML pages for the distribution), but this is no longer supported
+#    in CIAO 4
 #
 
 use strict;
@@ -69,6 +66,8 @@ use Carp;
 use Getopt::Long;
 use Cwd;
 use IO::File;
+
+use XML::LibXML;
 
 use FindBin;
 
@@ -83,7 +82,7 @@ sub get_ahelp_item_if_exists ($$);
 sub set_ahelp_item ($$$);
 sub check_multi_key ($\%);
 sub expand_seealso ($\%);
-sub inspect_xmlfile ($$$);
+sub inspect_xmlfile ($$);
 
 sub protect_xml_chars_for_printf ($);
 
@@ -111,11 +110,10 @@ $site = "";
 my $progname = extract_filename $0;
 my $usage = <<"EOD";
 Usage:
-  $progname --config=name --type=test|live|dist|trial --verbose
+  $progname --config=name --type=test|live|trial --verbose
 
 The default is --type=test, which publishes to the test web site.
 The live option publishes to the live (ie cxc.harvard.edu) site.
-The dist option is for poeple building the CIAO distribution.
 Don't use the trial option unless you know what it does.
 
 The --config option gives the path to the configuration file; this
@@ -181,12 +179,8 @@ die "ERROR: mk_ahelp_setup.pl should obly be run within site=ciao, not site=$sit
 
 # do we need the XML::LibXML stuff?
 #
-my $parser = undef;
-unless ( $type eq "dist" ) {
-    require XML::LibXML;
-    $parser = XML::LibXML->new()
-      or die "Error: Unable to create XML::LibXML parser instance.\n";
-}
+my $parser = XML::LibXML->new()
+  or die "Error: Unable to create XML::LibXML parser instance.\n";
 
 # now we can check the usage
 #
@@ -267,7 +261,7 @@ foreach my $path ( map { "${ahelpfiles}$_"; } qw( /doc/xml/ /contrib/doc/xml/ ) 
 
 	dbg( "+++ Processing file: $xmlfile" );
 
-	my ( $id, $obj ) = inspect_xmlfile( $xmlfile, $stylesheets, $type );
+	my ( $id, $obj ) = inspect_xmlfile( $xmlfile, $stylesheets );
 	next unless defined $id;
 
 	my ( $key, $context, $groups, $htmlname ) =
@@ -434,17 +428,12 @@ sub check_multi_key ($\%) {
 
 # check_htmlname( $obj );
 #
-# In CIAO 3.0 we should have all the ADDRESS/URL tags be sensible.
-# Unfortunately this is not yet true. So what we do is change
-# them here (so that the 'see also' links work) but ahelp -i/w
-# won't [until the updated files make there way through to the
-# distribution].
+# We check that the htmlname is "sensible". It is not
+# clear how useful/needed this is now we no longer need
+# to support type=dist (>=CIAO 4).
 #
-# (this is a requirement I have created, to make things
-#  simpler for the HTML creation process). It is not strictly
-# necessary for ahelp itself.
-#
-# ACTUALLY we do not fix things, just report them
+# If we find a 'problem' we print a message to STDERR
+# but continue processing.
 #
 sub check_htmlname ($) {
     my $obj = shift;
@@ -498,13 +487,11 @@ sub expand_seealso ($\%) {
 
 } # sub: expand_seealso()
 
-# ( $id, $obj ) = inspect_xmlfile( $filename, $styledir, $type )
+# ( $id, $obj ) = inspect_xmlfile( $filename, $styledir )
 #
 # parses the XML file $filename (includes full path to the file).
 # We return ( undef, undef ) if it is not a file we want to include
 # $styledir gives the location of the stylesheets
-# $type is the value of the --tye option (we're only interested if it
-# equals dist)
 #
 # $id is the 'mangled' key/concept values for this file
 # and $obj is a hash reference describing the file (although the user
@@ -514,8 +501,7 @@ sub expand_seealso ($\%) {
 # it -- since otherwise we need to adapt all the link codes to handle the
 # case that a link could be an external one rather than internal. I guess
 # we could set the depth to -1 and trap that but it is an effort for
-# only one file (at the moment). DO THIS FOR ALL types of output - ie
-# both dist and non-dist
+# only one file (at the moment).
 #
 # Obviously not an ideal solution - we need to come up with guidelines for
 # the ASSRESS/URL tags
@@ -531,11 +517,10 @@ sub expand_seealso ($\%) {
 # the data directly from the XML file rather than have to bother with
 # parsing the output of stylesheets
 #
-sub inspect_xmlfile ($$$) {
+sub inspect_xmlfile ($$) {
 
   my $xmlfile  = shift;
   my $styledir = shift;
-  my $type     = shift;
 
   # note that the stylesheet cuts out 'onapplication' help files
   #
@@ -560,8 +545,7 @@ sub inspect_xmlfile ($$$) {
   # XSL transformations.
   #
   if ( $htmlname =~ /^http/ ) {
-      print "NOTE: URL $htmlname -> $filehead\n"
-	unless $type eq "dist";
+      print "NOTE: URL $htmlname -> $filehead\n";
       $htmlname = $filehead;
   }
 
@@ -592,21 +576,19 @@ sub inspect_xmlfile ($$$) {
   # do we need to worry about parameters?
   # - the following relies on the ahelp file being valid
   #
+  my $dom = $parser->parse_file( $xmlfile )
+    or die "Error: unable to open $xmlfile via XML parser\n";
   my $paramlist = [];
-  unless ( $type eq "dist" ) {
-      my $dom = $parser->parse_file( $xmlfile )
-	or die "Error: unable to open $xmlfile via XML parser\n";
-      foreach my $param ( $dom->getElementsByTagName( "PARAM" ) ) {
-	  my $name = $param->getAttribute( "name" );
-	  my $synopsis = protect_xml_chars_for_printf $param->findvalue( "SYNOPSIS" );
+  foreach my $param ( $dom->getElementsByTagName( "PARAM" ) ) {
+    my $name = $param->getAttribute( "name" );
+    my $synopsis = protect_xml_chars_for_printf $param->findvalue( "SYNOPSIS" );
 
-	  # remove excess whitespace/newlines
-	  $synopsis =~ s/^\s+//;
-	  $synopsis =~ s/\s+$//;
-	  $synopsis =~ s/\n/ /g;
-	  $synopsis =~ s/\s+/ /g;
-	  push @$paramlist, [ $name, $synopsis ];
-      }
+    # remove excess whitespace/newlines
+    $synopsis =~ s/^\s+//;
+    $synopsis =~ s/\s+$//;
+    $synopsis =~ s/\n/ /g;
+    $synopsis =~ s/\s+/ /g;
+    push @$paramlist, [ $name, $synopsis ];
   }
 
   # we need to define all the valid keys here, even if we do not set them
@@ -937,11 +919,9 @@ sub create_seealso_files ($\%) {
 # file name used for the HTML file. This way we can avoid
 # excessive processig (such as processing the ahelp file to get the
 # names of the files it will create, only to then re-process the
-# file to actually do the conversion). This wouldn't be needed if
-# we forced XML::LibXML to be required for both type=web and type=dist
-# conversions, but I'm trying to avoid Jim having to install even more
-# software for the conversion. As of CIAO 4 we no longer support type=dist
-# so we could remove aheloindex.dat.
+# file to actually do the conversion). As of CIAO 4 we probably
+# do not need this since we could just always use the XML ahelp
+# index file.
 #
 # Format of ahelpindex.dat
 #    <xml name>  <depth>  <head of html name>  <seealso filename (without path)>
@@ -953,7 +933,7 @@ sub create_seealso_files ($\%) {
 #
 #   It is okay if the depth attribute is '' for the ahelpindex/ahelplist/ahelp/page
 #   attribute, since here depth is the actual path fragment to use (eg
-#   '../') and not a numeric value
+#   '../') and not a numeric value. This is just a reminder to self.
 #
 sub create_index_files ($\%\%\%) {
     my $dirname = shift;

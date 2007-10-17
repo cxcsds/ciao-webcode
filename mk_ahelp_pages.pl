@@ -3,13 +3,11 @@
 # Usage:
 #   mk_ahelp_pages.pl [name1 ... namen]
 #     --config=name
-#     --type=test|live|trial|dist
+#     --type=test|live|trial
 #     --verbose
 #
 #   The default is --type=test, which sets up for test web site.
 #   The live option sets things up for the live (ie cxc.harvard.edu) site.
-#   The type=dist is for people building the HTML pages for the
-#   CIAO distribution.
 #   Don't use the trial option unless you know what it does.
 #
 #   The --config option gives the path to the configuration file; this
@@ -51,14 +49,10 @@
 #                and updates to better support CIAO 4 changes
 #  15 Oct 07 DJB Executables are now OS specific
 #  16 Oct 07 DJB Handle site-specific pages
+#                Removed support for type=dist
 #
 # To Do:
-#  - allow it to work for type=dist (currently it requires the
-#    locations of things - such as htmldoc and the searchssi - that
-#    are not needed for the distribution).
-#    Hmmm, as we no longer need type=dist this comment is not as
-#    useful, although it may be useful to run on htmldoc-less
-#    systems for testing/development purposes.
+#  - 
 #
 # Future?:
 #  -
@@ -100,11 +94,10 @@ $site = "";
 my $progname = (split( m{/}, $0 ))[-1];
 my $usage = <<"EOD";
 Usage:
-  $progname --config=name --type=test|live|dist|trial --verbose [file(s)]
+  $progname --config=name --type=test|live|trial --verbose [file(s)]
 
 The default is --type=test, which publishes to the test web site.
 The live option publishes to the live (ie cxc.harvard.edu) site.
-The dist option is for poeple building the CIAO distribution.
 Don't use the trial option unless you know what it does.
 
 The --config option gives the path to the configuration file; this
@@ -123,8 +116,8 @@ my $dname = cwd();
 # make sure you are in an ahelp directory
 my @dirs = split /\//, $dname;
 unless ($dirs[-1] =~ "ahelp") {
-    die "This script should be run from the 'ahelp' subdirectory\n";
-  }
+  die "This script should be run from the 'ahelp' subdirectory\n";
+}
 
 
 # handle options
@@ -226,39 +219,23 @@ my @allowed_names = find_ahelpfiles $site, $ahelpindex_xml;
 my @names;
 if ( $#ARGV == -1 ) {
 
-=begin OLDCODE
-
-    # check there's at least a doc/xml directory in ahelpfiles
-    die "Error: ahelpfiles directory ($ahelpfiles) does not contain a doc/xml/ sub-directory\n"
-      unless -d "$ahelpfiles/doc/xml";
-
-    @names = ();
-    foreach my $path ( map { "${ahelpfiles}$_"; } qw( doc/xml/ contrib/doc/xml/ ) ) {
-	dbg( "Searching for XML files in $path" );
-	@names = ( @names, glob("${path}*.xml") ); # $path ends in a /
-    }
-
-=end OLDCODE
-
-=cut
-
   # Use the database to select the files to process
   #
   @names = @allowed_names;
 
 } else {
-    @names = @ARGV;
+  @names = @ARGV;
 
-    # We only check on the file name, not the path, for these files.
-    # This could lead to problems but let's not bother with that for
-    # now.
-    #
-    my %check_names = map { my $f = (split "/",$_)[-1]; ($f,1); } @allowed_names;
-    foreach my $name (@names) {
-      my $t = (split "/", $name)[-1];
-      die "Error: file not known for site=$site: $t\n"
-	unless exists $check_names{$t};
-    }
+  # We only check on the file name, not the path, for these files.
+  # This could lead to problems but let's not bother with that for
+  # now.
+  #
+  my %check_names = map { my $f = (split "/",$_)[-1]; ($f,1); } @allowed_names;
+  foreach my $name (@names) {
+    my $t = (split "/", $name)[-1];
+    die "Error: file not known for site=$site: $t\n"
+      unless exists $check_names{$t};
+  }
 }
 @names = map { s/\.xml$//; $_; }
   grep { !/onapplication/ } @names;
@@ -284,7 +261,6 @@ dbg "  version=$version";
 dbg " ---";
 dbg "  xsltproc=$xsltproc";
 dbg "  htmldoc=$htmldoc";
-dbg "*** CONFIG DATA (end) ***";
 
 # start work
 #
@@ -319,51 +295,44 @@ my @extra = (
 	  version  => $version,
 );
 
-# handle values only required for type != dist
-#
-if ( $type ne "dist" ) {
+my $cssfile      = get_config_type $version_config, "css", $type;
+my $cssprintfile = get_config_type $version_config, "cssprint", $type;
+my $searchssi    = get_config_type $version_config, "searchssi", $type;
+my $urlbase      = get_config_type $version_config, "outurl", $type;
 
-    my $cssfile      = get_config_type $version_config, "css", $type;
-    my $cssprintfile = get_config_type $version_config, "cssprint", $type;
-    my $searchssi    = get_config_type $version_config, "searchssi", $type;
-    my $urlbase      = get_config_type $version_config, "outurl", $type;
+# optional "postfix" text for page headers
+my $headtitlepostfix = "";
+my $texttitlepostfix = "";
+$headtitlepostfix = get_config_version( $version_config, "headtitlepostfix" )
+  if check_config_exists( $version_config, "headtitlepostfix" );
+$texttitlepostfix = get_config_version( $version_config, "texttitlepostfix" )
+  if check_config_exists( $version_config, "texttitlepostfix" );
 
-    # optional "postfix" text for page headers
-    my $headtitlepostfix = "";
-    my $texttitlepostfix = "";
-    $headtitlepostfix = get_config_version( $version_config, "headtitlepostfix" )
-	if check_config_exists( $version_config, "headtitlepostfix" );
-    $texttitlepostfix = get_config_version( $version_config, "texttitlepostfix" )
-	if check_config_exists( $version_config, "texttitlepostfix" );
+dbg "  uname=$uname";
+dbg "  urlbase=$urlbase";
+dbg "  searchssi=$searchssi";
+dbg "  cssfile=$cssfile";
+dbg "  cssprintfile=$cssprintfile";
+dbg "  searchssi=$searchssi";
+dbg "  headtitlepostfix=$headtitlepostfix";
+dbg "  texttitlepostfix=$texttitlepostfix";
+dbg "*** CONFIG DATA (end) ***";
 
-    dbg "*** CONFIG (type != dist) ***";
-    dbg "  uname=$uname";
-    dbg "  urlbase=$urlbase";
-    dbg "  searchssi=$searchssi";
-    dbg "  cssfile=$cssfile";
-    dbg "  cssprintfile=$cssprintfile";
-    dbg "  searchssi=$searchssi";
-    dbg "  headtitlepostfix=$headtitlepostfix";
-    dbg "  texttitlepostfix=$texttitlepostfix";
-    dbg "*** END CONFIG ***";
-
-    @extra =
-      (
-       @extra,
-       updateby     => $uname,
-       cssfile      => $cssfile,
-       cssprintfile => $cssprintfile,
-       searchssi    => $searchssi,
-       urlbase      => $urlbase,
-       headtitlepostfix => $headtitlepostfix,
-       texttitlepostfix => $texttitlepostfix,
-      );
-}
+@extra =
+  (
+   @extra,
+   updateby     => $uname,
+   cssfile      => $cssfile,
+   cssprintfile => $cssprintfile,
+   searchssi    => $searchssi,
+   urlbase      => $urlbase,
+   headtitlepostfix => $headtitlepostfix,
+   texttitlepostfix => $texttitlepostfix,
+  );
 
 # what 'hardcopy' values do we loop through?
 #
-my @hardcopy = ( 0 );
-push @hardcopy, 1 unless $type eq "dist";
+my @hardcopy = ( 0, 1 );
 
 # Loop through each file
 #
@@ -372,12 +341,7 @@ foreach my $in ( @names ) {
     dbg "Processing: $in";
     my $name = (split("/",$in))[-1];
 
-    # To avoid forcing the use of XML::LibXML for type=dist, we
-    # have a simple ascii file that maps between XML and HTML names.
-    # We have already used it to check that all the files are
-    # known about.
-    #
-    # we need to convert depth from a number to a string
+    # We need to convert depth from a number to a string
     # - e.g. from 2 to '../' - here
     #
     my ( $depth, $outname, $seealso_name ) = @{ $$html_mapping{$name} };
@@ -385,8 +349,7 @@ foreach my $in ( @names ) {
     # we 'hardcode' the output of the transformation
     # and ensure that any old files have been deleted
     #
-    my @names = $type eq "dist" ?
-      ( $outname ) : ( $outname, "${outname}.hard" );
+    my @names = ( $outname, "${outname}.hard" );
 
     my @pages = map { "${outdir}${_}.html"; } @names;
     foreach my $page ( @pages ) {
@@ -439,8 +402,8 @@ foreach my $in ( @names ) {
 	dbg("Created: $page");
     }
 
-    # create the hardcopy pages [if required]
-    create_hardcopy( $outdir, $outname ) if $type ne "dist";
+    # create the hardcopy pages
+    create_hardcopy( $outdir, $outname );
 
 } # foreach: $in
 
@@ -470,9 +433,7 @@ exit;
 #
 # Note:
 #   Now that we process the XML index proper, is this file still
-#   useful? At present it is, because we do not process the XML
-#   index if the user gives the files to process, but this could
-#   be changed.
+#   useful?
 #
 sub read_ahelpindex ($) {
     my $infile = shift;

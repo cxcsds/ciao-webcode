@@ -3,6 +3,7 @@ syntax: glob
 *.o
 
 list_seealso
+xslt.*
 
 syntax: regexp
 (.*/)?\#[^/]*\#$

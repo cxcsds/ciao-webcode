@@ -11,6 +11,9 @@
 
 <!--* 
     * Recent changes:
+    *  Oct 16 07 DJB
+    *    Removed support for type=dist and support for newsfile/newsfileurl/
+    *    watchouturl params
     *  Oct 15 07 DJB
     *    Updated to allow site-specific indexes
     *  v1.38 - changed page headers and index titles to use
@@ -89,60 +92,50 @@
     *   
     * User (ie by the stylesheet processor) defineable parameters:
     *  . type - string, required
-    *    one of "dist", "live", "test", or "trial"
+    *    one of "live", "test", or "trial"
     *      determines where the HTML files are created
-    *      dist is for the CIAO distribution
     *      trial is a "developer only" value
     *
     *  . hardcopy - integer, optional, default=0
     *    if 0 then create the "softcopy" version, if 1 then the "hardcopy"
-    *    version. Setting to 1 with type=dist is not valid so we die if this
-    *    combination is set
+    *    version.
     *
     *  . site - string, required
     *    what site are we to generate the index for, should be
     *    one of ciao, chips, or sherpa
     *
-    *  these are required only if type != dist
+    *  . url - TEMPORARY HACK - see v1.21 of ahelp_common
     *
-    *    . url - TEMPORARY HACK - see v1.21 of ahelp_common
+    *  . urlbase - string
+    *    base URL of pages (used when creating the hardcopy versions)
     *
-    *    . urlbase - string
-    *      base URL of pages (used when creating the hardcopy versions)
+    *  . updateby - string
+    *    name of person publishing the page (output of whoami is sufficient)
     *
-    *    . updateby - string
-    *      name of person publishing the page (output of whoami is sufficient)
+    *  . cssfile - string
+    *    url of CSS file for pages
     *
-    *    . cssfile - string
-    *      url of CSS file for pages
+    *  . navbarname="name" of navbar to use for indexes
+    *    if navbar is called navbar_XXX.incl then set navbarname to XXX
+    *    default=ahelp
     *
-    *    . newsfile=full path to the file containing the news for the "what's new" link
-    *      THIS IS NOT USED
-    *    . newsfileurl=URL to use for the "what's new" link
+    *  . searchssi - string, default=/incl/search.html, required
+    *    url of SSI file for the search bar
     *
-    *    . watchouturl=URL to use for the "watch out" link
+    *  . logoimage, string, optional
     *
-    *    . navbarname="name" of navbar to use for indexes
-    *      if navbar is called navbar_XXX.incl then set navbarname to XXX
-    *      default=ahelp
+    *    if the navbar is to have a logo image at the top, this gives the
+    *    location of the image, relative to *THE LOCATION OF THE NAV BAR*
+    *    e.g. ../imgs/ciao_logo_navbar.gif
+    *    This is different than in navbar.xsl where we produce multiple
+    *    navigation "bars" in one go and they are not guaranteed to be
+    *    all at the same 'depth'
     *
-    *    . searchssi - string, default=/incl/search.html, only required if format=web
-    *      url of SSI file for the search bar
+    *  . logotext, string, optional
     *
-    *    . logoimage, string, optional
-    *
-    *      if the navbar is to have a logo image at the top, this gives the
-    *      location of the image, relative to *THE LOCATION OF THE NAV BAR*
-    *      e.g. ../imgs/ciao_logo_navbar.gif
-    *      This is different than in navbar.xsl where we produce multiple
-    *      navigation "bars" in one go and they are not guaranteed to be
-    *      all at the same 'depth'
-    *
-    *    . logotext, string, optional
-    *
-    *      if logoimage is set then this gives the the ALT text for the
-    *      logo image, eg "CIAO Logo". If logoimage is unset then this is the
-    *      text that is used
+    *    if logoimage is set then this gives the the ALT text for the
+    *    logo image, eg "CIAO Logo". If logoimage is unset then this is the
+    *    text that is used
     *
     *  . indir - string, required
     *    full path to directory where to find the XML files
@@ -202,9 +195,6 @@
   <xsl:param name="site"/>
 
   <xsl:param name="cssfile"/>
-  <xsl:param name="newsfile"    select='""'/>
-  <xsl:param name="newsfileurl" select='""'/>
-  <xsl:param name="watchouturl" select='""'/>
   <xsl:param name="navbarname"  select='"ahelp"'/>
   <xsl:param name="searchssi"   select='"/incl/search.html"'/>
 
@@ -282,34 +272,18 @@
       <xsl:with-param name="allowed" select="$allowed-sites"/>
     </xsl:call-template>
 
-    <!--* type=dist is deprecated; remove un-needed code *-->
-    <xsl:choose>
-      <xsl:when test="$type = 'dist'">
-	<xsl:if test="$hardcopy != '0'">
+    <xsl:call-template name="check-param">
+      <xsl:with-param name="pname"   select="'urlbase'"/>
+      <xsl:with-param name="pvalue"  select="$urlbase"/>
+    </xsl:call-template>
+    <xsl:if test="substring($urlbase,string-length($urlbase))!='/'">
       <xsl:message terminate="yes">
- Error:
-   when type=dist then hardcopy must be set to 0, not <xsl:value-of select="$hardcopy"/>
-
-	  </xsl:message>
-	</xsl:if>
-      </xsl:when>
-
-      <xsl:otherwise>
-	<!--* type != dist *-->
-	<xsl:call-template name="check-param">
-	  <xsl:with-param name="pname"   select="'urlbase'"/>
-	  <xsl:with-param name="pvalue"  select="$urlbase"/>
-	</xsl:call-template>
-	<xsl:if test="substring($urlbase,string-length($urlbase))!='/'">
-	  <xsl:message terminate="yes">
  Error:
    urlbase parameter must end in a / character.
    urlbase=<xsl:value-of select="$urlbase"/>
 
-	  </xsl:message>
-	</xsl:if>
-      </xsl:otherwise>
-    </xsl:choose>
+      </xsl:message>
+    </xsl:if>
 
     <xsl:call-template name="check-param">
       <xsl:with-param name="pname"   select="'outdir'"/>
@@ -331,7 +305,6 @@
 
     <!--*
         * check the logo parameters
-        * (could also check that type!=dist if set)
         *-->
     <xsl:if test="$logoimage != '' and $logotext = ''">
       <xsl:message terminate="yes">
@@ -359,12 +332,6 @@
         *-->
 
     <xsl:choose>
-      <xsl:when test="$type = 'dist'">
-	<!--* pages for the distribution (so no hardcopy) *-->
-	<xsl:call-template name="make-alphabet-dist-viewable"/>
-	<xsl:call-template name="make-context-dist-viewable"/>
-      </xsl:when>
-
       <xsl:when test="$hardcopy = 0">
 	<!--* web site: softcopy *-->
 	<xsl:call-template name="make-navbar"/>
@@ -617,38 +584,6 @@
   </xsl:template> <!--* name=make-alphabet-viewable *-->
 
   <!--* 
-      * create: index_alphabet.html (Distribution)
-      *-->
-  <xsl:template name="make-alphabet-dist-viewable">
-
-    <xsl:variable name="pagename">index_alphabet</xsl:variable>
-    <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$pagename"/>.html</xsl:variable>
-
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="us-ascii">
-      
-      <html lang="en">
-
-	<xsl:call-template name="add-htmlhead">
-	  <xsl:with-param name="title">Ahelp (alphabetical) - <xsl:value-of select="$headtitlepostfix"/></xsl:with-param>
-	  <xsl:with-param name="withcss">0</xsl:with-param>
-	</xsl:call-template>
-
-	<body bgcolor="#ffffff">
-	  <!--* process the contents *-->
-	  <xsl:apply-templates select="ahelpindex/alphabet[@site=$site]"/>
-
-	</body>
-      </html>
-      
-    </xsl:document>
-  </xsl:template> <!--* name=make-alphabet-dist-viewable *-->
-
-  <!--* 
       * create: index_alphabet.hard.html
       *-->
   <xsl:template name="make-alphabet-hardcopy">
@@ -714,7 +649,7 @@
       * Output also depends on the value of $type.
       * It *may* be that we can get away with assuming this is always going to
       * have the correct site-specific alphabet list, but add separate rules to
-      * ensure this
+      * ensure this (and it appears that we need that rule)
       *
       *-->
   <xsl:template match="alphabet[@site=$site]">
@@ -724,7 +659,6 @@
 
     <!--* add text/links depending on the format *-->
     <xsl:if test="$hardcopy=0">
-      <xsl:if test="$type='dist'"><xsl:call-template name="add-whats-new"/></xsl:if>
       <xsl:call-template name="add-alphabet-jump"/>
     </xsl:if>
     <hr/><br/>
@@ -889,39 +823,6 @@
   </xsl:template> <!--* name=make-context-viewable *-->
 
   <!--* 
-      * create: index_context.html (Distribution)
-      *-->
-  <xsl:template name="make-context-dist-viewable">
-
-    <xsl:variable name="pagename">index_context</xsl:variable>
-    <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$pagename"/>.html</xsl:variable>
-
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="us-ascii">
-      
-      <html lang="en">
-
-	<xsl:call-template name="add-htmlhead">
-	  <xsl:with-param name="title">Ahelp (contextual) - <xsl:value-of select="$headtitlepostfix"/></xsl:with-param>
-	  <xsl:with-param name="withcss">0</xsl:with-param>
-	</xsl:call-template>
-
-	<body bgcolor="#ffffff">
-
-	  <!--* process the contents *-->
-	  <xsl:apply-templates select="ahelpindex/context[@site=$site]"/>
-	      
-	</body>
-      </html>
-      
-    </xsl:document>
-  </xsl:template> <!--* name=make-context-dist-viewable *-->
-
-  <!--* 
       * create: index_context.hard.html
       *-->
   <xsl:template name="make-context-hardcopy">
@@ -983,7 +884,6 @@
 
     <!--* add text/links depending on the format *-->
     <xsl:if test="$hardcopy=0">
-      <xsl:if test="$type='dist'"><xsl:call-template name="add-whats-new"/></xsl:if>
       <xsl:call-template name="add-context-jump"/>
     </xsl:if>
     <hr/><br/>
@@ -1122,57 +1022,6 @@
       <xsl:attribute name="bgcolor">#<xsl:value-of select="$btcolor"/></xsl:attribute>
     </xsl:if>
   </xsl:template>
-
-  <!--*
-      * Add a "What's New" link a la the CXC main page
-      *
-      * - based on the code in helper.xsl
-      *   taking advantage of the fact we know site == ciao
-      *
-      * This template apparently only gets applied when $type=dist,
-      * which we no longer support.
-      *-->
-
-  <xsl:template name="add-whats-new">
-
-    <!--* programming check *-->
-    <xsl:if test="$newsfile='' or $newsfileurl=''">
-      <xsl:message terminate="yes">
-  Internal error: newsfile or newsfileurl parameters not set
-
-      </xsl:message>
-    </xsl:if>
-    <xsl:if test="$newsfile='dummy' or $newsfileurl='dummy'">
-      <xsl:message terminate="yes">
-  Internal error: newsfile or newsfileurl parameters set to "dummy"
-
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:if test="$depth != ''">
-      <xsl:message terminate="yes">
-
-  ERROR: errr, assuming depth parameter should be '' [hence 2] but
-    set to depth=<xsl:value-of select="$depth"/>?
-
-      </xsl:message>
-    </xsl:if>
-
-    <!--*
-        * We do not use h2 here for the what's new link in order not
-        * to use too much vertical whitespace
-        *-->
-    <div class="noprint" align="center">
-      <font size="+1">
-	<a title="What's new for CIAO &amp; users of CIAO" href="{$newsfileurl}">WHAT'S NEW</a>
-	<xsl:if test="$watchouturl != ''">
-	  <xsl:text> | </xsl:text>
-	  <a title="Items to be aware of when using CIAO" href="{$watchouturl}">WATCH OUT</a>
-	</xsl:if>
-      </font>
-    </div>
-    <br/>
-  </xsl:template> <!--* name=add-whats-new *-->
 
   <!--* 
       * Given a title string, create the HTML head block

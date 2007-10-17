@@ -385,15 +385,13 @@ dbg "  headtitlepostfix=$headtitlepostfix";
 dbg "  texttitlepostfix=$texttitlepostfix";
 dbg "*** CONFIG DATA ***";
 
-# Handle the ahelpindex file:
-# - would like to create the name given the storage location but
-#   that only works for site=CIAO
+# Handle the ahelpindex file
 #
 my $ahelpindex = "${ahelpindexdir}ahelpindex.xml";
 die "Error: can not find ahelpindex file - check config file for\n  ahelpindexdir=$ahelpindexdir\n"
   unless "" eq $ahelpindexdir or -e $ahelpindex;
 
-# otherwise, get the list of files to work on
+# Get the list of files to work on
 my @xml;
 my @nonxml;
 

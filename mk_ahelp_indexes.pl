@@ -3,13 +3,11 @@
 # Usage:
 #   mk_ahelp_indexes.pl
 #     --config=name
-#     --type=test|live|trial|dist
+#     --type=test|live|trial
 #     --verbose
 #
 #   The default is --type=test, which sets up for test web site.
 #   The live option sets things up for the live (ie cxc.harvard.edu) site.
-#   The type=dist is for people building the HTML pages for the
-#   CIAO distribution.
 #   Don't use the trial option unless you know what it does.
 #
 #   The --config option gives the path to the configuration file; this
@@ -41,20 +39,15 @@
 #                and updates to better support CIAO 4 changes
 #  15 Oct 07 DJB Executables are now OS specific
 #                Handle site-specific index files
+#  16 Oct 07 DJB Removed support for type=dist and newsfile[url]/
+#                watchouturl params as not needed for ahelp files.
 #
 # To Do:
-#  - allow it to work for type=dist (currently it requires the
-#    locations of things - such as htmldoc and the searchssi - that
-#    are not needed for the distribution).
-#    Hmmm, as we no longer need type=dist this comment is not as
-#    useful, although it may be useful to run on htmldoc-less
-#    systems for testing/development purposes.
+#  - 
 #
 # Future?:
 #  -
 #
-
-#XXX update to be site specific XXX
 
 use strict;
 $|++;
@@ -87,11 +80,10 @@ $site = "";
 my $progname = (split( m{/}, $0 ))[-1];
 my $usage = <<"EOD";
 Usage:
-  $progname --config=name --type=test|live|dist|trial --verbose
+  $progname --config=name --type=test|live|trial --verbose
 
 The default is --type=test, which publishes to the test web site.
 The live option publishes to the live (ie cxc.harvard.edu) site.
-The dist option is for poeple building the CIAO distribution.
 Don't use the trial option unless you know what it does.
 
 The --config option gives the path to the configuration file; this
@@ -203,7 +195,6 @@ dbg "  ahelpindex=$ahelpindex";
 dbg " ---";
 dbg "  xsltproc=$xsltproc";
 dbg "  htmldoc=$htmldoc";
-dbg "*** CONFIG DATA (end) ***";
 
 # start work
 #
@@ -214,118 +205,95 @@ mymkdir $outdir;
 # create the index pages
 #
 
-# handle values only required for type != dist
 my @extra;
-if ( $type ne "dist" ) {
 
-    my $navbar       = get_config_version $version_config, "ahelpindexnavbar";
+my $navbar       = get_config_version $version_config, "ahelpindexnavbar";
 
-    my $cssfile      = get_config_type $version_config, "css", $type;
-    my $cssprintfile = get_config_type $version_config, "cssprint", $type;
-    my $searchssi    = get_config_type $version_config, "searchssi", $type;
-    my $urlbase      = get_config_type $version_config, "outurl", $type;
-    my $newsfile     = get_config_type $version_config, "newsfile", $type;
-    my $newsfileurl  = get_config_type $version_config, "newsurl", $type;
-    my $watchouturl  = get_config_type $version_config, "watchouturl", $type;
+my $cssfile      = get_config_type $version_config, "css", $type;
+my $cssprintfile = get_config_type $version_config, "cssprint", $type;
+my $searchssi    = get_config_type $version_config, "searchssi", $type;
+my $urlbase      = get_config_type $version_config, "outurl", $type;
 
-    # logo image/text is also optional
-    my $logoimage = "";
-    $logoimage = get_config_version( $version_config, "logoimage" )
-      if check_config_exists( $version_config, "logoimage" );
-    my $logotext = "";
-    $logotext = get_config_version( $version_config, "logotext" )
-      if check_config_exists( $version_config, "logotext" );
+# logo image/text is also optional
+my $logoimage = "";
+$logoimage = get_config_version( $version_config, "logoimage" )
+  if check_config_exists( $version_config, "logoimage" );
+my $logotext = "";
+$logotext = get_config_version( $version_config, "logotext" )
+  if check_config_exists( $version_config, "logotext" );
 
-    # optional "postfix" text for page headers
-    my $headtitlepostfix = "";
-    my $texttitlepostfix = "";
-    $headtitlepostfix = get_config_version( $version_config, "headtitlepostfix" )
-	if check_config_exists( $version_config, "headtitlepostfix" );
-    $texttitlepostfix = get_config_version( $version_config, "texttitlepostfix" )
-	if check_config_exists( $version_config, "texttitlepostfix" );
+# optional "postfix" text for page headers
+my $headtitlepostfix = "";
+my $texttitlepostfix = "";
+$headtitlepostfix = get_config_version( $version_config, "headtitlepostfix" )
+  if check_config_exists( $version_config, "headtitlepostfix" );
+$texttitlepostfix = get_config_version( $version_config, "texttitlepostfix" )
+  if check_config_exists( $version_config, "texttitlepostfix" );
 
+dbg "  uname=$uname";
+dbg "  urlbase=$urlbase";
+dbg "  searchssi=$searchssi";
+dbg "  cssfile=$cssfile";
+dbg "  cssprintfile=$cssprintfile";
+dbg "  searchssi=$searchssi";
+dbg "  navbarname=$navbar";
+dbg "  logoimage=$logoimage";
+dbg "  logotext=$logotext";
+dbg "  headtitlepostfix=$headtitlepostfix";
+dbg "  texttitlepostfix=$texttitlepostfix";
+dbg "*** CONFIG DATA (end) ***";
 
-    dbg "*** CONFIG (type != dist) ***";
-    dbg "  uname=$uname";
-    dbg "  urlbase=$urlbase";
-    dbg "  searchssi=$searchssi";
-    dbg "  cssfile=$cssfile";
-    dbg "  cssprintfile=$cssprintfile";
-    dbg "  searchssi=$searchssi";
-    dbg "  navbarname=$navbar";
-    dbg "  newsfile=$newsfile";
-    dbg "  newsfileurl=$newsfileurl";
-    dbg "  watchouturl=$watchouturl";
-    dbg "  logoimage=$logoimage";
-    dbg "  logotext=$logotext";
-    dbg "  headtitlepostfix=$headtitlepostfix";
-    dbg "  texttitlepostfix=$texttitlepostfix";
-    dbg "*** END ***";
+@extra =
+  (
+   urlbase      => $urlbase,
+   updateby     => $uname,
+   cssfile      => $cssfile,
+   cssprintfile => $cssprintfile,
+   searchssi    => $searchssi,
+   navbarname   => $navbar,
+   headtitlepostfix => $headtitlepostfix,
+   texttitlepostfix => $texttitlepostfix,
+  );
 
-    @extra =
-      (
-       urlbase      => $urlbase,
-       updateby     => $uname,
-       cssfile      => $cssfile,
-       cssprintfile => $cssprintfile,
-       newsfile     => $newsfile,
-       newsfileurl  => $newsfileurl,
-       watchouturl  => $watchouturl,
-       searchssi    => $searchssi,
-       navbarname   => $navbar,
-       headtitlepostfix => $headtitlepostfix,
-       texttitlepostfix => $texttitlepostfix,
-      );
-
-    # note: tweek logoimage location by depth
-    # (difference to how the main navbars are created)
-    #
-    push @extra, ( logoimage => '../' x ($depth-1) . $logoimage )
-      if $logoimage ne "";
-    push @extra, ( logotext  => $logotext )
-      if $logotext ne "";
-
-}
+# note: tweek logoimage location by depth
+# (difference to how the main navbars are created)
+#
+push @extra, ( logoimage => '../' x ($depth-1) . $logoimage )
+  if $logoimage ne "";
+push @extra, ( logotext  => $logotext )
+  if $logotext ne "";
 
 # what 'hardcopy' values do we loop through?
 #
-my @hardcopy = ( 0 );
-push @hardcopy, 1 unless $type eq "dist";
+my @hardcopy = ( 0, 1 );
 
 # we 'hardcode' the output of the transformation
 # and ensure that any old files have been deleted
 #
-my @soft;
-my @hard;
-if ( $type eq "dist" ) {
-    @soft = map { "${outdir}${_}.html"; } qw( index_alphabet index_context );
+my @s = qw( navbar_ahelp_index.incl index_alphabet.html index_context.html );
+my @h = qw( index_alphabet index_context );
 
-} else {
-    my @s = qw( navbar_ahelp_index.incl index_alphabet.html index_context.html );
-    my @h = qw( index_alphabet index_context );
+my @soft = map { "${outdir}${_}"; } @s;
+my @hard = map { "${outdir}${_}.hard.html"; } @h;
 
-    @soft = map { "${outdir}${_}"; } @s;
-    @hard = map { "${outdir}${_}.hard.html"; } @h;
-
-}
 foreach my $page ( @soft, @hard ) {
     dbg " ---> deleting (if it exists) $page";
     myrm( $page );
 }
 
 foreach my $hflag ( @hardcopy ) {
-    my $params =
-      make_params(
-		  type     => $type eq "trial" ? "test" : $type,
-		  outdir   => $outdir,
-		  site     => $site,
-		  version  => $version,
-		  hardcopy => $hflag,
-		  @extra
-		 );
+  my $params =
+    make_params(
+		type     => $type eq "trial" ? "test" : $type,
+		outdir   => $outdir,
+		site     => $site,
+		version  => $version,
+		hardcopy => $hflag,
+		@extra
+	       );
 
-    # run the processor, pipe the screen output to a file
-    translate_file( $params, "${stylesheets}ahelp_index.xsl", $ahelpindex );
+  # run the processor, pipe the screen output to a file
+  translate_file( $params, "${stylesheets}ahelp_index.xsl", $ahelpindex );
 }
 
 # success or failure?

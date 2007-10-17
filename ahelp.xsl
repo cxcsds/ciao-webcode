@@ -2,10 +2,11 @@
 <!DOCTYPE xsl:stylesheet>
 
 <!-- AHELP XML to HTML convertor using XSL Transformations -->
-<!-- $Id: ahelp.xsl,v 1.18 2004/05/14 16:14:39 dburke Exp $ -->
 
 <!--* 
     * Recent changes:
+    *  2007 Oct 16 DJB
+    *    Removed support for type=dist
     *  v1.18 - fixed default setting of global hardcopy param
     *  v1.17 - strip space from PARA as well as SYNTAX blocks to clean a
     *          few things up.
@@ -37,41 +38,36 @@
     *   v1.2 - reworked: still needs work before usable
     *   v1.1 - original version (from /data/da/Docs/ahelp2html/)
     * 
-    * We have three versions/flavours of HTML output:
+    * We have two versions/flavours of HTML output:
     *   a) HTML for CIAO web page (http://cxc.harvard.edu/ciao/ahelp/foo.html)
     *   b) HTML used to create PDF for CIAO web site using htmldoc
     *      (page not seen by users; in fact it's deleted after PDF are created
     *       but that's external to this stylesheet)
-    *   c) HTML version for the CIAO distribution ($ASCDS_INSTALL/doc/html/...)
     *   
     * The stylesheet produces a text output - to STDOUT - listing the files it
     * has created (it uses xsl:document to create the HTML files).
     *   
     * User (ie by the stylesheet processor) defineable parameters:
     *  . type - string, required
-    *    one of "dist", "live", "test", or "trial"
+    *    one of "live", "test", or "trial"
     *      determines where the HTML files are created
-    *      dist is for the CIAO distribution
     *      trial is a "developer only" value
     *
     *  . hardcopy - integer, optional, default=0
     *    if 0 then create the "softcopy" version, if 1 then the "hardcopy"
-    *    version. Setting to 1 with type=dist is not valid so we die if this
-    *    combination is set
+    *    version.
     *
-    *  these are required only if format=web (not needed for format=dist)
+    *  . urlbase - string, required
+    *    base URL of page [ie full URL without the trailing foo.html]
+    *    (used when creating the hardcopy versions). Must end in a '/'
     *
-    *    . urlbase - string, only required if format=web
-    *      base URL of page [ie full URL without the trailing foo.html]
-    *      (used when creating the hardcopy versions). Must end in a '/'
+    *  . updateby - string, required
+    *    name of person publishing the page (output of whoami is sufficient)
     *
-    *    . updateby - string, only required if format=web
-    *      name of person publishing the page (output of whoami is sufficient)
+    *  . cssfile - string, only equired format=web
+    *    url of CSS file for pages
     *
-    *    . cssfile - string, only required if format=web
-    *      url of CSS file for pages
-    *
-    *    . searchssi - string, default=/incl/search.html, only required if format=web
+    *  . searchssi - string, default=/incl/search.html, required
     *      url of SSI file for the search bar
     *
     *  . outdir - string, required
@@ -234,18 +230,13 @@
   <xsl:param name="have-seealso"  select="$seealso != ''"/>
   <xsl:param name="have-bugs"     select="count(//ENTRY/BUGS)!=0"/>
 
-  <!--* seems to need setting before matching "/" *-->
-  <xsl:variable name="url">
-    <xsl:if test="$type != 'dist'">
-      <xsl:value-of select="concat($urlbase,$outname,'.html')"/>
-    </xsl:if>
-  </xsl:variable>
+  <xsl:variable name="url"        select="concat($urlbase,$outname,'.html')"/>
 
   <!--*
       * Start processing here: "/"
       *   
       * start with the root node since we may want to loop over
-      * cxchelptopics multiple times (if format=web)
+      * cxchelptopics multiple times
       *
       *-->
   <xsl:template match="/">
@@ -258,14 +249,6 @@
       <xsl:with-param name="pvalue"  select="$type"/>
       <xsl:with-param name="allowed" select="$allowed-types"/>
     </xsl:call-template>
-
-    <xsl:if test="$type = 'dist' and $hardcopy != '0'">
-      <xsl:message terminate="yes">
- Error:
-   when type=dist then hardcopy must be set to 0, not <xsl:value-of select="$hardcopy"/>
-
-      </xsl:message>
-    </xsl:if>
 
     <xsl:call-template name="check-param">
       <xsl:with-param name="pname"   select="'outdir'"/>
@@ -297,13 +280,11 @@
         * it's a bit late to check urlbase here since we
         * have already used it in setting up the variable url
         *-->
-    <xsl:if test="$type != 'dist'">
-      <xsl:call-template name="check-param">
-	<xsl:with-param name="pname"   select="'urlbase'"/>
-	<xsl:with-param name="pvalue"  select="$urlbase"/>
-	<xsl:with-param name="pvalue"  select="1"/>
-      </xsl:call-template>
-    </xsl:if>
+    <xsl:call-template name="check-param">
+      <xsl:with-param name="pname"   select="'urlbase'"/>
+      <xsl:with-param name="pvalue"  select="$urlbase"/>
+      <xsl:with-param name="pvalue"  select="1"/>
+    </xsl:call-template>
       
     <xsl:call-template name="check-param">
       <xsl:with-param name="pname"   select="'version'"/>
@@ -317,27 +298,21 @@
         *-->
 
     <xsl:choose>
-      <xsl:when test="$type = 'dist'">
-	<!--* pages for the distribution *-->
-	<xsl:apply-templates name="cxchelptopics" mode="make-dist-viewable"/>
-      </xsl:when>
-
       <!--* pages for the web site (softcopy) *-->
-      <xsl:when test="$type != 'dist' and $hardcopy = '0'">
+      <xsl:when test="$hardcopy = '0'">
 	<xsl:apply-templates name="cxchelptopics" mode="make-viewable"/>
       </xsl:when>
 
       <!--* the version from which we create the PDF *-->
-      <xsl:when test="$type != 'dist' and $hardcopy = '1'">
+      <xsl:when test="$hardcopy = '1'">
 	<xsl:apply-templates name="cxchelptopics" mode="make-hardcopy"/>
       </xsl:when>
 
       <xsl:otherwise>
 	<xsl:message terminate="yes">
  Error:
-   unrecognised combination of
-   type=<xsl:value-of select="$type"/>
-   hardcopy=<xsl:value-of select="$hardcopy"/>
+   Unrecognised value for hardcopy parameter: '<xsl:value-of select="$hardcopy"/>'
+   Should be 0 or 1
 
 	</xsl:message>
       </xsl:otherwise>
