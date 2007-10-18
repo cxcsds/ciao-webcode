@@ -134,6 +134,7 @@
 #                 caldb site 
 #  12 Oct 07 DJB Removed ldpath/htmllib env vars
 #  15 Oct 07 DJB executables are now OS specific
+#  17 Oct 07 DJB removed xsltproc global variable as no longer needed
 #
  
 use strict;
@@ -269,8 +270,6 @@ if ( ! ($site =~ /caldb/)) {
 	die "Error: version $version in the config file ($configfile) does not contain the number parameter\n";
     }
 } 
-
-    
 
 # as is this
 # - since we do send these to the processor then we can not let them
@@ -656,10 +655,6 @@ sub xml2html_navbar ($) {
     #
     print "Parsing [navbar]: $in"; # don't '\n' until skip check
 
-    my @extra;
-    push @extra, ( logoimage => $logoimage )  if $logoimage ne "";
-    push @extra, ( logotext  => $logotext )   if $logotext  ne "";
-
     my %params = 
       (
 	  type => $$opts{type},
@@ -676,8 +671,10 @@ sub xml2html_navbar ($) {
 	  newsfileurl => $newsfileurl,
 	  watchouturl => $watchouturl,
 	  searchssi => $searchssi,
-	  @extra,
       );
+
+    $params{logoimage} = $logoimage if $logoimage ne "";
+    $params{logotext}  = $logotext  if $logotext  ne "";
 
     # get a list of the pages: we need this so that:
     # - we can create the directory if necessary
@@ -776,7 +773,7 @@ sub xml2html_page ($) {
     # used to set up the list of parameters sent to the
     # stylesheet
     #
-    my @flags =
+    my %params =
       (
        type => $$opts{type},
        site => $$opts{site},
@@ -806,7 +803,6 @@ sub xml2html_page ($) {
     my @hardcopy = ( 0 );
     push @hardcopy, 1 unless $site eq "icxc";
 
-    my %params = @flags;
     translate_file_hardcopy "$$opts{xslt}page.xsl", $in, \%params, \@hardcopy;
 
     # success or failure?
@@ -866,7 +862,7 @@ sub xml2html_bugs ($) {
     # used to set up the list of parameters sent to the
     # stylesheet
     #
-    my @flags =
+    my %params =
       (
        type => $$opts{type},
        site => $$opts{site},
@@ -896,7 +892,6 @@ sub xml2html_bugs ($) {
     my @hardcopy = ( 0 );
     push @hardcopy, 1 unless $site eq "icxc";
 
-    my %params = @flags;
     translate_file_hardcopy "$$opts{xslt}bugs.xsl", $in, \%params, \@hardcopy;
 
     # success or failure?
@@ -1023,7 +1018,7 @@ sub xml2html_register ($) {
 	myrm $page;
     }
 
-    my @flags =
+    my %params =
       (
        type => $$opts{type},
        site => $$opts{site},
@@ -1051,7 +1046,6 @@ sub xml2html_register ($) {
     # we no longer need to create so-many different versions
     # as of CIAO 3.1
     #
-    my %params = @flags;
     translate_file_hardcopy "$$opts{xslt}register_live.xsl", $in, \%params;
 
     # success or failure?
@@ -1126,7 +1120,7 @@ sub xml2html_multiple ($$$) {
     initialise_pages( @soft, @hard );
     clean_up_math( $outdir, @math );
 
-    my @flags =
+    my %params =
       (
        type => $$opts{type},
        site => $site,
@@ -1150,7 +1144,6 @@ sub xml2html_multiple ($$$) {
        texttitlepostfix => $texttitlepostfix,
       );
 
-    my %params = @flags;
     translate_file_hardcopy "$$opts{xslt}${pagename}.xsl", $in, \%params;
 
     # check the softcopy versions
@@ -1223,7 +1216,7 @@ sub xml2html_threadindex ($) {
     # create dirs/remove files
     initialise_pages( @soft, @hard );
 
-    my @flags =
+    my %params =
       (
        type => $$opts{type},
        site => $site,
@@ -1249,7 +1242,6 @@ sub xml2html_threadindex ($) {
        texttitlepostfix => $texttitlepostfix,
       );
 
-    my %params = @flags;
     translate_file_hardcopy "$$opts{xslt}threadindex.xsl", $in, \%params;
 
     # check the softcopy versions
@@ -1416,7 +1408,7 @@ sub xml2html_thread ($) {
     foreach my $page ( @html ) { myrm "${outdir}$page"; }
     clean_up_math( $outdir, @math );
 
-    my @flags =
+    my %params =
       (
        type => $$opts{type},
        site => $site,
@@ -1446,7 +1438,6 @@ sub xml2html_thread ($) {
        imglinkiconheight => $imglinkiconheight,
       );
 
-    my %params = @flags;
     translate_file_hardcopy "$$opts{xslt}${site}_thread.xsl", $in, \%params;
 
     # set the correct owner/permissions for the HTML files
@@ -1529,6 +1520,10 @@ sub process_xml ($$) {
 
 	# what is the name of the root node?
 	# (plus we also check for the presence of the /*/info/testonly tag here)
+	#
+	# This would be better done using XML::LibXML, but if so can we
+	# then pass the dom around instead of the filename?
+	#
 	my $roots = translate_file "${stylesheets}list_root_node.xsl", $in;
 	chomp $roots;
 	my ( $root, $testonly ) = split " ", $roots;

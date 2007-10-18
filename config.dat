@@ -41,7 +41,6 @@ group=cxcweb_ciao
 @types=live
 @types=test
 @types=trial
-@types=dist
 
 # prefix should not end in a /
 # NOTE: changed from old "prefix" (added ciaoweb)
@@ -210,13 +209,11 @@ logotext=CIAO Logo
 %stylesheets=live /data/da/Docs/web/ciao3.4/stylesheets/
 %stylesheets=test /data/da/Docs/web/ciao3.4/stylesheets/
 %stylesheets=trial /data/da/Docs/web/devel/
-%stylesheets=dist /somewhere/
 
 # what's the location for the output files?
 %outdir=live /proj/web-cxc/htdocs/ciao3.4/
 %outdir=test /proj/web-cxc-test/htdocs/ciao3.4/
 %outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
-%outdir=dist /somewhere/
 
 %outurl=live http://cxc.harvard.edu/ciao3.4/
 %outurl=test http://cxc-test.harvard.edu/ciao3.4/
@@ -226,7 +223,6 @@ logotext=CIAO Logo
 %storage=live /data/da/Docs/ciaoweb/published/ciao34/live/
 %storage=test /data/da/Docs/ciaoweb/published/ciao34/test/
 %storage=trial /data/da/Docs/ciaoweb/published/ciao34/trial/
-%storage=dist /somewhere/
 
 ## ahelp section
 #
@@ -255,7 +251,6 @@ logotext=CIAO Logo
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao34/test/ahelp/
 #%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao34/trial/ahelp/
 %ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao34/test/ahelp/
-%ahelpindexdir=dist /somewhere/
 
 # what navbar to use for the ahelp index pages
 ahelpindexnavbar=analysis
@@ -314,13 +309,11 @@ logotext=CIAO Logo
 %stylesheets=live /data/da/Docs/web/ciao3.3/stylesheets/
 %stylesheets=test /data/da/Docs/web/ciao3.3/stylesheets/
 %stylesheets=trial /data/da/Docs/web/devel/
-%stylesheets=dist /somewhere/
 
 # what's the location for the output files?
 %outdir=live /proj/web-cxc/htdocs/ciao3.3/
 %outdir=test /proj/web-cxc-test/htdocs/ciao3.3/
 %outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
-%outdir=dist /somewhere/
 
 %outurl=live http://cxc.harvard.edu/ciao3.3/
 %outurl=test http://cxc-test.harvard.edu/ciao3.3/
@@ -330,7 +323,6 @@ logotext=CIAO Logo
 %storage=live /data/da/Docs/ciaoweb/published/ciao33/live/
 %storage=test /data/da/Docs/ciaoweb/published/ciao33/test/
 %storage=trial /data/da/Docs/ciaoweb/published/ciao33/trial/
-%storage=dist /somewhere/
 
 ## ahelp section
 #
@@ -359,7 +351,6 @@ logotext=CIAO Logo
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao33/test/ahelp/
 #%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao33/trial/ahelp/
 %ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao33/test/ahelp/
-%ahelpindexdir=dist /somewhere/
 
 # what navbar to use for the ahelp index pages
 ahelpindexnavbar=analysis
@@ -418,13 +409,11 @@ logotext=CIAO Logo
 %stylesheets=live /data/da/Docs/web/ciao3.2/stylesheets/
 %stylesheets=test /data/da/Docs/web/ciao3.2/stylesheets/
 %stylesheets=trial /data/da/Docs/web/devel/
-%stylesheets=dist /somewhere/
 
 # what's the location for the output files?
 %outdir=live /proj/web-cxc/htdocs/ciao3.2/
 %outdir=test /proj/web-cxc-test/htdocs/ciao3.2/
 %outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
-%outdir=dist /somewhere/
 
 %outurl=live http://cxc.harvard.edu/ciao3.2/
 %outurl=test http://cxc-test.harvard.edu/ciao3.2/
@@ -434,7 +423,6 @@ logotext=CIAO Logo
 %storage=live /data/da/Docs/ciaoweb/published/ciao32/live/
 %storage=test /data/da/Docs/ciaoweb/published/ciao32/test/
 %storage=trial /data/da/Docs/ciaoweb/published/ciao32/trial/
-%storage=dist /somewhere/
 
 ## ahelp section
 #
@@ -454,12 +442,10 @@ logotext=CIAO Logo
 %ahelpfiles=live /proj/ciaox/
 %ahelpfiles=test /proj/ciaox/
 %ahelpfiles=trial /proj/ciaox/
-##%ahelpfiles=dist /somewhere/
 
 #%ahelpfiles=live /data/da/Docs/ciaoweb/ahelp/ciao32/
 #%ahelpfiles=test /data/da/Docs/ciaoweb/ahelp/ciao32/
 #%ahelpfiles=trial /data/da/Docs/ciaoweb/ahelp/ciao32/
-#%ahelpfiles=dist /somewhere/
 
 # where does the ahelp 'index' file live
 # - ie the directory that contains
@@ -473,7 +459,6 @@ logotext=CIAO Logo
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao32/test/ahelp/
 #%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao32/trial/ahelp/
 %ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao32/test/ahelp/
-%ahelpindexdir=dist /somewhere/
 
 # what navbar to use for the ahelp index pages
 ahelpindexnavbar=analysis
@@ -532,13 +517,11 @@ logotext=CIAO Logo
 %stylesheets=live /data/da/Docs/web/ciao3.1/stylesheets/
 %stylesheets=test /data/da/Docs/web/ciao3.1/stylesheets/
 %stylesheets=trial /data/da/Docs/web/devel/
-%stylesheets=dist /somewhere/
 
 # what's the location for the output files?
 %outdir=live /proj/web-cxc/htdocs/ciao3.1/
 %outdir=test /proj/web-cxc-test/htdocs/ciao3.1/
 %outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
-%outdir=dist /somewhere/
 
 %outurl=live http://cxc.harvard.edu/ciao3.1/
 %outurl=test http://cxc-test.harvard.edu/ciao3.1/
@@ -548,7 +531,6 @@ logotext=CIAO Logo
 %storage=live /data/da/Docs/ciaoweb/published/ciao31/live/
 %storage=test /data/da/Docs/ciaoweb/published/ciao31/test/
 %storage=trial /data/da/Docs/ciaoweb/published/ciao31/trial/
-%storage=dist /somewhere/
 
 ## ahelp section
 #
@@ -568,11 +550,9 @@ logotext=CIAO Logo
 ##%ahelpfiles=live /proj/ciaox/
 ##%ahelpfiles=test /proj/ciaox/
 ##%ahelpfiles=trial /proj/ciaox/
-##%ahelpfiles=dist /somewhere/
 %ahelpfiles=live /data/da/Docs/ciaoweb/ahelp/ciao31/
 %ahelpfiles=test /data/da/Docs/ciaoweb/ahelp/ciao31/
 %ahelpfiles=trial /data/da/Docs/ciaoweb/ahelp/ciao31/
-%ahelpfiles=dist /somewhere/
 
 # where does the ahelp 'index' file live
 # - ie the directory that contains
@@ -586,7 +566,6 @@ logotext=CIAO Logo
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao31/test/ahelp/
 #%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao31/trial/ahelp/
 %ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao31/test/ahelp/
-%ahelpindexdir=dist /somewhere/
 
 # what navbar to use for the ahelp index pages
 ahelpindexnavbar=analysis
@@ -642,13 +621,11 @@ logotext=CIAO Logo
 %stylesheets=live /data/da/Docs/web/ciao3.0/stylesheets/
 %stylesheets=test /data/da/Docs/web/ciao3.0/stylesheets/
 %stylesheets=trial /data/da/Docs/web/devel/
-%stylesheets=dist /somewhere/
 
 # what's the location for the output files?
 %outdir=live /proj/web-cxc/htdocs/ciao3.0/
 %outdir=test /proj/web-cxc-test/htdocs/ciao3.0/
 %outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
-%outdir=dist /somewhere/
 
 %outurl=live http://cxc.harvard.edu/ciao3.0/
 %outurl=test http://cxc-test.harvard.edu/ciao3.0/
@@ -658,7 +635,6 @@ logotext=CIAO Logo
 %storage=live /data/da/Docs/ciaoweb/published/ciao30/live/
 %storage=test /data/da/Docs/ciaoweb/published/ciao30/test/
 %storage=trial /data/da/Docs/ciaoweb/published/ciao30/trial/
-%storage=dist /somewhere/
 
 ## ahelp section
 #
@@ -671,7 +647,6 @@ logotext=CIAO Logo
 %ahelpfiles=live /soft/ciao/
 %ahelpfiles=test /soft/ciao/
 %ahelpfiles=trial /soft/ciao/
-%ahelpfiles=dist /somewhere/
 
 # where does the ahelp 'index' file live
 # - ie the directory that contains
@@ -684,7 +659,6 @@ logotext=CIAO Logo
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao30/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao30/test/ahelp/
 %ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao30/trial/ahelp/
-%ahelpindexdir=dist /somewhere/
 
 # what navbar to use for the ahelp index pages
 ahelpindexnavbar=analysis
