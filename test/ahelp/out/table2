@@ -1,10 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <table border="1" frame="void">
-<tr class="headerrow"><th>foo</th></tr>
+<tr class="headerrow">
+<th>foo</th>
+<th>bob</th>
+</tr>
 <tr>
-<td></td>
-<td>foo</td>
-<td>baa baa</td>
+<td>bar</td>
+<td>xx y2</td>
 </tr>
 </table>

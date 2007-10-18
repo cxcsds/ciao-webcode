@@ -347,7 +347,9 @@ Foo Bar
 <li>bar</li>
 </ul><br>';
 
-# also tests ROW & DATA
+# The table2 test checks that we ignore empty columns (well, empty
+# except for the first row).
+#
 add_test "table",
 '<xsl:template match="/">
 <xsl:text>
@@ -356,8 +358,12 @@ add_test "table",
 </xsl:template>',
 '<TABLE>
   <ROW><DATA>foo</DATA></ROW>
+  <ROW><DATA>bar</DATA></ROW>
 </TABLE>',
-'<table border="1" frame="void"><tr class="headerrow"><th>foo</th></tr></table>';
+'<table border="1" frame="void">
+<tr class="headerrow"><th>foo</th></tr>
+<tr><td>bar</td></tr>
+</table>';
 
 add_test "table2",
 '<xsl:template match="/">
@@ -366,18 +372,27 @@ add_test "table2",
   <xsl:apply-templates select="//TABLE"/>
 </xsl:template>',
 '<TABLE>
-  <ROW><DATA>foo</DATA></ROW>
-  <ROW><DATA></DATA><DATA>foo</DATA><DATA>baa baa</DATA></ROW>
+  <ROW><DATA>foo</DATA><DATA>empty column</DATA><DATA>bob</DATA></ROW>
+  <ROW><DATA>bar</DATA><DATA/><DATA>xx y2</DATA></ROW>
 </TABLE>',
 '<table border="1" frame="void">
-<tr class="headerrow"><th>foo</th></tr>
+<tr class="headerrow">
+<th>foo</th>
+<th>bob</th>
+</tr>
 <tr>
-<td></td>
-<td>foo</td>
-<td>baa baa</td>
+<td>bar</td>
+<td>xx y2</td>
 </tr>
 </table>';
 
+# we also check the handling of incorrectly-sepcified
+# tables, where the number of columns is not constant
+# from row to row
+#
+# This will generate a WARNING line to STDERR, but that
+# is okay.
+#
 add_test "table-with-caption",
 '<xsl:template match="/">
 <xsl:text>
@@ -387,8 +402,12 @@ add_test "table-with-caption",
 '<TABLE>
   <CAPTION>A caption.</CAPTION>
   <ROW><DATA>foo</DATA></ROW>
+  <ROW><DATA>bar</DATA><DATA>baz</DATA></ROW>
 </TABLE>',
-'<h4>A caption.</h4><table border="1" frame="void"><tr class="headerrow"><th>foo</th></tr></table>';
+'<h4>A caption.</h4><table border="1" frame="void">
+<tr class="headerrow"><th>foo</th></tr>
+<tr><td>bar</td></tr>
+</table>';
 
 
 add_test "desc-entry",

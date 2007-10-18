@@ -6,5 +6,6 @@ seealsogroups="foogroup">
 <TABLE>
   <CAPTION>A caption.</CAPTION>
   <ROW><DATA>foo</DATA></ROW>
+  <ROW><DATA>bar</DATA><DATA>baz</DATA></ROW>
 </TABLE>
 </ENTRY></cxchelptopics>
