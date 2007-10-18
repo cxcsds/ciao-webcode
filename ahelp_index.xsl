@@ -11,10 +11,13 @@
 
 <!--* 
     * Recent changes:
-    *  Oct 16 07 DJB
+    *  Oct 17 2007 DJB
+    *    navbar for ahelp pages now contains a link to the home page for that
+    *    site.
+    *  Oct 16 2007 DJB
     *    Removed support for type=dist and support for newsfile/newsfileurl/
     *    watchouturl params
-    *  Oct 15 07 DJB
+    *  Oct 15 2007 DJB
     *    Updated to allow site-specific indexes
     *  v1.38 - changed page headers and index titles to use
     *	       htmltitlepostfix value 
@@ -469,8 +472,30 @@
   <!--*
       * create the "quick links" section of the navbar
       * - try to match the "look" of the navbars in CIAO 3.0
+      * - add a link to the main site "home page"
       *-->
   <xsl:template name="add-navbar-qlinks">
+
+    <xsl:variable name="pretty-site"><xsl:choose>
+      <xsl:when test="$site = 'ciao'">CIAO</xsl:when>
+      <xsl:when test="$site = 'chips'">ChIPS</xsl:when>
+      <xsl:when test="$site = 'sherpa'">Sherpa</xsl:when>
+      <xsl:otherwise>
+	<xsl:message terminate="yes">
+  ERROR: expected site to be ciao, chips, or sherpa, not '<xsl:value-of select="$site"/>'
+	</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
+    <!--* link to the home page for the site*-->
+    <xsl:text disable-output-escaping="yes">&lt;dt&gt;</xsl:text>
+    <xsl:call-template name="add-link-to-text">
+      <xsl:with-param name="url" select="'../index.html'"/> <!--* I do not think we have a valid depth parameter? *-->
+      <xsl:with-param name="txt" select="concat('Home page (',$pretty-site,')')"/>
+      <xsl:with-param name="class" select="'heading'"/>
+      <xsl:with-param name="title" select="concat('The ',$pretty-site,' Home page')"/>
+    </xsl:call-template>
+    <xsl:text disable-output-escaping="yes">&lt;/dt&gt;</xsl:text>
 
     <!--* links to the index pages *-->
     <xsl:text disable-output-escaping="yes">&lt;dt&gt;</xsl:text>
