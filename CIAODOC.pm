@@ -846,8 +846,6 @@ sub check_location ($$) {
     # find out what version we are in
     # $dname has previously been set to cwd()
     #
-    # FIXME: this probably won't work well for type=dist?
-    #
     die "Error: expected to be running within the $site_prefix directory structure\n"
       unless substr($dname,0,$lp) eq $site_prefix;
     die "Error: expected to be running in a sub-directory of $site_prefix\n"
