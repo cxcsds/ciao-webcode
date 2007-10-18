@@ -65,10 +65,8 @@ end # foreach: id
 # do these individually
 #
 
-set srcdir = `pwd`/in
-
   if ( -e out/xslt.no-seealso ) rm -f out/xslt.no-seealso
-  $xsltproc --stringparam hardcopy 0 --stringparam bocolor foo --stringparam bgcolor bar --stringparam seealsofile $srcdir/seealso.empty.xml \
+  $xsltproc --stringparam hardcopy 0 --stringparam bocolor foo --stringparam bgcolor bar --stringparam seealsofile /Users/doug/doc/ciaodoc/test/ahelp/in/seealso.empty.xml \
     in/no-seealso.xsl in/no-seealso.xml > out/xslt.no-seealso
   diff out/no-seealso out/xslt.no-seealso
   if ( $status == 0 ) then
@@ -83,7 +81,7 @@ set srcdir = `pwd`/in
 
 
   if ( -e out/xslt.seealso ) rm -f out/xslt.seealso
-  $xsltproc --stringparam hardcopy 0 --stringparam bocolor foo --stringparam bgcolor bar --stringparam seealsofile $srcdir/seealso.full.xml \
+  $xsltproc --stringparam hardcopy 0 --stringparam bocolor foo --stringparam bgcolor bar --stringparam seealsofile /Users/doug/doc/ciaodoc/test/ahelp/in/seealso.full.xml \
     in/seealso.xsl in/seealso.xml > out/xslt.seealso
   diff out/seealso out/xslt.seealso
   if ( $status == 0 ) then
