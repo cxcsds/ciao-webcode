@@ -66,6 +66,7 @@ my @funcs_util =
 my @funcs_xslt =
   qw(
       translate_file translate_file_hardcopy create_hardcopy
+      read_xml_file
    );
 my @funcs_cfg  =
   qw(
@@ -100,6 +101,7 @@ sub check_executable_runs ($$$);
 
 sub extract_filename ($);
 
+sub read_xml_file ($);
 sub translate_file ($$;$);
 sub translate_file_hardcopy ($$$;$);
 sub create_hardcopy ($$;$);
@@ -364,6 +366,21 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     return $xslt_store{$filename};
   }
 
+  # Returns the DOM for the file or dies, although it may be that this
+  # method already dies and I need to improve my error handling here.
+  # 
+  # This routine need not be within this closure, but left here for now.
+  #
+  # We add the .xml suffix if it does not exist.
+  #
+  sub read_xml_file ($) {
+    my $filename = shift;
+    $filename .= ".xml" unless $filename =~ /\.xml$/;
+    dbg " - about to read XML file '$filename'";
+    $parser->parse_file ($filename)
+      or die "ERROR: unable to parse XML file '$filename'\n";
+  }
+
   # TODO:
   #   allow the return value to be XML and not assume plain text
   #
@@ -383,10 +400,8 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     #
     my $xml;
     if (ref $xml_arg eq "") {
-      $xml_arg .= ".xml" unless $xml_arg =~ /\.xml$/;
       dbg "  reading XML from $xml_arg";
-      $xml = $parser->parse_file ($xml_arg)
-	or die "ERROR: unable to parse XML file '$xml_arg'\n";
+      $xml = read_xml_file $xml_arg;
 
     } elsif (ref $xml_arg eq "XML::LibXML::Document") {
       dbg "  XML is from a DOM";
@@ -438,10 +453,8 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     #
     my $xml;
     if (ref $xml_arg eq "") {
-      $xml_arg .= ".xml" unless $xml_arg =~ /\.xml$/;
       dbg "  reading XML from $xml_arg";
-      $xml = $parser->parse_file ($xml_arg)
-	or die "ERROR: unable to parse XML file '$xml_arg'\n";
+      $xml = read_xml_file $xml_arg;
 
     } elsif (ref $xml_arg eq "XML::LibXML::Document") {
       dbg "  XML is from a DOM";
@@ -478,6 +491,12 @@ sub create_hardcopy ($$;$) {
     my $indir = shift;
     my $html_head = shift;
     my $out_head  = shift || $html_head;
+
+    # Check put in incase we accidently send in a XML::LibXML::Document
+    # object.
+    #
+    die "Error: second argument to create_hardcopy should be a string, not " .
+      ref $html_head . "\n" unless ref $html_head eq "";
 
     my $in = "${indir}${html_head}.hard.html";
 

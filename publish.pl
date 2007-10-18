@@ -135,6 +135,8 @@
 #  12 Oct 07 DJB Removed ldpath/htmllib env vars
 #  15 Oct 07 DJB executables are now OS specific
 #  17 Oct 07 DJB removed xsltproc global variable as no longer needed
+#  18 Oct 07 DJB Try to use DOM rather than re-load XML file
+#                Removed use of list_root_node to query file, use DOM instead.
 #
  
 use strict;
@@ -640,6 +642,7 @@ sub xml2html_navbar ($) {
     my $opts = shift;
 
     my $in     = $$opts{xml};
+    my $dom    = $$opts{xml_dom};
     my $depth  = $$opts{depth};
     my $outdir = $$opts{outdir};
 
@@ -682,7 +685,7 @@ sub xml2html_navbar ($) {
     #   (since we write protect them after creation so the processor
     #    can't actually create the new files)
     #
-    my $pages = translate_file "$$opts{xslt}list_navbar.xsl", $in, \%params;
+    my $pages = translate_file "$$opts{xslt}list_navbar.xsl", $dom, \%params;
     $pages =~ s/\s+/ /g;
     my @pages = split " ", $pages;
 
@@ -699,7 +702,7 @@ sub xml2html_navbar ($) {
     }
 
     # run the processor - ignore the screen output
-    translate_file "$$opts{xslt}navbar.xsl", $in, \%params;
+    translate_file "$$opts{xslt}navbar.xsl", $dom, \%params;
 
     foreach my $page ( @pages ) {
 	die "Error: transformation did not create $page\n"
@@ -738,6 +741,7 @@ sub xml2html_page ($) {
     my $opts = shift;
 
     my $in     = $$opts{xml};
+    my $dom    = $$opts{xml_dom};
     my $depth  = $$opts{depth};
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
@@ -759,7 +763,7 @@ sub xml2html_page ($) {
 
     # how about math pages?
     #
-    my $math = translate_file "$$opts{xslt}list_math.xsl", $in;
+    my $math = translate_file "$$opts{xslt}list_math.xsl", $dom;
     my @math = split " ", $math;
 
     # do we need to recreate (include the equations created by any math blocks)
@@ -803,7 +807,7 @@ sub xml2html_page ($) {
     my @hardcopy = ( 0 );
     push @hardcopy, 1 unless $site eq "icxc";
 
-    translate_file_hardcopy "$$opts{xslt}page.xsl", $in, \%params, \@hardcopy;
+    translate_file_hardcopy "$$opts{xslt}page.xsl", $dom, \%params, \@hardcopy;
 
     # success or failure?
     check_for_page( @pages );
@@ -827,6 +831,7 @@ sub xml2html_bugs ($) {
     my $opts = shift;
 
     my $in     = $$opts{xml};
+    my $dom    = $$opts{xml_dom};
     my $depth  = $$opts{depth};
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
@@ -848,7 +853,7 @@ sub xml2html_bugs ($) {
 
     # how about math pages?
     #
-    my $math = translate_file "$$opts{xslt}list_math.xsl", $in;
+    my $math = translate_file "$$opts{xslt}list_math.xsl", $dom;
     my @math = split " ", $math;
 
     # do we need to recreate (include the equations created by any math blocks)
@@ -892,7 +897,7 @@ sub xml2html_bugs ($) {
     my @hardcopy = ( 0 );
     push @hardcopy, 1 unless $site eq "icxc";
 
-    translate_file_hardcopy "$$opts{xslt}bugs.xsl", $in, \%params, \@hardcopy;
+    translate_file_hardcopy "$$opts{xslt}bugs.xsl", $dom, \%params, \@hardcopy;
 
     # success or failure?
     check_for_page( @pages );
@@ -916,6 +921,7 @@ sub xml2html_redirect ($) {
     my $opts = shift;
 
     my $in     = $$opts{xml};
+    my $dom    = $$opts{xml_dom};
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
 
@@ -928,7 +934,7 @@ sub xml2html_redirect ($) {
 
     myrm $out;
 
-    translate_file "$$opts{xslt}redirect.xsl", $in, { filename => $out };
+    translate_file "$$opts{xslt}redirect.xsl", $dom, { filename => $out };
 
     die "Error: unable to create $out\n" unless -e $out;
     mysetmods $out;
@@ -949,12 +955,13 @@ sub xml2html_softlink ($) {
     my $opts = shift;
 
     my $in     = $$opts{xml};
+    my $dom    = $$opts{xml_dom};
     my $outdir = $$opts{outdir};
 
     print "Parsing [softlink]: $in\n";
 
     # get the in/out list
-    my $pages = translate_file "$$opts{xslt}list_softlink.xsl", $in;
+    my $pages = translate_file "$$opts{xslt}list_softlink.xsl", $dom;
     $pages =~ s/\s+/ /g;
     my %pages = split " ", $pages;
 
@@ -986,6 +993,7 @@ sub xml2html_register ($) {
     my $opts = shift;
 
     my $in     = $$opts{xml};
+    my $dom    = $$opts{xml_dom};
     my $depth  = $$opts{depth};
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
@@ -1001,7 +1009,7 @@ sub xml2html_register ($) {
 
     # check for math blocks (can't be bothered to handle in register blocks)
     #
-    my $math = translate_file "$$opts{xslt}list_math.xsl", $in;
+    my $math = translate_file "$$opts{xslt}list_math.xsl", $dom;
     my @math = split " ", $math;
     die "Error: currently math blocks are not allowed in register pages (hassle Doug)\n"
       unless $#math == -1;
@@ -1046,7 +1054,7 @@ sub xml2html_register ($) {
     # we no longer need to create so-many different versions
     # as of CIAO 3.1
     #
-    translate_file_hardcopy "$$opts{xslt}register_live.xsl", $in, \%params;
+    translate_file_hardcopy "$$opts{xslt}register_live.xsl", $dom, \%params;
 
     # success or failure?
     check_for_page( @pages );
@@ -1082,6 +1090,7 @@ sub xml2html_multiple ($$$) {
     my $sitelist = shift;
 
     my $in     = $$opts{xml};
+    my $dom    = $$opts{xml_dom};
     my $depth  = $$opts{depth};
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
@@ -1100,14 +1109,14 @@ sub xml2html_multiple ($$$) {
     #   (since we write protect them after creation so the processor
     #    can't actually create the new files)
     #
-    my $pages = translate_file "$$opts{xslt}list_${pagename}.xsl", $in;
+    my $pages = translate_file "$$opts{xslt}list_${pagename}.xsl", $dom;
     $pages =~ s/\s+/ /g;
     my @soft = map { "${outdir}$_"; }split " ", $pages;
     my @hard = map { my $a = $_; $a =~ s/\.html$/.hard.html/; $a; } @soft;
 
     # how about math pages?
     #
-    my $math = translate_file "$$opts{xslt}list_math.xsl", $in;
+    my $math = translate_file "$$opts{xslt}list_math.xsl", $dom;
     my @math = split " ", $math;
 
     # do we need to recreate
@@ -1144,7 +1153,7 @@ sub xml2html_multiple ($$$) {
        texttitlepostfix => $texttitlepostfix,
       );
 
-    translate_file_hardcopy "$$opts{xslt}${pagename}.xsl", $in, \%params;
+    translate_file_hardcopy "$$opts{xslt}${pagename}.xsl", $dom, \%params;
 
     # check the softcopy versions
     check_for_page( @soft );
@@ -1176,6 +1185,7 @@ sub xml2html_threadindex ($) {
     my $opts = shift;
 
     my $in     = $$opts{xml};
+    my $dom    = $$opts{xml_dom};
     my $depth  = $$opts{depth};
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
@@ -1197,14 +1207,14 @@ sub xml2html_threadindex ($) {
     # - note: the list of names returned by this stylesheet does not
     #         include the installation directory
     #
-    my $pages = translate_file "$$opts{xslt}list_threadindex.xsl", $in;
+    my $pages = translate_file "$$opts{xslt}list_threadindex.xsl", $dom;
     $pages =~ s/\s+/ /g;
     my @soft = map { "${outdir}$_"; } split " ", $pages;
     my @hard = map { my $a = $_; $a =~ s/\.html$/.hard.html/; $a; } @soft;
 
     # do not allow math in the threadindex (for now)
     #
-    my $math = translate_file "$$opts{xslt}list_math.xsl", $in;
+    my $math = translate_file "$$opts{xslt}list_math.xsl", $dom;
     my @math = split " ", $math;
     die "Error: found math blocks in $in - not allowed here\n"
       unless $#math == -1;
@@ -1242,7 +1252,7 @@ sub xml2html_threadindex ($) {
        texttitlepostfix => $texttitlepostfix,
       );
 
-    translate_file_hardcopy "$$opts{xslt}threadindex.xsl", $in, \%params;
+    translate_file_hardcopy "$$opts{xslt}threadindex.xsl", $dom, \%params;
 
     # check the softcopy versions
     check_for_page( @soft );
@@ -1272,6 +1282,7 @@ sub xml2html_thread ($) {
     my $opts = shift;
 
     my $in     = $$opts{xml};
+    my $dom    = $$opts{xml_dom};
     my $depth  = $$opts{depth};
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
@@ -1306,7 +1317,7 @@ sub xml2html_thread ($) {
 
     # find out information about this conversion
     #
-    my $list_files = translate_file "$$opts{xslt}list_thread.xsl", $in;
+    my $list_files = translate_file "$$opts{xslt}list_thread.xsl", $dom;
 
     # split the list up into sections: html, image, screen, and file
     #
@@ -1340,7 +1351,7 @@ sub xml2html_thread ($) {
 
     # how about math pages?
     #
-    my $math = translate_file "$$opts{xslt}list_math.xsl", $in;
+    my $math = translate_file "$$opts{xslt}list_math.xsl", $dom;
     my @math = split " ", $math;
 
     # do we need to recreate
@@ -1438,7 +1449,7 @@ sub xml2html_thread ($) {
        imglinkiconheight => $imglinkiconheight,
       );
 
-    translate_file_hardcopy "$$opts{xslt}${site}_thread.xsl", $in, \%params;
+    translate_file_hardcopy "$$opts{xslt}${site}_thread.xsl", $dom, \%params;
 
     # set the correct owner/permissions for the HTML files
     #
@@ -1459,7 +1470,6 @@ sub xml2html_thread ($) {
     create_hardcopy $outdir, "index", $threadname;
 
     # delete the converted screen files
-    # these SHOULD BE copied over to the storage space first
     #
     foreach my $page ( @screen ) { myrm "$page.xml"; }
 
@@ -1506,7 +1516,8 @@ sub process_xml ($$) {
 	# perhaps should include siteversion?
 	my $opts =
 	  {
-	   xml => $in, depth => $depth,
+	   xml => $in,
+	   depth => $depth,
 	   dirname => $thisdir,
 	   navbar_link => $navbar_link,
 	   site => $site, type => $type, xslt => $stylesheets,
@@ -1518,22 +1529,21 @@ sub process_xml ($$) {
 	   texttitlepostfix => $texttitlepostfix,
 	  };
 
-	# what is the name of the root node?
-	# (plus we also check for the presence of the /*/info/testonly tag here)
+	# what is the name of the root node and is this
+	# file not intended only type=live?
 	#
-	# This would be better done using XML::LibXML, but if so can we
-	# then pass the dom around instead of the filename?
-	#
-	my $roots = translate_file "${stylesheets}list_root_node.xsl", $in;
-	chomp $roots;
-	my ( $root, $testonly ) = split " ", $roots;
-	$testonly ||= "";
+	my $dom      = read_xml_file $in;
+	my $droot    = $dom->documentElement();
+	my $root     = $droot->nodeName;
+	my $testonly = $droot->findvalue("count(info/testonly) != 0");
 
 	# skip if we're live publishing
-	if ( $type eq "live" and $testonly eq "TESTONLY" ) {
+	if ( $type eq "live" and $testonly eq "true" ) {
 	    print "The page $in [type $root] has been marked as for the test site only\n\n";
 	    next;
 	}
+
+	$$opts{xml_dom} = $dom;
 
 	# when was the file last modified?
 	# convert the date into "Day_number Month_string Year_number"

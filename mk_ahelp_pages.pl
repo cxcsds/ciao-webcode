@@ -72,8 +72,6 @@ use FindBin;
 use lib $FindBin::Bin;
 use CIAODOC qw( :util :xslt :cfg );
 
-use XML::LibXML;
-
 ## Subroutines (see end of file)
 #
 
@@ -457,11 +455,7 @@ sub find_ahelpfiles ($$) {
   my $site    = shift;
   my $xmlfile = shift;
 
-  my $parser = XML::LibXML->new()
-    or die "Error: Unable to create XML::LibXML parser instance.\n";
-
-  my $dom = $parser->parse_file( $xmlfile )
-    or die "Error: unable to open $xmlfile via XML parser\n";
+  my $dom = read_xml_file $xmlfile;
   my $root = $dom->documentElement();
   my @out;
   dbg "Processing ahelp index to find pages in site=$site";
