@@ -422,8 +422,8 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     }
     dbg "  *** params (end) ***";
 
-    # XXX TODO XXX
-    #   trap errors
+    # We could trap errors, but no real need at present.
+    #
     my $results = $sheet->transform($xml, %newparams);
     my $retval  = $sheet->output_string($results);
 

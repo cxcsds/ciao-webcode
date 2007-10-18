@@ -237,7 +237,8 @@
         *-->
     <xsl:variable name="hrefstart"><xsl:choose>
 	<xsl:when test="boolean(@site)"><xsl:value-of select="concat('/',@site,'/ahelp/')"/></xsl:when>
-	<xsl:when test="$site != 'ciao' and $site != 'chips' and $site != 'sherpa'">/ciao/ahelp/</xsl:when>
+	<xsl:when test="$site != 'ciao' and $site != 'chips' and $site != 'sherpa'
+			and $site != 'ciaobeta' and $site != 'chipsbeta' and $site != 'sherpabeta'">/ciao/ahelp/</xsl:when>
 	<xsl:otherwise><xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="0"/>
 	    <xsl:with-param name="depth"   select="$depth"/>
@@ -287,9 +288,9 @@
     </xsl:choose></xsl:variable>
     <xsl:variable name="outlc" select="translate($out,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
     <xsl:choose>
-      <xsl:when test="$outlc = 'ciao'">CIAO</xsl:when>
-      <xsl:when test="$outlc = 'sherpa'">Sherpa</xsl:when>
-      <xsl:when test="$outlc = 'chips'">ChIPS</xsl:when>
+      <xsl:when test="$outlc = 'ciao' or $outlc = 'ciaobeta'">CIAO</xsl:when>
+      <xsl:when test="$outlc = 'sherpa' or $outlc = 'sherpabeta'">Sherpa</xsl:when>
+      <xsl:when test="$outlc = 'chips' or $outlc = 'chipsbeta'">ChIPS</xsl:when>
       <xsl:otherwise>
 	<xsl:message terminate="yes">
  Expected site=ciao, sherpa, or chips but sent '<xsl:value-of select="$outlc"/>'
