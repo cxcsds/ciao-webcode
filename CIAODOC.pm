@@ -367,27 +367,45 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
   # TODO:
   #   allow the return value to be XML and not assume plain text
   #
+  # The XML file can be given by name, in which case the suffix
+  # ".xml" is added if it doesn't exist, otherwise it can be
+  # an XML::LibXML::Document
+  #
   sub translate_file ($$;$) {
     my $stylesheet = shift;
-    my $xml_file   = shift; # with/without trailing .xml
-    $xml_file .= ".xml" unless $xml_file =~ /\.xml$/;
-
+    my $xml_arg    = shift;
     my $params     = shift || {};
-    
-    dbg "*** XSLT (start) ***";
-    dbg "  in=$xml_file";
-    dbg "  xslt=$stylesheet";
-    dbg "  *** params (start) ***";
 
+    dbg "*** XSLT (start) ***";
+
+    # Should do this properly (allow for sub-classes etc) but go
+    # for the simple route
+    #
+    my $xml;
+    if (ref $xml_arg eq "") {
+      $xml_arg .= ".xml" unless $xml_arg =~ /\.xml$/;
+      dbg "  reading XML from $xml_arg";
+      $xml = $parser->parse_file ($xml_arg)
+	or die "ERROR: unable to parse XML file '$xml_arg'\n";
+
+    } elsif (ref $xml_arg eq "XML::LibXML::Document") {
+      dbg "  XML is from a DOM";
+      $xml = $xml_arg;
+
+    } else {
+      die "Expected xml_file argument to translate_file to be a string or XML::LibXML::Document, found " .
+	ref $xml_arg . " instead!\n";
+    }
+
+    dbg "  xslt=$stylesheet";
+    my $sheet = _get_stylesheet $stylesheet;
+
+    dbg "  *** params (start) ***";
     my %newparams = XML::LibXSLT::xpath_to_string(%$params);
     while (my ($parname, $parval) = each %newparams) {
       dbg "    $parname=$parval";
     }
     dbg "  *** params (end) ***";
-
-    my $sheet = _get_stylesheet $stylesheet;
-    my $xml = $parser->parse_file ($xml_file)
-      or die "ERROR: unable to parse XML file '$xml_file'\n";
 
     # XXX TODO XXX
     #   trap errors
@@ -402,16 +420,44 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
   # This is a common enough pattern that it is worth abstracting out
   # Note that the params assoc array will be changed by this routine.
   #
+  # xml_arg can be a string, in which case it is assumed to be the
+  # file name (a trailing ".xml" is added if ncessary) or
+  # a XML::LibXML::Document object.
+  #
   sub translate_file_hardcopy ($$$;$) {
     my $stylesheet = shift;
-    my $xml_file   = shift; # with/without trailing .xml
+    my $xml_arg    = shift;
     my $params     = shift;
     my $hcopy      = shift || [0,1];
 
+    my $hstr = join ",", @$hcopy;
+    dbg "*** start XSLT processing (hardcopy=$hstr)";
+
+    # Should do this properly (allow for sub-classes etc) but go
+    # for the simple route
+    #
+    my $xml;
+    if (ref $xml_arg eq "") {
+      $xml_arg .= ".xml" unless $xml_arg =~ /\.xml$/;
+      dbg "  reading XML from $xml_arg";
+      $xml = $parser->parse_file ($xml_arg)
+	or die "ERROR: unable to parse XML file '$xml_arg'\n";
+
+    } elsif (ref $xml_arg eq "XML::LibXML::Document") {
+      dbg "  XML is from a DOM";
+      $xml = $xml_arg;
+
+    } else {
+      die "Expected xml_file argument to translate_file to be a string or XML::LibXML::Document, found " .
+	ref $xml_arg . " instead!\n";
+    }
+
     foreach my $hflag ( @$hcopy ) {
       $$params{hardcopy} = $hflag;
-      translate_file $stylesheet, $xml_file, $params;
+      translate_file $stylesheet, $xml, $params;
     }
+    dbg "*** end XSLT processing (hardcopy=$hstr)";
+
   } # sub: translate_file_hardcopy()
 
 }
