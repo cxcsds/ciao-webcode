@@ -24,3 +24,8 @@ rather than update the links.xsl (and other?) pages at each release.
 Actually, they do not hardcode the version; the problem here is that
 we have the string _ciao4b2_ (or b3) that is hardcoded.
 
+*) DOM manipulation rather than stylesheets
+
+Convert publish.pl to use the DOM rather than stylesheets to extract
+simple information from files.
+

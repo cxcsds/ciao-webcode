@@ -136,7 +136,8 @@
 #  15 Oct 07 DJB executables are now OS specific
 #  17 Oct 07 DJB removed xsltproc global variable as no longer needed
 #  18 Oct 07 DJB Try to use DOM rather than re-load XML file
-#                Removed use of list_root_node to query file, use DOM instead.
+#                Removed use of list_root_node, list_math
+#                to query file, use DOM instead.
 #
  
 use strict;
@@ -763,8 +764,7 @@ sub xml2html_page ($) {
 
     # how about math pages?
     #
-    my $math = translate_file "$$opts{xslt}list_math.xsl", $dom;
-    my @math = split " ", $math;
+    my @math = find_math_pages $dom;
 
     # do we need to recreate (include the equations created by any math blocks)
     return if should_we_skip $in, @pages, map( { "${outdir}${_}.gif"; } @math );
@@ -853,8 +853,7 @@ sub xml2html_bugs ($) {
 
     # how about math pages?
     #
-    my $math = translate_file "$$opts{xslt}list_math.xsl", $dom;
-    my @math = split " ", $math;
+    my @math = find_math_pages $dom;
 
     # do we need to recreate (include the equations created by any math blocks)
     return if should_we_skip $in, @pages, map( { "${outdir}${_}.gif"; } @math );
@@ -1009,8 +1008,7 @@ sub xml2html_register ($) {
 
     # check for math blocks (can't be bothered to handle in register blocks)
     #
-    my $math = translate_file "$$opts{xslt}list_math.xsl", $dom;
-    my @math = split " ", $math;
+    my @math = find_math_pages $dom;
     die "Error: currently math blocks are not allowed in register pages (hassle Doug)\n"
       unless $#math == -1;
 
@@ -1116,8 +1114,7 @@ sub xml2html_multiple ($$$) {
 
     # how about math pages?
     #
-    my $math = translate_file "$$opts{xslt}list_math.xsl", $dom;
-    my @math = split " ", $math;
+    my @math = find_math_pages $dom;
 
     # do we need to recreate
     return
@@ -1214,8 +1211,7 @@ sub xml2html_threadindex ($) {
 
     # do not allow math in the threadindex (for now)
     #
-    my $math = translate_file "$$opts{xslt}list_math.xsl", $dom;
-    my @math = split " ", $math;
+    my @math = find_math_pages $dom;
     die "Error: found math blocks in $in - not allowed here\n"
       unless $#math == -1;
 
@@ -1351,8 +1347,7 @@ sub xml2html_thread ($) {
 
     # how about math pages?
     #
-    my $math = translate_file "$$opts{xslt}list_math.xsl", $dom;
-    my @math = split " ", $math;
+    my @math = find_math_pages $dom;
 
     # do we need to recreate
     # (need to send in a reference since it's the age of

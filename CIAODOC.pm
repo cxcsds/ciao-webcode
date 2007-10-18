@@ -66,7 +66,7 @@ my @funcs_util =
 my @funcs_xslt =
   qw(
       translate_file translate_file_hardcopy create_hardcopy
-      read_xml_file
+      read_xml_file find_math_pages
    );
 my @funcs_cfg  =
   qw(
@@ -474,6 +474,29 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
   } # sub: translate_file_hardcopy()
 
 }
+
+# Returns an array of all the name nodes within math tags
+# in the file. If there are no math tags then returns an
+# empty list.
+#
+# Should be sent a DOM
+#
+sub find_math_pages ($) {
+  my $dom = shift;
+
+  # Should use a proper OO check here to allow sub-classes to match.
+  #
+  my $r = ref $dom;
+  die "Error: expected a XML::LibXML::Document, but sent " . $r eq "" ? "scalar" : $r . "\n"
+    unless $r eq "XML::LibXML::Document";
+
+  my @out;
+  foreach my $node ( $dom->findnodes("//math/name") ) {
+    push @out, $node->textContent;
+  }
+  return @out;
+
+} # find_math_pages
 
 ## create the hardcopy versions of the files
 #

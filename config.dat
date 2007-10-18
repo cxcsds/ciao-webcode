@@ -754,7 +754,6 @@ ahelpversion=2.2.1
 @stylesheets=helper
 @stylesheets=links
 @stylesheets=myhtml
-@stylesheets=list_math
 
 -site  # end of ciao
 
@@ -859,7 +858,6 @@ imglinkiconheight=16
 @stylesheets=helper
 @stylesheets=links
 @stylesheets=myhtml
-@stylesheets=list_math
 
 -site  # end of chart
 
@@ -1361,7 +1359,6 @@ logotext=Sherpa Logo
 @stylesheets=helper
 @stylesheets=links
 @stylesheets=myhtml
-@stylesheets=list_math
 
 -site  # end of sherpa
 
@@ -1491,7 +1488,6 @@ ahelpindexnavbar=ahelp
 @stylesheets=helper
 @stylesheets=links
 @stylesheets=myhtml
-@stylesheets=list_math
 
 -site  # end of chips
 
@@ -1617,7 +1613,6 @@ headtitlepostfix=CALDB 2
 @stylesheets=helper
 @stylesheets=links
 @stylesheets=myhtml
-@stylesheets=list_math
 
 -site  # end of caldb
 
@@ -1670,7 +1665,6 @@ logotext=Science Data Systems
 @stylesheets=helper
 @stylesheets=links
 @stylesheets=myhtml
-@stylesheets=list_math
 
 -site  # end of icxc
 
@@ -1932,7 +1926,6 @@ number=1.0
 @stylesheets=globalparams_thread
 @stylesheets=helper
 @stylesheets=links
-@stylesheets=list_math
 @stylesheets=list_thread
 @stylesheets=myhtml
 @stylesheets=pog_thread
