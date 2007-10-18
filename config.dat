@@ -725,7 +725,6 @@ ahelpversion=2.2.1
 # ummm - really this should be version-specific
 #
 @stylesheets=page
-@stylesheets=list_navbar
 @stylesheets=navbar
 @stylesheets=navbar_main
 @stylesheets=redirect
@@ -846,7 +845,6 @@ imglinkiconheight=16
 -version
 
 @stylesheets=page
-@stylesheets=list_navbar
 @stylesheets=navbar
 @stylesheets=redirect
 @stylesheets=chart_thread
@@ -1343,7 +1341,6 @@ logotext=Sherpa Logo
 -version
 
 @stylesheets=page
-@stylesheets=list_navbar
 @stylesheets=navbar
 @stylesheets=redirect
 @stylesheets=list_threadindex
@@ -1472,7 +1469,6 @@ ahelpindexnavbar=ahelp
 -version
 
 @stylesheets=page
-@stylesheets=list_navbar
 @stylesheets=navbar
 @stylesheets=redirect
 @stylesheets=list_threadindex
@@ -1602,7 +1598,6 @@ headtitlepostfix=CALDB 2
 -version
 
 @stylesheets=page
-@stylesheets=list_navbar
 @stylesheets=navbar
 @stylesheets=redirect
 @stylesheets=helper
@@ -1655,7 +1650,6 @@ logotext=Science Data Systems
 -version
 
 @stylesheets=page
-@stylesheets=list_navbar
 @stylesheets=navbar
 @stylesheets=helper
 @stylesheets=links

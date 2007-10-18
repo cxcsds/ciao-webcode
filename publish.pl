@@ -136,8 +136,9 @@
 #  15 Oct 07 DJB executables are now OS specific
 #  17 Oct 07 DJB removed xsltproc global variable as no longer needed
 #  18 Oct 07 DJB Try to use DOM rather than re-load XML file
-#                Removed use of list_root_node, list_math, list_softlink
-#                to query file, use DOM instead.
+#                Removed use of list_root_node, list_math, list_softlink,
+#                list_navbar
+#                stylesheet to query file, use DOM instead.
 #
  
 use strict;
@@ -686,9 +687,32 @@ sub xml2html_navbar ($) {
     #   (since we write protect them after creation so the processor
     #    can't actually create the new files)
     #
-    my $pages = translate_file "$$opts{xslt}list_navbar.xsl", $dom, \%params;
-    $pages =~ s/\s+/ /g;
-    my @pages = split " ", $pages;
+    my @pages;
+    my $rnode = $dom->documentElement();
+
+    # Process the dirs/dir elements of section elements that contain an id attribute
+    # This is a lot simpler than the old XSLT code; it is not clear to me why
+    # the old code needed that complexity (ie I think it could have used the
+    # logic below).
+    #
+    foreach my $node ($rnode->findnodes('descendant::section[boolean(@id)]')) {
+
+      my $id = $node->findvalue('@id');
+      my $tail = "navbar_${id}.incl";
+
+      # Process the dirs/dir nodes.
+      # For now separate out the logic, but could do in one fell swoop
+      #
+      if ($node->findvalue("count(dirs/dir[.=''])!=0") eq "true") {
+	push @pages, "${outdir}$tail";
+      }
+
+      foreach my $dnode ($node->findnodes("dirs/dir[.!='']")) {
+	my $content = $dnode->textContent;
+	$content .= "/" unless $content =~ /\/$/;
+	push @pages, "${outdir}${content}$tail";
+      }
+    }
 
     # do we need to recreate
     return if should_we_skip $in, @pages;
