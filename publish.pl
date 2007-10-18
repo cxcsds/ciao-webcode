@@ -136,7 +136,7 @@
 #  15 Oct 07 DJB executables are now OS specific
 #  17 Oct 07 DJB removed xsltproc global variable as no longer needed
 #  18 Oct 07 DJB Try to use DOM rather than re-load XML file
-#                Removed use of list_root_node, list_math
+#                Removed use of list_root_node, list_math, list_softlink
 #                to query file, use DOM instead.
 #
  
@@ -959,16 +959,15 @@ sub xml2html_softlink ($) {
 
     print "Parsing [softlink]: $in\n";
 
-    # get the in/out list
-    my $pages = translate_file "$$opts{xslt}list_softlink.xsl", $dom;
-    $pages =~ s/\s+/ /g;
-    my %pages = split " ", $pages;
-
-    die "Error: softlink should have produced keys of original: and link:\n"
-      unless exists $pages{"original:"} and exists $pages{"link:"};
-
-    my $orig = $pages{"original:"};
-    my $link = $pages{"link:"};
+    # What are the link and target files?
+    #
+    foreach my $name (qw (/softlink/original /softlink/link)) {
+      my $nnode = $dom->findvalue ("count($name)");
+      die "Error: expected 1 $name node in $in, found $nnode\n"
+	unless $nnode == 1;
+    }
+    my $orig = $dom->findvalue("/softlink/original");
+    my $link = $dom->findvalue("/softlink/link");
 
     die "Error: softlink original file ($orig) does not exist\n"
       unless -e "$outdir/$orig";
