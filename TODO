@@ -1,6 +1,20 @@
 
 *** CURRENTLY ***
 
+change the ahelp nav bar: Antonella wants link to the "main page" for the
+site and I think it may be worth removing the alphabetical list? Hmm, not so
+sure on the latter case, as if we remove the alphabetical list, what do we
+actually have in the navbar?
+
+Have
+ 
+  Help pages (AHELP)
+  List by alphabet
+  List by context
+  Jump to: A B C .. Y Z
+
+want to add "CIAO/ChIPS/Sherpa home" link
+
 *) URLs in PDFs
 
 Check whether URLs printed out in the hardcopy versions of pages -

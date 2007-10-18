@@ -169,7 +169,7 @@
 
     <xsl:if test="$contents = ''">
       <xsl:message terminate="yes">
- ERROR: add-highlight called with no/empty contents parameter
+ ERROR: add-highlight called with no/empty contents parameter for key=<xsl:value-of select="//ENTRY/@key"/> context=<xsl:value-of select="//ENTRY/@context"/>
       </xsl:message>
     </xsl:if>
 
