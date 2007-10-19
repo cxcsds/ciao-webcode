@@ -4,15 +4,11 @@
 <!--*
     * Convert navbar.xml into the SSI pages
     *
-    * $Id: navbar.xsl,v 1.36 2004/09/08 20:52:02 dburke Exp $ 
-    *-->
-
-<!--* 
-    * NEEDS to be re-written to not do multiple depths since this
-    * leads to horrible templates everywhere (since the depth parameter needs 
-    * to be passed through to every template)
-    * 
     * Recent changes:
+    *  Oct 19 2007 DJB
+    *    Re-written so that we only process a single depth at a time
+    *    Need to send in the startdepth parameter to indicate the
+    *    depth of the top-level of the navbar.
     *  v1.36 - split out most code into navbar_main.xsl
     *  v1.35 - place contents within htdig_noindex /htdig_noindex comments
     *          to hide contents from search engine
@@ -66,6 +62,9 @@
     * To do:
     *
     * Parameters:
+    *   startdepth, integer, required
+    *     the starting depth of the navbar (normally 1)
+    *
     *   logoimage, string, optional
     *     if the navbar is to have a logo image at the top, this gives the
     *     location of the image, relative to the top-level for this site
@@ -84,6 +83,7 @@
   <!--* load in the set of "global" parameters *-->
   <xsl:include href="globalparams.xsl"/>
 
+  <xsl:param name="startdepth" select='""'/>
   <xsl:param name="logoimage" select='""'/>
   <xsl:param name="logotext"  select='""'/>
 
@@ -118,11 +118,50 @@
       <xsl:with-param name="pname"  select="'install'"/>
       <xsl:with-param name="pvalue" select="$install"/>
     </xsl:call-template>
+    <xsl:if test="$startdepth = ''">
+      <xsl:message terminate="yes">
+ ERROR: navbar.xsl called without a startdepth parameter!
+      </xsl:message>
+    </xsl:if>
 
-    <!--* process each section *-->
-    <xsl:apply-templates select="descendant::section[boolean(@id)]" mode="with-id">
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+    <!--*
+        * We are only intersted in sections which contain an id attribute.
+        * If $stardepth == $depth then we process the dirs/dir='' entries
+	* otherwise it's the non-empty dir elements. We need to be in the
+	* dirs/dir node for write-navbar to work (could be changed as only
+	* affects the access of the section/@id attribute when setting the
+	* matchid parameter within write-navbar).
+	*-->
+    <xsl:choose>
+      <xsl:when test="$startdepth = $depth">
+	<xsl:for-each select="descendant::section[boolean(@id)]/dirs/dir[.='']">
+	  <xsl:call-template name="write-navbar">
+	    <xsl:with-param name="filename" select="concat($install,'navbar_',../../@id,'.incl')"/>
+	  </xsl:call-template>
+	</xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:for-each select="descendant::section[boolean(@id)]/dirs/dir[.!='']">
+
+	  <!--*
+	      * Calculate the new depth from $startdepth and the number of / in the dir name
+	      *-->
+	  <xsl:variable name="dlen" select="string-length(.)"/>
+	  <xsl:variable name="dir"><xsl:choose>
+	    <xsl:when test="substring(.,$dlen)='/'"><xsl:value-of select="."/></xsl:when>
+	    <xsl:otherwise><xsl:value-of select="concat(.,'/')"/></xsl:otherwise>
+	  </xsl:choose></xsl:variable>
+	  <xsl:variable name="ndepth" select="$startdepth + string-length($dir) - string-length(translate($dir,'/',''))"/>
+
+	  <xsl:if test="$depth = $ndepth">
+	    <xsl:call-template name="write-navbar">
+	      <xsl:with-param name="filename" select="concat($install,$dir,'navbar_',../../@id,'.incl')"/>
+	    </xsl:call-template>
+	  </xsl:if>
+	</xsl:for-each>
+      </xsl:otherwise>
+    </xsl:choose>
+
 
   </xsl:template> <!--* match=navbar *-->
 

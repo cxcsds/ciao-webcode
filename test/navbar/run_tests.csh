@@ -12,13 +12,10 @@ switch ($PLATFORM)
     set head     = /data/da/Docs/local
     set xsltproc = /usr/bin/env LD_LIBRARY_PATH=${head}/lib ${head}/bin/xsltproc
     unset head
-
-    set diffprog = /data/dburke2/local32/bin/diff
   breaksw
 
   case Darwin
     set xsltproc = xsltproc
-    set diffprog = diff
   breaksw
 
 endsw
@@ -32,6 +29,20 @@ rm out/xslt.*
 @ ctr = 1
 @ ok  = 0
 set fail = ""
+
+
+set PLATFORM = `uname`
+switch ($PLATFORM)
+
+  case SunOS
+    set diffprog = /data/dburke2/local32/bin/diff
+  breaksw
+
+  case Darwin
+    set diffprog = diff
+  breaksw
+
+endsw
 
 ## multiple type/site/depth tests
 #
@@ -70,8 +81,7 @@ end # id
 # first those with only 1 output file
 #
 foreach id ( \
- section-process-id-link-logo  section-process-id-link-logotxt  section-process-id-link-nologo  section-process-id-sitelink-logo  \
- section-process-id-sitelink-logotxt  section-process-id-sitelink-nologo  section-process-id-nolink-logo  section-process-id-nolink-logotxt  section-process-id-nolink-nologo  \
+ \
   )
 
   foreach type ( live test )
@@ -109,8 +119,7 @@ end # id
 #  written to out/ and out/foo/]
 #
 foreach id ( \
- section-with-id-id-link-logo  section-with-id-id-link-logotxt  section-with-id-id-link-nologo  section-with-id-id-sitelink-logo  \
- section-with-id-id-sitelink-logotxt  section-with-id-id-sitelink-nologo  section-with-id-id-nolink-logo  section-with-id-id-nolink-logotxt  section-with-id-id-nolink-nologo  \
+ \
   )
 
   foreach type ( live test )

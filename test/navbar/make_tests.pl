@@ -90,7 +90,7 @@ add_test "links",
   <li>another <ahelp name="dmextract" tt="1">link</ahelp> and <strong>some text</strong>.</li>
  </list>
 </links>',
-'<br><hr><br>
+'<hr>
  <ul>
   <li>a <a href="%dlink.html">link</a>
 </li>
@@ -126,10 +126,11 @@ add_test "news-item",
  </item>
 </news>',
 '<hr><div>
-<table width="100%" align="left" cellspacing="2" cellpadding="2"><tr><th bgcolor="#666699" align="center">
-<font size="+2" color="#ffffff">News</font><br><a class="tablehead" href="/ciao9.9/news.html">Previous Items</a>
-</th></tr></table>
-<br><br><br><div>
+<div class="newsbar">
+<h2>News</h2>
+<a href="/ciao9.9/news.html">Previous Items</a>
+</div>
+<div>
 <p align="left"><strong>2 Sep 2004</strong> <img src="%dimgs/new.gif" alt="[New]"></p>
   Some text.
  <hr width="80%" align="center">
@@ -202,6 +203,12 @@ $section_in =~ s/ id="foo" / id="main" /;
 $section_in  =~ s{ link="/ciao/index.html"}{};
 $section_out =~ s{<a class="selectedheading" href="/ciao/index.html">A title</a>}{<span class="heading">A title</span>};
 add_test "section-id-nolink", $section_xsl, $section_in, $section_out;
+
+=begin OLDCODE
+
+this was valid when we had the 'old' navbar code (ie process multiple depths
+at one go). We could probably re-write things so that parts of these
+tests are retained, but leave for later
 
 # section, mode=process
 #   implicitly tests write-navbar
@@ -306,6 +313,9 @@ add_test2 "section-with-id-id-nolink-logotxt", $section_in, $section_out,
 add_test2 "section-with-id-id-nolink-nologo", $section_in, $section_out,
   logo => "none", mode => "with-id", out => [ 'out', 'out/foo' ];
 
+=end OLDCODE
+
+=cut
 
 ## end of tests
 
@@ -481,6 +491,20 @@ sub write_script () {
 
     print $fh get_test_setup("navbar");
     print $fh <<'EOD';
+
+set PLATFORM = `uname`
+switch ($PLATFORM)
+
+  case SunOS
+    set diffprog = /data/dburke2/local32/bin/diff
+  breaksw
+
+  case Darwin
+    set diffprog = diff
+  breaksw
+
+endsw
+
 ## multiple type/site/depth tests
 #
 foreach id ( \
@@ -498,8 +522,8 @@ EOD
         set out = out/xslt.$h
 
         if ( -e $out ) rm -f $out
-        /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > $out
-        /data/dburke2/local32/bin/diff -u out/${h} $out
+        $xsltproc --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > $out
+        $diffprog -u out/${h} $out
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s]\n" $ctr $h
           rm -f $out
@@ -546,12 +570,12 @@ EOD
         set out = out/navbar_main.incl
 
         if ( -e $out ) rm -f $out
-        /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam install out/ --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > /dev/null
+        $xsltproc --stringparam install out/ --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > /dev/null
         if ( ! -e $out ) then
           # fake a file so that code below works
           touch $out
         endif
-        /data/dburke2/local32/bin/diff -u out/${h} $out
+        $diffprog -u out/${h} $out
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s]\n" $ctr $h
           rm -f $out
@@ -599,12 +623,12 @@ EOD
 
         if ( -e $out1 ) rm -f $out1
         if ( -e $out2 ) rm -f $out2
-        /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam install out/ --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > /dev/null
+        $xsltproc --stringparam install out/ --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > /dev/null
         if ( ! -e $out1 ) then
           # fake a file so that code below works
           touch $out1
         endif
-        /data/dburke2/local32/bin/diff -u out/${h}_out $out1
+        $diffprog -u out/${h}_out $out1
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s] [out]\n" $ctr $h
           rm -f $out1
@@ -620,7 +644,7 @@ EOD
           # fake a file so that code below works
           touch $out2
         endif
-        /data/dburke2/local32/bin/diff -u out/${h}_out_foo $out2
+        $diffprog -u out/${h}_out_foo $out2
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s] [out/foo]\n" $ctr $h
           rm -f $out2

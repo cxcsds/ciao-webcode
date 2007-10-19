@@ -634,6 +634,18 @@ sub process_math {
     foreach my $page ( @_ ) { math2gif $page, "${outdir}${page}.gif"; }
 } # process_math()
 
+# Usage:
+#   $num = count_slash_in_string $str
+#
+# returns the number of times that '/' occurs
+# in $str
+#
+sub count_slash_in_string ($) {
+  my $str = shift;
+  $str =~ s/[^\/]//g;
+  return length ($str);
+} # count_slash_in_string
+
 # xml2html_navbar - called by xml2html
 #
 # 02/13/04 - we now pass the site depth into the stylesheet
@@ -664,7 +676,7 @@ sub xml2html_navbar ($) {
       (
 	  type => $$opts{type},
 	  site => $$opts{site},
-          depth => $depth,
+          #depth => $depth,
 	  install => $outdir,
 	  sourcedir => cwd() . "/",
 	  updateby => $$opts{updateby},
@@ -688,29 +700,39 @@ sub xml2html_navbar ($) {
     #    can't actually create the new files)
     #
     my @pages;
-    my $rnode = $dom->documentElement();
+    my %depths;
 
     # Process the dirs/dir elements of section elements that contain an id attribute
     # This is a lot simpler than the old XSLT code; it is not clear to me why
     # the old code needed that complexity (ie I think it could have used the
-    # logic below).
+    # logic below). I think it's because I based it on the code used to create
+    # the actual navbar's, which needed said logic.
     #
+    # Hmm, now I want to calculate the depth values as well I am probably
+    # going to re-introduce some of this complexity. However, it is still
+    # much simpler.
+    #
+    my $rnode = $dom->documentElement();
     foreach my $node ($rnode->findnodes('descendant::section[boolean(@id)]')) {
 
       my $id = $node->findvalue('@id');
       my $tail = "navbar_${id}.incl";
 
-      # Process the dirs/dir nodes.
-      # For now separate out the logic, but could do in one fell swoop
-      #
       if ($node->findvalue("count(dirs/dir[.=''])!=0") eq "true") {
 	push @pages, "${outdir}$tail";
+	$depths{$depth} = [] unless exists $depths{$depth};
+	push @{ $depths{$depth} }, $pages[-1];
       }
 
       foreach my $dnode ($node->findnodes("dirs/dir[.!='']")) {
 	my $content = $dnode->textContent;
 	$content .= "/" unless $content =~ /\/$/;
+
+	my $ndepth = $depth + count_slash_in_string $content;
+
 	push @pages, "${outdir}${content}$tail";
+	$depths{$ndepth} = [] unless exists $depths{$ndepth};
+	push @{ $depths{$ndepth} }, $pages[-1];
       }
     }
 
@@ -726,8 +748,13 @@ sub xml2html_navbar ($) {
 	myrm $page;
     }
 
-    # run the processor - ignore the screen output
-    translate_file "$$opts{xslt}navbar.xsl", $dom, \%params;
+    # process each depth
+    #
+    foreach my $d (keys %depths) {
+      $params{startdepth} = $depth;
+      $params{depth} = $d;
+      translate_file "$$opts{xslt}navbar.xsl", $dom, \%params;
+    }
 
     foreach my $page ( @pages ) {
 	die "Error: transformation did not create $page\n"

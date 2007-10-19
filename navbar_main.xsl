@@ -3,16 +3,10 @@
 
 <!--*
     * Convert navbar.xml into the SSI pages
-    *
-    * $Id: navbar_main.xsl,v 1.7 2007/05/04 19:36:31 egalle Exp $ 
-    *-->
-
-<!--* 
-    * NEEDS to be re-written to not do multiple depths since this
-    * leads to horrible templates everywhere (since the depth parameter needs 
-    * to be passed through to every template)
     * 
     * Recent changes:
+    *  Oct 19 2007 DJB
+    *    Re-written so that we only process a single depth at a time
     *   v1.6 - use CSS for news section of navbar
     *   v1.2 - code is now split between navbar.xsl and navbar_main.xsl
     *   v1.1 - copy of v1.35 of navbar.xsl
@@ -25,64 +19,9 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <!--*
-      * process each section with an id attribute
-      * (the id constraint is made in selecting the nodes to
-      *  send to this template)
-      *-->
-  <xsl:template match="section" mode="with-id">
-    <xsl:param name="depth" select="1"/>
-
-    <xsl:if test="boolean(@id)=false()">
-      <xsl:message terminate="yes">
- ERROR: match=section mode=with-id called but node has
-   no id attribute
-      </xsl:message>
-    </xsl:if>
-
-    <!--*
-        * are there any dirs?
-        * - we process the empty dir tag separately from the other tags
-        *-->
-    <xsl:for-each select="dirs/dir[.='']">
-      <!--* there really should be only one of these at most *-->
-      <xsl:apply-templates select="ancestor::section" mode="process">
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
-
-    </xsl:for-each>
-
-    <!--* now the remaining dir tags *-->
-    <xsl:for-each select="dirs/dir[.!='']">
-      <!--* messy way to find the number of / in the name of dir
-          * - strip trailing / but then we add it back when calling the template
-          *-->
-      <xsl:variable name="dlen" select="string-length(.)"/>
-      <xsl:variable name="dir" select="concat(substring(.,1,$dlen -1),translate(substring(.,$dlen),'/',''))"/>
-      <xsl:variable name="ndepth" select="1 + $depth + string-length($dir) - string-length(translate($dir,'/',''))"/>
-
-      <!--* call the template on each of the dirs *-->
-      <xsl:apply-templates select="ancestor::section" mode="process">
-	<xsl:with-param name="dir"   select="concat($dir,'/')"/>
-	<xsl:with-param name="depth" select="$ndepth"/>
-      </xsl:apply-templates>
-    </xsl:for-each>
-  </xsl:template> <!--* match=section mode=with-id *-->
-
-  <!--* process each section that has an output page *-->
-  <xsl:template match="section" mode="process">
-    <xsl:param name="dir"   select="''"/>
-    <xsl:param name="depth" select="1"/>
-
-    <!--* create the page *-->
-    <xsl:call-template name="write-navbar">
-      <xsl:with-param name="filename" select="concat($install,$dir,'navbar_',@id,'.incl')"/>
-      <xsl:with-param name="depth"    select="$depth"/>
-    </xsl:call-template>
-
-  </xsl:template> <!--* match=section mode=process *-->
-
-  <!--*
-      * Write the navbar. Context node should be the section node
+      * Write the navbar. Context node should be the section/dirs/dir node,
+      * which appears only to be important in the setting of the matchid parameter
+      * for the call to the section[mode=create] template.
       *
       * We include a logo image IF the logomimage and logotext parameters
       * are set. We have just text if logoimage is unset but logotext is set.
@@ -96,13 +35,9 @@
       *   filename - string, required
       *     name of file (including directory)
       *
-      *   depth - integer, defaults to 1
-      *     depth of current page
-      *
       *-->
   <xsl:template name="write-navbar">
     <xsl:param name="filename" select="''"/>
-    <xsl:param name="depth"    select="'1'"/>
     
     <xsl:if test="$filename = ''">
       <xsl:message terminate="yes">
@@ -163,7 +98,7 @@
 	<dl>
 	  <xsl:apply-templates select="//section" mode="create">
 	    <xsl:with-param name="depth"   select="$depth"/>
-	    <xsl:with-param name="matchid" select="@id"/>
+	    <xsl:with-param name="matchid" select="../../@id"/>
 	  </xsl:apply-templates>
 	</dl>
 	<br/>
