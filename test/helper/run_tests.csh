@@ -38,8 +38,8 @@ set depth = 1
 set srcdir = /data/da/Docs/web/devel/test/helper
 
 foreach id ( \
- add-htmlhead_scripts  add-htmlhead_css  add-htmlhead  add-disclaimer  \
- add-htmlhead_meta  add-hr-strong  unknown  comment  add-id-hardcopy  \
+ add-htmlhead_meta  add-hr-strong  unknown  add-htmlhead_scripts  \
+ add-disclaimer  add-htmlhead_css  add-htmlhead  add-id-hardcopy  comment  \
   )
 
   set h = ${id}_${type}_${site}_d${depth}
@@ -64,8 +64,8 @@ set type  = test
 set site  = ciao
 
 foreach id ( \
- add-image  add-path  dummy  add-attribute  \
- add-updated-image  add-new-image  \
+ add-image  add-updated-image  add-new-image  dummy  \
+ add-path  add-attribute  \
   )
 
   foreach depth ( 1 2 )
@@ -91,7 +91,7 @@ end # foreach: id
 #
 
 foreach id ( \
- add-footer  add-navbar  add-depth  \
+ add-footer  add-depth  add-navbar  \
   )
 
   foreach type ( live test )

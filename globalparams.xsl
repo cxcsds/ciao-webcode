@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="us-ascii" ?>
 <!DOCTYPE xsl:stylesheet>
 
-<!-- List of "global" templates for the web-page stylesheets -->
-<!-- $Id: globalparams.xsl,v 1.7 2004/05/14 16:17:43 dburke Exp $ -->
-
 <!--*
+    * List of "global" templates for the web-page stylesheets
+    *
     * Recent changes:
     *   v1.7 - added hardcopy parameter
     *   v1.6 - added cssprintfile parameter
@@ -53,7 +52,7 @@
     *
     *  . sourcedir=full path to directory containing navbar.xml
     *
-    *  . depth=depth of the file: needed for images and some links
+    *  . depth=depth of the file
     *
     *  . updateby=name of person doing the update
     *
@@ -101,7 +100,6 @@
   <xsl:param name="ahelpindex"  select='""'/>
   <xsl:variable name="ahelpindexfile" select="document($ahelpindex)"/>
 
-  <!--* really need to sort out the navbar (does this work for the navbar?) *-->
   <xsl:param name="depth" select="1"/>
   
 </xsl:stylesheet>

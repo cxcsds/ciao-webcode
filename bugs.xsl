@@ -4,11 +4,9 @@
 <!--* 
     * Create the bugs HTML page from XML source file
     *
-    * $Id: bugs.xsl,v 1.5 2007/04/20 19:57:09 egalle Exp $ 
-    *-->
-
-<!--* 
     * Recent changes:
+    * 2007 Oct 19 DJB
+    *    depth parameter is now a global, no need to send around
     *   v1.4 - fixlist takes "ver" and "vername" b.c of Beta releases
     *   v1.3 - now uses "add-image" template to add an image, changed
     *	       date tag to have day/month/year attributes
@@ -64,15 +62,11 @@
 PROGRAMMING ERROR: site=icxc and hardcopy=1
 	  </xsl:message>
 	</xsl:if>
-	<xsl:apply-templates name="bugs" mode="make-hardcopy">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates name="bugs" mode="make-hardcopy"/>
       </xsl:when>
       
       <xsl:otherwise>
-	<xsl:apply-templates name="bugs" mode="make-viewable">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates name="bugs" mode="make-viewable"/>
       </xsl:otherwise>
     </xsl:choose>
 
@@ -83,7 +77,6 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
       *-->
 
   <xsl:template match="bugs" mode="make-viewable">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$pagename"/>.html</xsl:variable>
 
@@ -107,7 +100,6 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 	    * a test version or the actual production HTML 
             *-->
 	<xsl:call-template name="add-header">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name" select="$pagename"/>
 	</xsl:call-template>
 
@@ -145,9 +137,7 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 
 	      <!--* add any intro text (often used for scripts) *-->
 	      <xsl:if test="intro/note">
-	        <xsl:apply-templates select="intro/note">
-		  <xsl:with-param name="depth" select="$depth"/>
-	        </xsl:apply-templates>
+	        <xsl:apply-templates select="intro/note"/>
 	      </xsl:if>
 
 	      <xsl:if test="not(//buglist)">
@@ -334,7 +324,6 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 	    
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="$pagename"/>
 	</xsl:call-template>
 
@@ -350,7 +339,6 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
       *-->
 
   <xsl:template match="bugs" mode="make-hardcopy">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$pagename"/>.hard.html</xsl:variable>
 
@@ -384,9 +372,7 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 
 	      <!--* add any intro text (often used for scripts) *-->
 	      <xsl:if test="intro/note">
-	        <xsl:apply-templates select="intro/note">
-		  <xsl:with-param name="depth" select="$depth"/>
-	        </xsl:apply-templates>
+	        <xsl:apply-templates select="intro/note"/>
 	      </xsl:if>
 
 	      <xsl:if test="not(//buglist)">
@@ -524,10 +510,8 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 
   <!--* note: we process the text so we can handle our `helper' tags *-->
   <xsl:template match="text">
-   <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
-  </xsl:template> <!--* text *-->
+   <xsl:apply-templates/>
+  </xsl:template>
 
 
   <!-- subbuglist table of contents template -->
@@ -568,17 +552,13 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 	   <xsl:value-of select="@ref"/>
 	 </xsl:attribute>
 
-	 <xsl:apply-templates select="summary/*|summary/text()">
-	   <xsl:with-param name="depth" select="$depth"/>
-	 </xsl:apply-templates>
-
+	 <xsl:apply-templates select="summary/*|summary/text()"/>
 
 	 <!--// add new/updated icon if the entry has a type attribute //-->
 	 <xsl:if test="@type">
 	   <xsl:choose>
 	     <xsl:when test="@type = 'new'">
 	       <xsl:call-template name="add-image">
-	         <xsl:with-param name="depth" select="$depth"/>
 		 <xsl:with-param name="src"   select="'imgs/new.gif'"/>
 		 <xsl:with-param name="alt"   select="'New'"/>
 	       </xsl:call-template>
@@ -586,7 +566,6 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 
 	     <xsl:when test="@type = 'updated'">
 	       <xsl:call-template name="add-image">
-	         <xsl:with-param name="depth" select="$depth"/>
 		 <xsl:with-param name="src"   select="'imgs/updated.gif'"/>
 		 <xsl:with-param name="alt"   select="'Updated'"/>
 	       </xsl:call-template>
@@ -657,16 +636,13 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
       </xsl:attribute>
 
         <strong>
-	<xsl:apply-templates select="summary/*|summary/text()">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="summary/*|summary/text()"/>
 
 	 <!--// add new/updated icon if the entry has a type attribute //-->
 	 <xsl:if test="@type">
 	   <xsl:choose>
 	     <xsl:when test="@type = 'new'">
 	       <xsl:call-template name="add-image">
-	         <xsl:with-param name="depth" select="$depth"/>
 		 <xsl:with-param name="src"   select="'imgs/new.gif'"/>
 		 <xsl:with-param name="alt"   select="'New'"/>
 	       </xsl:call-template>
@@ -674,7 +650,6 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 
 	     <xsl:when test="@type = 'updated'">
 	       <xsl:call-template name="add-image">
-	         <xsl:with-param name="depth" select="$depth"/>
 		 <xsl:with-param name="src"   select="'imgs/updated.gif'"/>
 		 <xsl:with-param name="alt"   select="'Updated'"/>
 	       </xsl:call-template>
@@ -706,9 +681,7 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
     <!-- done with summary and id -->
 
       <xsl:if test="./desc">
-        <xsl:apply-templates select="desc/*">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+        <xsl:apply-templates select="desc/*"/>
       </xsl:if> 
 
       <xsl:if test="./work">
@@ -718,9 +691,7 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 	  <ol>
 	    <xsl:for-each select="work">	
 	    <li>
-	      <xsl:apply-templates select="./*">
-	        <xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="./*"/>
 	    </li>
 	    </xsl:for-each>
 	  </ol>
@@ -729,9 +700,7 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
         <xsl:if test="count(work) = 1">
           <h4>Workaround:</h4>
 
-	  <xsl:apply-templates select="work/*">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="work/*"/>
 	</xsl:if> 
 
 	</xsl:if> 
@@ -761,18 +730,12 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 
   <!--* intro/note template *-->
   <xsl:template match="intro/note">
-    <xsl:param name="depth" select="1"/>
-
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+    <xsl:apply-templates/>
   </xsl:template> 
-  <!--* end intro template *-->
 
 
   <!--* date template *-->
   <xsl:template match="date">
-    <xsl:param name="depth" select="1"/>
 
   <font size="-1">(<xsl:number value="@day" format="01"/>
     <xsl:text>&#160;</xsl:text>

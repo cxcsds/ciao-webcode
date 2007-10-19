@@ -4,11 +4,9 @@
 <!--* 
     * Create the HTML version of the ChIPS thread
     *
-    * $Id: chips_thread.xsl,v 1.4 2007/08/22 14:54:51 egalle Exp $ 
-    *-->
-
-<!--* 
     * Recent changes:
+    * 2007 Oct 19 DJB
+    *    depth parameter is now a global, no need to send around
     *   v1.3 - added syntax line under thread title
     *   v1.2 - changed "Sherpa" to "ChIPS"
     *   v1.1 - copy of v1.12 of the Sherpa thread stylesheet
@@ -64,18 +62,12 @@
 
     <xsl:choose>
       <xsl:when test="$hardcopy = 1">
-	<xsl:apply-templates select="thread" mode="html-hardcopy">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="thread" mode="html-hardcopy"/>
       </xsl:when>
 
       <xsl:otherwise>
-	<xsl:apply-templates select="thread" mode="html-viewable">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
-	<xsl:apply-templates select="thread/images/image" mode="list">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="thread" mode="html-viewable"/>
+	<xsl:apply-templates select="thread/images/image" mode="list"/>
       </xsl:otherwise>
     </xsl:choose>
 
@@ -85,7 +77,6 @@
       * create: $install/index.hard.html
       *-->
   <xsl:template match="thread" mode="html-hardcopy">
-    <xsl:param name="depth"   select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>index.hard.html</xsl:variable>
 
@@ -125,7 +116,6 @@
 
 	  <!--* table of contents page *-->
 	  <xsl:call-template name="add-toc">
-	    <xsl:with-param name="depth" select="$depth"/>
 	    <xsl:with-param name="hardcopy" select="1"/>
 	  </xsl:call-template>
 
@@ -147,30 +137,22 @@
 
 	  <!--* Introductory text *-->
 	  <xsl:call-template name="add-introduction">
-	    <xsl:with-param name="depth" select="$depth"/>
 	    <xsl:with-param name="hardcopy" select="1"/>
 	  </xsl:call-template>
 
 	  <!--* Main thread *-->
-	  <xsl:apply-templates select="text/sectionlist">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="text/sectionlist"/>
 	
 	  <!--* Summary text *-->
 	  <xsl:call-template name="add-summary">
-	    <xsl:with-param name="depth" select="$depth"/>
 	    <xsl:with-param name="hardcopy" select="1"/>
 	  </xsl:call-template>
 	
 	  <!--* Parameter files *-->
-	  <xsl:call-template name="add-parameters">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:call-template>
+	  <xsl:call-template name="add-parameters"/>
 
 	  <!-- History -->
-	  <xsl:apply-templates select="info/history">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="info/history"/>
 
 	  <!--* add the footer text *-->
 	  <br/>
@@ -193,9 +175,7 @@
 
 	    <!--* "pre-image" text *-->
 	    <xsl:if test="boolean(before)">
-	      <xsl:apply-templates select="before">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="before"/>
 	    </xsl:if>
 
 	    <!--* image:
@@ -206,9 +186,7 @@
 		
 	    <!--* "post-image" text *-->
 	    <xsl:if test="boolean(after)">
-	      <xsl:apply-templates select="after">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="after"/>
 	    </xsl:if>
 
 	  </xsl:for-each>
@@ -224,7 +202,6 @@
       * create: $install/index.html
       *-->
   <xsl:template match="thread" mode="html-viewable">
-    <xsl:param name="depth" select="1"/>
     
     <xsl:variable name="filename"><xsl:value-of select="$install"/>index.html</xsl:variable>
     
@@ -248,13 +225,11 @@
       
       <!--* make the header *-->
       <xsl:call-template name="add-header">
-	<xsl:with-param name="depth" select="$depth"/>
 	<xsl:with-param name="name"  select="//thread/info/name"/>
       </xsl:call-template>
 
       <!--* set up the standard links before the page starts *-->
       <xsl:call-template name="add-top-links-chips-html">
-	<xsl:with-param name="depth" select="$depth"/>
 	<xsl:with-param name="name" select="$threadName"/>
       </xsl:call-template>
 
@@ -278,34 +253,22 @@
 	<xsl:call-template name="add-hr-strong"/>
 
 	<!--* Introductory text *-->
-	<xsl:call-template name="add-introduction">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-introduction"/>
 
 	<!--* table of contents *-->
-	<xsl:call-template name="add-toc">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-toc"/>
 
 	<!--* Main thread *-->
-	<xsl:apply-templates select="text/sectionlist">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="text/sectionlist"/>
 	
 	<!--* Summary text *-->
-	<xsl:call-template name="add-summary">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-summary"/>
 	
 	<!--* Parameter files *-->
-	<xsl:call-template name="add-parameters">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-parameters"/>
 
 	<!-- History -->
-	<xsl:apply-templates select="info/history">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="info/history"/>
 
 	<xsl:call-template name="add-hr-strong"/>
 
@@ -313,13 +276,11 @@
 
       <!--* set up the trailing links to threads/harcdopy *-->
       <xsl:call-template name="add-bottom-links-chips-html">
-	<xsl:with-param name="depth" select="$depth"/>
 	<xsl:with-param name="name" select="$threadName"/>
       </xsl:call-template>
 
       <!--* add the footer text *-->
       <xsl:call-template name="add-footer">
-	<xsl:with-param name="depth" select="$depth"/>
 	<xsl:with-param name="name"  select="//thread/info/name"/>
       </xsl:call-template>
 

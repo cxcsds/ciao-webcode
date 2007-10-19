@@ -5,10 +5,6 @@
     * Create a "redirect" page to automatically redirect the
     * brower to the new page
     *
-    * $Id: redirect.xsl,v 1.5 2005/03/02 21:56:06 dburke Exp $ 
-    *-->
-
-<!--* 
     * Recent changes:
     *   v1.5 - <html> changed to <html lang="en"> following
     *            http://www.w3.org/TR/2005/WD-i18n-html-tech-lang-20050224/
@@ -47,7 +43,7 @@
       </xsl:message>
     </xsl:if>
 
-    <xsl:apply-templates name="redirect"/> <!--* do not need to bother with depth here *-->
+    <xsl:apply-templates name="redirect"/>
   </xsl:template> <!--* match=/ *-->
 
   <!--*

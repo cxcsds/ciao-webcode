@@ -1,7 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <img src="foo.gif" alt="[a foo]">
-<img src="foo.gif" alt="[a foo]">
 <img src="foo.gif" alt="[a foo]" height="10">
 <img src="foo.gif" alt="[a foo]" width="20">
 <img src="foo.gif" alt="[a foo]" border="0">

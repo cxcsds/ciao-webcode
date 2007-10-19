@@ -10,9 +10,6 @@
 <xsl:template match='test'>
 <xsl:text>
 </xsl:text>
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
     <xsl:apply-templates/>
   </xsl:template>
 <!--* need to sort out newline template! *-->

@@ -55,9 +55,7 @@ add_test "list-li-navbar",
 '<xsl:template match="/">
 <xsl:text>
 </xsl:text>
-  <xsl:apply-templates select="//list" mode="navbar">
-    <xsl:with-param name="depth" select="$depth"/>
-  </xsl:apply-templates>
+  <xsl:apply-templates select="//list" mode="navbar"/>
 </xsl:template>',
 '<list>
   <li>a <cxclink href="link.html">link</cxclink></li>
@@ -80,9 +78,7 @@ add_test "links",
 '<xsl:template match="/">
 <xsl:text>
 </xsl:text>
-  <xsl:apply-templates select="//links" mode="create">
-    <xsl:with-param name="depth" select="$depth"/>
-  </xsl:apply-templates>
+  <xsl:apply-templates select="//links" mode="create"/>
 </xsl:template>',
 '<links>
  <list>
@@ -106,9 +102,7 @@ add_test "news-item",
 '<xsl:template match="/">
 <xsl:text>
 </xsl:text>
-  <xsl:apply-templates select="//news" mode="create">
-    <xsl:with-param name="depth" select="$depth"/>
-  </xsl:apply-templates>
+  <xsl:apply-templates select="//news" mode="create"/>
 </xsl:template>',
 '<news>
  <item type="new" day="2" month="September" year="4">
@@ -158,9 +152,7 @@ my $section_xsl =
 '<xsl:template match="/">
 <xsl:text>
 </xsl:text>
-  <xsl:apply-templates select="//section" mode="create">
-    <xsl:with-param name="depth" select="$depth"/>
-  </xsl:apply-templates>
+  <xsl:apply-templates select="//section" mode="create"/>
 </xsl:template>';
 
 my $section_in =
@@ -466,10 +458,7 @@ EOD
 <xsl:template match="/">
 <xsl:text>
 </xsl:text>
-  <xsl:apply-templates select="//section" mode="$mode">
-    <!-- dir param only used by mode=process and we can live with default there -->
-    <xsl:with-param name="depth" select="\$depth"/>
-  </xsl:apply-templates>
+  <xsl:apply-templates select="//section" mode="$mode"/>
 </xsl:template>
 </xsl:stylesheet>
 EOD

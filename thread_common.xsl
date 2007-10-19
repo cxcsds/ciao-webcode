@@ -4,11 +4,9 @@
 <!--* 
     * Useful templates for creating the CIAO threads
     *
-    * $Id: thread_common.xsl,v 1.46 2007/08/15 20:07:20 egalle Exp $ 
-    *-->
-
-<!--* 
     * Recent changes:
+    * 2007 Oct 19 DJB
+    *    depth parameter is now a global, no need to send around
     *  v1.45 - added add-[top|bottom]-links-chips-html template
     *  v1.44 - img title used for alt text in thread and individual
     *	       image pages
@@ -85,11 +83,6 @@
     *  - defined in including stylesheets
     *
     * Notes:
-    *  - do we really need to bother with depth as a parameter
-    *    since we know it'll be fixed for a single run.
-    *    There are templates for which we need to send it in as
-    *    a parameter (ie templates in links.xsl) but that shuold
-    *    be okay since we just don't remove them
     *
     *  - the number attribute on the text tag should probably be removed
     *    and become a type attribute on the sectionlist
@@ -109,14 +102,11 @@
       *  and hardcopy versions]
       *
       * Parameters:
-      *   depth, number, required
-      *     - standard meaning
       *
       * Updated for CIAO 3.0 to remove some 'excess' baggage
       *
       *-->
   <xsl:template name="add-top-links-ciao-html">
-    <xsl:param name="depth" select="1"/>
 
     <!--* safety check *-->
     <xsl:if test="$site != 'ciao'">
@@ -128,9 +118,7 @@
     <div class="topbar">
       <div class="qlinkbar">
 	<!--* create links to threads *-->
-	<xsl:call-template name="add-thread-qlinks">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-thread-qlinks"/>
       </div>
     </div>
 
@@ -142,12 +130,9 @@
       *  and hardcopy versions]
       *
       * Parameters:
-      *   depth, number, required
-      *     - standard meaning
       *
       *-->
   <xsl:template name="add-top-links-chart-html">
-    <xsl:param name="depth" select="1"/>
 
     <!--* safety check *-->
     <xsl:if test="$site != 'chart'">
@@ -161,7 +146,6 @@
 	<!--* create links to threads *-->
 	Return to 
 	<xsl:call-template name="mylink">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="dir">../</xsl:with-param>
 	  <xsl:with-param name="filename"></xsl:with-param>
 	  <xsl:with-param name="text">Threads Page</xsl:with-param>
@@ -177,12 +161,9 @@
       *  and hardcopy versions]
       *
       * Parameters:
-      *   depth, number, required
-      *     - standard meaning
       *
       *-->
   <xsl:template name="add-top-links-sherpa-html">
-    <xsl:param name="depth" select="1"/>
 
     <!--* safety check *-->
     <xsl:if test="$site != 'sherpa'">
@@ -194,9 +175,7 @@
     <div class="topbar">
       <div class="qlinkbar">
       <!--* create links to threads *-->
-	<xsl:call-template name="add-thread-qlinks">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-thread-qlinks"/>
       </div>
     </div>
 
@@ -208,12 +187,9 @@
       *  and hardcopy versions]
       *
       * Parameters:
-      *   depth, number, required
-      *     - standard meaning
       *
       *-->
   <xsl:template name="add-top-links-chips-html">
-    <xsl:param name="depth" select="1"/>
 
     <!--* safety check *-->
     <xsl:if test="$site != 'chips'">
@@ -225,9 +201,7 @@
     <div class="topbar">
       <div class="qlinkbar">
       <!--* create links to threads *-->
-	<xsl:call-template name="add-thread-qlinks">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-thread-qlinks"/>
       </div>
     </div>
 
@@ -239,12 +213,9 @@
       *  and hardcopy versions]
       *
       * Parameters:
-      *   depth, number, required
-      *     - standard meaning
       *
       *-->
   <xsl:template name="add-top-links-pog-html">
-    <xsl:param name="depth" select="1"/>
 
     <!--* safety check *-->
     <xsl:if test="$site != 'pog'">
@@ -258,7 +229,6 @@
 	<!--* create links to threads *-->
 	Return to 
 	<xsl:call-template name="mylink">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="dir">../</xsl:with-param>
 	  <xsl:with-param name="filename"></xsl:with-param>
 	  <xsl:with-param name="text">Threads Page</xsl:with-param>
@@ -273,14 +243,11 @@
       * [links to thread indexes and hardcopy versions]
       *
       * Parameters:
-      *   depth, number, required
-      *     - standard meaning
       *
       * *****CIAO SPECIFIC*****
       *
       *-->
   <xsl:template name="add-bottom-links-html">
-    <xsl:param name="depth" select="1"/>
 
     <!--* safety check *-->
     <xsl:if test="$site != 'ciao'">
@@ -292,9 +259,7 @@
     <!--* create the trailing links to threads *-->
     <div class="bottombar">
       <!--* create links to threads *-->
-      <xsl:call-template name="add-thread-qlinks">
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:call-template>
+      <xsl:call-template name="add-thread-qlinks"/>
     </div>
 
   </xsl:template> <!--* name=add-bottom-links-html *-->
@@ -304,12 +269,9 @@
       * [links to thread indexes and hardcopy versions]
       *
       * Parameters:
-      *   depth, number, required
-      *     - standard meaning
       *
       *-->
   <xsl:template name="add-bottom-links-chart-html">
-    <xsl:param name="depth" select="1"/>
 
     <!--* safety check *-->
     <xsl:if test="$site != 'chart'">
@@ -323,7 +285,6 @@
       <!--* create links to threads *-->
       Return to 
       <xsl:call-template name="mylink">
-	<xsl:with-param name="depth" select="$depth"/>
 	<xsl:with-param name="dir">../</xsl:with-param>
 	<xsl:with-param name="filename"></xsl:with-param>
 	<xsl:with-param name="text">Threads Page</xsl:with-param>
@@ -337,12 +298,9 @@
       * [links to thread indexes and hardcopy versions]
       *
       * Parameters:
-      *   depth, number, required
-      *     - standard meaning
       *
       *-->
   <xsl:template name="add-bottom-links-sherpa-html">
-    <xsl:param name="depth" select="1"/>
 
     <!--* safety check *-->
     <xsl:if test="$site != 'sherpa'">
@@ -354,9 +312,7 @@
     <!--* create the trailing links to threads *-->
     <div class="bottombar">
       <!--* create links to threads *-->
-      <xsl:call-template name="add-thread-qlinks">
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:call-template>
+      <xsl:call-template name="add-thread-qlinks"/>
     </div>
 
   </xsl:template> <!--* name=add-bottom-links-sherpa-html *-->
@@ -366,12 +322,9 @@
       * [links to thread indexes and hardcopy versions]
       *
       * Parameters:
-      *   depth, number, required
-      *     - standard meaning
       *
       *-->
   <xsl:template name="add-bottom-links-chips-html">
-    <xsl:param name="depth" select="1"/>
 
     <!--* safety check *-->
     <xsl:if test="$site != 'chips'">
@@ -383,9 +336,7 @@
     <!--* create the trailing links to threads *-->
     <div class="bottombar">
       <!--* create links to threads *-->
-      <xsl:call-template name="add-thread-qlinks">
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:call-template>
+      <xsl:call-template name="add-thread-qlinks"/>
     </div>
 
   </xsl:template> <!--* name=add-bottom-links-chips-html *-->
@@ -395,14 +346,11 @@
       * [links to thread indexes and hardcopy versions]
       *
       * Parameters:
-      *   depth, number, required
-      *     - standard meaning
       *
       * At the moment this is the same as the ChaRT version
       *
       *-->
   <xsl:template name="add-bottom-links-pog-html">
-    <xsl:param name="depth" select="1"/>
 
     <!--* safety check *-->
     <xsl:if test="$site != 'pog'">
@@ -416,7 +364,6 @@
       <!--* create links to threads *-->
       Return to 
       <xsl:call-template name="mylink">
-	<xsl:with-param name="depth" select="$depth"/>
 	<xsl:with-param name="dir">../</xsl:with-param>
 	<xsl:with-param name="filename"></xsl:with-param>
 	<xsl:with-param name="text">Threads Page</xsl:with-param>
@@ -432,11 +379,8 @@
       *  in its content
       *
       * Parameters:
-      *   depth - standard meaning
-      *
       *-->
   <xsl:template name="add-introduction">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:choose>
       <xsl:when test="boolean(text/introduction) and boolean(text/overview)">
@@ -452,9 +396,7 @@
       <xsl:when test="boolean(text/introduction)">
 	<br/>
 	<h2><a name="introduction">Introduction</a></h2>
-	<xsl:apply-templates select="text/introduction">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="text/introduction"/>
 	<br/><hr/><br/>
       </xsl:when> <!--* text/introduction *-->
 
@@ -470,9 +412,7 @@
 	  <tr>
 	    <td>
 	      <h2><a name="overview"><font color="red">Overview</font></a></h2>
-	      <xsl:apply-templates select="text/overview">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="text/overview"/>
 	    </td>
 	  </tr>
 	</table>
@@ -484,11 +424,8 @@
 
   <!--* process the contents of the introduction tag *-->
   <xsl:template match="introduction">
-    <xsl:param name="depth" select="1"/>
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
-  </xsl:template> <!--* match=introduction *-->
+    <xsl:apply-templates/>
+  </xsl:template>
 
   <!--*
       * process the contents of the overview tag:
@@ -499,7 +436,6 @@
       *
       *-->
   <xsl:template match="overview">
-    <xsl:param name="depth" select="1"/>
 
     <!--* safety checks (oh we need a DTD) *-->
     <xsl:if test="boolean(synopsis)=false()">
@@ -511,9 +447,7 @@
     </xsl:if>
 
     <xsl:apply-templates
-      select="/thread/info/history/entry[position()=count(/thread/info/history/entry)]" mode="most-recent">
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+      select="/thread/info/history/entry[position()=count(/thread/info/history/entry)]" mode="most-recent"/>
 
     <!--*
         * br/ at end of div block this is needed for konqueror but apparently
@@ -523,29 +457,21 @@
         *-->
     <xsl:call-template name="process-overview-section">
       <xsl:with-param name="title"   select="'Synopsis:'"/>
-      <xsl:with-param name="section"><xsl:apply-templates select="synopsis" mode="overview">
-	  <xsl:with-param name="depth"   select="$depth"/>
-	</xsl:apply-templates></xsl:with-param>
+      <xsl:with-param name="section"><xsl:apply-templates select="synopsis" mode="overview"/></xsl:with-param>
     </xsl:call-template>
 
     <xsl:call-template name="process-overview-section">
       <xsl:with-param name="title"   select="'Purpose:'"/>
-      <xsl:with-param name="section"><xsl:apply-templates select="why" mode="overview">
-	  <xsl:with-param name="depth"   select="$depth"/>
-	</xsl:apply-templates></xsl:with-param>
+      <xsl:with-param name="section"><xsl:apply-templates select="why" mode="overview"/></xsl:with-param>
     </xsl:call-template>
 
     <xsl:call-template name="process-overview-section">
       <xsl:with-param name="title"   select="'Read this thread if:'"/>
-      <xsl:with-param name="section"><xsl:apply-templates select="when" mode="overview">
-	  <xsl:with-param name="depth"   select="$depth"/>
-	</xsl:apply-templates></xsl:with-param>
+      <xsl:with-param name="section"><xsl:apply-templates select="when" mode="overview"/></xsl:with-param>
     </xsl:call-template>
 
     <xsl:if test="boolean(calinfo)">
-      <xsl:apply-templates select="calinfo">
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
+      <xsl:apply-templates select="calinfo"/>
     </xsl:if>
 
     <!--* umm, not sure about this *-->
@@ -554,9 +480,7 @@
       <ul>
 	<xsl:for-each select="seealso/item">
 	  <li>
-	    <xsl:apply-templates>
-	      <xsl:with-param name="depth" select="$depth"/>
-	    </xsl:apply-templates>
+	    <xsl:apply-templates/>
 	  </li>
 	</xsl:for-each>
       </ul>
@@ -584,19 +508,14 @@
       * properly.
       *-->
   <xsl:template name="add-surrounding-block-if-necessary">
-    <xsl:param name="depth" select="1"/>
     <xsl:choose>
       <xsl:when test="count(descendant::p)=0">
 	<div>
-	  <xsl:apply-templates>
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates/>
 	</div>
       </xsl:when>
       <xsl:otherwise>
-	<xsl:apply-templates>
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template> <!--* name=add-surrounding-block-if-necessary *-->
@@ -628,27 +547,19 @@
       * contents
       *-->
   <xsl:template match="synopsis|why|when" mode="overview">
-    <xsl:param name="depth" select="1"/>
-    <xsl:call-template name="add-surrounding-block-if-necessary">
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:call-template>
-  </xsl:template> <!--* match=synopsis|why|when mode=overview *-->
+    <xsl:call-template name="add-surrounding-block-if-necessary"/>
+  </xsl:template>
 
   <!--* process the contents of the calinfo tag *-->
   <xsl:template match="calinfo">
-    <xsl:param name="depth" select="1"/>
 
     <p><strong><a name="calnotes">Calibration Updates:</a></strong></p>
 
-    <xsl:apply-templates select="caltext">
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+    <xsl:apply-templates select="caltext"/>
       
     <xsl:if test="boolean(calupdates)">
       <ul>
-	<xsl:apply-templates select="calupdates/calupdate">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="calupdates/calupdate"/>
       </ul>
     </xsl:if>
     
@@ -656,11 +567,8 @@
   
   <!--* process the contents of the caltext tag *-->
   <xsl:template match="caltext">
-    <xsl:param name="depth" select="1"/>
-    <xsl:call-template name="add-surrounding-block-if-necessary">
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:call-template>
-  </xsl:template> <!--* match=caltext *-->
+    <xsl:call-template name="add-surrounding-block-if-necessary"/>
+  </xsl:template>
 
   <!--* process the contents of the calupdate tag *-->
 
@@ -719,7 +627,6 @@
    </xsl:variable>
 
   <xsl:template match="calupdate">
-    <xsl:param name="depth" select="1"/>
 
     <!--// need this variable because the count function doesn't
 	   appear to "see" the attribute we want it to use
@@ -744,9 +651,7 @@
 
 	<xsl:text> </xsl:text>
 	<xsl:call-template name="add-date"/>:</strong>
-      <xsl:apply-templates>
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
+      <xsl:apply-templates/>
     </li>
   </xsl:template> <!--* match=calupdate *-->
 
@@ -754,33 +659,24 @@
       * add the summary text
       *
       * Parameters:
-      *   depth - standard meaning
       *
       *-->
   <xsl:template name="add-summary">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:if test="boolean(text/summary)">
       <hr/><br/>
       <h2><a name="summary">Summary</a></h2>
 
-      <xsl:apply-templates select="text/summary">
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
-
+      <xsl:apply-templates select="text/summary"/>
       <br/>
-
     </xsl:if>
 
   </xsl:template> <!--* name-add-summary *-->
 
   <!--* process the contents of the summary tag *-->
   <xsl:template match="summary">
-    <xsl:param name="depth" select="1"/>
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
-  </xsl:template> <!--* match=summary *-->
+    <xsl:apply-templates/>
+  </xsl:template>
 
   <!--*
       * do we create a table of contents? 
@@ -789,8 +685,6 @@
       *  but that logic can be added if needed)
       *
       * Parameters:
-      *   depth, number, optional
-      *     - standard meaning
       *
       * Prior to CIAO 3.0 we included links to the introduction
       * but we don't anymore (the introduction now can also be overview)
@@ -804,7 +698,6 @@
       *-->
 
   <xsl:template name="add-toc">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:if test="count(text/sectionlist/section) > 1">
       <!--* Table of contents, list of parameter files, history *-->
@@ -817,9 +710,7 @@
 
       <ul>
 	<!--* Sections & Subsections *-->
-	<xsl:apply-templates select="text/sectionlist/section" mode="toc">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="text/sectionlist/section" mode="toc"/>
 	      
 	<!--* do we have a summary? *-->
 	<xsl:if test="boolean(text/summary)">
@@ -828,9 +719,7 @@
 	      
 	<!--* Parameter files (if any) *-->
 	<xsl:if test="boolean(parameters)">
-	  <xsl:apply-templates select="parameters" mode="toc">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="parameters" mode="toc"/>
 	</xsl:if>
 	      
 	<!--* History *-->
@@ -838,9 +727,7 @@
 	
 	<!--* Images (if any) *-->
 	<xsl:if test="boolean(images)">
-	  <xsl:apply-templates select="images" mode="toc">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="images" mode="toc"/>
 	</xsl:if>
 	
       </ul>
@@ -856,13 +743,10 @@
       * add the parameter info
       *-->
   <xsl:template name="add-parameters">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:choose>
       <xsl:when test="boolean(parameters)">
-	<xsl:apply-templates select="parameters">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="parameters"/>
       </xsl:when>
       <xsl:otherwise>
 	<!--* to separate out the text from the history *-->
@@ -896,7 +780,6 @@
   </xsl:template> <!--* name=find-section-label *-->
 
   <xsl:template match="section" mode="toc">
-    <xsl:param name="depth" select="$depth"/>
 
     <xsl:variable name="titlestring"><xsl:call-template name="find-section-label"/></xsl:variable>
 
@@ -915,9 +798,7 @@
       
       <!--* do we have to bother with any subsection's for this section? *-->
       <xsl:if test="boolean(subsectionlist)">
-	<xsl:apply-templates select="subsectionlist" mode="toc">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="subsectionlist" mode="toc"/>
       </xsl:if> 
     </li>
 
@@ -947,7 +828,6 @@
       *-->
 
   <xsl:template match="sectionlist">
-    <xsl:param name="depth" select="$depth"/>
 
     <!--* XXX to do: POG threads *-->
     <xsl:if test="boolean(@type)">
@@ -966,7 +846,6 @@
       <xsl:variable name="last" select="section[position()=count(../section)]/@id"/>
       <xsl:call-template name="add-sections">
 	<xsl:with-param name="last-section-id" select="$last"/>
-	<xsl:with-param name="depth" select="$depth"/>
       </xsl:call-template>
     </div>
 
@@ -989,7 +868,6 @@
       *
       *-->
   <xsl:template name="add-sections">
-    <xsl:param name="depth" select="$depth"/>
     <xsl:param name="last-section-id" select='""'/>
 
     <!--*
@@ -1041,9 +919,7 @@
 	<xsl:otherwise>
 	  
 	  <h2><a name="{@id}"><xsl:value-of select="$titlestring"/></a></h2>
-	  <xsl:apply-templates>
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates/>
 	  
 	</xsl:otherwise>
       </xsl:choose>
@@ -1082,28 +958,21 @@
       * list a subsection in the "table of contents"
       *-->
   <xsl:template match="subsectionlist" mode="toc">
-    <xsl:param name="depth" select="$depth"/>
 
     <xsl:choose>
       <xsl:when test='@type="A"'>
 	<ol type="A">
-	  <xsl:apply-templates select="subsection" mode="toc">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="subsection" mode="toc"/>
 	</ol>
       </xsl:when>
       <xsl:when test='@type="1"'>
 	<ol type="1">
-	  <xsl:apply-templates select="subsection" mode="toc">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="subsection" mode="toc"/>
 	</ol>
       </xsl:when>
       <xsl:otherwise>
 	<ul>
-	  <xsl:apply-templates select="subsection" mode="toc">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="subsection" mode="toc"/>
 	</ul>
       </xsl:otherwise>
     </xsl:choose>
@@ -1164,11 +1033,9 @@
       *   blocks
       * 
       * Parameters:
-      *   depth - standard meaning
       * 
       *-->
   <xsl:template match="subsectionlist">
-    <xsl:param name="depth" select="$depth"/>
 
     <!--*
         * need to store as a variable since we have changed
@@ -1186,9 +1053,7 @@
 	  <h3><a name="{@id}"><xsl:call-template name="position-to-label">
 		<xsl:with-param name="type" select="$type"/>
 	      </xsl:call-template><xsl:value-of select="title"/></a></h3>
-	  <xsl:apply-templates>
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates/>
       
 	  <!--* we only add a hr if we are NOT the last subsection (and hr's are allowed) *-->
 	  <xsl:if test="(not(/thread/text/@separator) or /thread/text/@separator = 'bar')
@@ -1208,7 +1073,6 @@
       * handle the history block
       *-->
   <xsl:template match="history">
-    <xsl:param name="depth" select="$depth"/>
 
     <!--* if no parameter block then we need a HR 
 
@@ -1225,18 +1089,14 @@ or do we, as this case is already caught in add-parameters?
       <xsl:when test="$hardcopy = 1">
 	<!--// ugly for htmldoc //-->    
 	<table cellpadding="3" cellspacing="1">
-	  <xsl:apply-templates>
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates/>
 	</table>
       </xsl:when>
 
       <xsl:otherwise>
         <!--// CSS-alicious //-->
 	  <table class="history">
-	    <xsl:apply-templates>
-	      <xsl:with-param name="depth" select="$depth"/>
-	    </xsl:apply-templates>
+	    <xsl:apply-templates/>
 	  </table>
       </xsl:otherwise>
     </xsl:choose>
@@ -1256,7 +1116,6 @@ or do we, as this case is already caught in add-parameters?
       *-->
 
   <xsl:template match="entry">
-    <xsl:param name="depth" select="$depth"/>
 
     <xsl:if test="boolean(@who)=false()">
       <xsl:message terminate="yes">
@@ -1283,9 +1142,7 @@ or do we, as this case is already caught in add-parameters?
       </td>
 
       <td>
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+    <xsl:apply-templates/>
       </td>
     </tr>
       </xsl:when>
@@ -1306,9 +1163,7 @@ or do we, as this case is already caught in add-parameters?
       </td>
 
       <td>
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+    <xsl:apply-templates/>
       </td>
     </tr>
       </xsl:otherwise>
@@ -1317,7 +1172,6 @@ or do we, as this case is already caught in add-parameters?
 
   <!--* used to create overview section *-->
   <xsl:template match="entry" mode="most-recent">
-    <xsl:param name="depth" select="$depth"/>
 
     <p>
       <strong>Last Update:</strong>
@@ -1326,9 +1180,7 @@ or do we, as this case is already caught in add-parameters?
 	<xsl:when test="@year >= 2000"><xsl:number value="@year"/></xsl:when>
 	<xsl:otherwise><xsl:number value="2000+@year"/></xsl:otherwise>
       </xsl:choose><xsl:text> - </xsl:text>
-      <xsl:apply-templates>
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
+      <xsl:apply-templates/>
     </p>
 
   </xsl:template> <!--* match=entry mode=most-recent *-->
@@ -1348,13 +1200,10 @@ or do we, as this case is already caught in add-parameters?
       * -->
 
   <xsl:template match="include">
-    <xsl:param name="depth" select="$depth"/>
 
-    <xsl:apply-templates select="document(concat($includeDir,.,'.xml'))" mode="include">
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+    <xsl:apply-templates select="document(concat($includeDir,.,'.xml'))" mode="include"/>
 
-  </xsl:template> <!--* include *-->
+  </xsl:template>
 
   <!--*
       * handle the root node of the included file
@@ -1364,12 +1213,8 @@ or do we, as this case is already caught in add-parameters?
       * - paramfile
       *-->
   <xsl:template match="/" mode="include">
-    <xsl:param name="depth" select="$depth"/>
-
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
-  </xsl:template> <!--* match=/ mode=include *-->
+    <xsl:apply-templates/>
+  </xsl:template>
 
   <!--* 
       * used in header/footer to provide links to thread pages:
@@ -1382,26 +1227,22 @@ or do we, as this case is already caught in add-parameters?
       * Uses the $threadName variable - the name of the thread
       *
       * Parameters:
-      *   depth, optional, default=1
       *
       * *****CIAO SPECIFIC*****
       *
       *-->
   <xsl:template name="add-thread-qlinks">
-    <xsl:param name="depth" select="'1'"/>
 
     <!--* read in the thread index *-->
     <xsl:variable name="threadIndex" select="document(concat($threadDir,'index.xml'))"/>
 
     Return to Threads Page: 
     <xsl:call-template name="mylink">
-      <xsl:with-param name="depth" select="$depth"/>
       <xsl:with-param name="dir">../</xsl:with-param>
       <xsl:with-param name="filename"></xsl:with-param>
       <xsl:with-param name="text">Top</xsl:with-param>
     </xsl:call-template> | 
     <xsl:call-template name="mylink">
-      <xsl:with-param name="depth" select="$depth"/>
       <xsl:with-param name="dir">../</xsl:with-param>
       <xsl:with-param name="filename">all.html</xsl:with-param>
       <xsl:with-param name="text">All</xsl:with-param>
@@ -1414,7 +1255,6 @@ or do we, as this case is already caught in add-parameters?
     <xsl:for-each select="$threadIndex//item[@name=$threadName]/ancestor::section/id">
       | 
       <xsl:call-template name="mylink">
-	<xsl:with-param name="depth" select="$depth"/>
 	<xsl:with-param name="dir">../</xsl:with-param>
 	<xsl:with-param name="filename"><xsl:value-of select="name"/>.html</xsl:with-param>
 	<xsl:with-param name="text" select="text"/>
@@ -1429,19 +1269,15 @@ or do we, as this case is already caught in add-parameters?
       * list the images in the table of contents
       *
       * Parameters:
-      *   depth - standard meaning
       *
       *-->
 
   <xsl:template match="images" mode="toc">
-    <xsl:param name="depth" select="1"/>
 
     <li>
       <strong>Images</strong>
       <ul>
-	<xsl:apply-templates select="image" mode="toc">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="image" mode="toc"/>
       </ul>
     </li>
   </xsl:template> <!--* match=images mode=toc *-->
@@ -1450,11 +1286,9 @@ or do we, as this case is already caught in add-parameters?
       * Link to an image in the TOC
       *
       * Parameters:
-      *   depth - standard meaning
       *
       *-->
   <xsl:template match="image" mode="toc">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="thispos" select="position()"/>
     <xsl:variable name="id" select="../image[position()=$thispos]/@id"/>
@@ -1539,7 +1373,6 @@ or do we, as this case is already caught in add-parameters?
       *-->
 
   <xsl:template match="parameters" mode="toc">
-    <xsl:param name="depth" select="1"/>
 
     <li>
       <strong>Parameter files:</strong>
@@ -1558,12 +1391,9 @@ or do we, as this case is already caught in add-parameters?
   </xsl:template> <!--* match=parameters mode=toc *-->
 
   <xsl:template match="parameters">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:call-template name="add-hr-strong"/>
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+    <xsl:apply-templates/>
     
   </xsl:template> <!--* match=parameters *-->
 
@@ -1572,7 +1402,6 @@ or do we, as this case is already caught in add-parameters?
       *
       *-->
   <xsl:template match="paramfile">
-    <xsl:param name="depth" select="1"/>
 
     <a>
       <xsl:attribute name="name"><xsl:value-of select="@name"/>.par<xsl:if
@@ -1586,12 +1415,8 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
 <xsl:choose>
 	      <xsl:when test="boolean(@file)"><xsl:apply-templates 
-		  select="document(concat($sourcedir,@file,'.xml'))" mode="include">
-		  <xsl:with-param name="depth" select="$depth"/>
-		</xsl:apply-templates><br/></xsl:when>
-	      <xsl:otherwise><xsl:apply-templates>
-		  <xsl:with-param name="depth" select="$depth"/>
-		</xsl:apply-templates></xsl:otherwise>
+		  select="document(concat($sourcedir,@file,'.xml'))" mode="include"/><br/></xsl:when>
+	      <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
 </xsl:choose>
 </pre></td></tr></table>
 
@@ -1611,7 +1436,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       *-->
 
   <xsl:template match="plist">
-    <xsl:param name="depth" select="1"/>
 
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
@@ -1681,7 +1505,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       *-->
 
   <xsl:template match="image" mode="list">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="pos" select="position()"/>
     <xsl:variable name="filename" select='concat($install,"img",$pos,".html")'/>
@@ -1704,7 +1527,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       
       <!--* make the header *-->
       <xsl:call-template name="add-header">
-	<xsl:with-param name="depth" select="$depth"/>
 	<xsl:with-param name="name"  select="//thread/info/name"/>
       </xsl:call-template>
 
@@ -1724,9 +1546,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
 	<!--* "pre-image" text *-->
 	<xsl:if test="boolean(before)">
-	  <xsl:apply-templates select="before">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="before"/>
 	</xsl:if>
 	  
 	<!--* image *-->
@@ -1740,9 +1560,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
 	<!--* "post-image" text *-->
 	<xsl:if test="boolean(after)">
-	  <xsl:apply-templates select="after">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="after"/>
 	</xsl:if>
 
       </div>
@@ -1754,7 +1572,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
       <!--* add the footer text *-->
       <xsl:call-template name="add-footer">
-        <xsl:with-param name="depth" select="$depth"/>
 	<xsl:with-param name="name"  select="//thread/info/name"/>
       </xsl:call-template>
 
@@ -1768,10 +1585,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
   <!--* handle before/after tags in image blocks *-->
   <xsl:template match="before|after">
-    <xsl:param name="depth" select="1"/>
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+    <xsl:apply-templates/>
   </xsl:template>
 
   <!--*
@@ -1866,7 +1680,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       *-->
 
   <xsl:template match="imglink">
-    <xsl:param name="depth" select="1"/>
 
     <!--*
         * get the name of the file that this link links to
@@ -1898,13 +1711,10 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     <xsl:variable name="getID" select="@id"/>
     <xsl:variable name="alttext" select="document(concat($sourcedir,'thread.xml'))//thread/images/image[@id=$getID]/title"/>
 
-      <xsl:apply-templates>
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
+      <xsl:apply-templates/>
       <xsl:call-template name="add-nbsp"/>
       <xsl:call-template name="add-image">
 	<xsl:with-param name="src"    select="$imglinkicon"/>
-	<xsl:with-param name="depth"  select="$depth"/>
 	<xsl:with-param name="alt">Link to Image <xsl:value-of select="$pos"/>: <xsl:value-of select="$alttext"/></xsl:with-param>
 	<xsl:with-param name="width"  select="$imglinkiconwidth"/>
 	<xsl:with-param name="height" select="$imglinkiconheight"/>

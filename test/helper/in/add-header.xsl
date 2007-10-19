@@ -12,7 +12,6 @@
 <xsl:text>
 </xsl:text>
     <xsl:call-template name="add-header">
-      <xsl:with-param name="depth"      select="$depth"/>
       <xsl:with-param name="type"       select="$type"/>
       <xsl:with-param name="name"       select="'foo'"/>
     </xsl:call-template>

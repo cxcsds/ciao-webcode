@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="us-ascii" ?>
 <!DOCTYPE xsl:stylesheet>
 
-<!-- $Id: helper.xsl,v 1.76 2007/04/16 13:48:59 egalle Exp $ -->
-
 <!--* 
     * Recent changes:
+    * 2007 Oct 19 DJB
+    *    depth parameter is now a global, no need to send around
+    *    Need to check users of add-attribute, add-image
     *  v1.75 - "fc4" is allowed-download-types
     *  v1.74 - "osx_ppc" and "osx_intel" are allowed-download-types
     *  v1.73 - added "chips" to allowed-sites list
@@ -144,9 +145,7 @@
       *
       *-->
   <xsl:template match="@*|node()">
-    <!--* it is IMPORTANT not to have <xsl:param name="depth" select="1"/> here 
-        * or else depth is set to 1 rather than the correct value *-->
-    <xsl:copy><xsl:apply-templates select="@*|node()"><xsl:with-param name="depth" select="$depth"/></xsl:apply-templates></xsl:copy>
+    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
   </xsl:template>
 
   <!--*
@@ -162,36 +161,21 @@
 
   <!--* 
       * add an attribute to the current node
-      * with a value dependent on the value of the depth parameter
       *
       * params are:
-      *  depth  - depth of file
       *  name   - name of attribute
       *  value  - value of attribute
-      *
+      *  idepth - depth to use (defaults to $depth if not given)
       *-->
   <xsl:template name="add-attribute">
-    <xsl:param name="depth" select="1"/>
     <xsl:param name="name"/>
     <xsl:param name="value"/>
+    <xsl:param name="idepth" select="$depth"/>
 
-<!--* ugly hack to handle depth="" cases: where are they coming from???? *-->
-    <xsl:choose>
-      <xsl:when test="$depth=''">
-	<xsl:message>
-  Warning: attribute name=[<xsl:value-of select="$name"/>] (node=<xsl:value-of select="name()"/>) has depth=[<xsl:value-of select="$depth"/>]
-	</xsl:message>
-<!--* dbg *-->	<xsl:attribute name="missing-depth">tag=<xsl:value-of select="name()"/></xsl:attribute>
-	<xsl:attribute name="{$name}"><xsl:call-template name="add-path">
-	    <xsl:with-param name="idepth" select="1"/>
-	  </xsl:call-template><xsl:value-of select="$value"/></xsl:attribute>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:attribute name="{$name}"><xsl:call-template name="add-path">
-	    <xsl:with-param name="idepth" select="$depth"/>
-	  </xsl:call-template><xsl:value-of select="$value"/></xsl:attribute>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:attribute name="{$name}"><xsl:call-template name="add-path">
+      <xsl:with-param name="idepth" select="$idepth"/>
+    </xsl:call-template><xsl:value-of select="$value"/></xsl:attribute>
+
   </xsl:template> <!--* name=add-attribute *-->
 
   <!--* 
@@ -203,14 +187,6 @@
   <xsl:template name="add-path">
     <xsl:param name="idepth" select="1"/>
     <xsl:param name="path"   select="''"/>
-
-    <!--* since I decided to use idepth, catch any depth values: may not be a good idea *-->
-    <xsl:param name="depth" select="''"/>
-    <xsl:if test="$depth != ''">
-      <xsl:message terminate="yes">
- Error: add-path has been sent a depth variable - should it be idepth??
-      </xsl:message>
-    </xsl:if>
 
     <xsl:choose>
       <xsl:when test="$idepth='' or $idepth&lt;1">
@@ -237,7 +213,6 @@
       *
       * params are:
       *  src    - name of image (assumed to be at a depth of 1)
-      *  depth  - depth of file that is including the image
       *  alt    - value for alt tag (will be surrounded by [])
       *
       * Optional tags:
@@ -245,10 +220,11 @@
       *  width  - width value
       *  border - border value
       *  align  - align value
+      *
+      * perhaps depth should be renamed idepth
       *-->
   <xsl:template name="add-image">
     <xsl:param name="src"/>
-    <xsl:param name="depth" select="1"/>
     <xsl:param name="alt"/>
 
     <xsl:param name="height"/>
@@ -259,7 +235,6 @@
     <img>
       <!--* required attributes *-->
       <xsl:call-template name="add-attribute">
-	<xsl:with-param name="depth" select="$depth"/>
 	<xsl:with-param name="name"  select="'src'"/>
 	<xsl:with-param name="value" select="$src"/>
       </xsl:call-template>
@@ -283,20 +258,16 @@
 
   <!--* add the 'new image' image *-->
   <xsl:template name="add-new-image">
-    <xsl:param name="depth" select="1"/>
     <xsl:call-template name="add-image">
       <xsl:with-param name="src"    select="'imgs/new.gif'"/>
-      <xsl:with-param name="depth"  select="$depth"/>
       <xsl:with-param name="alt"    select="'New'"/>
     </xsl:call-template>
   </xsl:template> <!--* name=add-new-image *-->
 
   <!--* add the 'updated image' image *-->
   <xsl:template name="add-updated-image">
-    <xsl:param name="depth" select="1"/>
     <xsl:call-template name="add-image">
       <xsl:with-param name="src"    select="'imgs/updated.gif'"/>
-      <xsl:with-param name="depth"  select="$depth"/>
       <xsl:with-param name="alt"    select="'Updated'"/>
     </xsl:call-template>
   </xsl:template> <!--* name=add-updated-image *-->
@@ -556,8 +527,6 @@
       * add the header
       *
       * Parameters:
-      *   depth
-      *     standard meaning
       *   name - string, required
       *
       * Also depends on the package-wide params/variables:
@@ -571,7 +540,6 @@
       *
       *-->
   <xsl:template name="add-header">
-    <xsl:param name="depth" select="1"/>
     <xsl:param name="name"  select="''"/>
 
     <xsl:if test="$name = ''">
@@ -702,8 +670,6 @@
       * add the footer
       *
       * Parameters:
-      *   depth
-      *     standard meaning
       *   name - string, required
       *     passed through to add-standard-banner
       *
@@ -712,7 +678,6 @@
       *
       *-->
   <xsl:template name="add-footer">
-    <xsl:param name="depth" select="1"/>
     <xsl:param name="name"  select="''"/>
 
     <xsl:if test="$name = ''">
@@ -843,11 +808,8 @@
       * dummy is used as the root element of included files
       *-->
   <xsl:template match="dummy">
-    <xsl:param name="depth" select="1"/>
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
-  </xsl:template> <!--* match=dummy *-->
+    <xsl:apply-templates/>
+  </xsl:template>
 
   <!--* make this bar stand out *-->
   <xsl:template name="add-hr-strong">

@@ -1,7 +1,5 @@
 #!/data/da/Docs/local/perl/bin/perl -w
 #
-# $Id: make_tests.pl,v 1.16 2004/09/15 19:04:53 dburke Exp dburke $
-#
 # Usage:
 #   make_tests.pl
 #
@@ -201,22 +199,9 @@ File = <xsl:call-template name="add-path"/>foo', type => "depth" };
 
 add_test "add-attribute", "<p>some text with random markup</p>",
 '<foo goo="##foobar">
-<p>some text with random markup</p></foo>
-<foo goo="foobar">
 <p>some text with random markup</p></foo>',
   { xsl =>
 '<foo>
-      <xsl:call-template name="add-attribute">
-        <xsl:with-param name="depth" select="$depth"/>
-        <xsl:with-param name="name"  select="\'goo\'"/>
-        <xsl:with-param name="value" select="\'foobar\'"/>
-      </xsl:call-template>
-      <xsl:apply-templates>
-        <xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
-</foo><xsl:text>
-</xsl:text>
-<foo>
       <xsl:call-template name="add-attribute">
         <xsl:with-param name="name"  select="\'goo\'"/>
         <xsl:with-param name="value" select="\'foobar\'"/>
@@ -226,7 +211,6 @@ add_test "add-attribute", "<p>some text with random markup</p>",
 
 add_test "add-image", "",
 '<img src="##foo.gif" alt="[a foo]">
-<img src="foo.gif" alt="[a foo]">
 <img src="##foo.gif" alt="[a foo]" height="10">
 <img src="##foo.gif" alt="[a foo]" width="20">
 <img src="##foo.gif" alt="[a foo]" border="0">
@@ -235,20 +219,12 @@ add_test "add-image", "",
   { xsl =>
 '    <xsl:call-template name="add-image">
       <xsl:with-param name="src"   select="\'foo.gif\'"/>
-      <xsl:with-param name="depth" select="$depth"/>
-      <xsl:with-param name="alt"   select="\'a foo\'"/>
-    </xsl:call-template>
-<xsl:text>
-</xsl:text>
-    <xsl:call-template name="add-image">
-      <xsl:with-param name="src"   select="\'foo.gif\'"/>
       <xsl:with-param name="alt"   select="\'a foo\'"/>
     </xsl:call-template>
 <xsl:text>
 </xsl:text>
     <xsl:call-template name="add-image">
       <xsl:with-param name="src"    select="\'foo.gif\'"/>
-      <xsl:with-param name="depth"  select="$depth"/>
       <xsl:with-param name="alt"    select="\'a foo\'"/>
       <xsl:with-param name="height" select="\'10\'"/>
     </xsl:call-template>
@@ -256,7 +232,6 @@ add_test "add-image", "",
 </xsl:text>
     <xsl:call-template name="add-image">
       <xsl:with-param name="src"    select="\'foo.gif\'"/>
-      <xsl:with-param name="depth"  select="$depth"/>
       <xsl:with-param name="alt"    select="\'a foo\'"/>
       <xsl:with-param name="width"  select="\'20\'"/>
     </xsl:call-template>
@@ -264,7 +239,6 @@ add_test "add-image", "",
 </xsl:text>
     <xsl:call-template name="add-image">
       <xsl:with-param name="src"    select="\'foo.gif\'"/>
-      <xsl:with-param name="depth"  select="$depth"/>
       <xsl:with-param name="alt"    select="\'a foo\'"/>
       <xsl:with-param name="border" select="0"/>
     </xsl:call-template>
@@ -272,7 +246,6 @@ add_test "add-image", "",
 </xsl:text>
     <xsl:call-template name="add-image">
       <xsl:with-param name="src"    select="\'foo.gif\'"/>
-      <xsl:with-param name="depth"  select="$depth"/>
       <xsl:with-param name="alt"    select="\'a foo\'"/>
       <xsl:with-param name="align"  select="\'right\'"/>
     </xsl:call-template>
@@ -280,7 +253,6 @@ add_test "add-image", "",
 </xsl:text>
     <xsl:call-template name="add-image">
       <xsl:with-param name="src"    select="\'foo.gif\'"/>
-      <xsl:with-param name="depth"  select="$depth"/>
       <xsl:with-param name="alt"    select="\'a foo\'"/>
       <xsl:with-param name="border" select="0"/>
       <xsl:with-param name="align"  select="\'right\'"/>
@@ -290,26 +262,14 @@ add_test "add-image", "",
 ', type => "depth" };
 
 add_test "add-new-image", "",
-'<img src="##imgs/new.gif" alt="[New]">
-<img src="imgs/new.gif" alt="[New]">',
+'<img src="##imgs/new.gif" alt="[New]">',
   { xsl =>
-'    <xsl:call-template name="add-new-image">
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:call-template>
-<xsl:text>
-</xsl:text>
-    <xsl:call-template name="add-new-image"/>', type => "depth" };
+'    <xsl:call-template name="add-new-image"/>', type => "depth" };
 
 add_test "add-updated-image", "",
-'<img src="##imgs/updated.gif" alt="[Updated]">
-<img src="imgs/updated.gif" alt="[Updated]">',
+'<img src="##imgs/updated.gif" alt="[Updated]">',
   { xsl =>
-'    <xsl:call-template name="add-updated-image">
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:call-template>
-<xsl:text>
-</xsl:text>
-    <xsl:call-template name="add-updated-image"/>', type => "depth" };
+'    <xsl:call-template name="add-updated-image"/>', type => "depth" };
 
 # as of CIAO 3.0 we do not use the add-marker template
 #
@@ -321,12 +281,8 @@ add_test "add-marker", "some text with <em>random</em> markup",
 <foo><img src="imgs/drop.gif" alt="[*]" height="15" width="10" border="0" align="left">some text with <em>random</em> markup</foo>',
   { xsl =>
 '    <foo>
-    <xsl:call-template name="add-marker">
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:call-template>
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+    <xsl:call-template name="add-marker"/>
+    <xsl:apply-templates/>
 </foo><xsl:text>
 </xsl:text>
 <foo>
@@ -340,13 +296,9 @@ add_test "add-marker", "some text with <em>random</em> markup",
 
 add_test "dummy", '<dummy><ahelp name="dmcopy"/></dummy>',
 '
-<a class="helplink" href="##ahelp/dmcopy.html">dmcopy</a>
-<a class="helplink" href="ahelp/dmcopy.html">dmcopy</a>',
+<a class="helplink" href="##ahelp/dmcopy.html">dmcopy</a>',
   { xsl =>
-'    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
-    <xsl:apply-templates/>', type => "depth" };
+'    <xsl:apply-templates/>', type => "depth" };
 
 # the following tests are only to be run with
 #   type  = test
@@ -382,7 +334,6 @@ add_test "add-footer", "",
   <xsl:param name="updateby"    select="\'a_tester\'"/>',
    xsl =>
 '    <xsl:call-template name="add-footer">
-      <xsl:with-param name="depth"      select="$depth"/>
       <xsl:with-param name="type"       select="$type"/>
       <xsl:with-param name="name"       select="' . "'foo'" . '"/>
     </xsl:call-template>', type => "all" };
@@ -396,7 +347,6 @@ add_test "add-navbar", "",
    xsl =>
 '    <xsl:call-template name="add-navbar">
       <xsl:with-param name="name"       select="\'test\'"/>
-      <xsl:with-param name="depth"      select="$depth"/>
       <xsl:with-param name="type"       select="$type"/>
     </xsl:call-template>', type => "all" };
 
@@ -414,7 +364,6 @@ add_test "add-header", "",
   <xsl:param name="updateby"    select="\'a_tester\'"/>',
    xsl =>
 '    <xsl:call-template name="add-header">
-      <xsl:with-param name="depth"      select="$depth"/>
       <xsl:with-param name="type"       select="$type"/>
       <xsl:with-param name="name"       select="' . "'foo'" . '"/>
     </xsl:call-template>', type => "liveonly" };
@@ -464,9 +413,7 @@ sub add_test ($$$;$) {
     # STYLESHEET
     #
     my $xsl = $$opts{xsl} ||
-'    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+'    <xsl:apply-templates/>
 ';
 
     my $xsl_pre = $$opts{xsl_pre} || "";
@@ -632,7 +579,7 @@ $xsl
 "
   Error:
     site parameter [unknown] is unknown
-    allowed values:  ciao sherpa chart caldb pog icxc 
+    allowed values:  ciao sherpa chips chart caldb pog icxc 
 " ) if $site eq "unknown";
 
 	    # note: the space after icxc above is important
@@ -691,7 +638,7 @@ EOD
   set h = ${id}_${type}_${site}_d${depth}
   set out = out/xslt.$h
   if ( -e $out ) rm -f $out
-  /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam sourcedir $srcdir --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml > $out
+  $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam sourcedir $srcdir --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml > $out
   diff out/${h} $out
   if ( $status == 0 ) then
     printf "OK:   %3d  [%s]\n" $ctr $h
@@ -722,7 +669,7 @@ EOD
     set h = ${id}_${type}_${site}_d${depth}
     set out = out/xslt.$h
     if ( -e $out ) rm -f $out
-    /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml > $out
+    $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml > $out
     diff out/$h $out
     if ( $status == 0 ) then
       printf "OK:   %3d  [%s]\n" $ctr $h
@@ -753,7 +700,7 @@ EOD
 	set h = ${id}_${type}_${site}_d${depth}
 	set out = out/xslt.$h
 	if ( -e $out ) rm -f $out
-	/usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml > $out
+	$xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml > $out
 	diff out/${h} $out
 	if ( $status == 0 ) then
 	  printf "OK:   %3d  [%s]\n" $ctr $h
@@ -788,7 +735,7 @@ EOD
     set out = out/xslt.$h
     if ( -e $out ) rm -f $out
     # NOTE the piping of stderr as well as stdout here
-    /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml >& $out
+    $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml in/${id}.xsl in/${id}.xml >& $out
     diff out/${h} $out
     if ( $status == 0 ) then
       printf "OK:   %3d  [%s]\n" $ctr $h

@@ -4,11 +4,9 @@
 <!--* 
     * Create the 'live' version of a register page (in HTML version)
     *
-    * $Id: register_live.xsl,v 1.14 2005/03/02 21:56:06 dburke Exp $ 
-    *-->
-
-<!--* 
     * Recent changes:
+    * 2007 Oct 19 DJB
+    *    depth parameter is now a global, no need to send around
     *  v1.14 - <html> changed to <html lang="en"> following
     *            http://www.w3.org/TR/2005/WD-i18n-html-tech-lang-20050224/
     *  v1.13 - removed the regtype variable as no-longer used by the reglink tag
@@ -64,11 +62,6 @@
   <!--* load in the set of "global" parameters *-->
   <xsl:include href="globalparams.xsl"/>
 
-  <!--* will all templates see this, or do we have to pass the value to all elements a la the navbar? *-->
-<!--
-  <xsl:param name="depth" select="1"/>
--->
-  
   <!--* use this several times, so make it into a variable *-->
   <xsl:variable name="head" select="concat($install,$pagename)"/>
 
@@ -96,15 +89,11 @@
 
     <xsl:choose>
       <xsl:when test="$hardcopy = 1">
-	<xsl:apply-templates name="register" mode="make-hardcopy">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates name="register" mode="make-hardcopy"/>
       </xsl:when>
 
       <xsl:otherwise>
-	<xsl:apply-templates name="register" mode="make-live">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates name="register" mode="make-live"/>
       </xsl:otherwise>
     </xsl:choose>
 
@@ -115,7 +104,6 @@
       *-->
 
   <xsl:template match="register" mode="make-live">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$head"/>_src.html</xsl:variable>
 
@@ -139,7 +127,6 @@
 	    * a test version or the actual production HTML 
             *-->
 	<xsl:call-template name="add-header">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name" select="$pagename"/> <!--* PDF's are called pagename.<size>.pdf *-->
 	</xsl:call-template>
 	<xsl:call-template name="newline"/>
@@ -162,9 +149,7 @@
 		<td class="mainbar" valign="top">
 		  <!--* the main text *-->
 		  <a name="maintext"/>
-		  <xsl:apply-templates select="text">
-		    <xsl:with-param name="depth" select="$depth"/>
-		  </xsl:apply-templates>
+		  <xsl:apply-templates select="text"/>
 		</td>
 	      </tr>
 	    </table>
@@ -172,16 +157,13 @@
 	  <xsl:otherwise>
 	    <!--* the main text *-->
 	    <div class="mainbar">
-	      <xsl:apply-templates select="text">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="text"/>
 	    </div>
 	  </xsl:otherwise>
 	</xsl:choose>
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="$pagename"/>
 	</xsl:call-template>
 
@@ -197,7 +179,6 @@
       *-->
 
   <xsl:template match="register" mode="make-hardcopy">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$head"/>.hard.html</xsl:variable>
 
@@ -222,9 +203,7 @@
 	  </xsl:call-template>
 
 	  <!--* do not need to bother with navbar's here as the hardcopy version *-->
-	  <xsl:apply-templates select="text">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="text"/>
       
 	  <xsl:call-template name="add-hardcopy-banner-bottom">
 	    <xsl:with-param name="url" select="$url"/>
@@ -238,10 +217,8 @@
 
   <!--* note: we process the text so we can handle our `helper' tags *-->
   <xsl:template match="text">
-   <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
-  </xsl:template> <!--* text *-->
+   <xsl:apply-templates/>
+  </xsl:template>
 
   <!--* 
       * for links on the register page: as of CIAO 3.1 we just need
@@ -259,7 +236,6 @@
       * whether we should do this conversion, ie a log attribute?)
       * 
       * parameters:
-      *   depth - standard use
       *
       * attributes:
       *  either
@@ -278,7 +254,6 @@
       *-->
  
   <xsl:template match="reglink">
-    <xsl:param name="depth" select="1"/>
 
     <!--* what params have been supplied? *-->
     <xsl:choose>

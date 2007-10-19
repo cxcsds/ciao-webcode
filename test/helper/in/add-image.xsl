@@ -12,20 +12,12 @@
 </xsl:text>
     <xsl:call-template name="add-image">
       <xsl:with-param name="src"   select="'foo.gif'"/>
-      <xsl:with-param name="depth" select="$depth"/>
-      <xsl:with-param name="alt"   select="'a foo'"/>
-    </xsl:call-template>
-<xsl:text>
-</xsl:text>
-    <xsl:call-template name="add-image">
-      <xsl:with-param name="src"   select="'foo.gif'"/>
       <xsl:with-param name="alt"   select="'a foo'"/>
     </xsl:call-template>
 <xsl:text>
 </xsl:text>
     <xsl:call-template name="add-image">
       <xsl:with-param name="src"    select="'foo.gif'"/>
-      <xsl:with-param name="depth"  select="$depth"/>
       <xsl:with-param name="alt"    select="'a foo'"/>
       <xsl:with-param name="height" select="'10'"/>
     </xsl:call-template>
@@ -33,7 +25,6 @@
 </xsl:text>
     <xsl:call-template name="add-image">
       <xsl:with-param name="src"    select="'foo.gif'"/>
-      <xsl:with-param name="depth"  select="$depth"/>
       <xsl:with-param name="alt"    select="'a foo'"/>
       <xsl:with-param name="width"  select="'20'"/>
     </xsl:call-template>
@@ -41,7 +32,6 @@
 </xsl:text>
     <xsl:call-template name="add-image">
       <xsl:with-param name="src"    select="'foo.gif'"/>
-      <xsl:with-param name="depth"  select="$depth"/>
       <xsl:with-param name="alt"    select="'a foo'"/>
       <xsl:with-param name="border" select="0"/>
     </xsl:call-template>
@@ -49,7 +39,6 @@
 </xsl:text>
     <xsl:call-template name="add-image">
       <xsl:with-param name="src"    select="'foo.gif'"/>
-      <xsl:with-param name="depth"  select="$depth"/>
       <xsl:with-param name="alt"    select="'a foo'"/>
       <xsl:with-param name="align"  select="'right'"/>
     </xsl:call-template>
@@ -57,7 +46,6 @@
 </xsl:text>
     <xsl:call-template name="add-image">
       <xsl:with-param name="src"    select="'foo.gif'"/>
-      <xsl:with-param name="depth"  select="$depth"/>
       <xsl:with-param name="alt"    select="'a foo'"/>
       <xsl:with-param name="border" select="0"/>
       <xsl:with-param name="align"  select="'right'"/>

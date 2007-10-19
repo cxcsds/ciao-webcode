@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="us-ascii" ?>
 <!DOCTYPE xsl:stylesheet>
 
-<!--* attempt to provide a common stylesheet for links *-->
-
 <!--*
+    * attempt to provide a common stylesheet for links
+    *
     * Recent changes:
+    * 2007 Oct 19 DJB
+    *    depth parameter is now a global, no need to send around
     * 2007 Oct 16 DJB
     *   Updated to account for ahelp files now existing under ciao,
     *   sherpa, and chips web sites
@@ -199,7 +201,6 @@
       *
       *-->
   <xsl:template match="ahelppage">
-    <xsl:param name="depth" select="1"/>
 
     <!--* safety check *-->
     <xsl:if test="boolean(@name)">
@@ -241,7 +242,6 @@
 			and $site != 'ciaobeta' and $site != 'chipsbeta' and $site != 'sherpabeta'">/ciao/ahelp/</xsl:when>
 	<xsl:otherwise><xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="0"/>
-	    <xsl:with-param name="depth"   select="$depth"/>
 	    <xsl:with-param name="dirname" select="'ahelp/'"/>
 	  </xsl:call-template></xsl:otherwise>
       </xsl:choose></xsl:variable>
@@ -343,7 +343,6 @@
       *-->
 
   <xsl:template match="ahelp">
-    <xsl:param name="depth" select="1"/>
 
     <!--* temporary check for the site attribute, as should not be used *-->
     <xsl:if test="boolean(@site)=true()">
@@ -454,7 +453,6 @@
       <xsl:when test="$site != $ahelpsite"><xsl:value-of select="concat('/',$ahelpsite,'/ahelp/')"/></xsl:when>
       <xsl:otherwise><xsl:call-template name="add-start-of-href">
 	<xsl:with-param name="extlink" select="0"/>
-	<xsl:with-param name="depth"   select="$depth"/>
 	<xsl:with-param name="dirname" select="'ahelp/'"/>
       </xsl:call-template></xsl:otherwise>
     </xsl:choose></xsl:variable>
@@ -541,7 +539,6 @@
       *-->
 
   <xsl:template match="faq">
-    <xsl:param name="depth" select="1"/>
 
     <!--* since we don't have a DTD *-->
     <xsl:call-template name="name-not-allowed">
@@ -596,7 +593,6 @@
 	<xsl:when test="$site != 'ciao' and $site != 'sherpa' and $site != 'chips'">/ciao/faq/</xsl:when>
 	<xsl:otherwise><xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="0"/>
-	    <xsl:with-param name="depth"   select="$depth"/>
 	    <xsl:with-param name="dirname" select="'faq/'"/>
 	  </xsl:call-template></xsl:otherwise>
       </xsl:choose></xsl:variable>
@@ -640,7 +636,6 @@
       *-->
   
   <xsl:template match="dictionary">
-    <xsl:param name="depth" select="1"/>
 
     <!--* are we empty? *-->
     <xsl:call-template name="check-contents-are-empty"/>
@@ -672,7 +667,6 @@
 	    <!--* where do we find the dictionary directory? *-->
 	    <xsl:call-template name="add-start-of-href">
 	      <xsl:with-param name="extlink" select="$extlink"/>
-	      <xsl:with-param name="depth"   select="$depth"/>
 	      <xsl:with-param name="dirname" select="'dictionary/'"/>
 	    </xsl:call-template>
 	    
@@ -713,7 +707,6 @@
       *-->
 
   <xsl:template match="pog">
-    <xsl:param name="depth" select="1"/>
 
     <!--* are we linking to the index page or a specific one *-->
     <a>
@@ -759,7 +752,6 @@
       *-->
 
   <xsl:template match="manual">
-    <xsl:param name="depth" select="1"/>
 
     <!--* are we empty? *-->
     <xsl:call-template name="check-contents-are-empty"/>
@@ -788,7 +780,6 @@
 	  <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
 	  <xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="$extlink"/>
-	    <xsl:with-param name="depth"   select="$depth"/>
 	    <xsl:with-param name="dirname">download/doc/chips_manual/</xsl:with-param>
 	  </xsl:call-template>
 	</xsl:when> <!--// end chips //-->
@@ -797,7 +788,6 @@
 	  <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
 	  <xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="$extlink"/>
-	    <xsl:with-param name="depth"   select="$depth"/>
 	    <xsl:with-param name="dirname">download/doc/detect_manual/</xsl:with-param>
 	  </xsl:call-template>
 	</xsl:when> <!--// end detect //-->
@@ -829,7 +819,6 @@
       *
       *-->
   <xsl:template match="manualpage">
-    <xsl:param name="depth" select="1"/>
 
     <!--* where are we linking to? *-->
     <xsl:variable name="href"><xsl:choose>
@@ -890,7 +879,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * if the tag is empty, use the text "Data Products guide"
       *-->
   <xsl:template match="dpguide">
-    <xsl:param name="depth" select="1"/>
 
     <!--* since we don't have a DTD *-->
     <xsl:call-template name="name-not-allowed"/>
@@ -909,7 +897,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	  <xsl:attribute name="href">
 	    <xsl:call-template name="add-start-of-href">
 	      <xsl:with-param name="extlink" select="$extlink"/>
-	      <xsl:with-param name="depth"   select="$depth"/>
 	      <xsl:with-param name="dirname" select="'data_products_guide/'"/>
 	    </xsl:call-template>
 	    <xsl:call-template name="sort-out-anchor"/>
@@ -943,7 +930,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *
       *-->
   <xsl:template match="bug">
-    <xsl:param name="depth" select="1"/>
 
     <!--* check page attribute *-->
     <xsl:call-template name="check-page-for-no-html"/>
@@ -956,7 +942,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	<xsl:when test="$site != 'ciao' and $site != 'sherpa'">/ciao/bugs/</xsl:when>
 	<xsl:otherwise><xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="0"/>
-	    <xsl:with-param name="depth"   select="$depth"/>
 	    <xsl:with-param name="dirname" select="'bugs/'"/>
 	  </xsl:call-template></xsl:otherwise>
       </xsl:choose></xsl:variable>
@@ -1000,7 +985,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * There is no default text
       *-->
   <xsl:template match="caveat">
-    <xsl:param name="depth" select="1"/>
 
     <!--* are we empty? *-->
     <xsl:call-template name="check-contents-are-empty"/>
@@ -1022,7 +1006,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	  <xsl:attribute name="href">
 	    <xsl:call-template name="add-start-of-href">
 	      <xsl:with-param name="extlink" select="$extlink"/>
-	      <xsl:with-param name="depth"   select="$depth"/>
 	      <xsl:with-param name="dirname" select="'caveats/'"/>
 	    </xsl:call-template>
 	    <xsl:call-template name="sort-out-anchor"/>
@@ -1052,7 +1035,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * There is no default text
       *-->
   <xsl:template match="aguide">
-    <xsl:param name="depth" select="1"/>
 
     <!--* are we empty? *-->
     <xsl:call-template name="check-contents-are-empty"/>
@@ -1079,7 +1061,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	  <xsl:attribute name="href">
 	    <xsl:call-template name="add-start-of-href">
 	      <xsl:with-param name="extlink" select="$extlink"/>
-	      <xsl:with-param name="depth"   select="$depth"/>
 	      <xsl:with-param name="dirname" select="'guides/'"/>
 	    </xsl:call-template>
 	    <xsl:call-template name="sort-out-anchor"/>
@@ -1106,7 +1087,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * There is no default text
       *-->
   <xsl:template match="why">
-    <xsl:param name="depth" select="1"/>
 
     <!--* are we empty? *-->
     <xsl:call-template name="check-contents-are-empty"/>
@@ -1133,7 +1113,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	  <xsl:attribute name="href">
 	    <xsl:call-template name="add-start-of-href">
 	      <xsl:with-param name="extlink" select="$extlink"/>
-	      <xsl:with-param name="depth"   select="$depth"/>
 	      <xsl:with-param name="dirname" select="'why/'"/>
 	    </xsl:call-template>
 	    <xsl:call-template name="sort-out-anchor"/>
@@ -1175,7 +1154,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *-->
 
   <xsl:template match="download">
-    <xsl:param name="depth" select="1"/>
 
     <!--* are we empty? *-->
     <xsl:call-template name="check-contents-are-empty"/>
@@ -1219,7 +1197,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 		  <xsl:when test="contains($no-register-type,concat(' ',@type,' '))=true()">
 		    <xsl:call-template name="add-start-of-href">
 		      <xsl:with-param name="extlink" select="$extlink"/>
-		      <xsl:with-param name="depth"   select="$depth"/>
 		      <xsl:with-param name="dirname" select="''"/>
 		    </xsl:call-template>
 		    <xsl:value-of select="concat('download/',@type,'.html')"/>
@@ -1237,7 +1214,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 		<!--* index page *-->
 		<xsl:call-template name="add-start-of-href">
 		  <xsl:with-param name="extlink" select="$extlink"/>
-		  <xsl:with-param name="depth"   select="$depth"/>
 		  <xsl:with-param name="dirname" select="''"/>
 		</xsl:call-template>
 		<xsl:text>download/</xsl:text>
@@ -1277,7 +1253,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *-->
 
   <xsl:template match="script">
-    <xsl:param name="depth" select="1"/>
 
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
@@ -1285,7 +1260,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	<xsl:call-template name="create-script-link">
 	  <xsl:with-param name="name"  select="@name"/>
 	  <xsl:with-param name="text"  select="."/>
-	  <xsl:with-param name="depth" select="$depth"/>
 	</xsl:call-template>
       </xsl:with-param>
     </xsl:call-template>
@@ -1295,7 +1269,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   <xsl:template name="create-script-link">
     <xsl:param name="name"  select="''"/>
     <xsl:param name="text"  select="''"/>
-    <xsl:param name="depth" select="1"/>
 
     <!--* are we in the ciao pages or not (ie is this an `external' link or not) *-->
     <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
@@ -1305,7 +1278,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:attribute name="href">
 	<xsl:call-template name="add-start-of-href">
 	  <xsl:with-param name="extlink" select="$extlink"/>
-	  <xsl:with-param name="depth"   select="$depth"/>
 	  <xsl:with-param name="dirname" select="'download/scripts/'"/>
 	</xsl:call-template>
 	<xsl:value-of select="$name"/>
@@ -1338,7 +1310,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * CURRENTLY links to the CIAO scipt page only
       *-->
   <xsl:template match="scriptpage">
-    <xsl:param name="depth" select="1"/>
 
     <!--* are we in the ciao pages or not (ie is this an `external' link or not) *-->
     <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
@@ -1351,7 +1322,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	  <xsl:attribute name="href">
 	    <xsl:call-template name="add-start-of-href">
 	      <xsl:with-param name="extlink" select="$extlink"/>
-	      <xsl:with-param name="depth"   select="$depth"/>
 	      <xsl:with-param name="dirname" select="'download/scripts/'"/>
 	    </xsl:call-template>
 	    <xsl:if test="boolean(@id)">index.html#<xsl:value-of select="@id"/></xsl:if>
@@ -1426,7 +1396,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *
       *-->
   <xsl:template match="extlink">
-    <xsl:param name="depth" select="1"/>
 
     <!--* are we empty? *-->
     <xsl:call-template name="check-contents-are-empty"/>
@@ -1498,7 +1467,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   </xsl:template>
 
   <xsl:template match="cxclink">
-    <xsl:param name="depth" select="1"/>
 
     <!--* are we empty? *-->
     <xsl:call-template name="check-contents-are-empty"/>
@@ -1567,9 +1535,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	      </xsl:call-template></xsl:if>
 	    <xsl:value-of select="@href"/><xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
 	  </xsl:attribute>
-	  <xsl:apply-templates>
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates/>
 	</a>
       </xsl:with-param>
     </xsl:call-template>
@@ -1605,7 +1571,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *-->
 
   <xsl:template match="icxclink">
-    <xsl:param name="depth" select="1"/>
 
     <!--* are we empty? *-->
     <xsl:call-template name="check-contents-are-empty"/>
@@ -1637,9 +1602,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	    </xsl:choose>
 	    <xsl:value-of select="@href"/><xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
 	  </xsl:attribute>
-	  <xsl:apply-templates>
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates/>
 	</a>
       </xsl:with-param>
     </xsl:call-template>
@@ -1663,7 +1626,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *-->
   
   <xsl:template match="helpdesk">
-    <xsl:param name="depth" select="1"/>
 
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
@@ -1709,7 +1671,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *-->
 
   <xsl:template match="threadpage">
-    <xsl:param name="depth" select="1"/>
 
     <!--* are we empty? *-->
     <xsl:call-template name="check-contents-are-empty"/>
@@ -1722,7 +1683,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
         *   b) handle the file location and is there an anchor too?
         *-->
     <xsl:variable name="urlfrag"><xsl:call-template name="handle-thread-site-link">
-	<xsl:with-param name="depth"     select="$depth"/>
 	<xsl:with-param name="linktype"  select="'threadpage'"/>
       </xsl:call-template></xsl:variable>
 
@@ -1733,7 +1693,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	  <!--* add the href attibute *-->
 	  <xsl:call-template name="add-attribute">
 	    <!--* we've added the depth to the url above (if it's needed), so we set depth to 1 here *-->
-	    <xsl:with-param name="depth" select="1"/>
+	    <xsl:with-param name="idepth" select="1"/>
 	    <xsl:with-param name="name"  select="'href'"/>
 	    <xsl:with-param name="value"><xsl:value-of
 		select="$urlfrag"/><xsl:choose>
@@ -1744,9 +1704,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	  </xsl:call-template>
 
 	  <!--* process the contents of the tag *-->
-	  <xsl:apply-templates>
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates/>
 	</a>
       </xsl:with-param>
     </xsl:call-template>
@@ -1779,7 +1737,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *-->
 
   <xsl:template match="threadlink">
-    <xsl:param name="depth" select="1"/>
 
     <!--* are we empty? *-->
     <xsl:call-template name="check-contents-are-empty"/>
@@ -1796,7 +1753,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
         *-->
 
     <xsl:variable name="urlfrag"><xsl:call-template name="handle-thread-site-link">
-	<xsl:with-param name="depth"     select="$depth"/>
 	<xsl:with-param name="linktype"  select="'threadlink'"/>
 	<xsl:with-param name="in-thread" select="$in-thread"/>
       </xsl:call-template></xsl:variable>
@@ -1808,7 +1764,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	  <!--* add the href attibute *-->
 	  <xsl:call-template name="add-attribute">
 	    <!--* we've added the depth to the url above (if it's needed), so we set depth to 1 here *-->
-	    <xsl:with-param name="depth" select="1"/>
+	    <xsl:with-param name="idepth" select="1"/>
 	    <xsl:with-param name="name"  select="'href'"/>
 	    <xsl:with-param name="value"><xsl:value-of
 		select="$urlfrag"/><xsl:choose>
@@ -1844,9 +1800,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	  </xsl:call-template>
 
 	  <!--* process the contents of the tag *-->
-	  <xsl:apply-templates>
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates/>
 	</a>
       </xsl:with-param>
     </xsl:call-template>
@@ -1870,7 +1824,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   <xsl:template name="handle-thread-site-link">
     <xsl:param name="linktype"  select="''"/>
     <xsl:param name="in-thread" select="false()"/>
-    <xsl:param name="depth"     select="1"/>
 
     <xsl:variable name="urlfrag"><xsl:choose>
 	<!--* do we start with the site or the depth? *-->
@@ -1915,7 +1868,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *-->
   
   <xsl:template match="buglink">
-    <xsl:param name="depth" select="1"/>
 
     <!--* check we are in the iCXC site *-->
     <xsl:if test="$site != 'icxc'">
@@ -1948,14 +1900,13 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *
       *-->
   <xsl:template match="id">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:if test="boolean(@name)!='1'">
       <xsl:message terminate="yes">
   id tag MUST have a name attribute.
       </xsl:message>
     </xsl:if>
-    <a name="{@name}"><xsl:apply-templates><xsl:with-param name="depth" select="$depth"/></xsl:apply-templates></a>
+    <a name="{@name}"><xsl:apply-templates/></a>
   </xsl:template> <!--* id *-->
 
   <!--* 
@@ -2089,7 +2040,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *-->
   <xsl:template name="add-start-of-href">
     <xsl:param name="extlink"/>
-    <xsl:param name="depth"/>
     <xsl:param name="dirname"/>
 
     <xsl:choose>

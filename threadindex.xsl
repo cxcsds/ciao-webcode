@@ -4,13 +4,13 @@
 <!--* 
     * Create the thread index pages - site agnostic
     *
-    * $Id: threadindex.xsl,v 1.7 2004/05/14 18:22:46 dburke Exp egalle $ 
-    *-->
-
-<!--* 
     * ***NOTE*** - hardcopy code could be made more modular (lots of repeated stuff)
     *
     * Recent changes:
+    * 2007 Oct 19 DJB
+    *    depth parameter is now a global, no need to send around
+    *    also changed a few name attributes of xsl:apply-template nodes
+    *    to select attributes (why hasn't this caused a problem previously?)
     *   v1.7 - We are no called with hardcopy=0 or 1 and this determines
     *          the type of the file created (CIAO 3.1)
     *   v1.6 - updated to handle head/texttitlepostfix
@@ -29,7 +29,7 @@
 
   <!--* load in the set of "global" parameters *-->
   <xsl:param name="lastmod"   select='""'/>      <!--* over-ride the thread setting *-->
-  <xsl:param name="depth"     select="2"/>
+  <xsl:param name="depth"     select="2"/> <!--* not sure if we need *-->
   <xsl:include href="globalparams_thread.xsl"/>
 
   <!--* used to create the HTML header *-->
@@ -72,37 +72,21 @@
     <xsl:choose>
       <xsl:when test="$hardcopy = 1">
 	<!--* hardcopy *-->
-	<xsl:apply-templates name="threadindex" mode="make-index-hard">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
-	<xsl:apply-templates name="threadindex" mode="make-all-hard">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
-	<xsl:apply-templates select="threadindex/section" mode="make-section-hard">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="threadindex" mode="make-index-hard"/>
+	<xsl:apply-templates select="threadindex" mode="make-all-hard"/>
+	<xsl:apply-templates select="threadindex/section" mode="make-section-hard"/>
 	<xsl:if test="boolean(//threadindex/datatable)">
-	  <xsl:apply-templates name="threadindex" mode="make-table-hard">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="threadindex" mode="make-table-hard"/>
 	</xsl:if>
       </xsl:when>
 
       <xsl:otherwise>
 	<!--* softcopy *-->
-	<xsl:apply-templates name="threadindex" mode="make-index">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
-	<xsl:apply-templates name="threadindex" mode="make-all">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
-	<xsl:apply-templates select="threadindex/section" mode="make-section">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="threadindex" mode="make-index"/>
+	<xsl:apply-templates select="threadindex" mode="make-all"/>
+	<xsl:apply-templates select="threadindex/section" mode="make-section"/>
 	<xsl:if test="boolean(//threadindex/datatable)">
-	  <xsl:apply-templates name="threadindex" mode="make-table">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="threadindex" mode="make-table"/>
 	</xsl:if>
       </xsl:otherwise>
     </xsl:choose>

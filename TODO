@@ -1,9 +1,6 @@
 
 *** CURRENTLY ***
 
-Working on changing navbar to be called one per depth so that can make
-depth a global parameter in all stylesheets
-
 *) URLs in PDFs
 
 Check whether URLs printed out in the hardcopy versions of pages -

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="us-ascii" ?>
 <!DOCTYPE xsl:stylesheet>
 
-<!-- $Id: threadindex_common.xsl,v 1.37 2007/08/23 19:09:08 egalle Exp $ -->
-
 <!--* 
     * Recent changes:
+    * 2007 Oct 19 DJB
+    *    depth parameter is now a global, no need to send around
     *  v1.35 - only create "Download Data" link in thread datatable if
     *	       datasets tag exists
     *  v1.34 - only create thread datatable if the tag exists
@@ -73,13 +73,6 @@
     *    are reported on the index pages (the move to using h3/4 tags has
     *    probably messed-up the current system)
     *
-    *  - confusion over whether $depth is a stylesheet parameter
-    *    (ie set by calling process, as it is for thread indexex) or is 
-    *    template parameter (as it is in the general case)
-    *    UNFORTUNATELY, UNTIL WE FIX EVERYTHING UP TO BE SENSIBLE
-    *    [needs re-designing the navbar code] WE HAVE TO MESS AROUND WITH
-    *    IT
-    *
     *  - some templates may collide with those in other stylesheets
     *    (primarily myhtml.xsl) - needs looking at
     *
@@ -101,23 +94,18 @@
       *
       *-->
   <xsl:template match="sublist" mode="threadindex">
-    <xsl:param name="depth" select="$depth"/>
 
     <li>
       <div class="threadsublist">
 	<h4><xsl:apply-templates select="title" mode="show"/></h4>
 
 	<xsl:if test="boolean(text)">
-	  <xsl:apply-templates select="text">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="text"/>
 	</xsl:if>
 
 	<ul>
 	  <!--* we do not want to process the title element here *-->
-	  <xsl:apply-templates select="*[name() != 'title' and name() != 'text']" mode="threadindex">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="*[name() != 'title' and name() != 'text']" mode="threadindex"/>
 	</ul>
 	<!--* do we need a spacer? *-->
 	<xsl:if test="name(following-sibling::*[1]) = 'item'">
@@ -134,10 +122,7 @@
   <xsl:template match="title"/>
 
   <xsl:template match="title" mode="show">
-    <xsl:param name="depth" select="$depth"/>
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+    <xsl:apply-templates/>
     <xsl:call-template name="newline"/>
   </xsl:template>
 
@@ -168,20 +153,15 @@
       *
       *-->
   <xsl:template match="item" mode="threadindex">
-    <xsl:param name="depth" select="$depth"/>
 
     <li>
       <!--* what goes here? *-->
       <xsl:choose>
 	<xsl:when test="boolean(text)">
-	  <xsl:apply-templates select="text">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="text"/>
 	</xsl:when>
 	<xsl:otherwise>
-	  <xsl:call-template name="list-thread">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:call-template>
+	  <xsl:call-template name="list-thread"/>
 	</xsl:otherwise>
       </xsl:choose>
 
@@ -210,11 +190,8 @@
       * 
       *-->
   <xsl:template match="text">
-    <xsl:param name="depth" select="$depth"/>
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
-  </xsl:template> <!--* match=text *-->
+    <xsl:apply-templates/>
+  </xsl:template>
 
   <!--*
       * list a thread
@@ -226,7 +203,6 @@
       *
       *-->
   <xsl:template name="list-thread">
-    <xsl:param name="depth" select="$depth"/>
 
     <!--* read the thread into a variable to avoid multiple parses of the file *-->
     <xsl:variable name="thisThread" select="document(concat($threadDir,@name,'/thread.xml'))"/>
@@ -248,25 +224,19 @@
     <xsl:if test="count($thisThreadInfo/files/script) > 0">
       <br/>Uses:
       <xsl:for-each select="$thisThreadInfo/files/script">
-	<xsl:apply-templates select="." mode="threadindex">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="." mode="threadindex"/>
       </xsl:for-each>
     </xsl:if>
 
     <!--* Is this thread new or recently updated ? *-->
     <xsl:if test="boolean($thisThreadInfo/history/@new)">
       <br/>
-      <xsl:call-template name="add-new-image">
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:call-template>
+      <xsl:call-template name="add-new-image"/>
       <xsl:apply-templates select="$thisThreadInfo/history" mode="date"/>
     </xsl:if>
     <xsl:if test="boolean($thisThreadInfo/history/@updated)">
       <br/>
-      <xsl:call-template name="add-updated-image">
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:call-template>
+      <xsl:call-template name="add-updated-image"/>
       <xsl:apply-templates select="$thisThreadInfo/history" mode="date"/>
     </xsl:if>
 	
@@ -323,13 +293,11 @@
       *   (ie *NOT* datatable)
       *
       * Parameters:
-      *  depth
       *
       * In CIAO 3.1 added the "threaddatatable" id to the table
       * (so that can hide the link using CSS for the print option)
       *-->
   <xsl:template name="make-datatable">
-    <xsl:param name="depth" select="1"/>
 
 <!--//BOB//-->
     <xsl:if test="boolean(//threadindex/datatable)">
@@ -438,10 +406,7 @@
     </tr>  
 
     <!--* process the individual packages *--> 
-    <xsl:apply-templates select="package">
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
-    
+    <xsl:apply-templates select="package"/>
       
   </xsl:template> <!--* match=packages *-->
 
@@ -453,7 +418,6 @@
       *
       *-->
   <xsl:template match="package">
-    <xsl:param name="depth" select="1"/>
 
     <tr>
       <td colspan="3" align="center">
@@ -465,15 +429,11 @@
 	<xsl:choose>
 	  <xsl:when test="count(descendant::p)=0">
 	    <p>
-	      <xsl:apply-templates select="text">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="text"/>
 	    </p>
 	  </xsl:when>
 	  <xsl:otherwise>
-	    <xsl:apply-templates select="text">
-	      <xsl:with-param name="depth" select="$depth"/>
-	    </xsl:apply-templates>
+	    <xsl:apply-templates select="text"/>
 	  </xsl:otherwise>
 	</xsl:choose>
       </td>
@@ -494,8 +454,6 @@
 	<!--* 
 	    * note: use absolute xpath location here since not always
             * called with threadindex as its context node (eg datatable)
-            * and assuming no depth-dependent text in the markup
-            * - maybe shouldn't assume any markup in the text?
             *-->
 	<xsl:for-each select="//threadindex/section/id">
 	  <a href="{name}.html"><xsl:apply-templates select="text"/></a> | 
@@ -536,7 +494,6 @@
       *   $install variable/parameter
       *-->
   <xsl:template match="section" mode="make-section">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select='id/name'/>.html</xsl:variable>
     <xsl:variable name="version" select="/threadindex/version"/>
@@ -577,14 +534,10 @@
 	      </xsl:call-template>
 
 	      <!--* do we have a synopsis? *-->
-	      <xsl:apply-templates select="synopsis" mode="section-page">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="synopsis" mode="section-page"/>
 
 	      <!--* process the section *-->
-	      <xsl:apply-templates select="." mode="section-page">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="." mode="section-page"/>
 
 	    </td>
 	  </tr>
@@ -592,7 +545,6 @@
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="id/name"/>
 	</xsl:call-template>
       
@@ -605,7 +557,6 @@
 
   <!--* create the hardcopy versions of the individual section pages *-->
   <xsl:template match="section" mode="make-section-hard">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select='id/name'/>.hard.html</xsl:variable>
     <xsl:variable name="version" select="/threadindex/version"/>
@@ -641,14 +592,10 @@
 	  </xsl:call-template>
 
 	  <!--* do we have a synopsis? *-->
-	  <xsl:apply-templates select="synopsis" mode="section-page">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="synopsis" mode="section-page"/>
 
 	  <!--* process the section *-->
-	  <xsl:apply-templates select="." mode="section-page">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="." mode="section-page"/>
 
 	  <br/><br/>
 
@@ -666,7 +613,6 @@
       * create: table.html (the data table page)
       **-->
   <xsl:template match="threadindex" mode="make-table">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>table.html</xsl:variable>
     <xsl:variable name="version" select="/threadindex/version"/>
@@ -710,9 +656,7 @@
 	      </xsl:call-template>
 
 	      <!--* add the data table *-->
-	      <xsl:call-template name="make-datatable">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:call-template>
+	      <xsl:call-template name="make-datatable"/>
 
 	    </td>
 	  </tr>
@@ -720,7 +664,6 @@
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="'table'"/>
 	</xsl:call-template>
       
@@ -735,7 +678,6 @@
       * create: table.hard.html
       **-->
   <xsl:template match="threadindex" mode="make-table-hard">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>table.hard.html</xsl:variable>
     <xsl:variable name="version" select="/threadindex/version"/>
@@ -768,9 +710,7 @@
 	  <h1 align="center">Data for CIAO <xsl:value-of select="$siteversion"/> Science Threads</h1>
 
 	  <!--* add the data table *-->
-	  <xsl:call-template name="make-datatable">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:call-template>
+	  <xsl:call-template name="make-datatable"/>
 
 	  <xsl:call-template name="add-hardcopy-banner-bottom">
 	    <xsl:with-param name="url" select="$url"/>
@@ -786,7 +726,6 @@
       * create: index.html 
       *-->
   <xsl:template match="threadindex" mode="make-index">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>index.html</xsl:variable>
 
@@ -824,9 +763,7 @@
 	      <xsl:call-template name="add-threadindex-title"/>
 
 	      <!--* include the header text *-->
-	      <xsl:apply-templates select="header">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="header"/>
 
 	      <!--*
 	          * prior to CIAO 3.1 (v1.21 of this stylesheet) we used to
@@ -842,9 +779,7 @@
 		</div>
 		
 		<!--* process the sections in the index *-->
-		<xsl:apply-templates select="section" mode="index-page">
-		  <xsl:with-param name="depth" select="$depth"/>
-		</xsl:apply-templates>
+		<xsl:apply-templates select="section" mode="index-page"/>
           
 		<!--* do we have a data table? *-->
 		<xsl:if test="boolean(//threadindex/datatable)">
@@ -865,7 +800,6 @@
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="'index'"/>
 	</xsl:call-template>
 
@@ -880,7 +814,6 @@
       * create: index.hard.html 
       *-->
   <xsl:template match="threadindex" mode="make-index-hard">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>index.hard.html</xsl:variable>
     <xsl:variable name="version" select="/threadindex/version"/>
@@ -915,9 +848,7 @@
 	  </xsl:call-template>
 
 	  <!--* include the header text *-->
-	  <xsl:apply-templates select="header">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="header"/>
 
 	  <div class="threadindex">
 	    <div class="threadsection">
@@ -930,9 +861,7 @@
 	    </div>
 		
 	    <!--* process the sections in the index *-->
-	    <xsl:apply-templates select="section" mode="index-page">
-	      <xsl:with-param name="depth" select="$depth"/>
-	    </xsl:apply-templates>
+	    <xsl:apply-templates select="section" mode="index-page"/>
 	    
 	    <!--* do we have a data table? *-->
 	    <xsl:if test="boolean(//threadindex/datatable)">
@@ -963,7 +892,6 @@
       * create: all.html 
       *-->
   <xsl:template match="threadindex" mode="make-all">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>all.html</xsl:variable>
     <xsl:variable name="version" select="/threadindex/version"/>
@@ -1003,17 +931,13 @@
 
 	      <!--* process the sections in the index *-->
 	      <div class="threadindex">
-		<xsl:apply-templates select="section" mode="all-page">
-		  <xsl:with-param name="depth" select="$depth"/>
-		</xsl:apply-templates>
+		<xsl:apply-templates select="section" mode="all-page"/>
 	      </div>
 
 	      <br/><br/>
 
 	      <!--* add the data table *-->
-	      <xsl:call-template name="make-datatable">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:call-template>
+	      <xsl:call-template name="make-datatable"/>
 	  
 	    </td>
 	  </tr>
@@ -1021,7 +945,6 @@
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="'all'"/>
 	</xsl:call-template>
       
@@ -1036,7 +959,6 @@
       * create: all.hard.html 
       *-->
   <xsl:template match="threadindex" mode="make-all-hard">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>all.hard.html</xsl:variable>
     <xsl:variable name="version" select="/threadindex/version"/>
@@ -1072,17 +994,13 @@
 	  
 	  <!--* process the sections in the index *-->
 	  <div class="threadindex">
-	    <xsl:apply-templates select="section" mode="all-page">
-	      <xsl:with-param name="depth" select="$depth"/>
-	    </xsl:apply-templates>
+	    <xsl:apply-templates select="section" mode="all-page"/>
 	  </div>
 
 	  <br/><br/>
 
 	  <!--* add the data table *-->
-	  <xsl:call-template name="make-datatable">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:call-template>
+	  <xsl:call-template name="make-datatable"/>
 
 	  <xsl:call-template name="add-hardcopy-banner-bottom">
 	    <xsl:with-param name="url" select="$url"/>
@@ -1138,7 +1056,6 @@
       *   have changed in the section
       *-->
   <xsl:template match="section" mode="index-page">
-    <xsl:param name="depth" select="1"/>
 
     <div class="threadsection">
       <!--* for CIAO 3.1 we added the new/updated images into the header *-->
@@ -1155,9 +1072,7 @@
       <!--*
           * If there's a synopsis section then include it
           *-->
-      <xsl:apply-templates select="synopsis" mode="index-page">
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
+      <xsl:apply-templates select="synopsis" mode="index-page"/>
 
     </div> <!--* class=threadsection *-->
 
@@ -1218,15 +1133,11 @@
 
     <!--* do we add the images? *-->
     <xsl:if test="$nnew != 0">
-      <xsl:call-template name="add-new-image">
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:call-template>
+      <xsl:call-template name="add-new-image"/>
     </xsl:if>
 
     <xsl:if test="$nupd != 0">
-      <xsl:call-template name="add-updated-image">
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:call-template>
+      <xsl:call-template name="add-updated-image"/>
     </xsl:if>
 
   </xsl:template> <!--* name=report-if-new-or-updated-threads-icons *-->
@@ -1246,7 +1157,6 @@
 
   <!--* a new thread *-->
   <xsl:template match="item" mode="list-new">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="ThreadInfo" select="document(concat($threadDir,@name,'/thread.xml'))/thread/info"/>
 
@@ -1254,9 +1164,7 @@
       <li>
 	<a href="{$ThreadInfo/name}/"><xsl:value-of select="$ThreadInfo/title/long"/></a>
 	<xsl:apply-templates select="$ThreadInfo/history" mode="date"/>
-	<xsl:call-template name="add-new-image">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-new-image"/>
       </li>
     </xsl:if>
   </xsl:template> <!--* item mode=list-new *-->
@@ -1268,9 +1176,7 @@
       <li>
 	<a href="{$ThreadInfo/name}/"><xsl:value-of select="$ThreadInfo/title/long"/></a>
 	<xsl:apply-templates select="$ThreadInfo/history" mode="date"/>
-	<xsl:call-template name="add-updated-image">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-updated-image"/>
       </li>
     </xsl:if>
   </xsl:template> <!--* item mode=list-updated *-->
@@ -1282,19 +1188,13 @@
   <xsl:template match="section" mode="all-page">
 
     <div class="threadsection">
-      <h3><a name="{@name}"><xsl:apply-templates select="title" mode="show">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates></a></h3>
+      <h3><a name="{@name}"><xsl:apply-templates select="title" mode="show"/></a></h3>
 
       <!--* synopsis? *-->
-      <xsl:apply-templates select="synopsis" mode="section-page">
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
+      <xsl:apply-templates select="synopsis" mode="section-page"/>
 	
       <!--* list the threads *-->
-      <xsl:apply-templates select="list" mode="threadindex">
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
+      <xsl:apply-templates select="list" mode="threadindex"/>
       <br/>
     </div> <!--* class=threadsection *-->
 
@@ -1305,22 +1205,15 @@
       * 
       *-->
   <xsl:template match="section" mode="section-page">
-    <xsl:param name="depth" select="1"/>
-
-    <xsl:apply-templates select="list" mode="threadindex">
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
-
-  </xsl:template> <!--* match=section mode=section-page *-->
+    <xsl:apply-templates select="list" mode="threadindex"/>
+  </xsl:template>
 
   <!--*
       * process the header block
       *-->
   <xsl:template match="header">
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
-  </xsl:template> <!--* match=header *-->
+    <xsl:apply-templates/>
+  </xsl:template>
 
   <!--*
       * adds a "title" which depends on the site
@@ -1360,17 +1253,13 @@
       *-->
   <xsl:template match="synopsis" mode="index-page">
     <div class="threadsynopsis">
-      <xsl:apply-templates>
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
+      <xsl:apply-templates/>
     </div>
   </xsl:template> <!--* match=synopsis mode=index-page *-->
   
   <xsl:template match="synopsis" mode="section-page">
     <div class="threadsynopsis">
-      <xsl:apply-templates>
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
+      <xsl:apply-templates/>
     </div>
   </xsl:template> <!--* match=synopsis mode=section-page *-->
   

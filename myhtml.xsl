@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="us-ascii" ?>
 <!DOCTYPE xsl:stylesheet>
 
-<!-- $Id: myhtml.xsl,v 1.35 2006/06/02 15:15:04 egalle Exp $ -->
-
 <!--* 
     * Recent changes:
+    * 2007 Oct 19 DJB
+    *    depth parameter is now a global, no need to send around
     *  v1.35 - moved "screen" code from thread_common.xsl to myhtml.xsl
     *  v1.34 - add-start-html now includes lang="en" attribute in tag following
     *            http://www.w3.org/TR/2005/WD-i18n-html-tech-lang-20050224/
@@ -233,7 +233,6 @@
       *
       *-->
   <xsl:template match="list">
-    <xsl:param name="depth" select="1"/>
 
     <!--* should be in DTD *-->
     <xsl:if test="boolean(ancestor::p)">
@@ -257,17 +256,17 @@
     <xsl:choose>
       <xsl:when test="string(@type)='A' or string(@type)='a'">
 	<ol type="{@type}">
-	  <xsl:apply-templates><xsl:with-param name="depth" select="$depth"/></xsl:apply-templates>
+	  <xsl:apply-templates/>
 	</ol>
       </xsl:when>
       <xsl:when test="string(@type)='1'">
 	<ol type="1">
-	  <xsl:apply-templates><xsl:with-param name="depth" select="$depth"/></xsl:apply-templates>
+	  <xsl:apply-templates/>
 	</ol>
       </xsl:when>
       <xsl:otherwise>
 	<ul>
-	  <xsl:apply-templates><xsl:with-param name="depth" select="$depth"/></xsl:apply-templates>
+	  <xsl:apply-templates/>
 	</ul>
       </xsl:otherwise>  
     </xsl:choose>
@@ -275,9 +274,8 @@
   </xsl:template> <!--* list *-->
 
   <xsl:template match="li">
-    <xsl:param name="depth" select="1"/>
     <li>
-      <xsl:apply-templates><xsl:with-param name="depth" select="$depth"/></xsl:apply-templates>
+      <xsl:apply-templates/>
     </li>
   </xsl:template> <!--* li *-->
 
@@ -318,10 +316,8 @@
       *          otherwise   => small
       *-->
   <xsl:template match="new">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:call-template name="add-image">
-      <xsl:with-param name="depth" select="$depth"/>
       <xsl:with-param name="src"   select="'imgs/new.gif'"/>
       <xsl:with-param name="alt"   select="'New'"/>
     </xsl:call-template>
@@ -333,10 +329,8 @@
       * - see the new template for usage/comments
       *-->
   <xsl:template match="updated">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:call-template name="add-image">
-      <xsl:with-param name="depth" select="$depth"/>
       <xsl:with-param name="src"   select="'imgs/updated.gif'"/>
       <xsl:with-param name="alt"   select="'Updated'"/>
     </xsl:call-template>
@@ -393,8 +387,7 @@
       *
       *-->
   <xsl:template match="p">
-    <xsl:param name="depth" select="1"/>
-    <xsl:variable name="contents"><xsl:apply-templates><xsl:with-param name="depth" select="$depth"/></xsl:apply-templates></xsl:variable>
+    <xsl:variable name="contents"><xsl:apply-templates/></xsl:variable>
 
     <p>
       <xsl:if test="boolean(@align)"><xsl:attribute name="align"><xsl:value-of select="@align"/></xsl:attribute></xsl:if>
@@ -408,7 +401,6 @@
 
   <!--* 
       * allow img tags:
-      * assume the user knows what's going on so don't handle $depth
       *-->
   <xsl:template match="img">
     <xsl:if test="boolean(@src)=false()">
@@ -457,7 +449,6 @@
   </xsl:template> <!--* name=add-highlight *-->
 
   <xsl:template match="screen">
-    <xsl:param name="depth" select="$depth"/>
 
     <!--* a check since we've changed name to file *-->
     <xsl:if test="boolean(@name)">
@@ -476,15 +467,11 @@
         *-->
     <xsl:variable name="contents"><xsl:choose>
 	<xsl:when test='. != ""'>
-	  <xsl:apply-templates>
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates/>
 	</xsl:when>
 	<xsl:when test='boolean(@file)'>
 	  <xsl:apply-templates
-	    select="document(concat($sourcedir,@file,'.xml'))" mode="include">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	    select="document(concat($sourcedir,@file,'.xml'))" mode="include"/>
 	</xsl:when>
       </xsl:choose></xsl:variable>
 
@@ -567,7 +554,6 @@
       *
       *-->
   <xsl:template match="pre">
-    <xsl:param name="depth" select="1"/>
 
     <!--* safety check *-->
     <xsl:if test="ancestor::p">
@@ -583,12 +569,12 @@
     <xsl:choose>
       <xsl:when test="boolean(@highlight) and @highlight='1'">
 	<xsl:call-template name="add-highlight-pre">
-	  <xsl:with-param name="contents"><xsl:apply-templates><xsl:with-param name="depth" select="$depth"/></xsl:apply-templates></xsl:with-param>
+	  <xsl:with-param name="contents"><xsl:apply-templates/></xsl:with-param>
 	</xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
 <pre>
-<xsl:apply-templates><xsl:with-param name="depth" select="$depth"/></xsl:apply-templates>
+<xsl:apply-templates/>
 </pre>
       </xsl:otherwise>
     </xsl:choose>
@@ -602,7 +588,6 @@
       *
       *-->
   <xsl:template match="highlight">
-    <xsl:param name="depth" select="1"/>
 
     <!--* safety check *-->
     <xsl:if test="ancestor::p">
@@ -615,7 +600,7 @@
     </xsl:if>
 
     <xsl:call-template name="add-highlight-block">
-      <xsl:with-param name="contents"><xsl:apply-templates><xsl:with-param name="depth" select="$depth"/></xsl:apply-templates></xsl:with-param>
+      <xsl:with-param name="contents"><xsl:apply-templates/></xsl:with-param>
     </xsl:call-template>
 
   </xsl:template> <!--* match=highlight *-->
@@ -625,11 +610,7 @@
       * - should we include a warning?
       *-->
   <xsl:template match="center">
-    <xsl:param name="depth" select="1"/>
-
-    <div align="center"><xsl:apply-templates>
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates></div>
+    <div align="center"><xsl:apply-templates/></div>
   </xsl:template> <!--* match=center *-->
 
   <!--*
@@ -728,7 +709,6 @@
       *   the tags that Chris was able to use
       *-->
   <xsl:template match="scriptlist">
-    <xsl:param name="depth" select="1"/>
 
     <h2><a name="scripts">Scripts included in the Package (by category)</a></h2>
     
@@ -760,9 +740,7 @@
 	      <strong><xsl:value-of select="@name"/></strong>
 	    </td>
 	    <td>
-	      <xsl:apply-templates select="thread" mode="scripts">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="thread" mode="scripts"/>
 	    </td>
 	    <td align="center"><xsl:value-of select="@lang"/></td>
 	    <td align="center"><xsl:value-of select="@ver"/></td>
@@ -771,7 +749,6 @@
 	      <xsl:if test="@updated = 'yes'">
 	        <br/>
 		<xsl:call-template name="add-image">
-		  <xsl:with-param name="depth" select="$depth"/>
 		  <xsl:with-param name="src"   select="'imgs/updated.gif'"/>
 		  <xsl:with-param name="alt"   select="'Updated'"/>
 		</xsl:call-template>
@@ -779,7 +756,6 @@
 	      <xsl:if test="@new = 'yes'">
 	        <br/>
 		<xsl:call-template name="add-image">
-		  <xsl:with-param name="depth" select="$depth"/>
 		  <xsl:with-param name="src"   select="'imgs/new.gif'"/>
 		  <xsl:with-param name="alt"   select="'New'"/>
 		</xsl:call-template>
@@ -788,9 +764,7 @@
           </tr>
           <tr bgcolor="#cccccc">
 	    <td align="left" colspan="4">
-	      <xsl:apply-templates select="desc" mode="scripts">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="desc" mode="scripts"/>
 	    </td>
 	  </tr>
 	  <tr>
@@ -802,10 +776,7 @@
   </xsl:template> <!-- match=scriptlist -->
 
   <xsl:template match="desc|thread" mode="scripts">
-    <xsl:param name="depth" select="1"/>
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+    <xsl:apply-templates/>
   </xsl:template> <!-- match=desc|thread mode=scripts -->
 
   <xsl:template name="get-month">

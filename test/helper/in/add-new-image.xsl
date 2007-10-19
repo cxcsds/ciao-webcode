@@ -10,11 +10,6 @@
 <xsl:template match='test'>
 <xsl:text>
 </xsl:text>
-    <xsl:call-template name="add-new-image">
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:call-template>
-<xsl:text>
-</xsl:text>
     <xsl:call-template name="add-new-image"/>
   </xsl:template>
 <!--* need to sort out newline template! *-->

@@ -10,8 +10,6 @@
 <xsl:template match="/">
 <xsl:text>
 </xsl:text>
-  <xsl:apply-templates select="//section" mode="create">
-    <xsl:with-param name="depth" select="$depth"/>
-  </xsl:apply-templates>
+  <xsl:apply-templates select="//section" mode="create"/>
 </xsl:template>
 </xsl:stylesheet>

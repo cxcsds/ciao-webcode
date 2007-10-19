@@ -4,11 +4,9 @@
 <!--* 
     * Convert an XML web page into an HTML one
     *
-    * $Id: page.xsl,v 1.22 2005/03/02 21:56:06 dburke Exp $ 
-    *-->
-
-<!--* 
     * Recent changes:
+    * 2007 Oct 19 DJB
+    *    depth parameter is now a global, no need to send around
     *  v1.22 - <html> changed to <html lang="en"> following
     *            http://www.w3.org/TR/2005/WD-i18n-html-tech-lang-20050224/
     *  v1.21 - We are no called with hardopy=0 or 1 and this determines
@@ -79,15 +77,11 @@
 PROGRAMMING ERROR: site=icxc and hardcopy=1
 	  </xsl:message>
 	</xsl:if>
-	<xsl:apply-templates name="page" mode="make-hardcopy">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates name="page" mode="make-hardcopy"/>
       </xsl:when>
       
       <xsl:otherwise>
-	<xsl:apply-templates name="page" mode="make-viewable">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates name="page" mode="make-viewable"/>
       </xsl:otherwise>
     </xsl:choose>
 
@@ -98,7 +92,6 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
       *-->
 
   <xsl:template match="page" mode="make-viewable">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$pagename"/>.html</xsl:variable>
 
@@ -122,7 +115,6 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 	    * a test version or the actual production HTML 
             *-->
 	<xsl:call-template name="add-header">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name" select="$pagename"/>
 	</xsl:call-template>
 
@@ -137,9 +129,7 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 		<td class="mainbar" valign="top">
 		  <!--* the main text *-->
 		  <a name="maintext"/>
-		  <xsl:apply-templates select="text">
-		    <xsl:with-param name="depth" select="$depth"/>
-		  </xsl:apply-templates>
+		  <xsl:apply-templates select="text"/>
 		</td>
 	      </tr>
 	    </table>
@@ -148,16 +138,13 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 	    <!--* the main text *-->
 	    <div class="mainbar">
 	      <a name="maintext"/>
-	      <xsl:apply-templates select="text">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="text"/>
 	    </div>
 	  </xsl:otherwise>
 	</xsl:choose>
 	    
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="$pagename"/>
 	</xsl:call-template>
 
@@ -173,7 +160,6 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
       *-->
 
   <xsl:template match="page" mode="make-hardcopy">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$pagename"/>.hard.html</xsl:variable>
 
@@ -198,9 +184,7 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 	  </xsl:call-template>
 
 	  <!--* do not need to bother with navbar's here as the hardcopy version *-->
-	  <xsl:apply-templates select="text">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="text"/>
       
 	  <xsl:call-template name="add-hardcopy-banner-bottom">
 	    <xsl:with-param name="url" select="$url"/>
@@ -214,9 +198,7 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 
   <!--* note: we process the text so we can handle our `helper' tags *-->
   <xsl:template match="text">
-   <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+   <xsl:apply-templates/>
   </xsl:template> <!--* text *-->
 
 </xsl:stylesheet>

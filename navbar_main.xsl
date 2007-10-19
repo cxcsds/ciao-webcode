@@ -73,7 +73,6 @@
 	  <xsl:when test="$logoimage != '' and $logotext != ''">
 	    <p align="center">
 	      <xsl:call-template name="add-image">
-		<xsl:with-param name="depth" select="$depth"/>
 		<xsl:with-param name="alt"   select="$logotext"/>
 		<xsl:with-param name="src"   select="$logoimage"/>
 	      </xsl:call-template>
@@ -97,7 +96,6 @@
 	<!--* create the various sections *-->
 	<dl>
 	  <xsl:apply-templates select="//section" mode="create">
-	    <xsl:with-param name="depth"   select="$depth"/>
 	    <xsl:with-param name="matchid" select="../../@id"/>
 	  </xsl:apply-templates>
 	</dl>
@@ -119,30 +117,22 @@
 	<xsl:choose>
 	  <xsl:when test="boolean(//links)">
 	    <!--* add the links section *-->
-	    <xsl:apply-templates select="//links" mode="create">
-	      <xsl:with-param name="depth"   select="$depth"/>
-	    </xsl:apply-templates>
+	    <xsl:apply-templates select="//links" mode="create"/>
 	  </xsl:when>
 	</xsl:choose>
 
 	<xsl:choose>
 	  <xsl:when test="$site='ciao' and count(//news/item)!=0">
 	    <!--* add the News table *-->
-	    <xsl:apply-templates select="//news" mode="create">
-	      <xsl:with-param name="depth"   select="$depth"/>
-	    </xsl:apply-templates>
+	    <xsl:apply-templates select="//news" mode="create"/>
 	  </xsl:when>
 
 	  <xsl:when test="$site='sherpa' and count(//news/item)!=0">
-	    <xsl:apply-templates select="//news" mode="create">
-	      <xsl:with-param name="depth"   select="$depth"/>
-	    </xsl:apply-templates>
+	    <xsl:apply-templates select="//news" mode="create"/>
 	  </xsl:when>
 
 	  <xsl:when test="$site='caldb' and count(//news/item)!=0">
-	    <xsl:apply-templates select="//news" mode="create">
-	      <xsl:with-param name="depth"   select="$depth"/>
-	    </xsl:apply-templates>
+	    <xsl:apply-templates select="//news" mode="create"/>
 	  </xsl:when>
 	</xsl:choose>
 
@@ -167,11 +157,6 @@
       *       we now allow sections with no link attribute (as a trial/test)
       *
       * NOTE:
-      *   font size is controlled by CSS which doesn't work in netscape 4
-      *   - or at least not how I've done it here. I don't want to add lots
-      *   of font statements to the text so we leave it like this for now.
-      *
-      * NOTE:
       *   for now we ignore the highlight attribute
       *
       * NOTE:
@@ -180,7 +165,6 @@
       *
       *-->
   <xsl:template match="section" mode="create">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="classname"><xsl:choose>
 	<xsl:when test="$matchid=@id">selectedheading</xsl:when>
@@ -197,7 +181,6 @@
 	      </xsl:when>
 	      <xsl:otherwise>
 		<xsl:call-template name="add-attribute">
-		  <xsl:with-param name="depth" select="$depth"/>
 		  <xsl:with-param name="name"  select="'href'"/>
 		  <xsl:with-param name="value" select="@link"/>
 		</xsl:call-template>
@@ -211,9 +194,7 @@
     </dt>
 	
     <!--* any contents? *-->
-    <xsl:apply-templates select="list" mode="navbar">
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+    <xsl:apply-templates select="list" mode="navbar"/>
     <!--* <br clear="all"/> *-->
 
   </xsl:template> <!--* match=section mode="create" *-->
@@ -224,7 +205,6 @@
       *   item attribute elsewhere
       *-->
   <xsl:template match="news" mode="create">
-    <xsl:param name="depth" select="1"/>
     <hr/>
 
     <div>
@@ -236,16 +216,13 @@
       </div>
 
       <!--* now do the individual items *-->
-      <xsl:apply-templates select="item" mode="create">
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
+      <xsl:apply-templates select="item" mode="create"/>
 
       <!--* and finish with the link to the "old news" section *-->
 <!--*
       <p align="center">
 	<a>
 	  <xsl:call-template name="add-attribute">
-	    <xsl:with-param name="depth" select="$depth"/>
 	    <xsl:with-param name="name"  select="'href'"/>
 	    <xsl:with-param name="value" select="'news.html'"/>
 	  </xsl:call-template>Old News Items</a>
@@ -267,7 +244,6 @@
       *
       *-->
   <xsl:template match="item" mode="create">
-    <xsl:param name="depth" select="1"/>
 
     <div>
       <p align="left">
@@ -277,14 +253,12 @@
 	  <xsl:when test="boolean(@type) = false()"/>
 	  <xsl:when test="@type = 'new'">
 	    <xsl:call-template name="add-image">
-	      <xsl:with-param name="depth" select="$depth"/>
 	      <xsl:with-param name="src"   select="'imgs/new.gif'"/>
 	      <xsl:with-param name="alt"   select="'New'"/>
 	    </xsl:call-template>
 	  </xsl:when>
 	  <xsl:when test="@type = 'updated'">
 	    <xsl:call-template name="add-image">
-	      <xsl:with-param name="depth" select="$depth"/>
 	      <xsl:with-param name="src"   select="'imgs/updated.gif'"/>
 	      <xsl:with-param name="alt"   select="'Updated'"/>
 	    </xsl:call-template>
@@ -297,9 +271,8 @@
 	  </xsl:otherwise>
 	</xsl:choose>
       </p>
-      <xsl:apply-templates>
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
+      <xsl:apply-templates/>
+
       <!--* since have a "old news" item at the end we always put in a hr *-->
       <hr width="80%" align="center"/>
     </div>
@@ -310,14 +283,11 @@
       * - have a mode of create to replicate "news" template for CIAO pages
       *-->
   <xsl:template match="links" mode="create">
-    <xsl:param name="depth" select="1"/>
 
     <!--* add a separator *-->
     <hr/>
+    <xsl:apply-templates/>
 
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
   </xsl:template> <!--* match=links mode=create *-->
 
   <!--*
@@ -329,18 +299,12 @@
       * css code is made available via add-htmlhead (helper.xsl)
       *-->
   <xsl:template match="list" mode="navbar">
-    <xsl:param name="depth" select="1"/>
-    <xsl:apply-templates mode="navbar">
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
+    <xsl:apply-templates mode="navbar"/>
   </xsl:template> <!--* match=list mode=navbar *-->
 
   <xsl:template match="li" mode="navbar">
-    <xsl:param name="depth" select="1"/>
     <dd>
-      <xsl:apply-templates>
-	<xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
+      <xsl:apply-templates/>
     </dd>
   </xsl:template> <!--* match=li mode=navbar *-->
 

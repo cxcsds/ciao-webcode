@@ -13,7 +13,6 @@
 </xsl:text>
     <xsl:call-template name="add-navbar">
       <xsl:with-param name="name"       select="'test'"/>
-      <xsl:with-param name="depth"      select="$depth"/>
       <xsl:with-param name="type"       select="$type"/>
     </xsl:call-template>
   </xsl:template>

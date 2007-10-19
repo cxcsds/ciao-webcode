@@ -4,11 +4,9 @@
 <!--* 
     * Create the FAQ HTML pages from one XML source file
     *
-    * $Id: faq.xsl,v 1.18 2007/05/24 19:51:16 egalle Exp $ 
-    *-->
-
-<!--* 
     * Recent changes:
+    * 2007 Oct 19 DJB
+    *    depth parameter is now a global, no need to send around
     *  v1.18 - don't center-align errmsg tag; qlinkbar class added on index
     *  v1.17 - hyphen added to (head/text)titlepostfix instances
     *  v1.16 - <html> changed to <html lang="en"> following
@@ -51,11 +49,6 @@
   <!--* load in the set of "global" parameters *-->
   <xsl:include href="globalparams.xsl"/>
 
-  <!--* will all templates see this, or do we have to pass the value to all elements a la the navbar? *-->
-<!--
-  <xsl:param name="depth" select="1"/>
--->
-  
   <!--* include the stylesheets AFTER defining the variables *-->
   <xsl:include href="helper.xsl"/>
   <xsl:include href="links.xsl"/>
@@ -85,22 +78,14 @@
     <xsl:choose>
       <xsl:when test="$hardcopy = 1">
 	<!--* hardcopy *-->
-	<xsl:apply-templates select="faq" mode="make-hardcopy">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
-	<xsl:apply-templates select="//faqentry" mode="make-hardcopy">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="faq" mode="make-hardcopy"/>
+	<xsl:apply-templates select="//faqentry" mode="make-hardcopy"/>
       </xsl:when>
 
       <xsl:otherwise>
 	<!--* softcopy *-->
-	<xsl:apply-templates select="faq" mode="make-viewable">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
-	<xsl:apply-templates select="//faqentry" mode="make-viewable">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="faq" mode="make-viewable"/>
+	<xsl:apply-templates select="//faqentry" mode="make-viewable"/>
       </xsl:otherwise>
 
     </xsl:choose>
@@ -112,7 +97,6 @@
       *-->
 
   <xsl:template match="faq" mode="make-viewable">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>index.html</xsl:variable>
 
@@ -136,7 +120,6 @@
 	    * a test version or the actual production HTML 
             *-->
 	<xsl:call-template name="add-header">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="'index'"/>
 	</xsl:call-template>
 	<xsl:call-template name="newline"/>
@@ -155,14 +138,10 @@
 	      <a name="maintext"/>
 
 	      <!--* add the intro text *-->
-	      <xsl:apply-templates select="intro">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="intro"/>
 	  
 	      <!--* create the list of FAQ's *--> 
-	      <xsl:apply-templates select="faqlist" mode="toc">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="faqlist" mode="toc"/>
 	    
 	    </td>
 	  </tr>
@@ -170,7 +149,6 @@
       
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="'index'"/>
 	</xsl:call-template>
 
@@ -186,7 +164,6 @@
       *-->
 
   <xsl:template match="faq" mode="make-hardcopy">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>index.hard.html</xsl:variable>
     <xsl:variable name="url"><xsl:value-of select="$urlhead"/></xsl:variable>
@@ -212,14 +189,10 @@
 	  </xsl:call-template>
 
 	  <!--* add the intro text *-->
-	  <xsl:apply-templates select="intro">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="intro"/>
 	      
 	  <!--* create the list of FAQ's *--> 
-	  <xsl:apply-templates select="faqlist" mode="toc">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="faqlist" mode="toc"/>
 
 	  <xsl:call-template name="add-hardcopy-banner-bottom">
 	    <xsl:with-param name="url" select="$url"/>
@@ -236,7 +209,6 @@
       *-->
 
   <xsl:template match="faqentry" mode="make-viewable">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="@id"/>.html</xsl:variable>
 
@@ -269,7 +241,6 @@
 	    * a test version or the actual production HTML 
             *-->
 	<xsl:call-template name="add-header">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="@id"/>
 	</xsl:call-template>
 
@@ -285,19 +256,13 @@
 
 	  <!--* page title *-->
 	  <div>
-	    <h2 align="center"><xsl:apply-templates select="title"/><xsl:call-template name="add-new-or-updated-info">
-	    <xsl:with-param name="depth" select="$depth"/>
-	    </xsl:call-template></h2>
-	    <xsl:apply-templates select="errmsg">
-	      <xsl:with-param name="depth" select="$depth"/>
-	    </xsl:apply-templates>
+	    <h2 align="center"><xsl:apply-templates select="title"/><xsl:call-template name="add-new-or-updated-info"/></h2>
+	    <xsl:apply-templates select="errmsg"/>
 	  </div>
 	  <hr/>
 
 	  <!--* add the explanation *-->
-	  <xsl:apply-templates select="text">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="text"/>
 	  
 	  <br/><hr/>
 	</div>
@@ -310,7 +275,6 @@
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="@id"/>
 	</xsl:call-template>
 	
@@ -326,7 +290,6 @@
       *-->
 
   <xsl:template match="faqentry" mode="make-hardcopy">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="@id"/>.hard.html</xsl:variable>
     <xsl:variable name="url"><xsl:value-of select="$urlhead"/><xsl:value-of select="@id"/>.html</xsl:variable>
@@ -361,22 +324,16 @@
 
 	  <!--* page title (and link back to index) *-->
 	  <div>
-	    <h2 align="center"><xsl:apply-templates select="title"/><xsl:call-template name="add-new-or-updated-info">
-	    <xsl:with-param name="depth" select="$depth"/>
-	    </xsl:call-template></h2>
+	    <h2 align="center"><xsl:apply-templates select="title"/><xsl:call-template name="add-new-or-updated-info"/></h2>
 
-	    <xsl:apply-templates select="errmsg">
-	      <xsl:with-param name="depth" select="$depth"/>
-	    </xsl:apply-templates>
+	    <xsl:apply-templates select="errmsg"/>
 	  </div>
 	  <br/>
 	  <!--* note: no 'link to index' link for the hardcopy *-->
 	  <hr/><br/>
 
 	  <!--* add the explanation *-->
-	  <xsl:apply-templates select="text">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="text"/>
 	      
 	  <xsl:call-template name="add-hardcopy-banner-bottom">
 	    <xsl:with-param name="url" select="$url"/>
@@ -394,7 +351,6 @@
       *
       *-->
   <xsl:template match="faqlist" mode="toc">
-    <xsl:param name="depth" select="1"/>
 
     <!--* create the list of topics *-->
     <div align="center" class="qlinkbar">
@@ -428,14 +384,11 @@
 	  <xsl:for-each select="faqentry">
 	    <li><a href="{@id}.html"><xsl:apply-templates select="title"/></a>
 	    <xsl:call-template name="add-new-or-updated-info">
-	      <xsl:with-param name="depth"     select="$depth"/>
 	      <xsl:with-param name="with-date" select="1"/>
 	    </xsl:call-template>
 
 	      <!--* do we need to add an error message? *-->
-	      <xsl:apply-templates select="errmsg">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="errmsg"/>
 	    </li>
 	  </xsl:for-each> <!--* faqentry *-->
 	</ol>
@@ -446,14 +399,10 @@
 
   </xsl:template> <!--* match=faqlist mode=toc *-->
 
-  <!--* remove the 'whatever' tag *-->
+  <!--* remove the 'whatever' tag and process the contents *-->
   <xsl:template match="intro|name|title|text">
-    <xsl:param name="depth" select="1"/>
-
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
-  </xsl:template> <!--* intro *-->
+    <xsl:apply-templates/>
+  </xsl:template>
 
   <!--*
       * handle the errmsg tag
@@ -463,13 +412,12 @@
       *
       *-->
   <xsl:template match="errmsg">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:call-template name="add-highlight-pre">
-      <xsl:with-param name="contents"><xsl:apply-templates><xsl:with-param name="depth" select="$depth"/></xsl:apply-templates></xsl:with-param>
+      <xsl:with-param name="contents"><xsl:apply-templates/></xsl:with-param>
     </xsl:call-template>
 
-  </xsl:template> <!--* match=errmsg *-->
+  </xsl:template>
 
   <!--*
       * adds a new or updated icon if the type attribute exists and
@@ -482,22 +430,17 @@
       * 
       *-->
   <xsl:template name="add-new-or-updated-info">
-    <xsl:param name="depth"     select="1"/>
     <xsl:param name="with-date" select="0"/>
 
     <xsl:choose>
       <xsl:when test="@type = 'new'">
 	<xsl:call-template name="add-nbsp"/>
-	<xsl:call-template name="add-new-image">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-new-image"/>
 	<xsl:if test="boolean($with-date) and boolean(@day)"><xsl:call-template name="add-date"/></xsl:if>
       </xsl:when>
       <xsl:when test="@type = 'updated'">
 	<xsl:call-template name="add-nbsp"/>
-	<xsl:call-template name="add-updated-image">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-updated-image"/>
 	<xsl:if test="boolean($with-date) and boolean(@day)"><xsl:call-template name="add-date"/></xsl:if>
       </xsl:when>
     </xsl:choose>

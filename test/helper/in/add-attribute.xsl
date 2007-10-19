@@ -12,17 +12,6 @@
 </xsl:text>
 <foo>
       <xsl:call-template name="add-attribute">
-        <xsl:with-param name="depth" select="$depth"/>
-        <xsl:with-param name="name"  select="'goo'"/>
-        <xsl:with-param name="value" select="'foobar'"/>
-      </xsl:call-template>
-      <xsl:apply-templates>
-        <xsl:with-param name="depth" select="$depth"/>
-      </xsl:apply-templates>
-</foo><xsl:text>
-</xsl:text>
-<foo>
-      <xsl:call-template name="add-attribute">
         <xsl:with-param name="name"  select="'goo'"/>
         <xsl:with-param name="value" select="'foobar'"/>
       </xsl:call-template>

@@ -4,11 +4,9 @@
 <!--* 
     * Create the dictionary HTML pages from one XML source file
     *
-    * $Id: dictionary.xsl,v 1.16 2007/03/13 17:06:37 egalle Exp $ 
-    *-->
-
-<!--* 
     * Recent changes:
+    * 2007 Oct 19 DJB
+    *    depth parameter is now a global, no need to send around
     *  v1.16 - sort on case-insensitive titles so that index is
     *	       alphabetical
     *  v1.15 - hyphen added to (head/text)titlepostfix instances
@@ -58,11 +56,6 @@
   <!--* load in the set of "global" parameters *-->
   <xsl:include href="globalparams.xsl"/>
 
-  <!--* will all templates see this, or do we have to pass the value to all elements a la the navbar? *-->
-<!--
-  <xsl:param name="depth" select="1"/>
--->
-  
   <!--* include the stylesheets AFTER defining the variables *-->
   <xsl:include href="helper.xsl"/>
   <xsl:include href="links.xsl"/>
@@ -96,22 +89,14 @@
     <xsl:choose>
       <xsl:when test="$hardcopy = 1">
 	<!--* hardcopy *-->
-	<xsl:apply-templates select="dictionary" mode="make-hardcopy">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
-	<xsl:apply-templates select="//entry" mode="make-hardcopy">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="dictionary" mode="make-hardcopy"/>
+	<xsl:apply-templates select="//entry" mode="make-hardcopy"/>
       </xsl:when>
 
       <xsl:otherwise>
 	<!--* softcopy *-->
-	<xsl:apply-templates select="dictionary" mode="make-viewable">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
-	<xsl:apply-templates select="//entry" mode="make-viewable">
-	  <xsl:with-param name="depth" select="$depth"/>
-	</xsl:apply-templates>
+	<xsl:apply-templates select="dictionary" mode="make-viewable"/>
+	<xsl:apply-templates select="//entry" mode="make-viewable"/>
       </xsl:otherwise>
 
     </xsl:choose>
@@ -126,7 +111,6 @@
   <xsl:variable name="lcletters" select="'abcdefghijklmnopqrstuvwxyz'"/>
 
   <xsl:template match="dictionary" mode="make-viewable">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>index.html</xsl:variable>
 
@@ -150,7 +134,6 @@
 	    * a test version or the actual production HTML 
             *-->
 	<xsl:call-template name="add-header">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="'index'"/>
 	</xsl:call-template>
 	
@@ -168,14 +151,10 @@
 	      <a name="maintext"/>
 	    
 	      <!--* add the intro text *-->
-	      <xsl:apply-templates select="intro">
-		<xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="intro"/>
 	  
 	      <!--* create the list of entries *--> 
-	      <xsl:apply-templates select="entries" mode="toc">
-	      <xsl:with-param name="depth" select="$depth"/>
-	      </xsl:apply-templates>
+	      <xsl:apply-templates select="entries" mode="toc"/>
 
 	    </td>
 	  </tr>
@@ -183,7 +162,6 @@
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="'index'"/>
 	</xsl:call-template>
 
@@ -199,7 +177,6 @@
       *-->
 
   <xsl:template match="dictionary" mode="make-hardcopy">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>index.hard.html</xsl:variable>
     <xsl:variable name="url"><xsl:value-of select="$urlhead"/></xsl:variable>
@@ -225,14 +202,10 @@
 	  </xsl:call-template>
 
 	  <!--* add the intro text *-->
-	  <xsl:apply-templates select="intro">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="intro"/>
 	      
 	  <!--* create the list of entries *--> 
-	  <xsl:apply-templates select="entries" mode="toc">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="entries" mode="toc"/>
 
 	  <xsl:call-template name="add-hardcopy-banner-bottom">
 	    <xsl:with-param name="url" select="$url"/>
@@ -249,7 +222,6 @@
       *-->
 
   <xsl:template match="entry" mode="make-viewable">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="@id"/>.html</xsl:variable>
 
@@ -281,7 +253,6 @@
 	    * a test version or the actual production HTML 
             *-->
 	<xsl:call-template name="add-header">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="@id"/>
 	</xsl:call-template>
 
@@ -300,9 +271,7 @@
 	  <hr/>
 
 	  <!--* add the explanation *-->
-	  <xsl:apply-templates select="text">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="text"/>
 	  
 	  <br/><hr/>
 	</div>
@@ -315,7 +284,6 @@
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="name"  select="@id"/>
 	</xsl:call-template>
 
@@ -331,7 +299,6 @@
       *-->
 
   <xsl:template match="entry" mode="make-hardcopy">
-    <xsl:param name="depth" select="1"/>
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="@id"/>.hard.html</xsl:variable>
     <xsl:variable name="url"><xsl:value-of select="$urlhead"/><xsl:value-of select="@id"/>.html</xsl:variable>
@@ -371,9 +338,7 @@
 	  <hr/><br/>
 
 	  <!--* add the explanation *-->
-	  <xsl:apply-templates select="text">
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="text"/>
 	      
 	  <xsl:call-template name="add-hardcopy-banner-bottom">
 	    <xsl:with-param name="url" select="$url"/>
@@ -392,7 +357,6 @@
       *
       *-->
   <xsl:template match="entries" mode="toc">
-    <xsl:param name="depth" select="1"/>
 
     <!--* create the nodesets we will be querying (is there a better way to do this?) *-->
     <xsl:variable name="ea" select="//entry[starts-with(@id,'a')]"/>
@@ -531,13 +495,9 @@
     <dd><a href="{@id}.html"><xsl:value-of select="title"/></a></dd>
   </xsl:template> <!--* name:add-entry *-->
 
-  <!--* remove the 'whatever' tag *-->
+  <!--* remove the 'whatever' tag, process the contents *-->
   <xsl:template match="intro|name|title|text">
-    <xsl:param name="depth" select="1"/>
-
-    <xsl:apply-templates>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:apply-templates>
-  </xsl:template> <!--* intro *-->
+    <xsl:apply-templates/>
+  </xsl:template>
 
 </xsl:stylesheet>
