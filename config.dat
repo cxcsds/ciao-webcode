@@ -740,7 +740,6 @@ ahelpversion=2.2.1
 @stylesheets=ahelp_index
 @stylesheets=ahelp_common
 @stylesheets=ahelp_main
-@stylesheets=ahelp_list_info
 @stylesheets=list_threadindex
 @stylesheets=threadindex
 @stylesheets=threadindex_common

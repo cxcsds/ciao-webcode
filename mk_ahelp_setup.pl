@@ -26,8 +26,6 @@
 #   Files in the storage location given in the config file
 #
 # Requires:
-#   in styledir
-#     ahelp_list_info.xsl
 #
 # Author:
 #  Doug Burke (dburke@cfa.harvard.edu)
@@ -41,6 +39,7 @@
 #                This script should *only* be run from the ciao site
 #  16 Oct 07 DJB Removed support for type=dist
 #  17 Oct 07 DJB Removed support for xsltproc tool
+#  19 Oct 07 DJB Removed use of ahelp_list_info stylesheet
 #
 # Notes:
 #  - for CIAO 4 we assume that any multi-language files (eg chips,
@@ -52,10 +51,7 @@
 # Future?:
 #  - include parameter names + synopsis for each ahelp file in the
 #    index. This will be used by the web code to add title attribute to
-#    ahelp links. It's easiest to do this by using XML::LibXML to
-#    parse each XML file, which would imply using this, rather
-#    than a stylesheet (ahelp_list_info.xsl), or have the stylesheet
-#    do the processing but return an XML document and not a text file.
+#    ahelp links. Do we not now do this?
 #
 
 use strict;
@@ -65,8 +61,6 @@ use Carp;
 use Getopt::Long;
 use Cwd;
 use IO::File;
-
-use XML::LibXML;
 
 use FindBin;
 
@@ -173,11 +167,6 @@ check_type_known $site_config, $type;
 die "ERROR: mk_ahelp_setup.pl should obly be run within site=ciao, not site=$site\n"
   unless $site eq "ciao";
 
-# do we need the XML::LibXML stuff?
-#
-my $parser = XML::LibXML->new()
-  or die "Error: Unable to create XML::LibXML parser instance.\n";
-
 # now we can check the usage
 #
 die $usage unless $#ARGV == -1;
@@ -195,7 +184,7 @@ my $ahelpfiles  = get_config_type $config_version, "ahelpfiles", $type;
 
 # check we can find the needed stylesheets
 #
-foreach my $name ( qw( ahelp ahelp_list_info ahelp_index ahelp_common ahelp_main ) ) {
+foreach my $name ( qw( ahelp ahelp_index ahelp_common ahelp_main ) ) {
     my $x = "${stylesheets}$name.xsl";
     die "Error: unable to find $x\n"
       unless -e $x;
@@ -518,19 +507,27 @@ sub inspect_xmlfile ($$) {
   my $xmlfile  = shift;
   my $styledir = shift;
 
-  # note that the stylesheet cuts out 'onapplication' help files
-  #
-  my $res = translate_file "${styledir}ahelp_list_info.xsl", $xmlfile;
+  my $dom = read_xml_file( $xmlfile );
+  my $droot = $dom->documentElement();
+  my $entry = $droot->find('ENTRY');
 
-  return ( undef, undef ) if $res =~ /^\s*$/;
-  chomp $res;
+  # I don't understand why a NodeList can be returned here,
+  # so just hack around it
+  #
+  $entry = $entry->get_node(1)
+    if ref $entry eq "XML::LibXML::NodeList";
+
+  # Extract information from the XML file, as long as it is
+  # not an ENTRY[@key='onapplication'] file
+  #
+  return (undef,undef) if $entry->findvalue('@key="onapplication"') eq "true";
 
   # just used for the temporary ADDRESS/URL hack
   my $filehead = extract_filename $xmlfile;
   $filehead =~ s/\.xml$//;
 
-  my ( $key, $context, $url1, $url2, $rest ) = split " ", $res, 5;
-  $context = lc $context; # since this is how ahelp sees it
+  my $key     = $entry->findvalue('normalize-space(@key)');
+  my $context = lc $entry->findvalue('normalize-space(@context)');
 
   # create single id
   my $id = mangle( $key, $context );
@@ -546,23 +543,22 @@ sub inspect_xmlfile ($$) {
       $htmlname = $filehead;
   }
 
-  # we are not guaranteed to have any seealso/displayseealso groups
-  # or a summary block...
-  ##$rest =~ m/^\s*\[([^\]]+)\] (.+)$/
-  ##  or die "Error: expected line to look like '[...] ...' but found\n$rest\n";
+  # Grab the seealsogroups and displayseealsogroups values. We grab the
+  # strings (with excess spaces removed from its ends), split on white space,
+  # and convert to lower case. We convert to a hash and then back again to
+  # remove duplicated values, as a defensive measure.
   #
-  $rest =~ m/^\s*\[([^\]]*)\] (.*)$/
-    or die "Error: expected line to look like '[...] ...' but found\n$rest\n";
+  my @dummy = 
+    map { ($_, 1); }
+      split( " ",
+	     lc $entry->findvalue('concat(normalize-space(@seealsogroups)," ",normalize-space(@displayseealsogroups))')
+	   );
+  my %dummy = @dummy;
+  my @seealsogroups = keys %dummy;
 
-  # convert the seealsogroup list to lowercase since that seems to
-  # be how the database works. Plus creates a key matching the group name
-  # in %seealso (trying to write posy Perl code rather than understandable stuff)
+  # Provide visual feedback to say that a file that need a summary added
   #
-  my @seealsogroups =
-    map { lc $_; } split( " ", $1 );
-
-  my $summary = $2;
-  # just to indicate those files that need a summary added to them
+  my $summary = $entry->findvalue('normalize-space(SYNOPSIS)');
   print STDERR "WARNING: key=$key context=$context has NO summary block\n"
     if $summary eq "";
 
@@ -573,8 +569,6 @@ sub inspect_xmlfile ($$) {
   # do we need to worry about parameters?
   # - the following relies on the ahelp file being valid
   #
-  my $dom = $parser->parse_file( $xmlfile )
-    or die "Error: unable to open $xmlfile via XML parser\n";
   my $paramlist = [];
   foreach my $param ( $dom->getElementsByTagName( "PARAM" ) ) {
     my $name = $param->getAttribute( "name" );
