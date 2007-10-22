@@ -25,10 +25,18 @@
 # OS type values can be sun, lin, or osx
 #
 %htmldoc=sun /usr/bin/env LD_LIBRARY_PATH=/data/da/Docs/local/lib/ /data/da/Docs/local/bin/htmldoc
-%listseealso=sun /data/da/Docs/web/list_seealso
+#%listseealso=sun /data/da/Docs/web/list_seealso
+%listseealso=sun /data/da/Docs/local/bin/list_seealso.ciao4
 %perl=sun /data/da/Docs/local/perl/bin/perl
 
+# Linux values tailored to Liz's machine (rory)
+#
+%htmldoc=lin /data/da/Docs/local/linux_x86_64/bin/htmldoc
+%listseealso=lin /data/da/Docs/local/linux_x86_64/bin/list_seealso.ciao4
+%perl=lin /usr/bin/env PERL5LIB=/data/da/Docs/local/linux_x86_64/lib64/perl5/site_perl:/data/da/Docs/local/linux_x86_64/lib64/perl5:/data/da/Docs/local/linux_x86_64/lib/perl5/site_perl perl
+
 # specific to Doug's laptop, should be changed to more general values
+#
 %htmldoc=osx /usr/bin/env DYLD_LIBRARY_PATH= /Users/doug/local/bin/htmldoc
 %listseealso=osx /Users/doug/doc/ahelp/list_seealso
 %perl=osx perl
