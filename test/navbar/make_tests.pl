@@ -30,14 +30,12 @@ use IO::File;
 use lib "..";
 use TESTS;
 
-sub add_test ($$$$);
-sub add_test2 ($$$;@);
+sub add_test ($$$$;@);
 sub write_script ();
 
 ## Code
 #
 my @name;
-my @name2;
 
 my $indir  = "in";
 my $outdir = "out";
@@ -196,20 +194,39 @@ $section_in  =~ s{ link="/ciao/index.html"}{};
 $section_out =~ s{<a class="selectedheading" href="/ciao/index.html">A title</a>}{<span class="heading">A title</span>};
 add_test "section-id-nolink", $section_xsl, $section_in, $section_out;
 
-=begin OLDCODE
-
-this was valid when we had the 'old' navbar code (ie process multiple depths
-at one go). We could probably re-write things so that parts of these
-tests are retained, but leave for later
-
-# section, mode=process
-#   implicitly tests write-navbar
+# test the navbar creation code; it is not quite the same code as in
+# navbar.xsl/navbar_main.xsl. It is based on the old section/mode=process
+# tests.
 #
-# since we are wiring out the navbar for this section
-# we have it as the selected heading (no matter what the
-# input parameter says)
+# I think that the basedir/subdir tests could be rolled into one
+# here, as they do not actually test anythign different, since the only
+# think that happens differently in the actual stylesheet are:
+#   - change in output file name
+#   - change in depth
+# and neither of these are tested here (the first point is handled
+# by write-navbar which we do not test and the second one isn't because
+# we do not include a startdepth parameter (or something equivalent) in the
+# tests.
 #
-$section_in =
+my $navbar_basedir_xsl =
+'<xsl:template match="/">
+<xsl:text>
+</xsl:text>
+  <xsl:for-each select="descendant::section[boolean(@id)]/dirs/dir[.=\'\']">
+    <xsl:call-template name="navbar-contents"/>
+  </xsl:for-each>
+</xsl:template>';
+
+my $navbar_subdir_xsl =
+'<xsl:template match="/">
+<xsl:text>
+</xsl:text>
+  <xsl:for-each select="descendant::section[boolean(@id)]/dirs/dir[.!=\'\']">
+    <xsl:call-template name="navbar-contents"/>
+  </xsl:for-each>
+</xsl:template>';
+
+my $navbar_in =
 '<section id="main" link="index.html">
  <dirs>
   <dir/>
@@ -222,92 +239,62 @@ $section_in =
  </list>
 </section>';
 
-$section_out =
-'<dl>
+my $navbar_base_out =
+'
+
+<!-- THIS FILE IS CREATED AUTOMATICALLY - DO NOT EDIT MANUALLY -->
+<!-- SEE: foo.xml -->
+
+<!--htdig_noindex-->
+<div>
+LOGO-HERE
+<dl>
 <dt><a class="selectedheading" href="%dindex.html">A title</a></dt>
   <dd>a <a href="%dlink.html">link</a>
 </dd>
   <dd>another <tt>' . get_ahelp_link("link") . '</tt> and <strong>some text</strong>.</dd>
  </dl>
-<br>';
+<br>
+</div>
+<!--/htdig_noindex-->
+';
 
-add_test2 "section-process-id-link-logo", $section_in, $section_out,
-  logo => "both", mode => "process", out => [ 'out' ];
-add_test2 "section-process-id-link-logotxt", $section_in, $section_out,
-  logo => "text", mode => "process", out => [ 'out' ];
-add_test2 "section-process-id-link-nologo", $section_in, $section_out,
-  logo => "none", mode => "process", out => [ 'out' ];
+my $navbar_out = $navbar_base_out;
+$navbar_out =~ s{LOGO-HERE\n}{};
 
-$section_in  =~ s{ link="index.html"}{ link="/ciao/index.html"};
-$section_out =~ s{ href="%dindex.html"}{ href="/ciao/index.html"};
-add_test2 "section-process-id-sitelink-logo", $section_in, $section_out,
-  logo => "both", mode => "process", out => [ 'out' ];
-add_test2 "section-process-id-sitelink-logotxt", $section_in, $section_out,
-  logo => "text", mode => "process", out => [ 'out' ];
-add_test2 "section-process-id-sitelink-nologo", $section_in, $section_out,
-  logo => "none", mode => "process", out => [ 'out' ];
+add_test "navbar-basedir-nologo", $navbar_basedir_xsl, $navbar_in, $navbar_out,
+  logoimage => "", logotext => "";
+add_test "navbar-subdir-nologo", $navbar_subdir_xsl, $navbar_in, $navbar_out,
+  logoimage => "", logotext => "";
 
-$section_in  =~ s{ link="/ciao/index.html"}{};
-$section_out =~ s{<a class="selectedheading" href="/ciao/index.html">A title</a>}{<span class="selectedheading">A title</span>};
-add_test2 "section-process-id-nolink-logo", $section_in, $section_out,
-  logo => "both", mode => "process", out => [ 'out' ];
-add_test2 "section-process-id-nolink-logotxt", $section_in, $section_out,
-  logo => "text", mode => "process", out => [ 'out' ];
-add_test2 "section-process-id-nolink-nologo", $section_in, $section_out,
-  logo => "none", mode => "process", out => [ 'out' ];
+add_test "navbar-basedir-logo-image", $navbar_basedir_xsl, $navbar_in, $navbar_out,
+  logoimage => "logo.gif", logotext => "";
+add_test "navbar-subdir-logo-image", $navbar_subdir_xsl, $navbar_in, $navbar_out,
+  logoimage => "logo.gif", logotext => "";
 
-## now the "final" test which is similar to the behavior of navbar.xsl
+$navbar_out = $navbar_base_out;
+$navbar_out =~ s{LOGO-HERE}{<p align="center"><img src="%dlogo.gif" alt="[Logo Text]"></p>};
+add_test "navbar-basedir-logo-both", $navbar_basedir_xsl, $navbar_in, $navbar_out,
+  logoimage => "logo.gif", logotext => "Logo Text";
+add_test "navbar-subdir-logo-both", $navbar_subdir_xsl, $navbar_in, $navbar_out,
+  logoimage => "logo.gif", logotext => "Logo Text";
+
+$navbar_out = $navbar_base_out;
+$navbar_out =~ s{LOGO-HERE}{<p align="center">Logo Text</p>};
+add_test "navbar-basedir-logo-text", $navbar_basedir_xsl, $navbar_in, $navbar_out,
+  logoimage => "", logotext => "Logo Text";
+add_test "navbar-subdir-logo-text", $navbar_subdir_xsl, $navbar_in, $navbar_out,
+  logoimage => "", logotext => "Logo Text";
+
+# I could test the logo handling for all these cases, but I can
+# not be bothered at the moment.
 #
-$section_in =
-'<section id="main" link="index.html">
- <dirs>
-  <dir/>
-  <dir>foo</dir>
- </dirs>
- <title>A title</title>
- <list>
-  <li>a <cxclink href="link.html">link</cxclink></li>
-  <li>another <ahelp name="dmextract" tt="1">link</ahelp> and <strong>some text</strong>.</li>
- </list>
-</section>';
-
-$section_out =
-'<dl>
-<dt><a class="selectedheading" href="%dindex.html">A title</a></dt>
-  <dd>a <a href="%dlink.html">link</a>
-</dd>
-  <dd>another <tt>' . get_ahelp_link("link") . '</tt> and <strong>some text</strong>.</dd>
- </dl>
-<br>';
-
-add_test2 "section-with-id-id-link-logo", $section_in, $section_out,
-  logo => "both", mode => "with-id", out => [ 'out', 'out/foo' ];
-add_test2 "section-with-id-id-link-logotxt", $section_in, $section_out,
-  logo => "text", mode => "with-id", out => [ 'out', 'out/foo' ];
-add_test2 "section-with-id-id-link-nologo", $section_in, $section_out,
-  logo => "none", mode => "with-id", out => [ 'out', 'out/foo' ];
-
-$section_in  =~ s{ link="index.html"}{ link="/ciao/index.html"};
-$section_out =~ s{ href="%dindex.html"}{ href="/ciao/index.html"};
-add_test2 "section-with-id-id-sitelink-logo", $section_in, $section_out,
-  logo => "both", mode => "with-id", out => [ 'out', 'out/foo' ];
-add_test2 "section-with-id-id-sitelink-logotxt", $section_in, $section_out,
-  logo => "text", mode => "with-id", out => [ 'out', 'out/foo' ];
-add_test2 "section-with-id-id-sitelink-nologo", $section_in, $section_out,
-  logo => "none", mode => "with-id", out => [ 'out', 'out/foo' ];
-
-$section_in  =~ s{ link="/ciao/index.html"}{};
-$section_out =~ s{<a class="selectedheading" href="/ciao/index.html">A title</a>}{<span class="selectedheading">A title</span>};
-add_test2 "section-with-id-id-nolink-logo", $section_in, $section_out,
-  logo => "both", mode => "with-id", out => [ 'out', 'out/foo' ];
-add_test2 "section-with-id-id-nolink-logotxt", $section_in, $section_out,
-  logo => "text", mode => "with-id", out => [ 'out', 'out/foo' ];
-add_test2 "section-with-id-id-nolink-nologo", $section_in, $section_out,
-  logo => "none", mode => "with-id", out => [ 'out', 'out/foo' ];
-
-=end OLDCODE
-
-=cut
+$navbar_in =~ s{ link="index.html"}{ link="/ciao/index.html"};
+$navbar_out =~ s{ href="%dindex.html"}{ href="/ciao/index.html"};
+add_test "navbar-basedir-sitelink-logo-text", $navbar_basedir_xsl, $navbar_in, $navbar_out,
+  logoimage => "", logotext => "Logo Text";
+add_test "navbar-subdir-sitelink-logo-text", $navbar_subdir_xsl, $navbar_in, $navbar_out,
+  logoimage => "", logotext => "Logo Text";
 
 ## end of tests
 
@@ -321,11 +308,12 @@ exit;
 
 # uses global variable @name
 #
-sub add_test ($$$$) {
+sub add_test ($$$$;@) {
     my $name  = shift;
     my $style = shift;
     my $in    = shift;
     my $out   = shift;
+    my %params = ( @_ );
 
     my $test_string = get_xml_header( "navbar" );
     $test_string .= $in;
@@ -357,6 +345,11 @@ sub add_test ($$$$) {
   <xsl:include href="../../../navbar_main.xsl"/>
 EOD
 
+    while ( my ($pname, $pval) = each %params ) {
+      $out_string .= sprintf '<xsl:param name="%s" select=\'"%s"\'/>', $pname, $pval;
+      $out_string .= "\n";
+    }
+
     $out_string .= $style . "\n</xsl:stylesheet>\n";
     write_out $out_string, "${indir}/${name}.xsl";
     print "Created: ${name}.x[sm]l\n";
@@ -365,112 +358,7 @@ EOD
 
 } # sub: add_test()
 
-# uses the global variable @name2
-#
-# this is for tests that create their own output file
-# rather than printing to STDOUT
-#
-sub add_test2 ($$$;@) {
-    my $name  = shift;
-    my $in    = shift;
-    my $out   = shift;
-    my %opts  =
-      (
-       @_
-       );
-
-    my $mode = $opts{mode} || die "Error: add_test2 needs a mode option\n";
-    my $outref = $opts{out} || die "Error: add_test2 needs an out option\n";
-
-    my $test_string = get_xml_header( "navbar" );
-    $test_string .= $in;
-    $test_string .= "\n</navbar>\n";
-    write_out $test_string, "${indir}/${name}.xml";
-
-    # OUTPUT
-    my $out_string = <<'EOD';
-
-
-<!-- THIS FILE IS CREATED AUTOMATICALLY - DO NOT EDIT MANUALLY -->
-<!-- SEE: foo.xml -->
-
-<!--htdig_noindex-->
-<div>
-EOD
-
-    my $logoimage = "";
-    my $logotext  = "";
-    if ( $opts{logo} eq "both" ) {
-	$logoimage = "logo.gif";
-	$logotext  = "LOGO TEXT";
-	$out_string .= <<'EOD';
-<p align="center"><img src="%dlogo.gif" alt="[LOGO TEXT]"></p>
-EOD
-    } elsif ( $opts{logo} eq "text" ) {
-	$logotext = "LOGO TEXT";
-	$out_string .= <<'EOD';
-<p align="center">LOGO TEXT</p>
-EOD
-    }
-
-    $out_string .= "$out\n";
-
-    $out_string .= <<'EOD';
-</div><!--/htdig_noindex-->
-
-EOD
-
-    foreach my $odir ( @$outref ) {
-	foreach my $type ( qw( live test ) ) {
-	    foreach my $site ( qw( ciao chart sherpa ) ) {
-		foreach my $depth ( qw( 1 2 ) ) {
-
-		    # can not have the split within the scalar() call apparently
-		    # (well, not without warnings)
-		    #
-		    my @dirs = split( /\//, $odir );
-		    write_out convert_depth_site( $out_string, $depth+$#dirs, $site ),
-		      "${outdir}/${name}_${type}_${site}_d${depth}_" . join("_",@dirs);
-
-		} # for: $depth
-	    } # for: $site
-	} # for: $type
-    } # for: $odir
-
-    # STYLESHEET
-    #
-    # we hack in the logoimage/text here if necessary
-    # (rather than sending them in as parameters to the
-    #  tool). This is possible since they are defined in
-    # navbar.xml which we do not include here.
-    #
-    $out_string = get_xslt_header();
-    $out_string .= <<"EOD";
-  <xsl:output method='html' media-type='text/html' version='4.0' encoding='us-ascii'/>
-  <xsl:param name="logoimage" select='"$logoimage"'/>
-  <xsl:param name="logotext"  select='"$logotext"'/>
-  <xsl:param name="sourcedir"  select='"foo"'/>
-  <xsl:include href="../../../globalparams.xsl"/>
-  <xsl:include href="../../../helper.xsl"/>
-  <xsl:include href="../../../links.xsl"/>
-  <xsl:include href="../../../myhtml.xsl"/>
-  <xsl:include href="../../../navbar_main.xsl"/>
-<xsl:template match="/">
-<xsl:text>
-</xsl:text>
-  <xsl:apply-templates select="//section" mode="$mode"/>
-</xsl:template>
-</xsl:stylesheet>
-EOD
-
-    write_out $out_string, "${indir}/${name}.xsl";
-    print "Created: ${name}.x[sm]l\n";
-
-    push @name2, [ $name, $outref ];
-
-} # sub: add_test2()
-
-# uses the global variables @name and @name2
+# uses the global variables @name
 #
 sub write_script () {
     my $ofile = "run_tests.csh";
@@ -511,7 +399,7 @@ EOD
         set out = out/xslt.$h
 
         if ( -e $out ) rm -f $out
-        $xsltproc --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > $out
+        $xsltproc --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html --stringparam pagename foo in/${id}.xsl in/${id}.xml > $out
         $diffprog -u out/${h} $out
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s]\n" $ctr $h
@@ -522,129 +410,6 @@ EOD
           set fail = "$fail $h"
         endif
         @ ctr++
-      end # depth
-    end #site
-  end # type
-
-end # id
-
-EOD
-
-    # now the "section" tests in @name2
-    #
-    print $fh <<'EOD';
-
-## transform creates the output file rather than written to STDOUT
-#
-# first those with only 1 output file
-#
-foreach id ( \
-EOD
-
-    my @names;
-    foreach my $aref ( @name2 ) {
-	my $name = $$aref[0];
-	my $oref = $$aref[1];
-	push @names, $name if $#$oref == 0;
-    }
-    print_id_list $fh, @names;
-
-    print $fh <<'EOD';
-  )
-
-  foreach type ( live test )
-    foreach site ( ciao chart sherpa )
-      foreach depth ( 1 2 )
-        set h = ${id}_${type}_${site}_d${depth}_out
-        set out = out/navbar_main.incl
-
-        if ( -e $out ) rm -f $out
-        $xsltproc --stringparam install out/ --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > /dev/null
-        if ( ! -e $out ) then
-          # fake a file so that code below works
-          touch $out
-        endif
-        $diffprog -u out/${h} $out
-        if ( $status == 0 ) then
-          printf "OK:   %3d  [%s]\n" $ctr $h
-          rm -f $out
-          @ ok++
-        else
-          printf "FAIL: %3d  [%s]\n" $ctr $h
-          set fail = "$fail $h"
-          mv $out out/xslt.$h
-        endif
-        @ ctr++
-      end # depth
-    end #site
-  end # type
-
-end # id
-
-EOD
-
-    print $fh <<'EOD';
-#
-# and now those with 2 output files
-# [we cheat and assume the two files are always
-#  written to out/ and out/foo/]
-#
-foreach id ( \
-EOD
-
-    @names = ();
-    foreach my $aref ( @name2 ) {
-	my $name = $$aref[0];
-	my $oref = $$aref[1];
-	push @names, $name if $#$oref == 1;
-    }
-    print_id_list $fh, @names;
-
-    print $fh <<'EOD';
-  )
-
-  foreach type ( live test )
-    foreach site ( ciao chart sherpa )
-      foreach depth ( 1 2 )
-        set h = ${id}_${type}_${site}_d${depth}
-        set out1 = out/navbar_main.incl
-        set out2 = out/foo/navbar_main.incl
-
-        if ( -e $out1 ) rm -f $out1
-        if ( -e $out2 ) rm -f $out2
-        $xsltproc --stringparam install out/ --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html in/${id}.xsl in/${id}.xml > /dev/null
-        if ( ! -e $out1 ) then
-          # fake a file so that code below works
-          touch $out1
-        endif
-        $diffprog -u out/${h}_out $out1
-        if ( $status == 0 ) then
-          printf "OK:   %3d  [%s] [out]\n" $ctr $h
-          rm -f $out1
-          @ ok++
-        else
-          printf "FAIL: %3d  [%s] [out]\n" $ctr $h
-          set fail = "$fail $h"
-          mv $out1 out/xslt.${h}_out
-        endif
-        @ ctr++
-
-        if ( ! -e $out2 ) then
-          # fake a file so that code below works
-          touch $out2
-        endif
-        $diffprog -u out/${h}_out_foo $out2
-        if ( $status == 0 ) then
-          printf "OK:   %3d  [%s] [out/foo]\n" $ctr $h
-          rm -f $out2
-          @ ok++
-        else
-          printf "FAIL: %3d  [%s] [out/foo]\n" $ctr $h
-          set fail = "$fail $h"
-          mv $out2 out/xslt.${h}_out_foo
-        endif
-        @ ctr++
-
       end # depth
     end #site
   end # type

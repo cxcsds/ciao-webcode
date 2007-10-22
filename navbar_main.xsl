@@ -53,97 +53,100 @@
 
     <!--* process the page *-->
     <xsl:document href="{$filename}" method="html">
-
-      <!--* add disclaimer about editing this HTML file *-->
-      <xsl:call-template name="add-disclaimer"/>
-      <xsl:comment>htdig_noindex</xsl:comment><xsl:text>
-</xsl:text>
-
-      <!--* 
-          * td element we are in has class="navbar"
-          * (for netscape4 & backgrounds)
-          *
-          * htdig_noindex comment added to hide contents from
-          * search index.
-          *-->
-      <div>
-	
-	<!--* add the logo/link if required *-->
-	<xsl:choose>
-	  <xsl:when test="$logoimage != '' and $logotext != ''">
-	    <p align="center">
-	      <xsl:call-template name="add-image">
-		<xsl:with-param name="alt"   select="$logotext"/>
-		<xsl:with-param name="src"   select="$logoimage"/>
-	      </xsl:call-template>
-	    </p>
-	  </xsl:when>
-	      
-	  <xsl:when test="$logotext != ''">
-	    <p align="center"><xsl:value-of select="$logotext"/></p>
-	  </xsl:when>
-
-	  <!--*
-	      * decided to not have any white space as doesn't look
-              * good to me with the re-designed layout
-              *-->
-	  <xsl:otherwise>
-	    <!--* just add some white space *-->
-	    <!--* <br/> *-->
-	  </xsl:otherwise>
-	</xsl:choose>
-
-	<!--* create the various sections *-->
-	<dl>
-	  <xsl:apply-templates select="//section" mode="create">
-	    <xsl:with-param name="matchid" select="../../@id"/>
-	  </xsl:apply-templates>
-	</dl>
-	<br/>
-
-	<!--*
-            * anything else? (site-specific)
-	    * Perhaps we should just go by what is in the navbar rather
-            * than having site-specific code?
-            *
-            * - if links section exists (any site), create it
-	    *	BEFORE creating the news items
-            * - if CIAO and there are news items, write out the 
-	    *   news bar (for all pages)
-            * - if Sherpa, as CIAO
-            * - if CALDB, as CIAO
-            *-->
-
-	<xsl:choose>
-	  <xsl:when test="boolean(//links)">
-	    <!--* add the links section *-->
-	    <xsl:apply-templates select="//links" mode="create"/>
-	  </xsl:when>
-	</xsl:choose>
-
-	<xsl:choose>
-	  <xsl:when test="$site='ciao' and count(//news/item)!=0">
-	    <!--* add the News table *-->
-	    <xsl:apply-templates select="//news" mode="create"/>
-	  </xsl:when>
-
-	  <xsl:when test="$site='sherpa' and count(//news/item)!=0">
-	    <xsl:apply-templates select="//news" mode="create"/>
-	  </xsl:when>
-
-	  <xsl:when test="$site='caldb' and count(//news/item)!=0">
-	    <xsl:apply-templates select="//news" mode="create"/>
-	  </xsl:when>
-	</xsl:choose>
-
-      </div>
-
-      <xsl:comment>/htdig_noindex</xsl:comment><xsl:text>
-</xsl:text>
-
+      <xsl:call-template name="navbar-contents"/>
     </xsl:document> <!--* end of a navbar *-->
 
   </xsl:template> <!--* name=write-navbar *-->
+
+  <!--*
+      * Create the contents of a navbar. This
+      * has been separated out of write-navbar to
+      * make it easier to test.
+      *-->
+  <xsl:template name="navbar-contents">
+
+    <!--* add disclaimer about editing this HTML file *-->
+    <xsl:call-template name="add-disclaimer"/>
+    <xsl:comment>htdig_noindex</xsl:comment><xsl:text>
+</xsl:text>
+
+    <div>
+	
+      <!--* add the logo/link if required *-->
+      <xsl:choose>
+	<xsl:when test="$logoimage != '' and $logotext != ''">
+	  <p align="center">
+	    <xsl:call-template name="add-image">
+	      <xsl:with-param name="alt"   select="$logotext"/>
+	      <xsl:with-param name="src"   select="$logoimage"/>
+	    </xsl:call-template>
+	  </p>
+	</xsl:when>
+	      
+	<xsl:when test="$logotext != ''">
+	  <p align="center"><xsl:value-of select="$logotext"/></p>
+	</xsl:when>
+
+	<!--*
+	    * decided to not have any white space as doesn't look
+	    * good to me with the re-designed layout
+	    *-->
+	<xsl:otherwise>
+	  <!--* <br/> *-->
+	</xsl:otherwise>
+      </xsl:choose>
+      
+      <!--* create the various sections *-->
+      <dl>
+	<xsl:apply-templates select="//section" mode="create">
+	  <xsl:with-param name="matchid" select="../../@id"/>
+	</xsl:apply-templates>
+      </dl>
+      <br/>
+
+      <!--*
+	  * anything else? (site-specific)
+	  * Perhaps we should just go by what is in the navbar rather
+	  * than having site-specific code?
+	  *
+	  * - if links section exists (any site), create it
+	  *	BEFORE creating the news items
+	  * - if CIAO and there are news items, write out the 
+	  *   news bar (for all pages)
+	  * - if Sherpa, as CIAO
+	  * - if CALDB, as CIAO
+	  *-->
+
+      <xsl:choose>
+	<xsl:when test="boolean(//links)">
+	  <!--* add the links section *-->
+	  <xsl:apply-templates select="//links" mode="create"/>
+	</xsl:when>
+      </xsl:choose>
+
+      <xsl:choose>
+	<xsl:when test="$site='ciao' and count(//news/item)!=0">
+	  <!--* add the News table *-->
+	  <xsl:apply-templates select="//news" mode="create"/>
+	</xsl:when>
+	
+	<xsl:when test="$site='sherpa' and count(//news/item)!=0">
+	  <xsl:apply-templates select="//news" mode="create"/>
+	</xsl:when>
+	
+	<xsl:when test="$site='caldb' and count(//news/item)!=0">
+	  <xsl:apply-templates select="//news" mode="create"/>
+	</xsl:when>
+      </xsl:choose>
+
+    </div>
+
+    <!--* re-start the indexing *-->
+    <xsl:text>
+</xsl:text>
+    <xsl:comment>/htdig_noindex</xsl:comment><xsl:text>
+</xsl:text>
+  </xsl:template> <!--* name=navbar-contents *-->
 
   <!--*
       * create a section in the current navbar
