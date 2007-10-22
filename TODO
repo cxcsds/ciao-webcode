@@ -24,8 +24,20 @@ rather than update the links.xsl (and other?) pages at each release.
 Actually, they do not hardcode the version; the problem here is that
 we have the string _ciao4b2_ (or b3) that is hardcoded.
 
-*) DOM manipulation rather than stylesheets
+*) DOM manipulation rather than stylesheets/manual code
 
 Convert publish.pl to use the DOM rather than stylesheets to extract
-simple information from files.
+simple information from files. Done for many simple cases. There are
+still 
+  list.xsl, list_<x>.xsl for
+    <x> = faq, thread, threadindex, dictionary
+
+mk_ahelp_setup.pl uses DOM to parse the ahelp files but then stores
+the information in a set of perl structures which it then uses to 
+manually create an XML output file. We should look at creating a
+DOM which can then be written out directly. Also, remove the use of
+the ahelpindex.dat file in the mk_ahelp_*.pl files.
+
+
+
 

@@ -515,7 +515,7 @@ sub create_hardcopy ($$;$) {
     my $html_head = shift;
     my $out_head  = shift || $html_head;
 
-    # Check put in incase we accidently send in a XML::LibXML::Document
+    # Check input in case user accidently sent in a XML::LibXML::Document
     # object.
     #
     die "Error: second argument to create_hardcopy should be a string, not " .
@@ -544,6 +544,11 @@ sub create_hardcopy ($$;$) {
 	    `$main::htmldoc --webpage --duplex --size $size -f $out $in 2>&1 >/dev/null`;
 	    dbg "End htmldoc call";
 
+	    # If we use htmldoc >= v1.8.25, the default option is to use --no-overflow,
+	    # a new option, which removes these messages, so we could check on the exit status
+	    # (I think). I have not checked this out to see whether we can re-instate
+	    # the check below.
+	    #
 	    # now get errors if text is too wide for page (which we have plenty
 	    # of), so don't bother checking -- other than whether the output was created
 	    #print "\nWARNING: problems using htmldoc\n\n" unless $? == 0;

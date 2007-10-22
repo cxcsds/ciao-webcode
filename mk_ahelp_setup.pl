@@ -224,6 +224,10 @@ mymkdir $storage;
 # we only have to bother with the seealsogroup list here; let's see how
 # that works.
 #
+# We should probably just create the out DOM here (ie a XML::LibXML::Document
+# object) rather than create a number of perl structures which we then later
+# have to turn into an XML document, manually.
+#
 my %out;
 my %multi_key;
 my %seealso;

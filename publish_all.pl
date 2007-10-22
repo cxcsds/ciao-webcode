@@ -1,7 +1,5 @@
 #!/data/da/Docs/local/perl/bin/perl -w
 #
-# $Id: publish_all.pl,v 1.12 2007/08/21 15:28:08 egalle Exp $
-#
 # Usage:
 #  publish_all.pl
 #     --type=live|test
@@ -32,16 +30,20 @@
 #    others, otherwise the code will be unable to calculate the ahelp
 #    links
 #  - the thread index is published last so that it can pick up all the
-#    details of the threads; it probably also needs publioshing before
-#    the threads too so that the threads cna find out what groups
+#    details of the threads; it probably also needs publishing before
+#    the threads too so that the threads can find out what groups
 #    they are in
 #  - the script currently can not be run in all directories; this
 #    restriction should be removed
 #  - there's a reasonably complicated set of rules for working out
 #    which files are to be skipped - it's a set of heuristic rules
 #    (ie we add another case to the list when we find a file to ignore)
-#    ratehr than anything clever.
+#    rather than anything clever.
 #
+# Changes:
+#    2007 Oct 22 DJB
+#      We now runt he publish.pl that is in the same directory as this
+#      script, rather than hard code it to /data/da/Docs/web/
 
 use strict;
 $|++;
@@ -50,6 +52,8 @@ use Getopt::Long;
 
 use Cwd;
 use IO::Pipe;
+
+use FindBin;
 
 # can not end in / because of regexp check below
 my @prefixes =
@@ -93,6 +97,12 @@ die "Error: unknown type ($type)\n"
 
 die $usage unless $#ARGV == -1;
 
+# Check we can find the publish.pl script
+#
+my $script = "$FindBin::Bin/publish.pl";
+die "Error: unable to find executable publish.pl - expected it to be at\n\t$script\n"
+  unless -e $script;
+
 my $cwd = cwd();
 
 my $prefix;
@@ -115,7 +125,7 @@ else { $excludedirs .= ",cookbook_test"; }
 my %excludedirs = map { ($_,1); } split( /,/, $excludedirs );
 
 # find all the files
-# - exclude SCCS directories
+# - exclude SCCS and RCS directories
 #
 # from 'man find'
 #
@@ -137,10 +147,10 @@ my %excludedirs = map { ($_,1); } split( /,/, $excludedirs );
 # - non thread.xml files in the threads/foo/ directories
 #
 # might be easier to do using perl's find module doohickey
-# but let's do this for now
+# but let's do this for now (it's ugly but seems to work).
 #
 my $pipe = IO::Pipe->new();
-$pipe->reader( qw( find . -name SCCS -prune -o -print ) );
+$pipe->reader( qw( find . \( -name RCS -o -name SCCS \) -prune -o -print ) );
 
 my %files;
 my %images;
@@ -283,7 +293,7 @@ foreach my $href ( \%images, \%files ) {
 	chdir $dir;
 
 	# and do the actual publishing
-	system "/data/da/Docs/web/publish.pl",
+	system $script,
 	  "--type=$type", $force ? "--force" : "--noforce",
 	  @files
 	    and die "\nerror in\n dir=$dir\n with files=" . join(" ",@files) . "\n\n";
@@ -300,7 +310,7 @@ if ( defined $threadindex ) {
     chdir $dir;
 
     # and do the actual publishing
-    system "/data/da/Docs/web/publish.pl",
+    system $script,
       "--type=$type", $force ? "--force" : "--noforce",
       @files
 	and die "\nerror in\n dir=$dir\n with files=" . join(" ",@files) . "\n\n";
