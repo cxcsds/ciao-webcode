@@ -236,6 +236,9 @@ $config = undef; # DBG: just make sure no one is trying to access it
 dbg "Site = $site";
 
 check_type_known $site_config, $type;
+dbg "Type = $type";
+
+dbg "OS = $ostype";
 
 # check usage
 #

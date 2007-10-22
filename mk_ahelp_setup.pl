@@ -163,6 +163,9 @@ $config = undef; # DBG: just make sure no one is trying to access it
 dbg "Site = $site";
 
 check_type_known $site_config, $type;
+dbg "Type = $type";
+
+dbg "OS = $ostype";
 
 die "ERROR: mk_ahelp_setup.pl should obly be run within site=ciao, not site=$site\n"
   unless $site eq "ciao";
