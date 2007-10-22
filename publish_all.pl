@@ -28,8 +28,8 @@
 #           be excluded from the search
 #  
 # Notes:
-#  - SCCS files that are checked out for editing are skipped;
-#    this is NOT true for RCS files
+#  - files that are checked out for editing are skipped;
+#    not 100% convinced got it right for RCS files
 #  - ahelp files are ignored. These should be processed *before* any
 #    others, otherwise the code will be unable to calculate the ahelp
 #    links
@@ -49,8 +49,7 @@
 #      We now run the publish.pl that is in the same directory as this
 #      script, rather than hard code it to /data/da/Docs/web/, and we use
 #      CIAODOC/config.dat to get the perl executable name
-#      We now exclude RCS/ dirs, as we do SCCS/ dirs, although we do not
-#      exclude RCS files that are checked out.
+#      We now exclude RCS/ dirs, as we do SCCS/ dirs.
 #
 
 use strict;
@@ -254,12 +253,18 @@ while ( <$pipe> ) {
     $nrej++, next if $path =~ /download\/doc\/dmodel($|\/)/;
 
     # last check - is it checked out for editing?
-    # At present this is only done for SCCS files, as I have
-    # not looked into how to check this for RCS files
-    # TODO - fix this
+    # Not 100% convinced about the RCS check
     #
     if ( -e "$path/SCCS/p.$fname" ) {
-	print "skipping $dname/$fname as checked out\n";
+	print "skipping $dname/$fname as checked out [SCCS]\n";
+	$nrej++;
+	next;
+    }
+    my $dummy = `rlog -L -R -l RCS/$fname,v`;
+    die "Error: problem running 'rlog -L -R -l RCS/$fname,v'\n"
+      unless $? == 0;
+    if ( $dummy ne "" ) {
+	print "skipping $dname/$fname as checked out [RCS]\n";
 	$nrej++;
 	next;
     }
