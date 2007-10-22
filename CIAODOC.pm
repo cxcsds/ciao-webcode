@@ -177,7 +177,7 @@ sub call_chmod ($$) {
 sub call_chgrp ($$) {
   my $opts = shift;
   my $name = shift;
-  my $chgro = $^O eq "linux" ? "/bin/chgrp" : "/usr/bin/chgrp";
+  my $chgrp = $^O eq "linux" ? "/bin/chgrp" : "/usr/bin/chgrp";
   system "$chgrp $opts $name" and die "Unable to chgrp $opts $name";
 }
 
