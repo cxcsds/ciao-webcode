@@ -170,19 +170,20 @@ sub call_mkdir ($) {
 sub call_chmod ($$) {
   my $opts = shift;
   my $name = shift;
-  my $chmod = $^O eq "darwin" ? "/bin/chmod" : "/usr/bin/chmod";
+  my $chmod = $^O eq "solaris" ? "/bin/chmod" : "/bin/chmod";
   system "$chmod $opts $name" and die "Unable to chmod $opts $name";
 }
 
 sub call_chgrp ($$) {
   my $opts = shift;
   my $name = shift;
-  system "/usr/bin/chgrp $opts $name" and die "Unable to chgrp $opts $name";
+  my $chgro = $^O eq "linux" ? "/bin/chgrp" : "/usr/bin/chgrp";
+  system "$chgrp $opts $name" and die "Unable to chgrp $opts $name";
 }
 
 sub call_rm ($) {
   my $name = shift;
-  my $rm = $^O eq "darwin" ? "/bin/rm" : "/usr/bin/rm";
+  my $rm = $^O eq "solaris" ? "/usr/bin/rm" : "/bin/rm";
   system "$rm -f $name";
   die "Error: been unable to delete $name\n"
     if -e $name;
@@ -191,7 +192,7 @@ sub call_rm ($) {
 sub call_cp ($$) {
   my $in = shift;
   my $out = shift;
-  my $cp = $^O eq "darwin" ? "/bin/cp" : "/usr/bin/cp";
+  my $cp = $^O eq "solaris" ? "/usr/bin/cp" : "/bin/cp";
   system "$cp $in $out" and die "Unable to cp $in to $out";
 }
 
