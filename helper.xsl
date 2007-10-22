@@ -3,6 +3,8 @@
 
 <!--* 
     * Recent changes:
+    * 2007 Oct 22 DJB
+    *    belatedly changed copyright date from "-2006" to "-2007"
     * 2007 Oct 19 DJB
     *    depth parameter is now a global, no need to send around
     *    Need to check users of add-attribute, add-image
@@ -353,7 +355,7 @@
 	    <br/>
 	    Smithsonian Institution, Copyright 
 	    <xsl:text disable-output-escaping="yes">&amp;copy;</xsl:text>
-	    1998-2006. All rights reserved. 
+	    1998-2007. All rights reserved. 
 	  </font>
 	</td>
 	<td align="right" valign="center">
@@ -747,7 +749,7 @@
 	    <br/>
 	    Smithsonian Institution, Copyright 
 	    <xsl:text disable-output-escaping="yes">&amp;copy; </xsl:text>
-	    1998-2006. All rights reserved.
+	    1998-2007. All rights reserved.
 	  </font>
 	</td>
       </tr>
