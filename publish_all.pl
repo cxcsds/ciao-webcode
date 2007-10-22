@@ -2,6 +2,7 @@
 #
 # Usage:
 #  publish_all.pl
+#     --config=<location of config file>
 #     --type=live|test
 #     --force
 #     --excludedir=<dir1 to ignore>,...,<dirN to ignore> - ie comma-separated list
@@ -16,7 +17,9 @@
 #  whether it should process them all.
 #
 # Options:
-#    --type and --force are passed through to the publish script
+#    --config - used to find perl executable and passed through to publish.pl
+#    --type, and --force are passed through to the publish script
+#      but the config variable is also used to get the perl/os value
 #    --yes means that the program will not ask you whether to process
 #          all the files, it will just go ahead and do it
 #          useful for background jobs
@@ -25,7 +28,8 @@
 #           be excluded from the search
 #  
 # Notes:
-#  - files that are checked out for editing are skipped
+#  - SCCS files that are checked out for editing are skipped;
+#    this is NOT true for RCS files
 #  - ahelp files are ignored. These should be processed *before* any
 #    others, otherwise the code will be unable to calculate the ahelp
 #    links
@@ -42,8 +46,12 @@
 #
 # Changes:
 #    2007 Oct 22 DJB
-#      We now runt he publish.pl that is in the same directory as this
-#      script, rather than hard code it to /data/da/Docs/web/
+#      We now run the publish.pl that is in the same directory as this
+#      script, rather than hard code it to /data/da/Docs/web/, and we use
+#      CIAODOC/config.dat to get the perl executable name
+#      We now exclude RCS/ dirs, as we do SCCS/ dirs, although we do not
+#      exclude RCS files that are checked out.
+#
 
 use strict;
 $|++;
@@ -54,6 +62,12 @@ use Cwd;
 use IO::Pipe;
 
 use FindBin;
+
+use lib $FindBin::Bin;
+use CIAODOC qw (:util :cfg);
+
+use vars qw( $configfile );
+$configfile = "$FindBin::Bin/config.dat";
 
 # can not end in / because of regexp check below
 my @prefixes =
@@ -75,11 +89,13 @@ my @prefixes =
    "/data/da/Docs/ciaoweb/40beta",
    "/data/da/Docs/sherpaweb/40beta",
    "/data/da/Docs/chipsweb/40beta",
+
+   "/Users/doug/doc/ahelp/",
   );
 
 my %_types = map { ($_,1); } qw( test live trial );
 
-my $usage = "Usage: $0 --type=live|test --force --xmlonly --excludedir=one,two,.. --yes\n";
+my $usage = "Usage: $0 --config=filename --type=live|test --force --xmlonly --excludedir=one,two,.. --yes\n";
 
 ## Code
 #
@@ -89,8 +105,14 @@ my $xmlonly = 0;
 my $excludedirs = "";
 my $yes = 0;
 die $usage unless
-  GetOptions 'type=s' => \$type, 'force!' => \$force,
+  GetOptions 'config=s' => \$configfile, 'type=s' => \$type, 'force!' => \$force,
   'excludedir=s' => \$excludedirs, 'xmlonly!' => \$xmlonly, 'yes!' => \$yes;
+
+# Get the name of the perl executable
+#
+my $ostype = get_ostype;
+my $config = parse_config( $configfile );
+my $perlexe = get_config_main_type ($config, "perl", $ostype);
 
 die "Error: unknown type ($type)\n"
   unless exists $_types{$type};
@@ -232,6 +254,10 @@ while ( <$pipe> ) {
     $nrej++, next if $path =~ /download\/doc\/dmodel($|\/)/;
 
     # last check - is it checked out for editing?
+    # At present this is only done for SCCS files, as I have
+    # not looked into how to check this for RCS files
+    # TODO - fix this
+    #
     if ( -e "$path/SCCS/p.$fname" ) {
 	print "skipping $dname/$fname as checked out\n";
 	$nrej++;
@@ -286,6 +312,10 @@ unless ( $yes ) {
 # first we publish all the "img" directories
 # (since they may be useful for creating PDF files)
 #
+my $cfg_opt = "--config=$configfile";
+my $type_opt = "--type=$type";
+my $force_opt = $force ? "--force" : "--noforce";
+
 foreach my $href ( \%images, \%files ) {
     foreach my $dir ( keys %{$href} ) {
 	my @files = @{ $$href{$dir} };
@@ -293,8 +323,8 @@ foreach my $href ( \%images, \%files ) {
 	chdir $dir;
 
 	# and do the actual publishing
-	system $script,
-	  "--type=$type", $force ? "--force" : "--noforce",
+	system $perlexe, $script,
+	  $cfg_opt, $type_opt, $force_opt,
 	  @files
 	    and die "\nerror in\n dir=$dir\n with files=" . join(" ",@files) . "\n\n";
     }

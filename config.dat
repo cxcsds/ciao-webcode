@@ -1,6 +1,6 @@
 #
 # The contents of this file are used by the publish script
-# (/data/da/Docs/web/publish.pl) to determine where the
+# publish.pl to determine where the
 # output of publishing a page goes.
 #
 # Do not change unless you are *really* sure you know
@@ -20,14 +20,18 @@
 # executable, and we now support running on different
 # systems, so we make the values OS dependent.
 #
+# %perl is currently only used by publish_all.pl
+#
 # OS type values can be sun, lin, or osx
 #
 %htmldoc=sun /usr/bin/env LD_LIBRARY_PATH=/data/da/Docs/local/lib/ /data/da/Docs/local/bin/htmldoc
 %listseealso=sun /data/da/Docs/web/list_seealso
+%perl=sun /data/da/Docs/local/perl/bin/perl
 
 # specific to Doug's laptop, should be changed to more general values
 %htmldoc=osx /usr/bin/env DYLD_LIBRARY_PATH= /Users/doug/local/bin/htmldoc
 %listseealso=osx /Users/doug/doc/ahelp/list_seealso
+%perl=osx perl
 
 # what "site" (ie part of the web pages) are we creating?
 +site ciao

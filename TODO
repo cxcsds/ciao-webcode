@@ -37,7 +37,3 @@ the information in a set of perl structures which it then uses to
 manually create an XML output file. We should look at creating a
 DOM which can then be written out directly. Also, remove the use of
 the ahelpindex.dat file in the mk_ahelp_*.pl files.
-
-
-
-
