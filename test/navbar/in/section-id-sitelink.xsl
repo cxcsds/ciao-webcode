@@ -10,6 +10,8 @@
 <xsl:template match="/">
 <xsl:text>
 </xsl:text>
-  <xsl:apply-templates select="//section" mode="create"/>
+  <xsl:apply-templates select="//section" mode="create">
+    <xsl:with-param name="matchid" select="'foo'"/>
+  </xsl:apply-templates>
 </xsl:template>
 </xsl:stylesheet>

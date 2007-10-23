@@ -58,7 +58,7 @@ add_test "imglink1",
   <xsl:apply-templates select="//imglink"/>
 </xsl:template>',
 '<imglink id="bar">image bar bar</imglink>',
-'<a name="bar" href="img1.html">image bar bar&#160;<img src="foo.gif" alt="[Link to Image 1]" height="12" width="10" border="0"></a>';
+'<a name="bar" href="img1.html">image bar bar&#160;<img src="foo.gif" alt="[Link to Image 1: Image 1 title]" height="12" width="10" border="0"></a>';
 
 add_test "imglink3",
 '<xsl:template match="/">
@@ -67,7 +67,7 @@ add_test "imglink3",
   <xsl:apply-templates select="//imglink"/>
 </xsl:template>',
 '<imglink id="before-no-ps">image 3</imglink>',
-'<a name="before-no-ps" href="img3.html">image 3&#160;<img src="foo.gif" alt="[Link to Image 3]" height="12" width="10" border="0"></a>';
+'<a name="before-no-ps" href="img3.html">image 3&#160;<img src="foo.gif" alt="[Link to Image 3: Image 2 title]" height="12" width="10" border="0"></a>';
 
 add_test "imglink3-in-p",
 '<xsl:template match="/">
@@ -76,7 +76,7 @@ add_test "imglink3-in-p",
   <xsl:apply-templates select="//p"/>
 </xsl:template>',
 '<p>A <em>link</em> to <imglink id="before-no-ps">image 3</imglink>.</p>',
-'<p>A <em>link</em> to <a name="before-no-ps" href="img3.html">image 3&#160;<img src="foo.gif" alt="[Link to Image 3]" height="12" width="10" border="0"></a>.</p>';
+'<p>A <em>link</em> to <a name="before-no-ps" href="img3.html">image 3&#160;<img src="foo.gif" alt="[Link to Image 3: Image 2 title]" height="12" width="10" border="0"></a>.</p>';
 
 # this one would be different for the hardcopy version
 #
@@ -695,7 +695,7 @@ add_test "filetypelist1", $transform,
  </section>
 </sectionlist>
 </text>',
-'<p><strong>File types needed:</strong> evt1</p>';
+'<p><a href="../intro_data/"><strong>File types needed:</strong> </a>evt1</p>';
 
 add_test "filetypelist2", $transform,
 '<text>
@@ -709,7 +709,7 @@ add_test "filetypelist2", $transform,
  </section>
 </sectionlist>
 </text>',
-'<p><strong>File types needed:</strong> evt1; asol1</p>';
+'<p><a href="../intro_data/"><strong>File types needed:</strong> </a>evt1; asol1</p>';
 
 ## now try parameters
 #
@@ -1039,9 +1039,8 @@ sub write_script () {
 set type  = test
 set site  = ciao
 set depth = 1
-set srcdir = /data/da/Docs/web/devel/test/threads/
 
-set params = "--stringparam sourcedir /data/da/Docs/web/devel/test/threads/ --stringparam hardcopy 0 --stringparam depth 1 --stringparam imglinkicon foo.gif --stringparam imglinkiconwidth 10 --stringparam imglinkiconheight 12 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam site $site"
+set params = "--stringparam sourcedir `pwd`/ --stringparam hardcopy 0 --stringparam depth 1 --stringparam imglinkicon foo.gif --stringparam imglinkiconwidth 10 --stringparam imglinkiconheight 12 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam site $site"
 
 foreach id ( \
 EOD
@@ -1059,7 +1058,7 @@ EOD
 
   set out = out/xslt.$id
   if ( -e $out ) rm -f $out
-  /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc $params in/${id}.xsl in/${id}.xml > $out
+  $xsltproc $params in/${id}.xsl in/${id}.xml > $out
   set statusa = $status
   set statusb = 1
   if ( $statusa == 0 ) then
@@ -1086,9 +1085,8 @@ EOD
 ## multiple  tests
 #
 set type  = test
-set srcdir = /data/da/Docs/web/devel/test/threads/
 
-set params = "--stringparam sourcedir /data/da/Docs/web/devel/test/threads/ --stringparam hardcopy 0 --stringparam imglinkicon foo.gif --stringparam imglinkiconwidth 10 --stringparam imglinkiconheight 12 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml"
+set params = "--stringparam sourcedir `pwd`/ --stringparam hardcopy 0 --stringparam imglinkicon foo.gif --stringparam imglinkiconwidth 10 --stringparam imglinkiconheight 12 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml"
 
 foreach id ( \
 EOD
@@ -1110,7 +1108,7 @@ EOD
       set out = out/xslt.$h
 
       if ( -e $out ) rm -f $out
-      /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam site $site --stringparam depth $depth $params in/${id}.xsl in/${id}.xml > $out
+      $xsltproc --stringparam site $site --stringparam depth $depth $params in/${id}.xsl in/${id}.xml > $out
       set statusa = $status
       set statusb = 1
       if ( $statusa == 0 ) then

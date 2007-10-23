@@ -457,7 +457,7 @@ EOD
 
   set out = out/xslt.$id
   if ( -e $out ) rm -f $out
-  /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam sourcedir $srcdir --stringparam hardcopy 0 in/${id}.xsl in/${id}.xml > $out
+  $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam sourcedir $srcdir --stringparam hardcopy 0 in/${id}.xsl in/${id}.xml > $out
   diff out/${id} $out
   if ( $status == 0 ) then
     printf "OK:   %3d  [%s]\n" $ctr $id

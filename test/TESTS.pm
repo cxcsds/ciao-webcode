@@ -28,13 +28,17 @@ use IO::File;
 
 sub call_touch ($) {
   my $arg = shift;
-  my $t = $^O eq "darwin" ? "/usr/bin/touch" : "/usr/ucb/touch";
+  my $t;
+  if ( $^O eq "solaris")    { $t = "/usr/ucb/touch"; }
+  elsif ( $^O eq "linux" )  { $t = "/bin/touch"; }
+  elsif ( $^O eq "darwin" ) { $t = "/usr/bin/touch"; }
+  else { die "Unknown OS " . $^O . " for call_touch\n"; }
   `$t $arg`;
 }
 
 sub call_rm ($) {
   my $arg = shift;
-  my $rm = $^O eq "darwin" ? "/bin/rm" : "/usr/bin/rm";
+  my $rm = $^O eq "solaris" ? "/usr/bin/rm" : "/bin/rm";
   `$rm $arg`;
 }
 
@@ -94,11 +98,15 @@ switch (\$PLATFORM)
 
   case SunOS
     set head     = /data/da/Docs/local
-    set xsltproc = /usr/bin/env LD_LIBRARY_PATH=\${head}/lib \${head}/bin/xsltproc
+    set xsltproc = "/usr/bin/env LD_LIBRARY_PATH=\${head}/lib \${head}/bin/xsltproc"
     unset head
   breaksw
 
   case Darwin
+    set xsltproc = xsltproc
+  breaksw
+
+  case Linux
     set xsltproc = xsltproc
   breaksw
 

@@ -10,11 +10,15 @@ switch ($PLATFORM)
 
   case SunOS
     set head     = /data/da/Docs/local
-    set xsltproc = /usr/bin/env LD_LIBRARY_PATH=${head}/lib ${head}/bin/xsltproc
+    set xsltproc = "/usr/bin/env LD_LIBRARY_PATH=${head}/lib ${head}/bin/xsltproc"
     unset head
   breaksw
 
   case Darwin
+    set xsltproc = xsltproc
+  breaksw
+
+  case Linux
     set xsltproc = xsltproc
   breaksw
 
@@ -35,10 +39,8 @@ set fail = ""
 set type  = test
 set site  = ciao
 set depth = 1
-##set srcdir = /data/da/Docs/web/devel/test/threads/
-set srcdir = `pwd`/
 
-set params = "--stringparam sourcedir $srcdir --stringparam hardcopy 0 --stringparam depth 1 --stringparam imglinkicon foo.gif --stringparam imglinkiconwidth 10 --stringparam imglinkiconheight 12 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam site $site"
+set params = "--stringparam sourcedir `pwd`/ --stringparam hardcopy 0 --stringparam depth 1 --stringparam imglinkicon foo.gif --stringparam imglinkiconwidth 10 --stringparam imglinkiconheight 12 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam site $site"
 
 foreach id ( \
  imglink1  imglink3  imglink3-in-p  images-toc  \
@@ -75,7 +77,7 @@ end # foreach: id
 #
 set type  = test
 
-set params = "--stringparam sourcedir $srcdir --stringparam hardcopy 0 --stringparam imglinkicon foo.gif --stringparam imglinkiconwidth 10 --stringparam imglinkiconheight 12 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml"
+set params = "--stringparam sourcedir `pwd`/ --stringparam hardcopy 0 --stringparam imglinkicon foo.gif --stringparam imglinkiconwidth 10 --stringparam imglinkiconheight 12 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml"
 
 foreach id ( \
  before  after  subsectionlist-nosep  subsectionlist-sepbar  \

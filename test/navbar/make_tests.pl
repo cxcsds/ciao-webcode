@@ -1,7 +1,5 @@
 #!/data/da/Docs/local/perl/bin/perl -w
 #
-# $Id: make_tests.pl,v 1.4 2004/09/15 18:29:14 dburke Exp dburke $
-#
 # Usage:
 #   make_tests.pl
 #
@@ -150,10 +148,12 @@ my $section_xsl =
 '<xsl:template match="/">
 <xsl:text>
 </xsl:text>
-  <xsl:apply-templates select="//section" mode="create"/>
+  <xsl:apply-templates select="//section" mode="create">
+    <xsl:with-param name="matchid" select="\'foo\'"/>
+  </xsl:apply-templates>
 </xsl:template>';
 
-my $section_in =
+my $section_in_orig =
 '<section id="main" link="index.html">
  <dirs>
   <dir/>
@@ -166,22 +166,24 @@ my $section_in =
  </list>
 </section>';
 
-my $section_out =
+my $section_out_orig =
 '<dt><a class="heading" href="%dindex.html">A title</a></dt>
   <dd>a <a href="%dlink.html">link</a>
 </dd>
   <dd>another <tt>' . get_ahelp_link("link") . '</tt> and <strong>some text</strong>.</dd>
  ';
 
+my $section_in  = $section_in_orig;
+my $section_out = $section_out_orig;
 add_test "section-id-locallink", $section_xsl, $section_in, $section_out;
 
 $section_in =~ s/ id="main" / id="foo" /;
 $section_out =~ s/ class="heading" / class="selectedheading" /;
 add_test "section-id-locallink-matchid", $section_xsl, $section_in, $section_out;
 
-$section_in =~ s/ id="foo" / id="main" /;
-$section_out =~ s/ class="selectedheading" / class="heading" /;
+$section_in  = $section_in_orig;
 $section_in  =~ s{ link="index.html"}{ link="/ciao/index.html"};
+$section_out = $section_out_orig;
 $section_out =~ s{ href="%dindex.html"}{ href="/ciao/index.html"};
 add_test "section-id-sitelink", $section_xsl, $section_in, $section_out;
 
@@ -189,9 +191,10 @@ $section_in =~ s/ id="main" / id="foo" /;
 $section_out =~ s/ class="heading" / class="selectedheading" /;
 add_test "section-id-sitelink-matchid", $section_xsl, $section_in, $section_out;
 
-$section_in =~ s/ id="foo" / id="main" /;
+$section_in  = $section_in_orig;
 $section_in  =~ s{ link="/ciao/index.html"}{};
-$section_out =~ s{<a class="selectedheading" href="/ciao/index.html">A title</a>}{<span class="heading">A title</span>};
+$section_out = $section_out_orig;
+$section_out =~ s{<a class="heading" href="/ciao/index.html">A title</a>}{<span class="heading">A title</span>};
 add_test "section-id-nolink", $section_xsl, $section_in, $section_out;
 
 # test the navbar creation code; it is not quite the same code as in
@@ -207,6 +210,11 @@ add_test "section-id-nolink", $section_xsl, $section_in, $section_out;
 # by write-navbar which we do not test and the second one isn't because
 # we do not include a startdepth parameter (or something equivalent) in the
 # tests.
+#
+# XXX TODO XXX
+# I am not 100% convinced about the class="selectedheading" test (ie
+# that the actual code being tested is behaving sensibly here, and that
+# I am not sure how to test it. Needs thought.
 #
 my $navbar_basedir_xsl =
 '<xsl:template match="/">
@@ -380,6 +388,10 @@ switch ($PLATFORM)
     set diffprog = diff
   breaksw
 
+    case Linux
+    set diffprog = diff
+  breaksw
+
 endsw
 
 ## multiple type/site/depth tests
@@ -399,7 +411,7 @@ EOD
         set out = out/xslt.$h
 
         if ( -e $out ) rm -f $out
-        $xsltproc --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html --stringparam pagename foo in/${id}.xsl in/${id}.xml > $out
+        $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html --stringparam pagename foo in/${id}.xsl in/${id}.xml > $out
         $diffprog -u out/${h} $out
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s]\n" $ctr $h

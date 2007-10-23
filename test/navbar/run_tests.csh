@@ -10,11 +10,15 @@ switch ($PLATFORM)
 
   case SunOS
     set head     = /data/da/Docs/local
-    set xsltproc = /usr/bin/env LD_LIBRARY_PATH=${head}/lib ${head}/bin/xsltproc
+    set xsltproc = "/usr/bin/env LD_LIBRARY_PATH=${head}/lib ${head}/bin/xsltproc"
     unset head
   breaksw
 
   case Darwin
+    set xsltproc = xsltproc
+  breaksw
+
+  case Linux
     set xsltproc = xsltproc
   breaksw
 
@@ -42,6 +46,10 @@ switch ($PLATFORM)
     set diffprog = diff
   breaksw
 
+    case Linux
+    set diffprog = diff
+  breaksw
+
 endsw
 
 ## multiple type/site/depth tests
@@ -60,7 +68,7 @@ foreach id ( \
         set out = out/xslt.$h
 
         if ( -e $out ) rm -f $out
-        $xsltproc --stringparam matchid foo --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html --stringparam pagename foo in/${id}.xsl in/${id}.xml > $out
+        $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam hardcopy 0 --stringparam newsfileurl /ciao9.9/news.html --stringparam pagename foo in/${id}.xsl in/${id}.xml > $out
         $diffprog -u out/${h} $out
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s]\n" $ctr $h

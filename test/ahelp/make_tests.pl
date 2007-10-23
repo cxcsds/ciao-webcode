@@ -839,7 +839,8 @@ add_test "no-seealso",
   <xsl:call-template name="add-seealso"/>
 </xsl:template>',
 '', '',
-params => { seealsofile => getcwd() . "/in/seealso.empty.xml" };
+params => { seealsofile => "`pwd`/in/seealso.empty.xml" };
+#params => { seealsofile => getcwd() . "/in/seealso.empty.xml" };
 
 my $seealso_text =
 '<dl>
@@ -868,7 +869,8 @@ add_test "seealso",
 <h2><a name=\"seealso\">See Also</a></h2>
 $seealso_text
 </div>",
-params => { seealsofile => getcwd() . "/in/seealso.full.xml" };
+params => { seealsofile => "`pwd`/in/seealso.full.xml" };
+#params => { seealsofile => getcwd() . "/in/seealso.full.xml" };
 
 ## lots more tests
 #

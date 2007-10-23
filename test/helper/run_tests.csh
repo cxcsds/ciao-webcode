@@ -10,11 +10,15 @@ switch ($PLATFORM)
 
   case SunOS
     set head     = /data/da/Docs/local
-    set xsltproc = /usr/bin/env LD_LIBRARY_PATH=${head}/lib ${head}/bin/xsltproc
+    set xsltproc = "/usr/bin/env LD_LIBRARY_PATH=${head}/lib ${head}/bin/xsltproc"
     unset head
   breaksw
 
   case Darwin
+    set xsltproc = xsltproc
+  breaksw
+
+  case Linux
     set xsltproc = xsltproc
   breaksw
 

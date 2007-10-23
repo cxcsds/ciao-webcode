@@ -28,13 +28,15 @@
 %listseealso=sun /data/da/Docs/web4/list_seealso.ciao4.sun
 %perl=sun /data/da/Docs/local/perl/bin/perl
 
-# Linux values tailored to Liz's machine (rory)
+# Linux values tailored to Liz's machine (rory),
+# although we actually build on bonsai as its a 32-bit
+# machine
 #
-%htmldoc=lin /data/da/Docs/local/linux_x86_64/bin/htmldoc
-%listseealso=lin /data/da/Docs/web4list_seealso.ciao4/lin
-%perl=lin /usr/bin/env PERL5LIB=/data/da/Docs/local/linux_x86_64/lib64/perl5/site_perl:/data/da/Docs/local/linux_x86_64/lib64/perl5:/data/da/Docs/local/linux_x86_64/lib/perl5/site_perl perl
+%htmldoc=lin /data/da/Docs/local/linux/bin/htmldoc
+%listseealso=lin /data/da/Docs/web4/list_seealso.ciao4.lin
+%perl=lin /usr/bin/env PERL5LIB=/data/da/Docs/local/linux/lib/perl5/site_perl:/data/da/Docs/local/linux/lib/perl5 perl
 
-# specific to Doug's laptop, should be changed to more general values
+# OS-X: specific to Doug's laptop, should be changed to more general values
 #
 %htmldoc=osx /usr/bin/env DYLD_LIBRARY_PATH= /Users/doug/local/bin/htmldoc
 %listseealso=osx /Users/doug/doc/ahelp/list_seealso

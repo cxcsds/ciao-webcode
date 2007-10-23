@@ -65,6 +65,8 @@
       *-->
   <xsl:template name="navbar-contents">
 
+    <xsl:variable name="matchid" select="../../@id"/>
+
     <!--* add disclaimer about editing this HTML file *-->
     <xsl:call-template name="add-disclaimer"/>
     <xsl:comment>htdig_noindex</xsl:comment><xsl:text>
@@ -73,33 +75,12 @@
     <div>
 	
       <!--* add the logo/link if required *-->
-      <xsl:choose>
-	<xsl:when test="$logoimage != '' and $logotext != ''">
-	  <p align="center">
-	    <xsl:call-template name="add-image">
-	      <xsl:with-param name="alt"   select="$logotext"/>
-	      <xsl:with-param name="src"   select="$logoimage"/>
-	    </xsl:call-template>
-	  </p>
-	</xsl:when>
-	      
-	<xsl:when test="$logotext != ''">
-	  <p align="center"><xsl:value-of select="$logotext"/></p>
-	</xsl:when>
-
-	<!--*
-	    * decided to not have any white space as doesn't look
-	    * good to me with the re-designed layout
-	    *-->
-	<xsl:otherwise>
-	  <!--* <br/> *-->
-	</xsl:otherwise>
-      </xsl:choose>
+      <xsl:call-template name="add-logo-section"/>
       
       <!--* create the various sections *-->
       <dl>
 	<xsl:apply-templates select="//section" mode="create">
-	  <xsl:with-param name="matchid" select="../../@id"/>
+	  <xsl:with-param name="matchid" select="$matchid"/>
 	</xsl:apply-templates>
       </dl>
       <br/>
@@ -168,6 +149,7 @@
       *
       *-->
   <xsl:template match="section" mode="create">
+    <xsl:param name="matchid" select='""'/>
 
     <xsl:variable name="classname"><xsl:choose>
 	<xsl:when test="$matchid=@id">selectedheading</xsl:when>
@@ -310,6 +292,31 @@
       <xsl:apply-templates/>
     </dd>
   </xsl:template> <!--* match=li mode=navbar *-->
+
+  <xsl:template name="add-logo-section">
+    <xsl:choose>
+      <xsl:when test="$logoimage != '' and $logotext != ''">
+	<p align="center">
+	  <xsl:call-template name="add-image">
+	    <xsl:with-param name="alt"   select="$logotext"/>
+	    <xsl:with-param name="src"   select="$logoimage"/>
+	  </xsl:call-template>
+	</p>
+      </xsl:when>
+	      
+      <xsl:when test="$logotext != ''">
+	<p align="center"><xsl:value-of select="$logotext"/></p>
+      </xsl:when>
+
+      <!--*
+	  * decided to not have any white space as doesn't look
+	  * good to me with the re-designed layout
+	  *-->
+      <xsl:otherwise>
+	<!--* <br/> *-->
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template> <!--* name=add-logo-section *-->
 
   <!--*
       * This is needed by helper.xsl for some reason

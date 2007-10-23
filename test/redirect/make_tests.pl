@@ -118,7 +118,7 @@ EOD
 
   set out = out/xslt.$id
   if ( -e $out ) rm -f $out
-  set outname = `/usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc --stringparam filename $out $xsl in/$id.xml`
+  set outname = `$xsltproc --stringparam filename $out $xsl in/$id.xml`
   set statusa = $status
   set statusb = 1
   if ( $statusa == 0 ) then

@@ -420,9 +420,11 @@ add_test_depth "make-datatable", $transform,
   </package>
  </packages>
 </datatable>',
-'<table id="threaddatatable" align="center" width="90%" bgcolor="#666699" cellspacing="0" cellpadding="2">
-<tr><td bgcolor="#666699" align="center"><font size="+1" color="#ffffff"><strong>Data Used in Threads</strong><br><br><a class="tablehead" href="archivedownload/">How to Download Chandra Data from the Archive</a></font></td></tr>
-<tr><td><table border="0" bgcolor="#eeeeee" width="100%" cellpadding="6" cellspacing="0">
+'<table id="threaddatatable" align="center" width="90%" cellspacing="0" cellpadding="2">
+<tr><td id="threaddatatableheader" colspan="4">
+<h3>Data Used in Threads</h3>
+<br><a class="tablehead" href="archivedownload/">How to Download Chandra Data from the Archive</a>
+</td></tr>
 <tr><th colspan="4" align="center">Sorted by OBSID</th></tr>
 <tr>
 <th align="center">OBSID</th>
@@ -450,8 +452,6 @@ add_test_depth "make-datatable", $transform,
     And ' . get_ahelp_link("another one") . '.
    </p></td>
 </tr>
-<tr><td colspan="4" align="center"><br></td></tr>
-</table></td></tr>
 </table>
 ';
 
@@ -603,12 +603,12 @@ sub write_script () {
 #
 set type   = live
 set site   = ciao
-set srcdir = /data/da/Docs/web/devel/test/threads/
 
-# note: set threadDir to test site even though testing live code since
-# want to use the example thread and that is only published to the test site
+# note: 
+#   copied over one version of the example thread
 #
-set params = "--stringparam sourcedir /data/da/Docs/web/devel/test/threads/ --stringparam threadDir /data/da/Docs/ciaoweb/published/test/threads/ --stringparam hardcopy 0 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam type $type --stringparam site $site "
+set threaddir = `pwd`/
+set params = "--stringparam sourcedir /data/da/Docs/web/devel/test/threads/ --stringparam threadDir $threaddir --stringparam hardcopy 0 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam type $type --stringparam site $site "
 
 foreach id ( \
 EOD
@@ -623,7 +623,7 @@ EOD
     set out = out/xslt.$h
 
     if ( -e $out ) rm -f $out
-    /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc $params --stringparam depth $depth in/${id}.xsl in/${id}.xml > $out
+    $xsltproc $params --stringparam depth $depth in/${id}.xsl in/${id}.xml > $out
     set statusa = $status
     set statusb = 1
     if ( $statusa == 0 ) then
@@ -651,7 +651,6 @@ EOD
 ## multiple site/depths
 #
 set type  = test
-set srcdir = /data/da/Docs/web/devel/test/threads/
 
 set params = "--stringparam sourcedir /data/da/Docs/web/devel/test/threads/ --stringparam hardcopy 0 --stringparam ahelpindex `pwd`/../links/ahelpindexfile.xml --stringparam type $type "
 
@@ -669,7 +668,7 @@ EOD
       set out = out/xslt.$h
 
       if ( -e $out ) rm -f $out
-      /usr/bin/env LD_LIBRARY_PATH=$ldpath $xsltproc $params --stringparam depth $depth --stringparam site $site in/${id}.xsl in/${id}.xml > $out
+      $xsltproc $params --stringparam depth $depth --stringparam site $site in/${id}.xsl in/${id}.xml > $out
       set statusa = $status
       set statusb = 1
       if ( $statusa == 0 ) then

@@ -10,11 +10,15 @@ switch ($PLATFORM)
 
   case SunOS
     set head     = /data/da/Docs/local
-    set xsltproc = /usr/bin/env LD_LIBRARY_PATH=${head}/lib ${head}/bin/xsltproc
+    set xsltproc = "/usr/bin/env LD_LIBRARY_PATH=${head}/lib ${head}/bin/xsltproc"
     unset head
   breaksw
 
   case Darwin
+    set xsltproc = xsltproc
+  breaksw
+
+  case Linux
     set xsltproc = xsltproc
   breaksw
 
@@ -66,7 +70,7 @@ end # foreach: id
 #
 
   if ( -e out/xslt.no-seealso ) rm -f out/xslt.no-seealso
-  $xsltproc --stringparam hardcopy 0 --stringparam bocolor foo --stringparam bgcolor bar --stringparam seealsofile /Users/doug/doc/ciaodoc/test/ahelp/in/seealso.empty.xml \
+  $xsltproc --stringparam hardcopy 0 --stringparam bocolor foo --stringparam bgcolor bar --stringparam seealsofile `pwd`/in/seealso.empty.xml \
     in/no-seealso.xsl in/no-seealso.xml > out/xslt.no-seealso
   diff out/no-seealso out/xslt.no-seealso
   if ( $status == 0 ) then
@@ -81,7 +85,7 @@ end # foreach: id
 
 
   if ( -e out/xslt.seealso ) rm -f out/xslt.seealso
-  $xsltproc --stringparam hardcopy 0 --stringparam bocolor foo --stringparam bgcolor bar --stringparam seealsofile /Users/doug/doc/ciaodoc/test/ahelp/in/seealso.full.xml \
+  $xsltproc --stringparam hardcopy 0 --stringparam bocolor foo --stringparam bgcolor bar --stringparam seealsofile `pwd`/in/seealso.full.xml \
     in/seealso.xsl in/seealso.xml > out/xslt.seealso
   diff out/seealso out/xslt.seealso
   if ( $status == 0 ) then
