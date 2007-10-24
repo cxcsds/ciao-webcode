@@ -889,7 +889,7 @@
       <xsl:message>
 	<xsl:value-of select="concat('WARNING: ROW contains ',$found_ncols,
 	  ' DATA elements but expected to find ',$expected_ncols,' of them ',
-	  '(key=',//ENTRY/@key,' context=',//ENTRY/@context,')')"/>
+	  '(key=',//ENTRY/@key,' context=',//ENTRY/@context,' table caption=',../CAPTION,')')"/>
       </xsl:message>
     </xsl:if>
 
