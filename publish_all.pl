@@ -45,6 +45,9 @@
 #    rather than anything clever.
 #
 # Changes:
+#    2007 Oct 24 DJB
+#      Fix up RCS check (only run rlog if the RCS file exists) and calling
+#      of the perl executable
 #    2007 Oct 22 DJB
 #      We now run the publish.pl that is in the same directory as this
 #      script, rather than hard code it to /data/da/Docs/web/, and we use
@@ -112,6 +115,7 @@ die $usage unless
 my $ostype = get_ostype;
 my $config = parse_config( $configfile );
 my $perlexe = get_config_main_type ($config, "perl", $ostype);
+my @pexe = split / /, $perlexe;
 
 die "Error: unknown type ($type)\n"
   unless exists $_types{$type};
@@ -260,13 +264,15 @@ while ( <$pipe> ) {
 	$nrej++;
 	next;
     }
-    my $dummy = `rlog -L -R -l RCS/$fname,v`;
-    die "Error: problem running 'rlog -L -R -l RCS/$fname,v'\n"
-      unless $? == 0;
-    if ( $dummy ne "" ) {
-	print "skipping $dname/$fname as checked out [RCS]\n";
-	$nrej++;
-	next;
+    if ( -e "$path/RCS/$fname,v" ) {
+	my $dummy = `rlog -L -R -l RCS/$fname,v`;
+	die "Error: problem running 'rlog -L -R -l RCS/$fname,v'\n"
+	  unless $? == 0;
+	if ( $dummy ne "" ) {
+	    print "skipping $dname/$fname as checked out [RCS]\n";
+	    $nrej++;
+	    next;
+	}
     }
 
     # skip if not an XML file?
@@ -328,7 +334,7 @@ foreach my $href ( \%images, \%files ) {
 	chdir $dir;
 
 	# and do the actual publishing
-	system $perlexe, $script,
+	system @pexe, $script,
 	  $cfg_opt, $type_opt, $force_opt,
 	  @files
 	    and die "\nerror in\n dir=$dir\n with files=" . join(" ",@files) . "\n\n";

@@ -28,13 +28,13 @@
 %listseealso=sun /data/da/Docs/web4/list_seealso.ciao4.sun
 %perl=sun /data/da/Docs/local/perl/bin/perl
 
-# Linux values tailored to Liz's machine (rory),
-# although we actually build on bonsai as its a 32-bit
-# machine
+# Linux values tailored to Liz's machine (rory). I had tried
+# building on a 32-bit Linux machine but it didn't seem to run
+# on rory, so go back to the 64-bit versions
 #
-%htmldoc=lin /data/da/Docs/local/linux/bin/htmldoc
+%htmldoc=lin /data/da/Docs/local/linux_x86_64/bin/htmldoc
 %listseealso=lin /data/da/Docs/web4/list_seealso.ciao4.lin
-%perl=lin /usr/bin/env PERL5LIB=/data/da/Docs/local/linux/lib/perl5/site_perl:/data/da/Docs/local/linux/lib/perl5 perl
+%perl=lin /usr/bin/env PERL5LIB=/data/da/Docs/local/linux_x86_64/lib64/perl5/site_perl:/data/da/Docs/local/linux_x86_64/lib64/perl5:/data/da/Docs/local/linux_x86_64/lib/perl5/site_perl perl
 
 # OS-X: specific to Doug's laptop, should be changed to more general values
 #
@@ -147,12 +147,13 @@ logotext=CIAO Logo
 # significant amount of work, so we are leaving this for a future
 # date.
 #
-# Note that, unlike the beta 2 release, the %ahelpfiles values should
-# be the same for ciao, chips, and sherpa
-#
-%ahelpfiles=live /data/da/Docs/sxml_manuals/crates/4.0/GENERATED/webxml/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/crates/4.0/GENERATED/webxml/
-%ahelpfiles=trial /proj/xena/ciao_bt/sun/
+##%ahelpfiles=live /data/da/Docs/sxml_manuals/crates/4.0/GENERATED/webxml/
+##%ahelpfiles=test /data/da/Docs/sxml_manuals/crates/4.0/GENERATED/webxml/
+##%ahelpfiles=trial /proj/xena/ciao_bt/sun/
+
+%ahelpfiles=live /pool14/dburke/webxml/
+%ahelpfiles=test /pool14/dburke/webxml/
+%ahelpfiles=trial /pool14/dburke/webxml/
 
 # where does the ahelp 'index' file live
 # - ie the directory that contains
@@ -335,11 +336,6 @@ logotext=Sherpa Logo
 %storage=test /data/da/Docs/sherpaweb/published/40beta/test/
 %storage=trial /data/da/Docs/sherpaweb/published/40beta/trial/
 
-# This *should* be the same as the ciao version
-%ahelpfiles=live /data/da/Docs/sxml_manuals/sherpa/4.0/GENERATED/webxml/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/sherpa/4.0/GENERATED/webxml/
-%ahelpfiles=trial /data/da/Docs/sxml_manuals/sherpa/4.0/GENERATED/webxml/
-
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/40beta/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
 %ahelpindexdir=trial /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
@@ -429,11 +425,6 @@ logotext=ChIPS Logo
 %storage=live /data/da/Docs/chipsweb/published/40beta/live/
 %storage=test /data/da/Docs/chipsweb/published/40beta/test/
 %storage=trial /data/da/Docs/chipsweb/published/40beta/trial/
-
-# This *should* be the same as the ciao version
-%ahelpfiles=live /data/da/Docs/sxml_manuals/chips/4.0/GENERATED/webxml/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/chips/4.0/GENERATED/webxml/
-%ahelpfiles=trial /data/da/Docs/sxml_manuals/chips/4.0/GENERATED/webxml/
 
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/40beta/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/

@@ -195,7 +195,7 @@
   <!--* parameters to be set by stylesheet processor *-->
   <xsl:param name="hardcopy" select="0"/>
 
-  <xsl:param name="site"/>
+  <xsl:param name="site" select="''"/>
 
   <xsl:param name="cssfile"/>
   <xsl:param name="navbarname"  select='"ahelp"'/>
@@ -676,8 +676,24 @@
       * have the correct site-specific alphabet list, but add separate rules to
       * ensure this (and it appears that we need that rule)
       *
+      * I did have
+      *   xsl:template match="alphabet[@site=$site]"
+      * but 
+      *   xsltproc was compiled against libxml 20628, libxslt 10121 and libexslt 813
+      * complained (libxslt 10115 and earlier did not). Is this valid XSLT or not?
+      * Decided to try and work around this rather than work out what should be
+      * be going on.
+      *
+      * With further review/reqrite it may be that we should only ever be processing
+      * alphabet nodes for which @site = $site anyway, which will avoid this sissue
       *-->
-  <xsl:template match="alphabet[@site=$site]">
+  <xsl:template match="alphabet">
+    <xsl:if test="@site = $site">
+      <xsl:call-template name="handle-alphabet"/>
+    </xsl:if>
+  </xsl:template> <!--* match=alphabet *-->
+
+  <xsl:template name="handle-alphabet">
 
     <!--* title *-->
     <h2 align="center">Alphabetical list of Ahelp files for <xsl:value-of select="$headtitlepostfix"/></h2>
@@ -775,16 +791,7 @@
     <!--* jump back links only if not hardcopy *-->
     <xsl:if test="$hardcopy=0"><xsl:call-template name="add-alphabet-jump"/></xsl:if>
     
-  </xsl:template> <!--* match=alphabet[@site=$site] *-->
-
-  <xsl:template match="alphabet">
-<!--
-    <xsl:message terminate="yes">
-  Internal error: processing alphabet node that is not site='<xsl:value-of select="$site"/>'
-    </xsl:message>
--->
-  </xsl:template> <!--* match=alphabet *-->
-    
+  </xsl:template> <!--* name=handle-alphabet *-->
 
   <!--* 
       * create: index_context.html (Web)
@@ -901,8 +908,24 @@
       * have the correct site-specific context list, but add separate rules to
       * ensure this
       *
+      * I did have
+      *   xsl:template match="context[@site=$site]"
+      * but 
+      *   xsltproc was compiled against libxml 20628, libxslt 10121 and libexslt 813
+      * complained (libxslt 10115 and earlier did not). Is this valid XSLT or not?
+      * Decided to try and work around this rather than work out what should be
+      * be going on.
+      *
+      * With further review/reqrite it may be that we should only ever be processing
+      * context nodes for which @site = $site anyway, which will avoid this sissue
       *-->
-  <xsl:template match="context[@site=$site]">
+  <xsl:template match="context">
+    <xsl:if test="@site = $site">
+      <xsl:call-template name="handle-context"/>
+    </xsl:if>
+  </xsl:template> <!--* match=context *-->
+
+  <xsl:template name="handle-context">
 
     <!--* title *-->
     <h2 align="center">Contextual list of Ahelp files for <xsl:value-of select="$headtitlepostfix"/></h2>
@@ -984,15 +1007,7 @@
     <!--* jump back links only if not hardcopy *-->
     <xsl:if test="$hardcopy=0"><xsl:call-template name="add-context-jump"/></xsl:if>
     
-  </xsl:template> <!--* match=context *-->
-
-  <xsl:template match="context">
-<!--
-    <xsl:message terminate="yes">
-  Internal error: processing context node that is not site='<xsl:value-of select="$site"/>'
-    </xsl:message>
--->
-  </xsl:template> <!--* match=context *-->
+  </xsl:template> <!--* name=handle-context *-->
 
   <!--* taken from helper.xsl *-->
 
