@@ -1,6 +1,67 @@
 
 *** CURRENTLY ***
 
+*) S-Lang/Python support in threads
+
+a) threadlink tag
+
+It can check if going to a multi-language page and say
+
+  "Name of thread" (<Python> or <S-Lang>) 
+
+where <Python>/<S-Lang> are the acutal links. If you want to link to
+a specific version then you have to add an attribute (proglang?) to
+say whether "sl" or "py", in which case you just get
+
+  "<Name of thread>"
+
+as before (ie the thread name is the link).
+
+See also the discussion below when used in a thread itself.
+
+b) pages
+
+add to metadata 
+
+    <proglang>sl</proglang>
+    <proglang>py</proglang>
+
+to indicate a multi-language thread. I decided against having these in
+a container as we don't really need them; I'm sure this will come back
+to haunt me (and may change if the code gets too painful). If there
+are no proglang tags then you just get a single file (as before). The
+presence of a proglang tag means that you get index.<sl|py>.html and
+an index.html file created. You can have only a single proglang tag,
+which means you get the index.<sl|py>.html file and index.html is a
+referral to it.
+
+Qus: how to encode lang-specific text/sections/...
+
+i) ahelp tags
+
+If we leave off the context then we can let ahelp + knowledge of proglang
+decide which context (eg sl.sherpa) to use. This could be extended to
+other links/pages/etc. We could also add a proglang attribute to ahelp
+tags but it's unclear how that would play out (ie if you give it then
+couldn't you just say 'context="sl.sherpa"' anyway)?
+
+ii) threadlink tags
+
+We should be able to make these clever enough as with ahelp.
+
+iii) hardcopy
+
+need separate s-lang and python PDF versions
+
+iv) general contents
+
+We could try adding proglang="sl"/proglang="py" attributes to
+say what should be included. This would probably be best handled by
+having a pre-process step that goes through and removes those nodes
+with proglang!=<desired proglang> and leaves everything else.
+
+QUS: how to handle thread indexes?
+
 *) URLs in PDFs
 
 Check whether URLs printed out in the hardcopy versions of pages -

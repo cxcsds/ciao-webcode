@@ -139,6 +139,8 @@
 #                Removed use of list_root_node, list_math, list_softlink,
 #                list_navbar
 #                stylesheet to query file, use DOM instead.
+#  26 Oct 07 DJB Started adding support for separate S-Lang/Python threads
+#                (a long way to go)
 #
  
 use strict;
@@ -1321,11 +1323,12 @@ sub xml2html_threadindex ($) {
 
 # xml2html_thread - called by xml2html
 #
-# note: use site-specific stylesheets
-#
-# note: $xslt, $outdir, and $outurl end in a /
-#
-# note: need to copy over /thread/info/files/file entries
+# Notes:
+#   use site-specific stylesheets
+#   $xslt, $outdir, and $outurl end in a /
+#   need to copy over /thread/info/files/file entries
+#   updating to support proglang tags in header which
+#     indicate creation of index.<lang>.html/index.html files
 #
 sub xml2html_thread ($) {
     my $opts = shift;
@@ -1365,38 +1368,65 @@ sub xml2html_thread ($) {
     print "Parsing [thread]: $in";
 
     # find out information about this conversion
+    # (used to be done by list_thread.xsl)
     #
-    my $list_files = translate_file "$$opts{xslt}list_thread.xsl", $dom;
+    my $rnode = $dom->documentElement();
 
-    # split the list up into sections: html, image, screen, and file
+    my @html = qw (index.html index.hard.html);
+    my @lang;
+    foreach my $node ($rnode->findnodes('info/proplang')) {
+	my $lang = $node->textContent;
+	$lang =~ s/^\s*//;
+	$lang =~ s/\s*$//;
+	$lang = lc $lang;
+	die "Error: //thread/info/proplang = '$lang' is unrecognized\n"
+	  unless $lang eq "sl" or $lang eq "py";
+	push @html, "index.${lang}.html";
+	push @lang, $lang;
+    }
+
+    push @html, map { "img$_.html"; } ( 1 .. $rnode->findnodes('images/image')->size );
+
+    # What files need pre-processing before being included?
     #
-    # we also want to find out which of these is the "youngest" file
-    # for use in the 'skip' check below
+    my @screen = map { $_->getAttribute('file'); }
+      ($rnode->findnodes('text/descendant::screen[boolean(@file)]'),
+       $rnode->findnodes('images/descendant::screen[boolean(@file)]'),
+       $rnode->findnodes('parameters/paramfile[boolean(@file)]'));
+
+#    my @image =
+#      (
+#       map { $_->getAttribute('src'); } 
+#       ($rnode->findnodes('images/image'), $rnode->findnodes('text/descendant::img')),
+#       map { $_->getAttribute('ps'); } $rnode->findnodes('images/image[boolean(@ps)]')
+#      );
+    my @image =
+      map { $_->getAttribute('src'); } 
+	($rnode->findnodes('images/image'), $rnode->findnodes('text/descendant::img'));
+    push @image,
+      map { $_->getAttribute('ps'); } $rnode->findnodes('images/image[boolean(@ps)]');
+
+    my @file = map { $_->textContent; } $rnode->findnodes('info/files/file');
+
+    # Check the files exist and find which of these is the "youngest" file,
+    # for use in the 'skip' check below.
     #
     my $time = -M "$in.xml";
-
-    my ( @html, @image, @screen, @file );
-    foreach my $page_info ( split "\n", $list_files ) {
-	my ( $type, $name ) = split " ", $page_info;
-
-	# note: only want to carry on processing within this loop if an input file
-	if    ( $type eq "html:" )      { push @html, $name; next; }
-	elsif ( $type eq "image:" )     { push @image, $name; }
-	elsif ( $type eq "screen:" )    { push @screen, $name; $name .= ".txt"; }
-	elsif ( $type eq "file:" )      { push @file, $name; }
-	else {
-	    die "Error: list_thread.xsl returned unknown type [$type]\n";
-	}
-
-	# check if file is knowm
+    foreach my $name (@image, @file) {
 	die "Error: thread needs file $name which does not exist\n"
 	  unless -e $name;
 
-	# check if it's younger than the previous files
 	my $t = -M $name;
 	$time = $t if $t < $time;
+    }
+    foreach my $name (@screen) {
+	$name .= ".txt";
+	die "Error: thread needs file $name which does not exist\n"
+	  unless -e $name;
 
-    } # foreach: $page_info
+	my $t = -M $name;
+	$time = $t if $t < $time;
+    }
 
     # how about math pages?
     #
