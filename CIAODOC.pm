@@ -18,6 +18,7 @@
 #                OS's
 #  15 Oct 07 DJB Initial support for having ahelp pages in multiple sites.
 #  17 Oct 07 DJB Changed xslt processing to use XML::LibXSLT rather than xsltproc
+#  26 Oct 07 DJB Initial support for individual S-Lang/Python pages
 #
 
 #
@@ -65,9 +66,11 @@ my @funcs_util =
     );
 my @funcs_xslt =
   qw(
-      translate_file translate_file_hardcopy create_hardcopy
-      read_xml_file find_math_pages
-   );
+     translate_file translate_file_hardcopy
+     translate_file_hardcopy_langs
+     create_hardcopy read_xml_file find_math_pages
+     preload_stylesheet
+    );
 my @funcs_cfg  =
   qw(
      parse_config find_site get_config_main get_config_main_type
@@ -100,10 +103,12 @@ sub check_executables (@);
 sub check_executable_runs ($$$);
 
 sub extract_filename ($);
-
+ 
 sub read_xml_file ($);
 sub translate_file ($$;$);
+sub translate_file_lang ($$$;$);
 sub translate_file_hardcopy ($$$;$);
+sub translate_file_hardcopy_langs ($$$$;$);
 sub create_hardcopy ($$;$);
 
 sub parse_config ($);
@@ -367,6 +372,18 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     return $xslt_store{$filename};
   }
 
+  # An ugly hack to allow strip_proplang.xsl be referenced below
+  # without a path name. This should be solved properly.
+  #
+  sub preload_stylesheet ($$) {
+      my $filename = shift;
+      my $name = shift;
+      return if exists $xslt_store{$filename};
+      my $style = $xslt->parse_stylesheet_file ($filename) ||
+	die "ERROR: unable to parse stylesheet '$filename'\n";
+      $xslt_store{$name} = $style;
+  }
+
   # Returns the DOM for the file or dies, although it may be that this
   # method already dies and I need to improve my error handling here.
   # 
@@ -473,6 +490,75 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     dbg "*** end XSLT processing (hardcopy=$hstr)";
 
   } # sub: translate_file_hardcopy()
+
+  # Return a DOM that is specialized to the given language, which
+  # should be "sl" or "py".
+  # 
+  sub specialize_lang ($$) {
+    my $dom  = shift;
+    my $lang = shift;
+
+    dbg "*** Language specialisation for lang=$lang ***";
+
+    die "Unknown language '$lang'\n" unless $lang eq "sl" or $lang eq "py";
+    die "Expect to be sent a DOM\n"
+      unless ref $dom eq "XML::LibXML::Document";
+
+    # We could trap errors, but no real need at present.
+    #
+    my $sheet = _get_stylesheet "strip_proplang.xsl";
+    my $newdom = $sheet->transform($dom, proplang => "'$lang'");
+    dbg "*** Finished language specialization (lang=$lang)";
+
+    return $newdom;
+
+  } # sub: specialize_lang()
+
+  # Process the input file/DOM so that it is specialized to the
+  # input languages - if any are supplied - and then run
+  # translate_file_hardcopy on it.
+  # $langs can be [], ["sl","py"], ["py"], or ["sl"]. If [] then
+  # we do not do any
+  #
+  # XXX TODO XXX
+  #   do we need to be clever and manipulate the output file name
+  #   in this case?
+  #
+  sub translate_file_hardcopy_langs ($$$$;$) {
+    my $stylesheet = shift;
+    my $xml_arg    = shift;
+    my $langs      = shift;
+    my $params     = shift;
+    my $hcopy      = shift || [0,1];
+
+    my $xml;
+    if (ref $xml_arg eq "") {
+      dbg "  reading XML from $xml_arg";
+      $xml = read_xml_file $xml_arg;
+
+    } elsif (ref $xml_arg eq "XML::LibXML::Document") {
+      dbg "  XML is from a DOM";
+      $xml = $xml_arg;
+
+    } else {
+      die "Expected xml_file argument to translate_file to be a string or XML::LibXML::Document, found " .
+	ref $xml_arg . " instead!\n";
+    }
+
+    if ($#$langs == -1) {
+        dbg "*** No need to specialize for language";
+	translate_file_hardcopy $stylesheet, $xml, $params, $hcopy;
+	return;
+    }
+
+    dbg "*** Specializing for languages=" . join(",",@$langs) . " ***";
+    foreach my $lang (@$langs) {
+	dbg "---> lang=$lang";
+	my $nxml = specialize_lang $xml, $lang;
+	translate_file_hardcopy $stylesheet, $nxml, $params, $hcopy;
+    }
+
+  } # sub: translate_file_hardcopy_langs()
 
 }
 

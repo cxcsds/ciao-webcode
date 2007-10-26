@@ -53,7 +53,11 @@ iii) hardcopy
 
 need separate s-lang and python PDF versions
 
-iv) general contents
+iv) img<n>.html
+
+do these need to be separate?
+
+v) general contents
 
 We could try adding proglang="sl"/proglang="py" attributes to
 say what should be included. This would probably be best handled by

@@ -1330,6 +1330,12 @@ sub xml2html_threadindex ($) {
 #   updating to support proglang tags in header which
 #     indicate creation of index.<lang>.html/index.html files
 #
+# XXX TODO XXX
+# At present we do not have language-specific versions of the
+# files we copy or include - e.g. as indicated by the screen tag -
+# which could need changing. We also assume the img<n>.html files
+# do not need separate versions; again this could change.
+#
 sub xml2html_thread ($) {
     my $opts = shift;
 
@@ -1367,8 +1373,7 @@ sub xml2html_thread ($) {
 
     print "Parsing [thread]: $in";
 
-    # find out information about this conversion
-    # (used to be done by list_thread.xsl)
+    # Find out information about this conversion
     #
     my $rnode = $dom->documentElement();
 
@@ -1419,8 +1424,8 @@ sub xml2html_thread ($) {
 	my $t = -M $name;
 	$time = $t if $t < $time;
     }
-    foreach my $name (@screen) {
-	$name .= ".txt";
+    foreach my $head (@screen) {
+	my $name = "${head}.txt";
 	die "Error: thread needs file $name which does not exist\n"
 	  unless -e $name;
 
@@ -1449,6 +1454,9 @@ sub xml2html_thread ($) {
 
     # convert the text file into XML format
     # (it will be included by the main transformation)
+    #
+    # For now we assume we do not need language-specific versions,
+    # but this could change.
     #
     foreach my $page ( @screen ) {
 	my $in  = "$page.txt";
@@ -1527,7 +1535,11 @@ sub xml2html_thread ($) {
        imglinkiconheight => $imglinkiconheight,
       );
 
-    translate_file_hardcopy "$$opts{xslt}${site}_thread.xsl", $dom, \%params;
+    # Hack to avoid translate_file_langs having to know the xslt path
+    # (not a very good idea)
+    #
+    preload_stylesheet "$$opts{xslt}strip_proplang.xsl", "strip_proplang.xsl";
+    translate_file_hardcopy_langs "$$opts{xslt}${site}_thread.xsl", $dom, \@lang, \%params;
 
     # set the correct owner/permissions for the HTML files
     #
@@ -1545,6 +1557,8 @@ sub xml2html_thread ($) {
     # create the hardcopy files
     # [perhaps should return an array of files that are processed by xml2html?]
     #
+    # XXX TODO XXX
+    #    check support for multi-language?
     create_hardcopy $outdir, "index", $threadname;
 
     # delete the converted screen files
