@@ -36,6 +36,8 @@
 #                were changed need a valid content)
 #   2007 Oct 16 DJB
 #     Updated to handle new site-specific ahelp versions for CIAO 4
+#   2007 Oct 29 DJB
+#     Initial suport for threadlink/proglang handling.
 #
 
 use strict;
@@ -46,6 +48,7 @@ use lib "..";
 use TESTS;
 
 sub add_test ($$$$);
+sub add_test_proglang ($$$$);
 sub write_xsl ();
 sub write_script ();
 
@@ -367,6 +370,14 @@ add_test "threadlink_thread_name_id", "threadlink",
   { name => 'foo', id => 'foo-1', @text },
   { href => '../foo/index.html#foo-1', deftext => '', styles => 'no_uc', no_fix => 1, no_depth => 1, site => 'all', root => 'thread', @text };
 
+add_test_proglang "threadlink_name_proglang", "threadlink",
+  { name => 'bar', @text },
+  { href => 'threads/bar/index.XX.html', deftext => '', styles => 'no_uc', no_fix => 1, site => 'all', @text };
+
+add_test_proglang "threadlink_name_id_proglang", "threadlink",
+  { name => 'bar', id => 'bar-1', @text },
+  { href => 'threads/bar/index.XX.html#bar-1', deftext => '', styles => 'no_uc', no_fix => 1, site => 'all', @text };
+
 # test the 'site' attribute
 #
 # note the test checks fail - beacuse of the test code not beacuse the
@@ -424,6 +435,142 @@ sub is_set ($$) {
     return exists $$href{$key} and $$href{$key} eq "1";
 } # is_set
 
+# creates the link text
+#
+sub process_text ($$$$) {
+  my $text   = shift;
+  my $dtxt   = shift;
+  my $styles = shift;
+  my $attr   = shift;
+
+  # create the text link
+  # - we only turn it to upper case if uc is set
+  #   and styles = all and no text was supplied
+  my $otxt = $text eq "" ? $dtxt : $text;
+  $otxt = uc $otxt if
+    $text eq "" and $styles eq "all" and is_set "uc", $attr;
+  return $otxt;
+
+} # process_text
+
+
+# Create the input XML file
+#
+sub write_input_xml ($$$$$) {
+  my $name   = shift;
+  my $root   = shift;
+  my $tag    = shift;
+  my $basic  = shift;
+  my $test_attr = shift;
+
+  my $test_string = get_xml_header($root);
+
+  # INPUT
+  foreach my $i ( 0 .. $#$basic ) {
+    my $aref = $$basic[$i];
+
+    $test_string .=
+      sprintf "Test %02d: <$tag", $i+1;
+
+    my $attr = { %{$$aref[1]}, %$test_attr };
+
+    # set up the link text
+    my $text = defined $$attr{text} ? $$attr{text} : $$aref[0];
+
+    while ( my ( $key, $value ) = each %$attr ) {
+      next if $key eq "text";
+      $test_string .= " $key=\"$value\"";
+    }
+
+    if ( $text eq "" ) {
+      $test_string .= "/>\n";
+    } else {
+      $test_string .= ">$text</$tag>\n";
+    }
+  }
+  $test_string .= "</$root>\n";
+
+  my $ofile = "${indir}/$name.xml";
+  write_out $test_string, $ofile;
+  print "Created: $ofile\n";
+  push @in, $name;
+
+} # write_input_xml
+
+# Create a link
+#
+sub create_link ($$$$$$$$$$) {
+  my $href  = shift;
+  my $dir   = shift;
+  my $tag   = shift;
+  my $htags = shift;
+  my $attr  = shift;
+  my $lsite = shift;
+  my $site  = shift;
+  my $nodepth = shift;
+  my $isa_http = shift;
+  my $contents = shift;
+
+  my $out_string = "<a ";
+  $out_string .= "class=\"helplink\" "
+    if exists $$htags{$tag};
+
+  # add 'title' attribute if available
+  # VERY hacky way to have site-specific values
+  #
+  if ( exists $$attr{title}) {
+    my $text = $$attr{title};
+    if (ref $text eq "HASH") {
+      die "Error: expected title hash to include a value for key=$site\n"
+	unless exists $$text{$site};
+      $text = $$text{$site}
+    }
+    if ( $text =~ /"/ ) {
+      $out_string .= "title='$text' ";
+    } else {
+      $out_string .= "title=\"$text\" ";
+    }
+  }
+
+  $out_string .= "href=\"";
+
+  # do we have to bother with depth?
+  #
+  if ( exists $$lsite{all} ) {
+
+    $href = "${dir}$href"
+      if not $nodepth;
+
+  } elsif ( exists $$lsite{$site} ) {
+    
+    $href = "${dir}$href"
+      unless $nodepth or $isa_http;
+
+  } else {
+
+    # for now we default to the first site in the list if there's
+    # multiple matches [ugly ugly ugly, works for faq links]
+    #
+    unless ( substr($href,0,1) eq "/" or $isa_http ) {
+      while ( my ( $sitename, $siteval ) = each %$lsite ) {
+	next if $siteval;
+	$href = "/${sitename}/$href";
+      }
+    }
+
+  } # mangle href
+
+  $out_string .= "$href\">";
+
+  $out_string .= $contents;
+
+  $out_string .= "</a>";
+
+  return $out_string;
+
+} # create_link
+
+
 # add_test( $name, $tag, $test_attr, $out_attr );
 #
 # modifies the global variables @in and %root
@@ -450,6 +597,8 @@ sub is_set ($$) {
 #      it can also be an associative array, in which case there should be a string
 #      with a key set to each site value used in the test.
 #
+# NEED TO COMBINE add_test AND add_test_proglang
+#
 sub add_test ($$$$) {
     unless ( $dotest ) {
 	print "-- Skipping test: $_[0]\n";
@@ -465,41 +614,10 @@ sub add_test ($$$$) {
     my $root = $$out_attr{root} || "test";
     $root{$root} = 1;
 
-    my $test_string = get_xml_header($root);
-
     # to make things 'simpler' we create the input first
     # and then do multiple passes to create the output files
     #
-
-    # INPUT
-    foreach my $i ( 0 .. $#basic ) {
-	my $aref = $basic[$i];
-
-	$test_string .=
-	  sprintf "Test %02d: <$tag", $i+1;
-
-	my $attr = { %{$$aref[1]}, %$test_attr };
-
-	# set up the link text
-	my $text = defined $$attr{text} ? $$attr{text} : $$aref[0];
-
-	while ( my ( $key, $value ) = each %$attr ) {
-	    next if $key eq "text";
-	    $test_string .= " $key=\"$value\"";
-	}
-
-	if ( $text eq "" ) {
-	    $test_string .= "/>\n";
-	} else {
-	    $test_string .= ">$text</$tag>\n";
-	}
-    }
-    $test_string .= "</$root>\n";
-
-    my $ofile = "${indir}/$name.xml";
-    write_out $test_string, $ofile;
-    print "Created: $ofile\n";
-    push @in, $name;
+    write_input_xml $name, $root, $tag, \@basic, $test_attr;
 
     # OUTPUT
     #
@@ -546,66 +664,8 @@ sub add_test ($$$$) {
 			$out_string .= "<tt>" if is_set "tt", $attr;
 		    }
 
-		    $out_string .= "<a ";
-		    $out_string .= "class=\"helplink\" "
-		      if exists $helplink_tags{$tag};
-
-		    # add 'title' attribute if available
-		    # VERY hacky way to have site-specific values
-		    #
-		    if ( exists $$attr{title}) {
-			my $text = $$attr{title};
-			if (ref $text eq "HASH") {
-			  die "Error: expected title hash to include a value for key=$site\n"
-			    unless exists $$text{$site};
-			  $text = $$text{$site}
-			}
-			if ( $text =~ /"/ ) {
-			    $out_string .= "title='$text' ";
-			} else {
-			    $out_string .= "title=\"$text\" ";
-			}
-		    }
-
-		    $out_string .= "href=\"";
-
-		    # do we have to bother with depth?
-		    #
-		    if ( exists $lsite{all} ) {
-
-			$href = "${dir}$href"
-			  if not $nodepth;
-
-		    } elsif ( exists $lsite{$site} ) {
-
-			$href = "${dir}$href"
-			  unless $nodepth or $isa_http;
-
-		    } else {
-
-			# for now we default to the first site in the list if there's
-			# multiple matches [ugly ugly ugly, works for faq links]
-			#
-			unless ( substr($href,0,1) eq "/" or $isa_http ) {
-			    while ( my ( $sitename, $siteval ) = each %lsite ) {
-				next if $siteval;
-				$href = "/${sitename}/$href";
-			    }
-			}
-
-		    } # mangle href
-
-		    $out_string .= "$href\">";
-
-		    # create the text link
-		    # - we only turn it to upper case if uc is set
-		    #   and styles = all and no text was supplied
-		    my $otxt = $text eq "" ? $dtxt : $text;
-		    $otxt = uc $otxt if
-		      $text eq "" and $styles eq "all" and is_set "uc", $attr;
-		    $out_string .= $otxt;
-
-		    $out_string .= "</a>";
+		    $out_string .= create_link $href, $dir, $tag, \%helplink_tags, $attr, \%lsite, 
+		      $site, $nodepth, $isa_http, process_text ($text, $dtxt, $styles, $attr);
 
 		    # are we interested in styles?
 		    unless ( $styles eq "none" ) {
@@ -627,6 +687,113 @@ sub add_test ($$$$) {
     } # for: $type
 
 } # sub: add_test()
+
+# I have copied add_test rather than re-factoring the code as done in a rush
+#
+sub add_test_proglang ($$$$) {
+    unless ( $dotest ) {
+	print "-- Skipping test: $_[0]\n";
+	return;
+    }
+
+    my $name = shift;
+    my $tag  = shift;
+    my $test_attr = shift || {};
+    my $out_attr  = shift || {};
+
+    # get the root node
+    my $root = $$out_attr{root} || "test";
+    $root{$root} = 1;
+
+    # to make things 'simpler' we create the input first
+    # and then do multiple passes to create the output files
+    #
+    write_input_xml $name, $root, $tag, \@basic, $test_attr;
+
+    # OUTPUT
+    #
+    my $out_hdr = get_html_header();
+
+    my $styles  = $$out_attr{styles} || "all";
+    my $dtxt    = $$out_attr{deftext} || "";
+    my $nodepth = $$out_attr{no_depth} || 0;
+    my $nofix   = $$out_attr{no_fix} || 0;
+
+    # site handling is now even more of a mess thanks to faq tag
+    # l for linksite (made up to differentiate from $site)
+    # - use ctr since want to be able to pick the first element of this
+    #   list later on and am too tired to do this sensibly
+    my $ctr = 0;
+    my %lsite = map { ($_,$ctr++); } split( /,/, $$out_attr{site} || "ciao" );
+
+    my $out_href = $$out_attr{href} || die "missing href\n";
+    my $isa_http = substr($out_href,0,4) eq "http";
+
+    foreach my $type ( qw( live test ) ) {
+	foreach my $site ( qw( ciao chart sherpa ) ) {
+	    foreach my $depth ( qw( 1 2 ) ) {
+
+		my $out_string = $out_hdr;
+		my $dir = '../' x ($depth-1);
+
+		foreach my $i ( 0 .. $#basic ) {
+		    my $aref = $basic[$i];
+		    my $attr = { %{$$aref[1]}, %$out_attr };
+
+		    # what is the link text
+		    my $text = defined $$attr{text} ? $$attr{text} : $$aref[0];
+
+		    # we modify this later so need a copy
+		    my $href = $out_href;
+
+		    $out_string .=
+		      sprintf "Test %02d: ", $i+1;
+
+		    # are we interested in styles?
+		    unless ( $styles eq "none" ) {
+			$out_string .= "<em>" if is_set "em", $attr;
+			$out_string .= "<tt>" if is_set "tt", $attr;
+		    }
+
+		    # What is the text?
+		    #
+		    $out_string .= process_text $text, $dtxt, $styles, $attr;
+
+		    # Add in the S-Lang and Python links
+		    #
+		    $out_string .= " (";
+		    $href =~ s/XX/sl/;
+		    $out_string .= create_link $href, $dir, "", {}, {}, \%lsite, 
+		      $site, $nodepth, 0, "S-Lang";
+		    $out_string .= " or ";
+
+		    $href = $out_href;
+		    $href =~ s/XX/py/;
+		    $out_string .= create_link $href, $dir, "", {}, {}, \%lsite, 
+		      $site, $nodepth, 0, "Python";
+		    $out_string .= ")";
+
+		    # are we interested in styles?
+		    unless ( $styles eq "none" ) {
+			$out_string .= "</tt>" if is_set "tt", $attr;
+			$out_string .= "</em>" if is_set "em", $attr;
+		    }
+
+		    $out_string .= "\n";
+		}
+
+		$out_string .= "\n";
+
+		my $ofile = "${outdir}/${name}_${type}_${site}_d${depth}";
+		write_out $out_string, $ofile;
+##		print "             $ofile\n";
+
+	    } # for: $depth
+	} # for: $site
+    } # for: $type
+
+} # sub: add_test_proglang()
+
 
 # write the test stylesheet
 sub write_xsl () {
@@ -677,7 +844,7 @@ EOD
         set out = out/xslt.$h
 
         if ( -e $out ) rm -f $out
-        $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml test.xsl in/${id}.xml > $out
+        $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml --stringparam storage `pwd`/storage/ test.xsl in/${id}.xml > $out
         diff out/${h} $out
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s]\n" $ctr $h

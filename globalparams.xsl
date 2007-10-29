@@ -5,6 +5,8 @@
     * List of "global" templates for the web-page stylesheets
     *
     * Recent changes:
+    *   2007 Oct 26 DJB Added proglang and storage parameters
+    *
     *   v1.7 - added hardcopy parameter
     *   v1.6 - added cssprintfile parameter
     *   v1.5 - added headtitlepostfix and texttitlepostfix parameters
@@ -68,7 +70,22 @@
     *    version. Setting to 1 with site=icxc is not valid but we do not
     *    check for this
     *
-   *-->
+    *  . storage - string, optional, default=''
+    *    gives the location of the "storage" files - ie the copies of the
+    *    published XML documents for the site/version. This is currently
+    *    needed so we can access the thread pages for the threadlink tags
+    *    (proglang info). It should be sent to the top-level storage
+    *    location for the site/version, not the location for this particular
+    *    page - EXCEPT THAT I DO NOT KNOW HOW WE ARE GOING TO HANDLE LINKS
+    *    BETWEEN SITES USING THIS SCHEME ...
+    *
+    *    For now we assume the threadlinking is done within the same site
+    *
+    *  . proglang - string, optional, default=''
+    *    if set - to either "sl" or "py" - then 'specialize' the document
+    *    for the given language.
+    *
+    *-->
 
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -102,4 +119,13 @@
 
   <xsl:param name="depth" select="1"/>
   
+  <!--*
+      * If set (not empty) to sl or py then the output document should
+      * be for the given language (S-lang or Python)
+      *-->
+  <xsl:param name="proglang" select="''"/>
+
+  <!--* not sure about this; see header *-->
+  <xsl:param name="storage" select="''"/>
+
 </xsl:stylesheet>

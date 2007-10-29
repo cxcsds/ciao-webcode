@@ -1,6 +1,15 @@
 
 *** CURRENTLY ***
 
+do we need to add proplang support to threadpage as well? Need to
+sort out threadindex stuff to support this too
+
+PROBLEM: need to send in storage location for threads so that we
+can find out whether they support multiple languages or not, but
+this can be done for cross-site threads, which means we need to
+send in multiple storage locations somehow... For the initial
+implementation restrict to no cross-site handling...
+
 *) S-Lang/Python support in threads
 
 a) threadlink tag
@@ -55,7 +64,8 @@ need separate s-lang and python PDF versions
 
 iv) img<n>.html
 
-do these need to be separate?
+do these need to be separate? I think they do - need to update code to
+allow this
 
 v) general contents
 
@@ -65,6 +75,9 @@ having a pre-process step that goes through and removes those nodes
 with proglang!=<desired proglang> and leaves everything else.
 
 QUS: how to handle thread indexes?
+
+Should HTML METADATA header (eg title) and actual page name/header
+include " (S-Lang)" or " (Python)" when specialized?
 
 *) URLs in PDFs
 

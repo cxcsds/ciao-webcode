@@ -5,6 +5,8 @@
     * Create the HTML version of the CIAO thread
     *
     * Recent changes:
+    * 2007 Oct 29 DJB
+    *    start work on supporting proglang (=sl or py)
     * 2007 Oct 19 DJB
     *    depth parameter is now a global, no need to send around
     *  v1.27 - add version under thread title
@@ -84,10 +86,16 @@
   </xsl:template>
 
   <!--* 
-      * top level - create:
+      * top level
+      * if proglang == '' then create
       *   index.html                - hardcopy != 1
       *   img<n>.html               - hardcopy != 1
       *   $install/index.hard.html  - hardcopy = 1
+      * else create
+      *   index.<proglang>.html                - hardcopy != 1
+      *   img<n>.<proglang>.html               - hardcopy != 1
+      *   $install/index.hard.<proglang>.html  - hardcopy = 1
+      *   in this case no index.html case is created (heardcopy != 1)
       *
       *-->
 
@@ -95,12 +103,11 @@
 
     <!--* check the params are okay *-->
     <xsl:call-template name="is-site-valid"/>
-    <xsl:if test="substring($install,string-length($install))!='/'">
-      <xsl:message terminate="yes">
-  Error: install parameter must end in a / character.
-    install=<xsl:value-of select="$install"/>
-      </xsl:message>
-    </xsl:if>
+    <xsl:call-template name="check-param-ends-in-a-slash">
+      <xsl:with-param name="pname" select="'install'"/>
+      <xsl:with-param name="pvalue" select="$install"/>
+    </xsl:call-template>
+    <xsl:call-template name="is-proglang-valid"/>
 
     <xsl:choose>
       <xsl:when test="$hardcopy = 1">
@@ -116,11 +123,27 @@
   </xsl:template> <!-- match="/" *-->
 
   <!--*
-      * create: $install/index.hard.html
+      * create:
+      *    $install/index.hard.html
+      * or
+      *    $install/index.hard.<proglang>.html
       *-->
   <xsl:template match="thread" mode="html-hardcopy">
 
-    <xsl:variable name="filename"><xsl:value-of select="$install"/>index.hard.html</xsl:variable>
+    <xsl:variable name="langid"><xsl:choose>
+      <xsl:when test="$proglang=''"/>
+      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
+    <xsl:variable name="filename"
+		  select="concat($install,'index.hard',langid,'.html')"/>
+
+    <xsl:variable name="urlfrag">
+      <xsl:value-of select="concat('threads/',$threadName,'/')"/>
+      <xsl:if test="$proglang != ''">
+	<xsl:value-of select="concat('index',$langid,'.html')"/>
+      </xsl:if>
+    </xsl:variable>
 
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html" 
@@ -158,9 +181,9 @@
 
 	  <!--* start the thread *-->
 
-	  <!--* make the header *-->
+	  <!--* Make the header. *-->
 	  <xsl:call-template name="add-id-hardcopy">
-	    <xsl:with-param name="urlfrag" select="concat('threads/',$threadName,'/')"/>
+	    <xsl:with-param name="urlfrag" select="$urlfrag"/>
 	    <xsl:with-param name="lastmod" select="$lastmodified"/>
 	  </xsl:call-template>
 	  <xsl:call-template name="add-hr-strong"/>
@@ -189,7 +212,7 @@ w
 	  <br/>
 	  <xsl:call-template name="add-hr-strong"/>
 	  <xsl:call-template name="add-id-hardcopy">
-	    <xsl:with-param name="urlfrag" select="concat('threads/',$threadName,'/')"/>
+	    <xsl:with-param name="urlfrag" select="$urlfrag"/>
 	    <xsl:with-param name="lastmod" select="$lastmodified"/>
 	  </xsl:call-template>
 
@@ -230,12 +253,21 @@ w
   </xsl:template> <!--* match=thread mode=html-hardcopy *-->
 
   <!--*
-      * create: $install/index.html
+      * create:
+      *    $install/index.html
+      * or
+      *    $install/index.<proglang>.html
       *-->
   <xsl:template match="thread" mode="html-viewable">
     
-    <xsl:variable name="filename"><xsl:value-of select="$install"/>index.html</xsl:variable>
-    
+    <xsl:variable name="langid"><xsl:choose>
+      <xsl:when test="$proglang=''"/>
+      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
+    <xsl:variable name="filename"
+		  select="concat($install,'index',langid,'.html')"/>
+
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html" 
       version="4.0" encoding="us-ascii">

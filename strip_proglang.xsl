@@ -2,9 +2,9 @@
 <!DOCTYPE xsl:stylesheet>
 
 <!--*
-    * Strip out only those elements that contain a proplang attribute
+    * Strip out only those elements that contain a proglang attribute
     * and whose value (of the attribute) does not equal the
-    * proplang parameter.
+    * proglang parameter.
     *-->
 
 <xsl:stylesheet version="1.0"
@@ -12,12 +12,12 @@
 
   <xsl:output method="xml"/>
 
-  <xsl:param name="proplang" select='""'/>
+  <xsl:param name="proglang" select='""'/>
 
   <xsl:template match="/">
-    <xsl:if test="$proplang = ''">
+    <xsl:if test="$proglang = ''">
       <xsl:message terminate="yes">
-  ERROR: proplang parameter not set
+  ERROR: proglang parameter not set
       </xsl:message>
     </xsl:if>
     <xsl:apply-templates/>
@@ -25,7 +25,7 @@
 
   <!--*
       * I want to say
-      *   <xsl:template match="*[boolean(@proplang) and @proplang!=$proplang]"/>
+      *   <xsl:template match="*[boolean(@proglang) and @proglang!=$proglang]"/>
       * but this doesn't work with xsltproc version
       *   Using libxml 20629, libxslt 10121 and libexslt 813
       *   xsltproc was compiled against libxml 20628, libxslt 10121 and libexslt 813
@@ -41,7 +41,7 @@
   </xsl:template>
 
   <xsl:template match="*">
-    <xsl:if test='(boolean(@proplang) and @proplang=$proplang) or boolean(@proplang)=false()'>
+    <xsl:if test='(boolean(@proglang) and @proglang=$proglang) or boolean(@proglang)=false()'>
       <xsl:copy>
 	<xsl:apply-templates select="*|@*|text()"/>
       </xsl:copy>
@@ -49,7 +49,7 @@
   </xsl:template>
 
 <!--
-  <xsl:template match="*[boolean(@proplang) and @proplang!=$proplang]"/>
+  <xsl:template match="*[boolean(@proglang) and @proglang!=$proglang]"/>
   <xsl:template match="*|@*|text()">
     <xsl:copy>
       <xsl:apply-templates select="*|@*|text()"/>

@@ -48,6 +48,7 @@ foreach id ( \
  cxclink_href  cxclink_href_id  cxclink_id  cxclink_extlink  helpdesk  \
  threadpage  threadpage_id  threadpage_name  threadpage_name_id  threadlink_name  \
  threadlink_name_id  threadlink_thread  threadlink_thread_id  threadlink_thread_name  threadlink_thread_name_id  \
+ threadlink_name_proglang  threadlink_name_id_proglang  \
   )
 
   foreach type ( live test )
@@ -57,7 +58,7 @@ foreach id ( \
         set out = out/xslt.$h
 
         if ( -e $out ) rm -f $out
-        $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml test.xsl in/${id}.xml > $out
+        $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml --stringparam storage `pwd`/storage/ test.xsl in/${id}.xml > $out
         diff out/${h} $out
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s]\n" $ctr $h

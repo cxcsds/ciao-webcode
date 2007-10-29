@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+Test 01: foo foo (<a href="../threads/bar/index.sl.html#bar-1">S-Lang</a> or <a href="../threads/bar/index.py.html#bar-1">Python</a>)
+Test 02: foo foo (<a href="../threads/bar/index.sl.html#bar-1">S-Lang</a> or <a href="../threads/bar/index.py.html#bar-1">Python</a>)
+Test 03: <tt>foo foo (<a href="../threads/bar/index.sl.html#bar-1">S-Lang</a> or <a href="../threads/bar/index.py.html#bar-1">Python</a>)</tt>
+Test 04: <em>foo foo (<a href="../threads/bar/index.sl.html#bar-1">S-Lang</a> or <a href="../threads/bar/index.py.html#bar-1">Python</a>)</em>
+Test 05: <tt>foo foo (<a href="../threads/bar/index.sl.html#bar-1">S-Lang</a> or <a href="../threads/bar/index.py.html#bar-1">Python</a>)</tt>
+Test 06: <em>foo foo (<a href="../threads/bar/index.sl.html#bar-1">S-Lang</a> or <a href="../threads/bar/index.py.html#bar-1">Python</a>)</em>
+Test 07: <em><tt>foo foo (<a href="../threads/bar/index.sl.html#bar-1">S-Lang</a> or <a href="../threads/bar/index.py.html#bar-1">Python</a>)</tt></em>
+Test 08: <em><tt>foo foo (<a href="../threads/bar/index.sl.html#bar-1">S-Lang</a> or <a href="../threads/bar/index.py.html#bar-1">Python</a>)</tt></em>
+Test 09: foo foo (<a href="../threads/bar/index.sl.html#bar-1">S-Lang</a> or <a href="../threads/bar/index.py.html#bar-1">Python</a>)
+Test 10: foo foo (<a href="../threads/bar/index.sl.html#bar-1">S-Lang</a> or <a href="../threads/bar/index.py.html#bar-1">Python</a>)
+

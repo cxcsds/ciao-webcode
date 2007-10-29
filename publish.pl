@@ -1333,8 +1333,7 @@ sub xml2html_threadindex ($) {
 # XXX TODO XXX
 # At present we do not have language-specific versions of the
 # files we copy or include - e.g. as indicated by the screen tag -
-# which could need changing. We also assume the img<n>.html files
-# do not need separate versions; again this could change.
+# which could need changing.
 #
 sub xml2html_thread ($) {
     my $opts = shift;
@@ -1377,20 +1376,41 @@ sub xml2html_thread ($) {
     #
     my $rnode = $dom->documentElement();
 
-    my @html = qw (index.html index.hard.html);
+    my @html;
     my @lang;
-    foreach my $node ($rnode->findnodes('info/proplang')) {
+    foreach my $node ($rnode->findnodes('info/proglang')) {
 	my $lang = $node->textContent;
 	$lang =~ s/^\s*//;
 	$lang =~ s/\s*$//;
 	$lang = lc $lang;
-	die "Error: //thread/info/proplang = '$lang' is unrecognized\n"
+	die "Error: //thread/info/proglang = '$lang' is unrecognized\n"
 	  unless $lang eq "sl" or $lang eq "py";
 	push @html, "index.${lang}.html";
 	push @lang, $lang;
     }
 
-    push @html, map { "img$_.html"; } ( 1 .. $rnode->findnodes('images/image')->size );
+    # We assume that there are either 0, 1, or 2 proglang elements below,
+    # and that they are unique.
+    #
+    die "Unexpected number of //thread/info/proglang elements in $in\n"
+      if $#lang >= 2;
+    die "Repeated //thread/info/proglang elements in $in\n"
+      if $#lang == 1 and $lang[0] eq $lang[1];
+
+    if ($#lang == -1) {
+      push @html, "index.html";
+      push @html, "index.hard.html";
+      push @html, map { "img$_.html"; } ( 1 .. $rnode->findnodes('images/image')->size );
+    } else {
+      foreach my $lang ( @lang ) {
+	push @html, "index.${lang}.html";
+	push @html, "index.hard.${lang}.html";
+	push @html, map { "img${_}.${lang}.html"; } ( 1 .. $rnode->findnodes('images/image')->size );
+      }
+    }
+
+    die "Error: no HTML files to be generated for thread=$in!\n"
+      if $#html == -1;
 
     # What files need pre-processing before being included?
     #
@@ -1444,6 +1464,9 @@ sub xml2html_thread ($) {
     # + need to add installation dir onto output file names
     #   and hack the .hard. version so that we look for the
     #   correct pdf file names (not index.[a4|letter].pdf)
+    #
+    # XXX TODO XXX
+    #   update this to handle proglang!='', if necessary
     #
     return if should_we_skip \$time,
       map { my $a = $_; $a =~ s/index\.hard\.html$/$threadname.hard.html/; "${outdir}$a"; } @html,
@@ -1538,7 +1561,7 @@ sub xml2html_thread ($) {
     # Hack to avoid translate_file_langs having to know the xslt path
     # (not a very good idea)
     #
-    preload_stylesheet "$$opts{xslt}strip_proplang.xsl", "strip_proplang.xsl";
+    preload_stylesheet "$$opts{xslt}strip_proglang.xsl", "strip_proglang.xsl";
     translate_file_hardcopy_langs "$$opts{xslt}${site}_thread.xsl", $dom, \@lang, \%params;
 
     # set the correct owner/permissions for the HTML files
@@ -1564,6 +1587,82 @@ sub xml2html_thread ($) {
     # delete the converted screen files
     #
     foreach my $page ( @screen ) { myrm "$page.xml"; }
+
+    # No langauge support? We can leave now.
+    #
+    if ($#lang == -1) {
+      print "\nThe thread can be viewed at:\n  $outurl\n\n";
+      return;
+    }
+
+    # If proglang != '' then we need an index.html file. Its contents
+    # depend on whether there are one or two languages to be created.
+    # We create either a redirect or page DOM and then treat it as
+    # a separate document. We could create it manually via DOM
+    # manipulation but it's easier to create it as a string.
+    #
+    # Copy over the options we were sent in. We explicitly override
+    # some of these values below. Hopefully the presence of the rest
+    # will not be a problem.
+    #
+    my %nopts;
+    while ( my ($key, $value) = each %$opts ) {
+      $nopts{$key} = $value;
+    }
+
+    my $xml_text = <<'EOX';
+<?xml version="1.0" encoding="us-ascii">
+EOX
+
+    my $process;
+    my $infostr;
+    if ( $#lang == 0 ) {
+      # simple redirect
+      #
+      $infostr = "redirect";
+      $process = &xml2html_redirect;
+      my $lang = $lang[0];
+      $xml_text .= <<"EOX";
+<!DOCTYPE redirect>
+<redirect><to>index.$lang.html</to></redirect>
+EOX
+    } else {
+      # a page offering a choice
+      #
+      $infostr = "page";
+      $process = &xml2html_page;
+
+      my $thread_title_short = $rnode->findvalue('info/title/short');
+      my $thread_title_long;
+      if ($rnode->findvalue('boolean(info/title/long)') eq "true") {
+	$thread_title_long = $rnode->findvalue('info/title/long');
+      } else {
+	$thread_title_long = $thread_title_short;
+      }
+	
+      # For now no navbar or meta information
+      #
+      $xml_text .= <<"EOX";
+<!DOCTYPE page>
+<page>
+<info>
+ <title><short>${thread_title_short}: S-Lang or Python?</short></title>
+</info>
+<text>
+<p>Please choose the S-Lang or Python version of the thread
+"${thread_title_long}".</p>
+<list>
+ <li><threadlink name="${threadname}" proglang="sl">S-Lang</threadlink></li>
+ <li><threadlink name="${threadname}" proglang="py">Python</threadlink></li>
+</list>
+</text>
+</page>
+EOX
+    }
+    $nopts{xml} = "index";
+    $nopts{xml_dom} = parse_xml_chunk $xml_text;
+    dbg "-- about to create index page for multi-language thread with root=$infostr";
+    &$process (\%nopts);
 
     print "\nThe thread can be viewed at:\n  $outurl\n\n";
 

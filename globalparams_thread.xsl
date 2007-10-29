@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="us-ascii" ?>
 <!DOCTYPE xsl:stylesheet>
 
-<!-- List of "global" templates for the thread stylesheets -->
-<!-- $Id: globalparams_thread.xsl,v 1.1 2003/07/22 18:30:54 dburke Exp $ -->
-
 <!--*
-    * Recent changes:
-    *   v1.1 - Initial version
+    * List of "global" templates for the thread stylesheets
     *
     * Note:
     *  load in the default global parameters and then add thread-related

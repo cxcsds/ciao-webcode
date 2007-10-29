@@ -3,6 +3,8 @@
 
 <!--* 
     * Recent changes:
+    * 2007 Oct 29 DJB
+    *    added is-proglang-valid
     * 2007 Oct 22 DJB
     *    belatedly changed copyright date from "-2006" to "-2007"
     * 2007 Oct 19 DJB
@@ -135,6 +137,9 @@
   <xsl:variable name="allowed-pdf" select="' page faq dictionary bugs register threadindex thread '"/>
   <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc '"/>
   <xsl:variable name="allowed-download-types" select="' solaris linux6 linux8 fc4 osx osx_ppc osx_intel caldb atomdb '"/>
+
+  <!--* note that '' is also allowed for proglang but this is checked for separately *-->
+  <xsl:variable name="allowed-proglang" select="' py sl '"/>
 
   <!--*
       * handle unknown tags
@@ -790,6 +795,20 @@
       </xsl:message>
     </xsl:if>
   </xsl:template> <!--* name=is-site-valid *-->
+
+  <xsl:template name="is-proglang-valid">
+    <xsl:choose>
+      <xsl:when test="$proglang=''"/>
+      <xsl:when test="contains($allowed-sites,concat(' ',$site,' '))=true()"/>
+      <xsl:otherwise>
+	<xsl:message terminate="yes">
+  Error:
+    proglang parameter [<xsl:value-of select="$proglang"/>] is unknown
+    allowed values: '' or <xsl:value-of select="$allowed-proglang"/>
+	</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template> <!--* name=is-proglang-valid *-->
 
   <!--***
       *** check parameters are okay

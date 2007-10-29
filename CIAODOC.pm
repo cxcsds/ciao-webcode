@@ -68,7 +68,8 @@ my @funcs_xslt =
   qw(
      translate_file translate_file_hardcopy
      translate_file_hardcopy_langs
-     create_hardcopy read_xml_file find_math_pages
+     create_hardcopy read_xml_file read_xml_chunk
+     find_math_pages
      preload_stylesheet
     );
 my @funcs_cfg  =
@@ -105,6 +106,7 @@ sub check_executable_runs ($$$);
 sub extract_filename ($);
  
 sub read_xml_file ($);
+sub read_xml_chunk ($);
 sub translate_file ($$;$);
 sub translate_file_lang ($$$;$);
 sub translate_file_hardcopy ($$$;$);
@@ -372,7 +374,7 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     return $xslt_store{$filename};
   }
 
-  # An ugly hack to allow strip_proplang.xsl be referenced below
+  # An ugly hack to allow strip_proglang.xsl be referenced below
   # without a path name. This should be solved properly.
   #
   sub preload_stylesheet ($$) {
@@ -397,6 +399,17 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     dbg " - about to read XML file '$filename'";
     $parser->parse_file ($filename)
       or die "ERROR: unable to parse XML file '$filename'\n";
+  }
+
+  # As read_xml_file but use the input string as the file
+  # contents.
+  #
+  sub read_xml_chunk ($) {
+    my $chunk = shift;
+    my $firstline = (split(/\n/,$chunk))[0];
+    dbg " - about to parse XML chunk, first line='$firstline'";
+    $parser->parse_xml_chunk ($chunk)
+      or die "ERROR: unable to parse XML chunk, start='$firstline'\n";
   }
 
   # TODO:
@@ -506,8 +519,8 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
 
     # We could trap errors, but no real need at present.
     #
-    my $sheet = _get_stylesheet "strip_proplang.xsl";
-    my $newdom = $sheet->transform($dom, proplang => "'$lang'");
+    my $sheet = _get_stylesheet "strip_proglang.xsl";
+    my $newdom = $sheet->transform($dom, proglang => "'$lang'");
     dbg "*** Finished language specialization (lang=$lang)";
 
     return $newdom;
@@ -555,6 +568,7 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     foreach my $lang (@$langs) {
 	dbg "---> lang=$lang";
 	my $nxml = specialize_lang $xml, $lang;
+	$$params{proglang} = $lang;
 	translate_file_hardcopy $stylesheet, $nxml, $params, $hcopy;
     }
 

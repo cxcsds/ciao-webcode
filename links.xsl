@@ -5,6 +5,8 @@
     * attempt to provide a common stylesheet for links
     *
     * Recent changes:
+    * 2007 Oct 29 DJB
+    *    add support fro proglang attribute for threadlink
     * 2007 Oct 19 DJB
     *    depth parameter is now a global, no need to send around
     * 2007 Oct 16 DJB
@@ -117,7 +119,7 @@
     * Ahelp support:
     *   If a page uses the ahelp tag then the master/initial/control stylesheet
     *   needs to include something like
-
+    *
     *  . ahelpindex=full path to ahelp index file created by mk_ahelp_setup.pl
     *    something like /data/da/Docs/ciaoweb/published/ciao3/live/ahelp/ahelpindex.xml
     *    Used to work out the ahelp links
@@ -127,6 +129,11 @@
   <xsl:variable name="ahelpindexfile" select="document($ahelpindex)"/>
 
     * 
+    * Thread support:
+    *   We have added support for the proglang attribute to threadlink tags, and
+    *   the /thread/info/proglang tags to thread pages. This complicates thread
+    *   linking, since we have to check the storage location for the given thread
+    *   to see if the thread has language-specific versions.
     * 
     * Thoughts:
     * - a number of links go to the 'index' page (eg ahelp)
@@ -165,7 +172,11 @@
     *-->
 
 <xsl:stylesheet version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:exsl="http://exslt.org/common"
+  xmlns:func="http://exslt.org/functions"
+  xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
+  extension-element-prefixes="exsl func djb">
 
   <!--* we don't like "a" tags! *-->
   <xsl:template match="a|A">
@@ -637,8 +648,7 @@
   
   <xsl:template match="dictionary">
 
-    <!--* are we empty? *-->
-    <xsl:call-template name="check-contents-are-empty"/>
+    <xsl:call-template name="check-contents-are-not-empty"/>
     
     <!--* since we don't have a DTD *-->
     <xsl:call-template name="name-not-allowed"/>
@@ -753,8 +763,7 @@
 
   <xsl:template match="manual">
 
-    <!--* are we empty? *-->
-    <xsl:call-template name="check-contents-are-empty"/>
+    <xsl:call-template name="check-contents-are-not-empty"/>
     
     <!--* check name attribute *-->
     <xsl:call-template name="check-page-for-no-html"/>
@@ -986,8 +995,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *-->
   <xsl:template match="caveat">
 
-    <!--* are we empty? *-->
-    <xsl:call-template name="check-contents-are-empty"/>
+    <xsl:call-template name="check-contents-are-not-empty"/>
 
     <!--* since we don't have a DTD *-->
     <xsl:call-template name="name-not-allowed"/>
@@ -1036,17 +1044,13 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *-->
   <xsl:template match="aguide">
 
-    <!--* are we empty? *-->
-    <xsl:call-template name="check-contents-are-empty"/>
+    <xsl:call-template name="check-contents-are-not-empty"/>
 
     <!--* since we don't have a DTD *-->
     <xsl:call-template name="name-not-allowed"/>
 
     <!--* check name attribute *-->
     <xsl:call-template name="check-page-for-no-html"/>
-
-    <!--* are we empty? *-->
-    <xsl:call-template name="check-contents-are-empty"/>
 
     <!--* are we in the ciao pages or not (ie is this an `external' link or not) *-->
     <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
@@ -1088,17 +1092,13 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *-->
   <xsl:template match="why">
 
-    <!--* are we empty? *-->
-    <xsl:call-template name="check-contents-are-empty"/>
+    <xsl:call-template name="check-contents-are-not-empty"/>
 
     <!--* since we don't have a DTD *-->
     <xsl:call-template name="name-not-allowed"/>
 
     <!--* check name attribute *-->
     <xsl:call-template name="check-page-for-no-html"/>
-
-    <!--* are we empty? *-->
-    <xsl:call-template name="check-contents-are-empty"/>
 
     <!--* are we in the ciao pages or not (ie is this an `external' link or not) *-->
     <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
@@ -1155,8 +1155,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
   <xsl:template match="download">
 
-    <!--* are we empty? *-->
-    <xsl:call-template name="check-contents-are-empty"/>
+    <xsl:call-template name="check-contents-are-not-empty"/>
 
     <!--* the spaces are important *-->
     <xsl:variable name="no-register-type" select="' caldb atomdb '"/>
@@ -1397,8 +1396,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *-->
   <xsl:template match="extlink">
 
-    <!--* are we empty? *-->
-    <xsl:call-template name="check-contents-are-empty"/>
+    <xsl:call-template name="check-contents-are-not-empty"/>
 
     <!--* warn if there's a better option *-->
     <xsl:if test="$site != 'icxc' and starts-with(@href,'http://cxc.harvard.edu')">
@@ -1468,8 +1466,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
   <xsl:template match="cxclink">
 
-    <!--* are we empty? *-->
-    <xsl:call-template name="check-contents-are-empty"/>
+    <xsl:call-template name="check-contents-are-not-empty"/>
 
     <!--* safety check *-->
     <xsl:if test="$site = 'icxc'">
@@ -1572,8 +1569,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
   <xsl:template match="icxclink">
 
-    <!--* are we empty? *-->
-    <xsl:call-template name="check-contents-are-empty"/>
+    <xsl:call-template name="check-contents-are-not-empty"/>
     
     <!--* safety check *-->
     <xsl:if test="$site != 'icxc'">
@@ -1672,8 +1668,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
   <xsl:template match="threadpage">
 
-    <!--* are we empty? *-->
-    <xsl:call-template name="check-contents-are-empty"/>
+    <xsl:call-template name="check-contents-are-not-empty"/>
     
     <!--* since we don't have a DTD *-->
     <xsl:call-template name="page-not-allowed"/>
@@ -1731,73 +1726,160 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *   - if the root node is thread, link to the current page
       *   - else throw a wobbly and tell the user to use threadpage (or there's an error). 
       *
+      *  we now support the proglang attribute - which says link to
+      *  a specific language - and the //thread/info/proglang values -
+      *  which indicate what language(s) the thread covers.
+      *
       *  id only is only allowed if the rootnode is thread
       *    OR dummy (ie an include file)
+      *
+      * As we now have to read in the thread we *could* support empty
+      * thread link tags, which would mean using the short/long title
+      * elements for the thread as the link text.
       *
       *-->
 
   <xsl:template match="threadlink">
 
-    <!--* are we empty? *-->
-    <xsl:call-template name="check-contents-are-empty"/>
-    
-    <!--* since we don't have a DTD *-->
+    <!--* safety checks *-->
+    <xsl:call-template name="check-contents-are-not-empty"/>
     <xsl:call-template name="page-not-allowed"/>
+
+    <!--* this is only needed to be checked once, but for the moment do it multiple times *-->
+    <xsl:call-template name="check-param-ends-in-a-slash">
+      <xsl:with-param name="pname" select="'storage'"/>
+      <xsl:with-param name="pvalue" select="$storage"/>
+    </xsl:call-template>
 
     <!--* are we within a thread (or an included file)? *-->
     <xsl:variable name="in-thread" select="name(//*)='thread' or name(//*)='dummy'"/>
 
+    <xsl:if test="$in-thread=false() and boolean(@name)=false()">
+      <xsl:message terminate="yes">
+  threadlink tag must contain a name attribute when not used in a thread.
+  If you want to link to the thread index page use the
+  threadpage tag.
+  Threadlink contents:
+  <xsl:value-of select="."/>
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:if test="boolean(@name) and boolean(@site)">
+      <xsl:message terminate="yes">
+ Internal error: need to support threadlink use with @site
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:if test="boolean(@name)=false() and name(//*)!='thread'">
+      <xsl:message terminate="yes">
+ Internal error: need to support threadlink use within an included file!
+      </xsl:message>
+    </xsl:if>
+
+    <!--*
+        * Do we need to bother about multiple language versions?
+	* XXX TODO XXX
+	*   Need to handle the case of cross-site threads
+	*   How do we handle the case when we are within a thread?
+	*-->
+    <xsl:variable name="threadInfo" select="djb:read-in-thread-info()"/>
+
+    <xsl:variable name="tInfo" select="exsl:node-set($threadInfo)"/>
+    <xsl:variable name="tname" select="$tInfo/name"/>
+    <xsl:variable name="nlang" select="count($tInfo/proglang)"/>
+
+    <!--*
+	* How do we process the link?
+	* We first handle the obvious error cases
+	*-->
+    <xsl:choose>
+
+      <xsl:when test="boolean(@proglang) and $nlang=0">
+	<xsl:message terminate="yes">
+ ERROR: threadlink tag has proglang attribute (value=<xsl:value-of select="@proglang"/>)
+    but the thread (name=<xsl:value-of select="$tname"/>) has no //thread/info/proglang nodes!
+	</xsl:message>
+      </xsl:when>
+
+<!--* why did I think this was an error?
+
+      <xsl:when test="boolean(@proglang)=false() and $nlang&gt;1">
+	<xsl:message terminate="yes">
+ ERROR: threadlink tag has no proglang attribute but the thread 
+    (name=<xsl:value-of select="$tname"/>) has <xsl:value-of select="$nlang"/> //thread/info/proglang nodes!
+	</xsl:message>
+      </xsl:when>
+*-->
+
+      <xsl:when test="$nlang = 1 and @proglang != $tInfo/proglang">
+	<xsl:message terminate="yes">
+ ERROR: threadlink tag has proglang attribute=<xsl:value-of select="@proglang"/>
+   but the thread (name=<xsl:value-of select="$name"/>) only has
+   //thread/info/proglang=<xsl:value-of select="$tInfo/proglang"/>
+	</xsl:message>
+      </xsl:when>
+
+      <!--*
+          * With the checks above we either have a single match or we
+	  * need to handle all the proglang values
+	  *-->
+      <xsl:when test="$nlang &gt; 1">
+	<xsl:call-template name="threadlink-multiple-proglang">
+	  <xsl:with-param name="in-thread" select="$in-thread"/>
+	</xsl:call-template>
+      </xsl:when>
+
+      <xsl:otherwise>
+	<xsl:call-template name="threadlink-simple">
+	  <xsl:with-param name="in-thread" select="$in-thread"/>
+	</xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </xsl:template> <!--* match=threadlink *-->
+
+  <!--* Handle a threadlink when we do not have to bother about proglang values *-->
+  <xsl:template name="threadlink-simple">
+    <xsl:param name="in-thread" select="false()"/>
+
     <!--* set up the url fragment:
-        *   a) handle the site/depth
-        *   b) handle the file location and is there an anchor too?
-        *-->
-
+	*   a) handle the site/depth
+	*   b) handle the file location and is there an anchor too?
+	*-->
     <xsl:variable name="urlfrag"><xsl:call-template name="handle-thread-site-link">
-	<xsl:with-param name="linktype"  select="'threadlink'"/>
-	<xsl:with-param name="in-thread" select="$in-thread"/>
-      </xsl:call-template></xsl:variable>
+      <xsl:with-param name="linktype"  select="'threadlink'"/>
+      <xsl:with-param name="in-thread" select="$in-thread"/>
+    </xsl:call-template></xsl:variable>
 
-    <!--* process the contents, surrounded by styles *-->
+    <xsl:variable name="index">index<xsl:if
+    test="boolean(@proglang)"><xsl:value-of select="concat('.',@proglang)"/>
+    </xsl:if>.html</xsl:variable>
+    
+    <!--*
+	* Process the contents, surrounded by styles.
+	* I think the code below can be cleaned up; see threadlink-multiple-proglang
+	*-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
 	<a>
 	  <!--* add the href attibute *-->
-	  <xsl:call-template name="add-attribute">
-	    <!--* we've added the depth to the url above (if it's needed), so we set depth to 1 here *-->
-	    <xsl:with-param name="idepth" select="1"/>
-	    <xsl:with-param name="name"  select="'href'"/>
-	    <xsl:with-param name="value"><xsl:value-of
+	  <xsl:attribute name="href"><xsl:value-of
 		select="$urlfrag"/><xsl:choose>
 		<!--* and now the actual directory/file *-->
 	
 		<!--* name specified (id may or may not be) *-->
 		<xsl:when test="boolean(@name)"><xsl:value-of select="@name"/>/<xsl:if
-		    test="boolean(@id)">index.html#<xsl:value-of select="@id"/></xsl:if></xsl:when>
+		    test="boolean(@id)"><xsl:value-of select="concat($index,'#',@id)"/></xsl:if></xsl:when>
 
-		<!--* 
-                    * the following options (id only or no attribute) are
-                    * only allowed within a thread
-                    *-->
-		<xsl:when test="$in-thread=false()">
-		  <xsl:message terminate="yes">
-  threadlink tag must contain a name attribute when not used in a thread.
-  If you want to link to the thread index page use the
-  threadpage tag.
-  Thread contents:
-  <xsl:value-of select="."/>
-		  </xsl:message>
-		</xsl:when>
-	
 		<!--* 
                     * if id only then we include the index.html in the URL to make
                     * offline browsing/site-packaging code to work
                     *-->
-		<xsl:when test="boolean(@id)">index.html#<xsl:value-of select="@id"/></xsl:when>
+		<xsl:when test="boolean(@id)"><xsl:value-of select="concat($index,'#',@id)"/></xsl:when>
 
 		<!--* link to itself (a bit pointless) *-->
-		<xsl:otherwise>index.html</xsl:otherwise>
-	      </xsl:choose></xsl:with-param>
-	  </xsl:call-template>
+		<xsl:otherwise><xsl:value-of select="$index"/></xsl:otherwise>
+	  </xsl:choose></xsl:attribute>
 
 	  <!--* process the contents of the tag *-->
 	  <xsl:apply-templates/>
@@ -1805,11 +1887,54 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:with-param>
     </xsl:call-template>
 
-  </xsl:template> <!--* threadlink *-->
+  </xsl:template> <!--* name=threadlink-simple *-->
+
+  <!--*
+      * We have multiple programming languages to deal with,
+      * and - at present - we assume these are always
+      * "sl" and "py".
+      *-->
+  <xsl:template name="threadlink-multiple-proglang">
+    <xsl:param name="in-thread" select="false()"/>
+
+    <xsl:variable name="urlfrag"><xsl:call-template name="handle-thread-site-link">
+      <xsl:with-param name="linktype"  select="'threadlink'"/>
+      <xsl:with-param name="in-thread" select="$in-thread"/>
+    </xsl:call-template></xsl:variable>
+
+    <!--* is this correct? *-->
+    <xsl:variable name="urlpagehead"><xsl:choose>
+      <xsl:when test="boolean(@name)"><xsl:value-of select="concat(@name,'/')"/></xsl:when>
+    </xsl:choose>index.</xsl:variable>
+
+    <xsl:variable name="urltail">.html<xsl:if
+    test="boolean(@id)"><xsl:value-of select="concat('#',@id)"/></xsl:if></xsl:variable>
+    
+    <!--* process the contents, surrounded by styles *-->
+    <xsl:call-template name="add-text-styles">
+      <xsl:with-param name="contents">
+	<xsl:apply-templates/>
+	<xsl:text> (</xsl:text>
+	<a>
+	  <xsl:attribute name="href"><xsl:value-of
+	  select='concat($urlfrag,$urlpagehead,"sl",$urltail)'/></xsl:attribute>
+	  <xsl:text>S-Lang</xsl:text>
+	</a>
+	<xsl:text> or </xsl:text>
+	<a>
+	  <xsl:attribute name="href"><xsl:value-of
+	  select='concat($urlfrag,$urlpagehead,"py",$urltail)'/></xsl:attribute>
+	  <xsl:text>Python</xsl:text>
+	</a>
+	<xsl:text>)</xsl:text>
+      </xsl:with-param>
+    </xsl:call-template>
+
+  </xsl:template> <!--* name=threadlink-multiple-proglang *-->
 
   <!--*
       * this mess is to allow threadlink/threadpage to
-      * link to the correct site/server
+      * link to the correct site/server.
       *
       * Parameters:
       *   linktype - string, required
@@ -1826,34 +1951,34 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <xsl:param name="in-thread" select="false()"/>
 
     <xsl:variable name="urlfrag"><xsl:choose>
-	<!--* do we start with the site or the depth? *-->
-	<!--* UGH: this is horrible since it depends on what site/type we're doing *-->
+      <!--* do we start with the site or the depth? *-->
+      <!--* UGH: this is horrible since it depends on what site/type we're doing *-->
 
-	<!--*
-            * Need to think about whether links should be to asc-bak
-            * or to cxc in the test case
-            *-->
-	<xsl:when test="boolean(@site) and @site != $site">/<xsl:value-of select="@site"/>/threads/</xsl:when>
+      <!--*
+	  * Need to think about whether links should be to asc-bak
+	  * or to cxc in the test case
+	  *-->
+      <xsl:when test="boolean(@site) and @site != $site">/<xsl:value-of select="@site"/>/threads/</xsl:when>
 
-	<!--*
-            * if within a thread
-            *   and linking to itself, do nothing
-            *   linking to another thread then add "../"
-            *   linking to the thread index then add "../"
-            *-->
-	<xsl:when test="$in-thread"><xsl:if
-	    test="boolean(@name)">../</xsl:if></xsl:when>
+      <!--*
+	  * if within a thread
+	  *   and linking to itself, do nothing
+	  *   linking to another thread then add "../"
+	  *   linking to the thread index then add "../"
+	  *-->
+      <xsl:when test="$in-thread"><xsl:if
+				      test="boolean(@name)">../</xsl:if></xsl:when>
 
-	<!--* was a complicated expression, hopefully we can just fall through to this now
-	<xsl:when test="$linktype = 'threadpage' or ($linktype = 'threadlink' and (not($in-thread) or boolean(@name)))"><xsl:call-template name="add-path">
-	    *-->
-	<xsl:otherwise><xsl:call-template name="add-path">
-	    <xsl:with-param name="idepth" select="$depth"/>
-	  </xsl:call-template>threads/</xsl:otherwise>
-      </xsl:choose></xsl:variable>
+      <!--* was a complicated expression, hopefully we can just fall through to this now
+	  <xsl:when test="$linktype = 'threadpage' or ($linktype = 'threadlink' and (not($in-thread) or boolean(@name)))"><xsl:call-template name="add-path">
+	  *-->
+      <xsl:otherwise><xsl:call-template name="add-path">
+	<xsl:with-param name="idepth" select="$depth"/>
+      </xsl:call-template>threads/</xsl:otherwise>
+    </xsl:choose></xsl:variable>
 
-    <!--* return the value *-->
     <xsl:value-of select="$urlfrag"/>
+
   </xsl:template> <!--* name=handle-thread-site-link *-->
 
   <!--*
@@ -2084,7 +2209,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * It is used to check that links contain text (or a tag)
       *
       *-->
-  <xsl:template name="check-contents-are-empty">
+  <xsl:template name="check-contents-are-not-empty">
     <xsl:if test="count(child::*)=0 and normalize-space(.) = ''">
       <xsl:message terminate="yes">
  ERROR: the <xsl:value-of select="name()"/> node can not be empty<xsl:text>
@@ -2098,5 +2223,34 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:message>
     </xsl:if>
   </xsl:template>
- 
+
+  <!--*
+      * Returns the //thread/info node for either the current document
+      * (ie when dealing with the current thread) or that of a separate
+      * document - determined by the @name attribute.
+      *
+      * I am trying this in the hope that it will always return a node set,
+      * since I am having troubles with handling the external files
+      * otherwise.
+      *
+      * To do: deal with multiple sites
+      *
+      
+      *-->
+  <func:function name="djb:read-in-thread-info">
+    <xsl:choose>
+      <xsl:when test="boolean(@name)">
+	<func:result select="document(concat($storage,'threads/',@name,'/thread.xml'))/thread/info"/>
+      </xsl:when>
+      <xsl:when test="name(//*) = 'thread'">
+	<func:result select="//thread/info"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:message terminate="yes">
+  ERROR: internal error - djb:read-in-thread-info
+	</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+  </func:function> <!--* name=djb:read-in-thread-info *-->
+
 </xsl:stylesheet>
