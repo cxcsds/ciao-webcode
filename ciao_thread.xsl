@@ -115,101 +115,11 @@
       </xsl:when>
 
       <xsl:otherwise>
-	<xsl:apply-templates select="thread" mode="html-viewable"/>
+	<xsl:apply-templates select="thread" mode="html-viewable-standard"/>
 	<xsl:apply-templates select="thread/images/image" mode="list"/>
       </xsl:otherwise>
     </xsl:choose>
 
   </xsl:template> <!-- match="/" *-->
-
-  <!--*
-      * create:
-      *    $install/index.html
-      * or
-      *    $install/index.<proglang>.html
-      *-->
-  <xsl:template match="thread" mode="html-viewable">
-    
-    <xsl:variable name="langid"><xsl:choose>
-      <xsl:when test="$proglang=''"/>
-      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
-    <xsl:variable name="filename"
-		  select="concat($install,'index',$langid,'.html')"/>
-
-    <xsl:variable name="hardcopyName" select="concat(//thread/info/name,$langid)"/>
-
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html" 
-      version="4.0" encoding="us-ascii">
-
-      <!--* get the start of the document over with *-->
-      <xsl:call-template name="add-start-html"/>
-
-      <!--* make the HTML head node *-->
-      <xsl:call-template name="add-htmlhead-site-thread"/>
-      
-      <!--* add disclaimer about editing the HTML file *-->
-      <xsl:call-template name="add-disclaimer"/>
-      
-      <!--* make the header *-->
-      <xsl:call-template name="add-header">
-	<xsl:with-param name="name"  select="$hardcopyName"/>
-      </xsl:call-template>
-
-      <!--* set up the standard links before the page starts *-->
-      <xsl:call-template name="add-top-links-ciao-html">
-	<xsl:with-param name="name" select="$threadName"/>
-      </xsl:call-template>
-
-      <div class="mainbar">
-
-	<!--* let the 'skip nav bar' have somewhere to skip to *-->
-	<a name="maintext"/>
-
-	<!--* set up the title block of the page *-->
-	<xsl:call-template name="add-thread-title"/>
-
-	<!--* Introductory text *-->
-	<xsl:call-template name="add-introduction"/>
-	
-	<!--* table of contents *-->
-	<xsl:call-template name="add-toc"/>
-
-	<!--* Main thread *-->
-	<xsl:apply-templates select="text/sectionlist"/>
-	  
-	<!--* Summary text *-->
-	<xsl:call-template name="add-summary"/>
-	
-	<!--* Parameter files *-->
-	<xsl:call-template name="add-parameters"/>
-
-	<!-- History -->
-	<xsl:apply-templates select="info/history"/>
-
-	<!--* set up the trailing links to threads/harcdopy *-->
-	<xsl:call-template name="add-hr-strong"/>
-
-      </div> <!--* calss=mainbar *-->
-
-      <!--* set up the trailing links to threads/harcdopy *-->
-      <xsl:call-template name="add-bottom-links-html">
-	<xsl:with-param name="name" select="$threadName"/>
-      </xsl:call-template>
-
-      <!--* add the footer text *-->
-      <xsl:call-template name="add-footer">
-	<xsl:with-param name="name"  select="$hardcopyName"/>
-      </xsl:call-template>
-
-      <!--* add </body> tag [the <body> is included in a SSI] *-->
-      <xsl:call-template name="add-end-body"/>
-      <xsl:call-template name="add-end-html"/>
-
-    </xsl:document>
-
-  </xsl:template> <!--* match=thread mode=html-viewable *-->
 
 </xsl:stylesheet>

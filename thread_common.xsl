@@ -110,7 +110,24 @@
       *
       * Updated for CIAO 3.0 to remove some 'excess' baggage
       *
+      * As many of these templates do the same thing we could refactor here
       *-->
+  <xsl:template name="add-top-links-site-html">
+    <xsl:choose>
+      <xsl:when test="$site = 'ciao'"><xsl:call-template name="add-top-links-ciao-html"/></xsl:when>
+      <xsl:when test="$site = 'chart'"><xsl:call-template name="add-top-links-chart-html"/></xsl:when>
+      <xsl:when test="$site = 'chips'"><xsl:call-template name="add-top-links-chips-html"/></xsl:when>
+      <xsl:when test="$site = 'sherpa'"><xsl:call-template name="add-top-links-sherpa-html"/></xsl:when>
+      <xsl:when test="$site = 'pog'"><xsl:call-template name="add-top-links-pog-html"/></xsl:when>
+      <xsl:otherwise>
+	<xsl:message terminate="yes">
+ Internal error - add-top-links-site-html sent site='<xsl:value-of select="$site"/>'
+	</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </xsl:template> <!--* name=add-top-links-site-html *-->
+
   <xsl:template name="add-top-links-ciao-html">
 
     <!--* safety check *-->
@@ -249,10 +266,24 @@
       *
       * Parameters:
       *
-      * *****CIAO SPECIFIC*****
-      *
       *-->
-  <xsl:template name="add-bottom-links-html">
+  <xsl:template name="add-bottom-links-site-html">
+    <xsl:choose>
+      <xsl:when test="$site = 'ciao'"><xsl:call-template name="add-bottom-links-ciao-html"/></xsl:when>
+      <xsl:when test="$site = 'chart'"><xsl:call-template name="add-bottom-links-chart-html"/></xsl:when>
+      <xsl:when test="$site = 'chips'"><xsl:call-template name="add-bottom-links-chips-html"/></xsl:when>
+      <xsl:when test="$site = 'sherpa'"><xsl:call-template name="add-bottom-links-sherpa-html"/></xsl:when>
+      <xsl:when test="$site = 'pog'"><xsl:call-template name="add-bottom-links-pog-html"/></xsl:when>
+      <xsl:otherwise>
+	<xsl:message terminate="yes">
+ Internal error - add-bottom-links-site-html sent site='<xsl:value-of select="$site"/>'
+	</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </xsl:template> <!--* name=add-bottom-links-site-html *-->
+
+  <xsl:template name="add-bottom-links-ciao-html">
 
     <!--* safety check *-->
     <xsl:if test="$site != 'ciao'">
@@ -1966,6 +1997,90 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
   </xsl:template> <!--* match=thread mode=html-hardcopy-standard *-->
 
+  <!--*
+      * create:
+      *    $install/index.html
+      * or
+      *    $install/index.<proglang>.html
+      *-->
+  <xsl:template match="thread" mode="html-viewable-standard">
+    
+    <xsl:variable name="langid"><xsl:choose>
+      <xsl:when test="$proglang=''"/>
+      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
 
+    <xsl:variable name="filename"
+		  select="concat($install,'index',$langid,'.html')"/>
+
+    <xsl:variable name="hardcopyName" select="concat(//thread/info/name,$langid)"/>
+
+    <!--* create document *-->
+    <xsl:document href="{$filename}" method="html" media-type="text/html" 
+      version="4.0" encoding="us-ascii">
+
+      <!--* get the start of the document over with *-->
+      <xsl:call-template name="add-start-html"/>
+
+      <!--* make the HTML head node *-->
+      <xsl:call-template name="add-htmlhead-site-thread"/>
+      
+      <!--* add disclaimer about editing the HTML file *-->
+      <xsl:call-template name="add-disclaimer"/>
+      
+      <!--* make the header *-->
+      <xsl:call-template name="add-header">
+	<xsl:with-param name="name"  select="$hardcopyName"/>
+      </xsl:call-template>
+
+      <!--* set up the standard links before the page starts *-->
+      <xsl:call-template name="add-top-links-site-html"/>
+
+      <div class="mainbar">
+
+	<!--* let the 'skip nav bar' have somewhere to skip to *-->
+	<a name="maintext"/>
+
+	<!--* set up the title block of the page *-->
+	<xsl:call-template name="add-thread-title"/>
+
+	<!--* Introductory text *-->
+	<xsl:call-template name="add-introduction"/>
+	
+	<!--* table of contents *-->
+	<xsl:call-template name="add-toc"/>
+
+	<!--* Main thread *-->
+	<xsl:apply-templates select="text/sectionlist"/>
+	  
+	<!--* Summary text *-->
+	<xsl:call-template name="add-summary"/>
+	
+	<!--* Parameter files *-->
+	<xsl:call-template name="add-parameters"/>
+
+	<!-- History -->
+	<xsl:apply-templates select="info/history"/>
+
+	<!--* set up the trailing links to threads/harcdopy *-->
+	<xsl:call-template name="add-hr-strong"/>
+
+      </div> <!--* calss=mainbar *-->
+
+      <!--* set up the trailing links to threads/harcdopy *-->
+      <xsl:call-template name="add-bottom-links-site-html"/>
+
+      <!--* add the footer text *-->
+      <xsl:call-template name="add-footer">
+	<xsl:with-param name="name"  select="$hardcopyName"/>
+      </xsl:call-template>
+
+      <!--* add </body> tag [the <body> is included in a SSI] *-->
+      <xsl:call-template name="add-end-body"/>
+      <xsl:call-template name="add-end-html"/>
+
+    </xsl:document>
+
+  </xsl:template> <!--* match=thread mode=html-viewable-standard *-->
 
 </xsl:stylesheet>

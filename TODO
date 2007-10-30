@@ -131,14 +131,7 @@ manually create an XML output file. We should look at creating a
 DOM which can then be written out directly. Also, remove the use of
 the ahelpindex.dat file in the mk_ahelp_*.pl files.
 
-*) Clean up *_thread.xsl
-
-I had these files separated out so that the threads could be
-customized, but there is currently very-little different for
-ChIPS, CIAO, and Sherpa (others too?). Should be able to
-refactor these files a lot.
-
-Partly done.
+*) thread_common.xsl can probably be refactrored in places
 
 *) Clean up config.dat file/location
 

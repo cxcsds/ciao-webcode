@@ -79,78 +79,11 @@
       </xsl:when>
 
       <xsl:otherwise>
-	<xsl:apply-templates select="thread" mode="html-viewable"/>
+	<xsl:apply-templates select="thread" mode="html-viewable-standard"/>
 	<xsl:apply-templates select="thread/images/image" mode="list"/>
       </xsl:otherwise>
     </xsl:choose>
 
   </xsl:template> <!-- match="/" *-->
-
-
-  <xsl:template match="thread" mode="html-viewable">
-    
-    <xsl:variable name="langid"><xsl:choose>
-      <xsl:when test="$proglang=''"/>
-      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
-    <xsl:variable name="filename"
-		  select="concat($install,'index',$langid,'.html')"/>
-
-    <xsl:variable name="hardcopyName" select="concat(//thread/info/name,$langid)"/>
-
-    <xsl:document href="{$filename}" method="html" media-type="text/html" 
-      version="4.0" encoding="us-ascii">
-
-      <xsl:call-template name="add-start-html"/>
-
-      <xsl:call-template name="add-htmlhead-site-thread"/>
-      
-      <xsl:call-template name="add-disclaimer"/>
-      
-      <xsl:call-template name="add-header">
-	<xsl:with-param name="name"  select="$hardcopyName"/>
-      </xsl:call-template>
-
-      <xsl:call-template name="add-top-links-sherpa-html">
-	<xsl:with-param name="name" select="$threadName"/>
-      </xsl:call-template>
-
-      <div class="mainbar">
-
-	<a name="maintext"/>
-
-	<xsl:call-template name="add-thread-title"/>
-
-	<xsl:call-template name="add-introduction"/>
-
-	<xsl:call-template name="add-toc"/>
-
-	<xsl:apply-templates select="text/sectionlist"/>
-	
-	<xsl:call-template name="add-summary"/>
-	
-	<xsl:call-template name="add-parameters"/>
-
-	<xsl:apply-templates select="info/history"/>
-
-	<xsl:call-template name="add-hr-strong"/>
-
-      </div> <!--* class=mainbar *-->
-
-      <xsl:call-template name="add-bottom-links-sherpa-html">
-	<xsl:with-param name="name" select="$threadName"/>
-      </xsl:call-template>
-
-      <xsl:call-template name="add-footer">
-	<xsl:with-param name="name"  select="$hardcopyName"/>
-      </xsl:call-template>
-
-      <xsl:call-template name="add-end-body"/>
-      <xsl:call-template name="add-end-html"/>
-
-    </xsl:document>
-
-  </xsl:template> <!--* match=thread mode=html-viewable *-->
 
 </xsl:stylesheet>
