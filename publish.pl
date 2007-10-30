@@ -1667,10 +1667,6 @@ EOX
 <p>Please choose the S-Lang or Python version of the thread
 "${thread_title_long}".</p>
 <list>
-<!--
- <li><threadlink name="${threadname}" proglang="sl">S-Lang</threadlink></li>
- <li><threadlink name="${threadname}" proglang="py">Python</threadlink></li>
--->
  <li><cxclink href="index.sl.html">S-Lang</cxclink></li>
  <li><cxclink href="index.py.html">Python</cxclink></li>
 </list>

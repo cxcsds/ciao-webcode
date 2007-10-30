@@ -1780,8 +1780,8 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       *-->
   <xsl:template name="add-proglang-sub-header">
     <xsl:choose>
-      <xsl:when test="$proglang = 'py'"><h3>[Python Syntax]</h3></xsl:when>
-      <xsl:when test="$proglang = 'sl'"><h3>[S-Lang Syntax]</h3></xsl:when>
+      <xsl:when test="$proglang = ''"/>
+      <xsl:otherwise><h3>[<xsl:value-of select="djb:get-proglang-string()"/> Syntax]</h3></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
@@ -1819,9 +1819,8 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     </xsl:choose></xsl:variable>
 
     <xsl:variable name="endstr"><xsl:choose>
-      <xsl:when test="$proglang = 'py'">Python, <xsl:value-of select="$siteversion"/></xsl:when>
-      <xsl:when test="$proglang = 'sl'">S-Lang, <xsl:value-of select="$siteversion"/></xsl:when>
-      <xsl:otherwise><xsl:value-of select="$siteversion"/></xsl:otherwise>
+      <xsl:when test="$proglang = ''"><xsl:value-of select="$siteversion"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="concat(djb:get-proglang-string(),', ',$siteversion)"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
 
     <xsl:call-template name="add-htmlhead">
