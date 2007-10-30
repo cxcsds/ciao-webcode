@@ -68,7 +68,7 @@ my @funcs_xslt =
   qw(
      translate_file translate_file_hardcopy
      translate_file_hardcopy_langs
-     create_hardcopy read_xml_file read_xml_chunk
+     create_hardcopy read_xml_file read_xml_string
      find_math_pages
      preload_stylesheet
     );
@@ -106,7 +106,7 @@ sub check_executable_runs ($$$);
 sub extract_filename ($);
  
 sub read_xml_file ($);
-sub read_xml_chunk ($);
+sub read_xml_string ($);
 sub translate_file ($$;$);
 sub translate_file_lang ($$$;$);
 sub translate_file_hardcopy ($$$;$);
@@ -404,12 +404,12 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
   # As read_xml_file but use the input string as the file
   # contents.
   #
-  sub read_xml_chunk ($) {
-    my $chunk = shift;
-    my $firstline = (split(/\n/,$chunk))[0];
+  sub read_xml_string ($) {
+    my $str = shift;
+    my $firstline = (split(/\n/,$str))[0];
     dbg " - about to parse XML chunk, first line='$firstline'";
-    $parser->parse_xml_chunk ($chunk)
-      or die "ERROR: unable to parse XML chunk, start='$firstline'\n";
+    $parser->parse_string ($str)
+      or die "ERROR: unable to parse XML string, start='$firstline'\n";
   }
 
   # TODO:

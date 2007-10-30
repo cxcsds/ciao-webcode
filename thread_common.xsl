@@ -5,6 +5,9 @@
     * Useful templates for creating the CIAO threads
     *
     * Recent changes:
+    * 2007 Oct 29 DJB
+    *    updating to support proglang; fix for newer libxslt/xml (need to
+    *    explicitly list params to stylesheet with xsl:param ?)
     * 2007 Oct 19 DJB
     *    depth parameter is now a global, no need to send around
     *  v1.45 - added add-[top|bottom]-links-chips-html template
@@ -91,7 +94,9 @@
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:exsl="http://exslt.org/common"
-  extension-element-prefixes="exsl">
+  xmlns:func="http://exslt.org/functions"
+  xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
+  extension-element-prefixes="exsl func djb">
 
   <!--* we create the HTML files using xsl:document statements *-->
   <xsl:output method="text"/>
@@ -1335,6 +1340,7 @@ or do we, as this case is already caught in add-parameters?
   <xsl:template name="find-pos">
     <xsl:param name="pos"    select="1"/>
     <xsl:param name="matchID" select="''"/>
+    <xsl:param name="nodes"/>
 
     <!--* note: we start the loop at the last node and loop down *-->
     <xsl:if test="$pos=0">
@@ -1452,34 +1458,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     </xsl:call-template>
     
   </xsl:template> <!--* match=plist *-->
-
-  <!--*
-      * add links to the hardcopy versions of the page
-      * thread-specific - other pages use add-standard-banner
-      *
-      * Parameters:
-      *   name - string, required
-      *     name of page (excluding .html).
-      *     PDF files are assumed to be called $name.[size].pdf
-      *
-      *-->
-  <xsl:template name="add-hardcopy-links">
-    <xsl:param name="name" select="''"/>
-
-    <!--* safety check *-->
-    <xsl:if test="$name = ''">
-      <xsl:message terminate="yes">
-  Error: add-hardcopy-links called with an empty name parameter
-      </xsl:message>
-    </xsl:if>
-
-    <td align="right"><font size="-1">
-        Hardcopy (PDF): 
-        <a title="PDF (A4 format) version of the page" href="{$name}.a4.pdf">A4</a>
-	<xsl:text> | </xsl:text>
-        <a title="PDF (US Letter format) version of the page" href="{$name}.letter.pdf">Letter</a>
-      </font></td>
-  </xsl:template> <!--* name=add-hardcopy-links *-->
 
   <!--*
       * create img<n>.html files
@@ -1733,5 +1711,99 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     <xsl:comment> NEW PAGE </xsl:comment><xsl:text>
 </xsl:text>
   </xsl:template> <!--* name=add-new-page *-->
+
+  <!--*
+      * Intended for use after displaying the thread title
+      *-->
+  <xsl:template name="add-proglang-sub-header">
+    <xsl:choose>
+      <xsl:when test="$proglang = 'py'"><h3>[Python Syntax]</h3></xsl:when>
+      <xsl:when test="$proglang = 'sl'"><h3>[S-Lang Syntax]</h3></xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <!--*
+      * Display the thread title in its own block,
+      * with ancillary information (at present what language this is for)
+      *-->
+  <xsl:template name="add-thread-title">
+    <div align="center">
+      <h1><xsl:value-of select="$threadInfo/title/long"/></h1>
+
+      <h3><xsl:choose>
+	<xsl:when test="$site = 'ciao'">CIAO <xsl:value-of select="$siteversion"/> Science Threads</xsl:when>
+	<xsl:when test="$site = 'chips'">ChIPS Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
+	<xsl:when test="$site = 'sherpa'">Sherpa Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
+	<xsl:when test="$site = 'pog'">POG Threads (<xsl:value-of select="$siteversion"/>)</xsl:when>
+      </xsl:choose></h3>
+	  
+      <xsl:call-template name="add-proglang-sub-header"/>
+    </div>
+    <xsl:call-template name="add-hr-strong"/>
+  </xsl:template>
+
+  <!--*
+      * Adds the thread title, along with the site name and optional
+      * language support, to the HTML header. Should it use the
+      * headtitlepostfix parameter (see add-htmlhead-standard in
+      * helper.xsl)
+      *-->
+  <xsl:template name="add-htmlhead-site-thread">
+
+    <xsl:variable name="start"><xsl:choose>
+      <xsl:when test="boolean($threadInfo/title/short)"><xsl:value-of select="$threadInfo/title/short"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="$threadInfo/title/long"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
+    <xsl:variable name="endstr"><xsl:choose>
+      <xsl:when test="$proglang = 'py'">Python, <xsl:value-of select="$siteversion"/></xsl:when>
+      <xsl:when test="$proglang = 'sl'">S-Lang, <xsl:value-of select="$siteversion"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="$siteversion"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
+    <xsl:call-template name="add-htmlhead">
+      <xsl:with-param name="title" select="concat($start,' - ',djb:get-sitename-string(),' (',$endstr,')')"/>
+    </xsl:call-template>
+
+  </xsl:template> <!--* name=add-htmlhead-site-thread *-->
+
+  <!--*
+      * Adds the thread title, along with the site name and optional
+      * language support, to the start of the hardcopy documentation
+      * (the main text, not the front page).
+      *-->
+  <xsl:template name="add-threadtitle-main-hard">
+
+    <div align="center">
+      <h1><xsl:value-of select="$threadInfo/title/long"/></h1>
+
+      <h2><xsl:choose>
+	<xsl:when test="$site = 'ciao'">CIAO <xsl:value-of select="$siteversion"/> Science Threads</xsl:when>
+	<xsl:when test="$site = 'chips'">ChIPS Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
+	<xsl:when test="$site = 'sherpa'">Sherpa Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
+	<xsl:when test="$site = 'pog'">Proposal Threads for <xsl:value-of select="$siteversion"/></xsl:when>
+      </xsl:choose></h2>
+
+      <xsl:call-template name="add-proglang-sub-header"/>
+    </div>
+
+  </xsl:template> <!--* name=add-threadtitle-main-hard *-->
+
+  <!--*
+      * returns a human-readable version of the site name
+      *-->
+  <func:function name="djb:get-sitename-string">
+    <func:result><xsl:choose>
+      <xsl:when test="$site = 'ciao'">CIAO</xsl:when>
+      <xsl:when test="$site = 'chips'">ChIPS</xsl:when>
+      <xsl:when test="$site = 'sherpa'">Sherpa</xsl:when>
+      <xsl:when test="$site = 'pog'">POG</xsl:when>
+      <xsl:otherwise>
+	<xsl:message terminate="yes">
+ Internal error: djb:get-sitename-string() unable to deal with site=<xsl:value-of select="$site"/>
+	</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose></func:result>
+  </func:function>
 
 </xsl:stylesheet>

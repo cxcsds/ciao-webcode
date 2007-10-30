@@ -136,7 +136,7 @@
     </xsl:choose></xsl:variable>
 
     <xsl:variable name="filename"
-		  select="concat($install,'index.hard',langid,'.html')"/>
+		  select="concat($install,'index',$langid,'hard.html')"/>
 
     <xsl:variable name="urlfrag">
       <xsl:value-of select="concat('threads/',$threadName,'/')"/>
@@ -153,7 +153,7 @@
       <html lang="en">
 
 	<!--* make the HTML head node *-->
-	<xsl:call-template name="add-htmlhead-standard"/>
+	<xsl:call-template name="add-htmlhead-site-thread"/>
 
 	<!--* and now the main part of the text *-->
 	<body>
@@ -170,12 +170,15 @@
 	    <img src="../../imgs/cxc-logo.gif" alt="[CXC Logo]"/>
 
 	    <h2><strong>CIAO <xsl:value-of select="$siteversion"/> Science Threads</strong></h2>
+	    <xsl:call-template name="add-proglang-sub-header"/>
 
 	  </div>
 	  <xsl:call-template name="add-new-page"/>
 
 	  <!--* table of contents page *-->
-	  <xsl:call-template name="add-toc"/>
+	  <xsl:call-template name="add-toc">
+	    <xsl:with-param name="hardcopy" select="1"/>
+	  </xsl:call-template>
 
 	  <xsl:call-template name="add-new-page"/>
 
@@ -190,17 +193,20 @@
 	  <br/>
 
 	  <!--* set up the title block of the page *-->
-	  <h1 align="center"><xsl:value-of select="$threadInfo/title/long"/></h1>
-	  <div align="center"><strong>CIAO <xsl:value-of select="$siteversion"/> Science Threads</strong></div>
+	  <xsl:call-template name="add-threadtitle-main-hard"/>
 
 	  <!--* Introductory text *-->
-	  <xsl:call-template name="add-introduction"/>
+	  <xsl:call-template name="add-introduction">
+	    <xsl:with-param name="hardcopy" select="1"/>
+	  </xsl:call-template>
 
 	  <!--* Main thread *-->
 	  <xsl:apply-templates select="text/sectionlist"/>
 	
 	  <!--* Summary text *-->
-	  <xsl:call-template name="add-summary"/>
+	  <xsl:call-template name="add-summary">
+	    <xsl:with-param name="hardcopy" select="1"/>
+	  </xsl:call-template>
 	
 	  <!--* Parameter files *-->
 	  <xsl:call-template name="add-parameters"/>
@@ -266,7 +272,9 @@ w
     </xsl:choose></xsl:variable>
 
     <xsl:variable name="filename"
-		  select="concat($install,'index',langid,'.html')"/>
+		  select="concat($install,'index',$langid,'.html')"/>
+
+    <xsl:variable name="hardcopyName" select="concat(//thread/info/name,$langid)"/>
 
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html" 
@@ -276,14 +284,14 @@ w
       <xsl:call-template name="add-start-html"/>
 
       <!--* make the HTML head node *-->
-      <xsl:call-template name="add-htmlhead-standard"/>
+      <xsl:call-template name="add-htmlhead-site-thread"/>
       
       <!--* add disclaimer about editing the HTML file *-->
       <xsl:call-template name="add-disclaimer"/>
       
       <!--* make the header *-->
       <xsl:call-template name="add-header">
-	<xsl:with-param name="name"  select="//thread/info/name"/>
+	<xsl:with-param name="name"  select="$hardcopyName"/>
       </xsl:call-template>
 
       <!--* set up the standard links before the page starts *-->
@@ -297,14 +305,8 @@ w
 	<a name="maintext"/>
 
 	<!--* set up the title block of the page *-->
-	<div align="center">
-	  <h1><xsl:value-of select="$threadInfo/title/long"/></h1>
+	<xsl:call-template name="add-thread-title"/>
 
-	  <h3>[CIAO <xsl:value-of select="$siteversion"/> Science Threads]</h3>
-	</div>
-
-	<xsl:call-template name="add-hr-strong"/>
-	
 	<!--* Introductory text *-->
 	<xsl:call-template name="add-introduction"/>
 	
@@ -335,7 +337,7 @@ w
 
       <!--* add the footer text *-->
       <xsl:call-template name="add-footer">
-	<xsl:with-param name="name"  select="//thread/info/name"/>
+	<xsl:with-param name="name"  select="$hardcopyName"/>
       </xsl:call-template>
 
       <!--* add </body> tag [the <body> is included in a SSI] *-->

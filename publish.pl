@@ -498,7 +498,16 @@ sub should_we_skip ($@) {
     } else {
 	$in =~ s/\.xml$//;
 	$in .= ".xml";
-	$intime = -M $in;
+	if (-e $in) {
+	    $intime = -M $in;
+	} else {
+	    # HACK for when the XML is created in-memory
+	    # For now we assume that we can skip these pages;
+	    # perhaps in this case the intie should have been
+	    # sent in instead.
+	    #
+	    return 0;
+	}
     }
 
     foreach my $file ( @files ) {
@@ -1385,7 +1394,6 @@ sub xml2html_thread ($) {
 	$lang = lc $lang;
 	die "Error: //thread/info/proglang = '$lang' is unrecognized\n"
 	  unless $lang eq "sl" or $lang eq "py";
-	push @html, "index.${lang}.html";
 	push @lang, $lang;
     }
 
@@ -1404,7 +1412,7 @@ sub xml2html_thread ($) {
     } else {
       foreach my $lang ( @lang ) {
 	push @html, "index.${lang}.html";
-	push @html, "index.hard.${lang}.html";
+	push @html, "index.${lang}.hard.html";
 	push @html, map { "img${_}.${lang}.html"; } ( 1 .. $rnode->findnodes('images/image')->size );
       }
     }
@@ -1426,7 +1434,7 @@ sub xml2html_thread ($) {
 #       map { $_->getAttribute('ps'); } $rnode->findnodes('images/image[boolean(@ps)]')
 #      );
     my @image =
-      map { $_->getAttribute('src'); } 
+      map { $_->getAttribute('src'); }
 	($rnode->findnodes('images/image'), $rnode->findnodes('text/descendant::img'));
     push @image,
       map { $_->getAttribute('ps'); } $rnode->findnodes('images/image[boolean(@ps)]');
@@ -1528,6 +1536,9 @@ sub xml2html_thread ($) {
     foreach my $page ( @html ) { myrm "${outdir}$page"; }
     clean_up_math( $outdir, @math );
 
+    # Note that threads contain their own history block, and we use that
+    # to create the last modified date, rather than send one in.
+    #
     my %params =
       (
        type => $$opts{type},
@@ -1582,7 +1593,11 @@ sub xml2html_thread ($) {
     #
     # XXX TODO XXX
     #    check support for multi-language?
-    create_hardcopy $outdir, "index", $threadname;
+    if ($#lang == -1) {
+	create_hardcopy $outdir, "index", $threadname;
+    } else {
+	map { create_hardcopy $outdir, "index.$_", "${threadname}.$_"; } @lang;
+    }
 
     # delete the converted screen files
     #
@@ -1611,7 +1626,7 @@ sub xml2html_thread ($) {
     }
 
     my $xml_text = <<'EOX';
-<?xml version="1.0" encoding="us-ascii">
+<?xml version="1.0" encoding="us-ascii"?>
 EOX
 
     my $process;
@@ -1620,7 +1635,7 @@ EOX
       # simple redirect
       #
       $infostr = "redirect";
-      $process = &xml2html_redirect;
+      $process = \&xml2html_redirect;
       my $lang = $lang[0];
       $xml_text .= <<"EOX";
 <!DOCTYPE redirect>
@@ -1630,7 +1645,7 @@ EOX
       # a page offering a choice
       #
       $infostr = "page";
-      $process = &xml2html_page;
+      $process = \&xml2html_page;
 
       my $thread_title_short = $rnode->findvalue('info/title/short');
       my $thread_title_long;
@@ -1660,8 +1675,11 @@ EOX
 EOX
     }
     $nopts{xml} = "index";
-    $nopts{xml_dom} = parse_xml_chunk $xml_text;
+    $nopts{xml_dom} = read_xml_string $xml_text;
     dbg "-- about to create index page for multi-language thread with root=$infostr";
+
+##use Data::Dumper; print Dumper \%nopts; die;
+
     &$process (\%nopts);
 
     print "\nThe thread can be viewed at:\n  $outurl\n\n";

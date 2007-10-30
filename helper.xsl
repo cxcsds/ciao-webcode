@@ -387,6 +387,10 @@
       * this is appended to the title, with a space in between
       *
       * IF run from a thread then we look in $threadInfo instead of info
+      *
+      * Note that for threads I have moved to using add-htmlhead-site
+      * - in thread_common.xsl - which does not (currently) use the
+      * headtitlepostfix parameter
       *-->
   <xsl:template name="add-htmlhead-standard">
 

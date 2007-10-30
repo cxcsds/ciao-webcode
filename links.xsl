@@ -6,7 +6,7 @@
     *
     * Recent changes:
     * 2007 Oct 29 DJB
-    *    add support fro proglang attribute for threadlink
+    *    add support for proglang attribute for threadlink
     * 2007 Oct 19 DJB
     *    depth parameter is now a global, no need to send around
     * 2007 Oct 16 DJB
@@ -1746,10 +1746,15 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <xsl:call-template name="page-not-allowed"/>
 
     <!--* this is only needed to be checked once, but for the moment do it multiple times *-->
+<!--
+
+ we can just use threadDir for now
+
     <xsl:call-template name="check-param-ends-in-a-slash">
       <xsl:with-param name="pname" select="'storage'"/>
       <xsl:with-param name="pvalue" select="$storage"/>
     </xsl:call-template>
+-->
 
     <!--* are we within a thread (or an included file)? *-->
     <xsl:variable name="in-thread" select="name(//*)='thread' or name(//*)='dummy'"/>
@@ -2240,7 +2245,10 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   <func:function name="djb:read-in-thread-info">
     <xsl:choose>
       <xsl:when test="boolean(@name)">
+<!--
 	<func:result select="document(concat($storage,'threads/',@name,'/thread.xml'))/thread/info"/>
+-->
+	<func:result select="document(concat($threadDir,'threads/',@name,'/thread.xml'))/thread/info"/>
       </xsl:when>
       <xsl:when test="name(//*) = 'thread'">
 	<func:result select="//thread/info"/>
