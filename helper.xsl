@@ -120,7 +120,9 @@
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:date="http://exslt.org/dates-and-times"
-  extension-element-prefixes="date">
+  xmlns:func="http://exslt.org/functions"
+  xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
+  extension-element-prefixes="date func djb">
 
   <!--*
       * used to determine whether the site is valid
@@ -1060,5 +1062,21 @@ Programming error: add-ssi-include called with an empty file parameter
     </div>
 
   </xsl:template> <!--* name=add-whatsnew-link *-->
+
+  <!--*
+      * Convert the $proglang variable into printable text.
+      * It is not expected to be called when $proglang is empty.
+      *-->
+  <func:function name="djb:get-proglang-string">
+    <func:result><xsl:choose>
+      <xsl:when test="$proglang = 'sl'">S-Lang</xsl:when>
+      <xsl:when test="$proglang = 'py'">Python</xsl:when>
+      <xsl:otherwise>
+	<xsl:message terminate="yes">
+ Internal error - djb:get-proglang-string() does not recognise proglang='<xsl:value-of select="$proglang"/>
+	</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose></func:result>
+  </func:function>
 
 </xsl:stylesheet>

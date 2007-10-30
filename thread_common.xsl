@@ -1537,10 +1537,17 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
   <xsl:template match="image" mode="list">
 
+    <xsl:variable name="langid"><xsl:choose>
+      <xsl:when test="$proglang=''"/>
+      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
     <xsl:variable name="pos" select="position()"/>
-    <xsl:variable name="filename" select='concat($install,"img",$pos,".html")'/>
+    <xsl:variable name="filename" select='concat($install,"img",$pos,$langid,".html")'/>
     <xsl:variable name="imgname" select='concat("Image ",$pos)'/>
     <xsl:variable name="imgtitle" select="title"/>
+
+    <xsl:variable name="endstr"><xsl:if test="$proglang != ''"><xsl:value-of select="concat(' (',djb:get-proglang-string(),')')"/></xsl:if></xsl:variable>
 
     <xsl:document href="{$filename}" method="html" media-type="text/html" 
       version="4.0" encoding="us-ascii">
@@ -1550,7 +1557,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
       <!--* make the HTML head node *-->
       <xsl:call-template name="add-htmlhead">
-	<xsl:with-param name="title" select="$imgname"/>
+	<xsl:with-param name="title"><xsl:value-of select="concat($imgname,$endstr)"/></xsl:with-param>
       </xsl:call-template>
       
       <!--* add disclaimer about editing the HTML file *-->
@@ -1571,7 +1578,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       <div class="mainbar">
 	  
 	<!-- set up the title block of the page -->
-	<h2><xsl:value-of select="$imgname"/>: <xsl:value-of select="title"/></h2>
+	<h2><xsl:value-of select="concat($imgname,': ',title,$endstr)"/></h2>
 	<hr/>
 	<br/>
 
@@ -1705,9 +1712,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       * from the imglinkicon[width/height] parameters which are
       * set by the calling process [user-defined in the config file]
       *
-      * Do we want to remove the 'image link' icons from POG threads?
-      * [Actually, I want to remove them from *all* threads...]
-      *
       *-->
 
   <xsl:template match="imglink">
@@ -1729,20 +1733,26 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       </xsl:call-template>
     </xsl:variable>
 
+    <xsl:variable name="langid"><xsl:choose>
+      <xsl:when test="$proglang=''"/>
+      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
     <xsl:variable name="href">
       <xsl:choose>
 	<xsl:when test="$hardcopy = 1">#img-<xsl:value-of select="@id"/></xsl:when>
-	<xsl:otherwise>img<xsl:value-of select="$pos"/>.html</xsl:otherwise>
+	<xsl:otherwise><xsl:value-of select="concat('img',$pos,$langid,'.html')"/></xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
 
     <!--* need an anchor so that we can link back to the text *-->
     <a name="{@id}" href="{$href}">
 
-    <xsl:variable name="getID" select="@id"/>
-    <xsl:variable name="alttext" select="document(concat($sourcedir,'thread.xml'))//thread/images/image[@id=$getID]/title"/>
-
       <xsl:apply-templates/>
+
+      <xsl:variable name="getID" select="@id"/>
+      <xsl:variable name="alttext" select="document(concat($sourcedir,'thread.xml'))//thread/images/image[@id=$getID]/title"/>
+
       <xsl:call-template name="add-nbsp"/>
       <xsl:call-template name="add-image">
 	<xsl:with-param name="src"    select="$imglinkicon"/>
