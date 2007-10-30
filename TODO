@@ -3,13 +3,19 @@
 
 problem:
 
--- use of @proglang for language specialization and choice of web page is not
-ideal. Should have two separate ways of doing it.
+links to index.html#foo now need to check whether to index.<lang>.html#foo, as in the
+thread toc. Should we send in the output file name to the script? If so then
+this is a big change - e.g. it can be used in <xsl:document> calls -
+but would avoid some issues (would there be problems with those that create
+multiple pages - probably...)
+
+I think I have this fixed for the thread publishing itself, but there's 
+of other areas where this could be a problem.
 
 problem:
 
-links to index.html#foo now need to check whether to index.<lang>.html#foo, as in the
-thread toc.
+-- use of @proglang for language specialization and choice of web page is not
+ideal. Should have two separate ways of doing it.
 
 do we need to add proplang support to threadpage tag as well? Need to
 sort out threadindex stuff to support this too

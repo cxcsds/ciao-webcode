@@ -524,11 +524,11 @@
 
     <div class="noprint">
       <p><strong>
-	  Proceed to the <a href="index.html#start-thread">HTML</a> or
+	  Proceed to the <a href="{djb:get-index-page-name()}#start-thread">HTML</a> or
 	  hardcopy (PDF:
-	  <a title="PDF (A4 format) version of the page" href="{/thread/info/name}.a4.pdf">A4</a>
+	  <a title="PDF (A4 format) version of the page" href="{djb:get-pdf-head()}.a4.pdf">A4</a>
 	  <xsl:text> | </xsl:text>
-	  <a title="PDF (US Letter format) version of the page" href="{/thread/info/name}.letter.pdf">letter</a>)
+	  <a title="PDF (US Letter format) version of the page" href="{djb:get-pdf-head()}.letter.pdf">letter</a>)
 	  version of the thread.
 	</strong></p></div>
 
@@ -738,6 +738,9 @@
     <xsl:if test="count(text/sectionlist/section) > 1">
       <!--* Table of contents, list of parameter files, history *-->
 
+      <!--* should this be sent in to the stylesheet ? *-->
+      <xsl:variable name="pageName" select="djb:get-index-page-name()"/>
+
       <!--* sort out the header: depends on hardcopy *-->
       <xsl:choose>
 	<xsl:when test="$hardcopy = 0"><h2><a name="toc">Contents</a></h2></xsl:when>
@@ -746,24 +749,30 @@
 
       <ul>
 	<!--* Sections & Subsections *-->
-	<xsl:apply-templates select="text/sectionlist/section" mode="toc"/>
+	<xsl:apply-templates select="text/sectionlist/section" mode="toc">
+	  <xsl:with-param name="pageName" select="$pageName"/>
+	</xsl:apply-templates>
 	      
 	<!--* do we have a summary? *-->
 	<xsl:if test="boolean(text/summary)">
-	  <li><a href="index.html#summary"><strong>Summary</strong></a></li>
+	  <li><a href="{$pageName}#summary"><strong>Summary</strong></a></li>
 	</xsl:if>
 	      
 	<!--* Parameter files (if any) *-->
 	<xsl:if test="boolean(parameters)">
-	  <xsl:apply-templates select="parameters" mode="toc"/>
+	  <xsl:apply-templates select="parameters" mode="toc">
+	    <xsl:with-param name="pageName" select="$pageName"/>
+	  </xsl:apply-templates>
 	</xsl:if>
 	      
 	<!--* History *-->
-	<li><strong><a href="index.html#history">History</a></strong></li>
+	<li><strong><a href="{$pageName}#history">History</a></strong></li>
 	
 	<!--* Images (if any) *-->
 	<xsl:if test="boolean(images)">
-	  <xsl:apply-templates select="images" mode="toc"/>
+	  <xsl:apply-templates select="images" mode="toc">
+	    <xsl:with-param name="pageName" select="$pageName"/>
+	  </xsl:apply-templates>
 	</xsl:if>
 	
       </ul>
@@ -815,7 +824,9 @@
     <xsl:value-of select="title"/>
   </xsl:template> <!--* name=find-section-label *-->
 
+  <!--* what use is @threadlink here over id? *-->
   <xsl:template match="section" mode="toc">
+    <xsl:param name="pageName" select="'index.html'"/>
 
     <xsl:variable name="titlestring"><xsl:call-template name="find-section-label"/></xsl:variable>
 
@@ -824,17 +835,19 @@
       <strong>
 	<xsl:choose>
 	  <xsl:when test="boolean(@threadlink)">
-	    <a href="{concat('index.html#',@threadlink)}"><xsl:value-of select="$titlestring"/></a>
+	    <a href="{concat($pageName,'#',@threadlink)}"><xsl:value-of select="$titlestring"/></a>
 	  </xsl:when>
 	  <xsl:otherwise>
-	    <a href="{concat('index.html#',@id)}"><xsl:value-of select="$titlestring"/></a>
+	    <a href="{concat($pageName,'#',@id)}"><xsl:value-of select="$titlestring"/></a>
 	  </xsl:otherwise>
 	</xsl:choose>
       </strong>
       
       <!--* do we have to bother with any subsection's for this section? *-->
       <xsl:if test="boolean(subsectionlist)">
-	<xsl:apply-templates select="subsectionlist" mode="toc"/>
+	<xsl:apply-templates select="subsectionlist" mode="toc">
+	  <xsl:with-param name="pageName" select="$pageName"/>
+	</xsl:apply-templates>
       </xsl:if> 
     </li>
 
@@ -994,29 +1007,37 @@
       * list a subsection in the "table of contents"
       *-->
   <xsl:template match="subsectionlist" mode="toc">
+    <xsl:param name="pageName" select="'index.html'"/>
 
     <xsl:choose>
       <xsl:when test='@type="A"'>
 	<ol type="A">
-	  <xsl:apply-templates select="subsection" mode="toc"/>
+	  <xsl:apply-templates select="subsection" mode="toc">
+	    <xsl:with-param name="pageName" select="$pageName"/>
+	  </xsl:apply-templates>
 	</ol>
       </xsl:when>
       <xsl:when test='@type="1"'>
 	<ol type="1">
-	  <xsl:apply-templates select="subsection" mode="toc"/>
+	  <xsl:apply-templates select="subsection" mode="toc">
+	    <xsl:with-param name="pageName" select="$pageName"/>
+	  </xsl:apply-templates>
 	</ol>
       </xsl:when>
       <xsl:otherwise>
 	<ul>
-	  <xsl:apply-templates select="subsection" mode="toc"/>
+	  <xsl:apply-templates select="subsection" mode="toc">
+	    <xsl:with-param name="pageName" select="$pageName"/>
+	  </xsl:apply-templates>
 	</ul>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template> <!--* match=subsectionlist mode=toc *-->
 
   <xsl:template match="subsection" mode="toc">
+    <xsl:param name="pageName" select="'index.html'"/>
     <li>
-      <a href="index.html#{@id}"><xsl:value-of select="title"/></a>
+      <a href="{$pageName}#{@id}"><xsl:value-of select="title"/></a>
     </li>
   </xsl:template> <!--* subsection mode=toc *-->
 
@@ -1410,6 +1431,7 @@ or do we, as this case is already caught in add-parameters?
       *-->
 
   <xsl:template match="parameters" mode="toc">
+    <xsl:param name="pageName" select="'index.html'"/>
 
     <li>
       <strong>Parameter files:</strong>
@@ -1417,7 +1439,7 @@ or do we, as this case is already caught in add-parameters?
 	<xsl:for-each select="paramfile">
 	  <li>
 	    <a>
-	      <xsl:attribute name="href">index.html#<xsl:value-of select="@name"/>.par<xsl:if
+	      <xsl:attribute name="href"><xsl:value-of select="concat($pageName,'#',@name,'.par')"/><xsl:if
 		  test="boolean(@id)">_<xsl:value-of select="@id"/></xsl:if></xsl:attribute>
 	      <xsl:value-of select="@name"/>
 	    </a>
@@ -1542,7 +1564,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       <!--* link back to thread *-->
       <div class="topbar">
 	<div class="qlinkbar">
-	  <a href="index.html#{@id}">Return to thread</a>
+	  <a href="{djb:get-index-page-name()}#{@id}">Return to thread</a>
 	</div>
       </div>
 
@@ -1576,7 +1598,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
       <!--* link back to thread *-->
       <div class="bottombar">
-	<a href="index.html#{@id}">Return to thread</a>
+	<a href="{djb:get-index-page-name()}#{@id}">Return to thread</a>
       </div>
 
       <!--* add the footer text *-->
@@ -1870,6 +1892,23 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
   </func:function>
 
   <!--*
+      * Returns the name of the page - index.html, index.sl.html, or index.py.html
+      * Only expected to be used when hardcopy=0
+      *-->
+  <func:function name="djb:get-index-page-name">
+    <func:result>index<xsl:if test="$proglang != ''">.<xsl:value-of select="$proglang"/></xsl:if>.html</func:result>
+  </func:function>
+
+  <!--*
+      * Returns the head of the PDF version of the page, ie up to
+      * but excluding the paper size,
+      * Only expected to be used when hardcopy=0
+      *-->
+  <func:function name="djb:get-pdf-head">
+    <func:result><xsl:value-of select="/thread/info/name"/><xsl:if test="$proglang != ''">.<xsl:value-of select="$proglang"/></xsl:if></func:result>
+  </func:function>
+
+  <!--*
       * For those threads that want a common look and feel, use
       * these templates.
       *-->
@@ -2005,15 +2044,10 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       *-->
   <xsl:template match="thread" mode="html-viewable-standard">
     
-    <xsl:variable name="langid"><xsl:choose>
-      <xsl:when test="$proglang=''"/>
-      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
     <xsl:variable name="filename"
-		  select="concat($install,'index',$langid,'.html')"/>
+		  select="concat($install,djb:get-index-page-name())"/>
 
-    <xsl:variable name="hardcopyName" select="concat(//thread/info/name,$langid)"/>
+    <xsl:variable name="hardcopyName" select="djb:get-pdf-head()"/>
 
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html" 
