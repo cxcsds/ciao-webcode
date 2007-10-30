@@ -138,3 +138,15 @@ customized, but there is currently very-little different for
 ChIPS, CIAO, and Sherpa (others too?). Should be able to
 refactor these files a lot.
 
+Partly done.
+
+*) Clean up config.dat file/location
+
+Think about changing the config.dat file so that it lives
+at the "top" of the doc tree for a set of web pages - 
+
+e.g. /data/da/Docs/ciaoweb/ciao34/config.dat
+
+- which would mean being able to remove site and version
+sections (although would want to have these variables set).
+
