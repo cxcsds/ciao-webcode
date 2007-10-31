@@ -2290,6 +2290,13 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
    storageloc=<xsl:value-of select="$storageloc"/>
 	</xsl:message>
       </xsl:when>
+      <xsl:when test="substring($head,string-length($head))!='/'">
+	<xsl:message terminate="yes">
+ ERROR: storage directory for site=<xsl:value-of select="$site"/> in
+   storageloc=<xsl:value-of select="$storageloc"/>
+   does not end in a '/' - value=<xsl:value-of select="$head"/>
+	</xsl:message>
+      </xsl:when>
     </xsl:choose>
 
     <func:result select="concat($head,'threads/',$name,'/thread.xml')"/>
