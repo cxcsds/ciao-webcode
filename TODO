@@ -12,11 +12,6 @@ multiple pages - probably...)
 I think I have this fixed for the thread publishing itself, but there's 
 of other areas where this could be a problem.
 
-problem:
-
--- use of @proglang for language specialization and choice of web page is not
-ideal. Should have two separate ways of doing it.
-
 do we need to add proplang support to threadpage tag as well? Need to
 sort out threadindex stuff to support this too
 
@@ -25,6 +20,10 @@ can find out whether they support multiple languages or not, but
 this can be done for cross-site threads, which means we need to
 send in multiple storage locations somehow... For the initial
 implementation restrict to no cross-site handling...
+
+Want to use an external XML file to say
+<storage><dir site="ciao">/foo/bar/</dir>...</storage>
+and send the location of this file as a parameter
 
 note:
 
@@ -40,7 +39,7 @@ It can check if going to a multi-language page and say
   "Name of thread" (<Python> or <S-Lang>) 
 
 where <Python>/<S-Lang> are the acutal links. If you want to link to
-a specific version then you have to add an attribute (proglang?) to
+a specific version then you have to add an attribute (proglang) to
 say whether "sl" or "py", in which case you just get
 
   "<Name of thread>"
@@ -94,15 +93,14 @@ DONE
 
 v) general contents
 
-We could try adding proglang="sl"/proglang="py" attributes to
-say what should be included. This would probably be best handled by
-having a pre-process step that goes through and removes those nodes
-with proglang!=<desired proglang> and leaves everything else.
+Add restrict="sl"/restrict="py" attributes to
+say what should be included. So
+
+ <p restrict="sl">...</p>
+
+DONE
 
 QUS: how to handle thread indexes?
-
-Should HTML METADATA header (eg title) and actual page name/header
-include " (S-Lang)" or " (Python)" when specialized?
 
 *) URLs in PDFs
 
@@ -140,6 +138,8 @@ the information in a set of perl structures which it then uses to
 manually create an XML output file. We should look at creating a
 DOM which can then be written out directly. Also, remove the use of
 the ahelpindex.dat file in the mk_ahelp_*.pl files.
+
+This is ongoing work.
 
 *) thread_common.xsl can probably be refactrored in places
 
