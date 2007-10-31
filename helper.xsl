@@ -132,13 +132,15 @@
       *
       * used to determine whether a download type is recognised
       * (to catch user error rather than any real need to restrict the types)
+      * This should perhaps be determined by an external file (eg a list in the
+      * config file that publish.pl can check rather than this code)
       *
       * the spaces around each root name are important for the simple checking we do
       * - should these be node sets rather than strings?
       *-->
   <xsl:variable name="allowed-pdf" select="' page faq dictionary bugs register threadindex thread '"/>
   <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc '"/>
-  <xsl:variable name="allowed-download-types" select="' solaris linux6 linux8 fc4 osx osx_ppc osx_intel caldb atomdb '"/>
+  <xsl:variable name="allowed-download-types" select="' solaris linux6 linux8 fc4 fc7 osx osx_ppc osx_intel caldb atomdb '"/>
 
   <!--* note that '' is also allowed for proglang but this is checked for separately *-->
   <xsl:variable name="allowed-proglang" select="' py sl '"/>

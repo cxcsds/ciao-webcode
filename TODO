@@ -149,3 +149,9 @@ sections (although would want to have these variables set).
 Perhaps we should treat the threads in a similar manner to 
 ahelp pages and create a single file containing the information
 we need to create the thread indexes/threadlink tags?
+
+*) move some checks into the config file/publish.pl?
+
+The allowed-pdf/sites/download-types checks done by the stylesheet
+could perhaps be done by giving the list of values in the config
+file and then checking against these in publish.pl.
