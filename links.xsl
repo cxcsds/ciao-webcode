@@ -1745,33 +1745,15 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <xsl:call-template name="check-contents-are-not-empty"/>
     <xsl:call-template name="page-not-allowed"/>
 
-    <!--* this is only needed to be checked once, but for the moment do it multiple times *-->
-<!--
-
- we can just use threadDir for now
-
-    <xsl:call-template name="check-param-ends-in-a-slash">
-      <xsl:with-param name="pname" select="'storage'"/>
-      <xsl:with-param name="pvalue" select="$storage"/>
-    </xsl:call-template>
--->
-
     <!--* are we within a thread (or an included file)? *-->
     <xsl:variable name="in-thread" select="name(//*)='thread' or name(//*)='dummy'"/>
 
     <xsl:if test="$in-thread=false() and boolean(@name)=false()">
       <xsl:message terminate="yes">
   threadlink tag must contain a name attribute when not used in a thread.
-  If you want to link to the thread index page use the
-  threadpage tag.
+  If you want to link to the thread index page use the threadpage tag.
   Threadlink contents:
   <xsl:value-of select="."/>
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:if test="boolean(@name) and boolean(@site)">
-      <xsl:message terminate="yes">
- Internal error: need to support threadlink use with @site
       </xsl:message>
     </xsl:if>
 
@@ -1781,14 +1763,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:message>
     </xsl:if>
 
-    <!--*
-        * Do we need to bother about multiple language versions?
-	* XXX TODO XXX
-	*   Need to handle the case of cross-site threads
-	*   How do we handle the case when we are within a thread?
-	*-->
     <xsl:variable name="threadInfo" select="djb:read-in-thread-info()"/>
-
     <xsl:variable name="tInfo" select="exsl:node-set($threadInfo)"/>
     <xsl:variable name="tname" select="$tInfo/name"/>
     <xsl:variable name="nlang" select="count($tInfo/proglang)"/>
@@ -1806,17 +1781,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</xsl:message>
       </xsl:when>
 
-<!--* why did I think this was an error?
-
-      <xsl:when test="boolean(@proglang)=false() and $nlang&gt;1">
-	<xsl:message terminate="yes">
- ERROR: threadlink tag has no proglang attribute but the thread 
-    (name=<xsl:value-of select="$tname"/>) has <xsl:value-of select="$nlang"/> //thread/info/proglang nodes!
-	</xsl:message>
-      </xsl:when>
-*-->
-
-      <xsl:when test="$nlang = 1 and @proglang != $tInfo/proglang">
+      <xsl:when test="$nlang = 1 and boolean(@proglang) and @proglang != $tInfo/proglang">
 	<xsl:message terminate="yes">
  ERROR: threadlink tag has proglang attribute=<xsl:value-of select="@proglang"/>
    but the thread (name=<xsl:value-of select="$name"/>) only has
@@ -2230,6 +2195,54 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   </xsl:template>
 
   <!--*
+      * djb:get-thread-filename($name,$site)
+      *
+      * Returns the full path to the given thread; it
+      * does not check that the name/site parameters
+      * are valid.
+      *
+      *   $name is the thread name (ie as used in threadlink @name)
+      *   $site is the site name (e.g. threadlink @site attribute)
+      *     and can be left out, when it defaults to the site of the page
+      *-->
+  <func:function name="djb:get-thread-filename">
+    <xsl:param name="name" select="''"/>
+    <xsl:param name="site" select="$site"/>
+
+    <xsl:if test="$name = ''">
+      <xsl:message terminate="yes">
+ Internal error: djb:get-thread-filename called with an empty name argument.
+      </xsl:message>
+    </xsl:if>
+
+    <!--* this only needs to be tested once but do it every time, for now *-->
+    <xsl:if test="$storageloc = ''">
+      <xsl:message terminate="yes">
+ Internal error: storageloc parameter is empty, needs to point to the storage XML file!
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:variable name="head" select="$storageInfo//dir[@site=$site]"/>
+    <xsl:choose>
+      <xsl:when test="count($head) = 0">
+	<xsl:message terminate="yes">
+ ERROR: no storage directory for site=<xsl:value-of select="$site"/> in
+   storageloc=<xsl:value-of select="$storageloc"/>
+	</xsl:message>
+      </xsl:when>
+      <xsl:when test="count($head) != 1">
+	<xsl:message terminate="yes">
+ ERROR: multiple storage directories for site=<xsl:value-of select="$site"/> in
+   storageloc=<xsl:value-of select="$storageloc"/>
+	</xsl:message>
+      </xsl:when>
+    </xsl:choose>
+
+    <func:result select="concat($head,'threads/',$name,'/thread.xml')"/>
+
+  </func:function> <!--* name djb:get-thread-filename *-->
+
+  <!--*
       * Returns the //thread/info node for either the current document
       * (ie when dealing with the current thread) or that of a separate
       * document - determined by the @name attribute.
@@ -2240,15 +2253,17 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *
       * To do: deal with multiple sites
       *
-      
+      * At present assumed to be called with a threadlink tag as the
+      * context node. Perhaps the input values should be sent in as
+      * arguments to the function?
       *-->
   <func:function name="djb:read-in-thread-info">
     <xsl:choose>
+      <xsl:when test="boolean(@site) and boolean(@name)">
+	<func:result select="document(djb:get-thread-filename(@name,@site))/thread/info"/>
+      </xsl:when>
       <xsl:when test="boolean(@name)">
-<!--
-	<func:result select="document(concat($storage,'threads/',@name,'/thread.xml'))/thread/info"/>
--->
-	<func:result select="document(concat($threadDir,'threads/',@name,'/thread.xml'))/thread/info"/>
+	<func:result select="document(djb:get-thread-filename(@name))/thread/info"/>
       </xsl:when>
       <xsl:when test="name(//*) = 'thread'">
 	<func:result select="//thread/info"/>

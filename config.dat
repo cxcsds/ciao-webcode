@@ -136,6 +136,16 @@ logotext=CIAO Logo
 %storage=test /data/da/Docs/ciaoweb/published/40beta/test/
 %storage=trial /data/da/Docs/ciaoweb/published/40beta/trial/
 
+# We are moving away from the use of %storage and towards
+# %storageloc, which gives the location of an XML file,
+# format
+#   <storage><dir site="ciao">/data/da/Docs/ciaoweb/published/40beta/live/</dir>...</storage>
+# but we have not converted everything yet
+#
+%storageloc=live /data/da/Docs/ciaoweb/storage.40beta.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.40beta.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.40beta.trial.xml
+
 ## ahelp section
 #
 # where do the ahelp files (ie the XML files) live
@@ -250,6 +260,10 @@ imglinkiconheight=16
 %storage=test /data/da/Docs/chartweb/published/internal/test/
 %storage=trial /data/da/Docs/chartweb/published/internal/trial/
 
+%storageloc=live /data/da/Docs/ciaoweb/storage.40beta.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.40beta.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.40beta.trial.xml
+
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/40beta/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
 %ahelpindexdir=trial /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
@@ -333,6 +347,10 @@ logotext=Sherpa Logo
 %storage=live /data/da/Docs/sherpaweb/published/40beta/live/
 %storage=test /data/da/Docs/sherpaweb/published/40beta/test/
 %storage=trial /data/da/Docs/sherpaweb/published/40beta/trial/
+
+%storageloc=live /data/da/Docs/ciaoweb/storage.40beta.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.40beta.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.40beta.trial.xml
 
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/40beta/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
@@ -424,6 +442,10 @@ logotext=ChIPS Logo
 %storage=test /data/da/Docs/chipsweb/published/40beta/test/
 %storage=trial /data/da/Docs/chipsweb/published/40beta/trial/
 
+%storageloc=live /data/da/Docs/ciaoweb/storage.40beta.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.40beta.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.40beta.trial.xml
+
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/40beta/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
 %ahelpindexdir=trial /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
@@ -514,6 +536,10 @@ headtitlepostfix=CALDB 2
 %storage=live /data/da/Docs/caldbweb/published/caldb2/live/
 %storage=test /data/da/Docs/caldbweb/published/caldb2/test/
 %storage=trial /data/da/Docs/caldbweb/published/caldb2/trial/
+
+#%storageloc=live /data/da/Docs/ciaoweb/storage.40beta.live.xml
+#%storageloc=test /data/da/Docs/ciaoweb/storage.40beta.test.xml
+#%storageloc=trial /data/da/Docs/ciaoweb/storage.40beta.trial.xml
 
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/40beta/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
@@ -616,6 +642,10 @@ imglinkiconheight=16
 #
 %storage=live /data/cdo1/threads/storage/live/
 %storage=test /data/cdo1/threads/storage/test/
+
+#%storageloc=live /data/da/Docs/ciaoweb/storage.40beta.live.xml
+#%storageloc=test /data/da/Docs/ciaoweb/storage.40beta.test.xml
+#%storageloc=trial /data/da/Docs/ciaoweb/storage.40beta.trial.xml
 
 # What ahelp system are we using here?
 # Should the POG be created using the CIAO 3.4 publishing scripts?

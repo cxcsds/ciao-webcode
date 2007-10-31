@@ -5,6 +5,7 @@
     * List of "global" templates for the web-page stylesheets
     *
     * Recent changes:
+    *   2007 Oct 31 DJB Added storageloc parameters, not sure about storage
     *   2007 Oct 26 DJB Added proglang and storage parameters
     *
     *   v1.7 - added hardcopy parameter
@@ -25,7 +26,7 @@
     *
     *  . lastmod=string to use to say when page was last modified
     *
-    *  . site=one of: ciao chart icxc
+    *  . site=one of: ciao chart chips sherpa pog icxc
     *    tells the stylesheet what site we are working with
     *
     *  . ahelpindex=full path to ahelp index file created by mk_ahelp_setup.pl
@@ -81,14 +82,24 @@
     *
     *    For now we assume the threadlinking is done within the same site
     *
+    *    IT IS VERY LIKELY THAT STORAGE WILL BE REMOVED RSN
+    *
     *  . proglang - string, optional, default=''
     *    if set - to either "sl" or "py" - then 'specialize' the document
     *    for the given language.
     *
+    *  . storageloc - string, optional, default=''
+    *    points to an XML file that contains the "storage" directories
+    *    for the different sites for this version and type (live,...).
+    *    Currently used by threads to access stored thread information.
+    *
     *-->
 
 <xsl:stylesheet version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:func="http://exslt.org/functions"
+  xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
+  extension-element-prefixes="func djb">
 
   <!--* these should be over-ridden from the command line *-->
   <xsl:param name="hardcopy"     select="0"/>
@@ -127,5 +138,24 @@
 
   <!--* not sure about this; see header *-->
   <xsl:param name="storage" select="''"/>
+
+  <xsl:param name="storageloc" select="''"/>
+  <xsl:variable name="storageInfo" select="djb:read-if-set($storageloc)"/>
+
+  <!--*
+      * Returns the document if set - as a node set - otherwise
+      * the empty string.
+      *-->
+  <func:function name="djb:read-if-set">
+    <xsl:param name="filename" select="''"/>
+    <xsl:choose>
+      <xsl:when test="$filename != ''"><func:result select="document($filename)"/></xsl:when>
+      <xsl:otherwise><func:result/></xsl:otherwise>
+    </xsl:choose>
+  </func:function>
+
+  <!--* easily add a new line to a concat(...) statement *-->
+  <xsl:variable name="nl"><xsl:text>
+</xsl:text></xsl:variable>
 
 </xsl:stylesheet>

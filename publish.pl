@@ -307,10 +307,15 @@ $searchssi = get_config_type( $version_config, "searchssi", $type )
   if check_config_exists( $version_config, "searchssi" );
 
 # storage/published is optional [sort of, depends on the site]
+# Moving towards using storageloc but have not completed the move
 #
 my $published = "";
 $published = get_config_type( $version_config, "storage", $type )
   if check_config_exists( $version_config, "storage" );
+
+my $storageloc = "";
+$storageloc = get_config_type( $version_config, "storageloc", $type )
+  if check_config_exists( $version_config, "storageloc" );
 
 # set up the ahelp index file based on the storeage location
 #
@@ -377,6 +382,7 @@ dbg "  depth=$depth";
 dbg "  outdir=$outdir";
 dbg "  outurl=$outurl";
 dbg "  published=$published";
+dbg "  storageloc=$storageloc";
 dbg "  ahelpindexdir=$ahelpindexdir";
 dbg "  version=$site_version";
 dbg "  css=$css";
@@ -396,6 +402,9 @@ dbg "*** CONFIG DATA ***";
 my $ahelpindex = "${ahelpindexdir}ahelpindex.xml";
 die "Error: can not find ahelpindex file - check config file for\n  ahelpindexdir=$ahelpindexdir\n"
   unless "" eq $ahelpindexdir or -e $ahelpindex;
+
+die "Error: unable to find storageloc=$storageloc\n"
+  unless $storageloc eq "" or -e $storageloc;
 
 # Get the list of files to work on
 my @xml;
@@ -688,20 +697,22 @@ sub xml2html_navbar ($) {
 
     my %params = 
       (
-	  type => $$opts{type},
-	  site => $$opts{site},
-          #depth => $depth,
-	  install => $outdir,
-	  sourcedir => cwd() . "/",
-	  updateby => $$opts{updateby},
-	  pagename => $in,
-	  # ahelpindex added in CIAO 3.0
-	  ahelpindex => $ahelpindex,
-	  ## cssfile => $css, # not needed for navbar
-	  newsfile => $newsfile,
-	  newsfileurl => $newsfileurl,
-	  watchouturl => $watchouturl,
-	  searchssi => $searchssi,
+       type => $$opts{type},
+       site => $$opts{site},
+       #depth => $depth,
+       install => $outdir,
+       sourcedir => cwd() . "/",
+       updateby => $$opts{updateby},
+       pagename => $in,
+       # ahelpindex added in CIAO 3.0
+       ahelpindex => $ahelpindex,
+       ## cssfile => $css, # not needed for navbar
+       newsfile => $newsfile,
+       newsfileurl => $newsfileurl,
+       watchouturl => $watchouturl,
+       searchssi => $searchssi,
+
+       storageloc => $$opts{storageloc},
       );
 
     $params{logoimage} = $logoimage if $logoimage ne "";
@@ -865,6 +876,8 @@ sub xml2html_page ($) {
        searchssi => $searchssi,
        headtitlepostfix => $headtitlepostfix,
        texttitlepostfix => $texttitlepostfix,
+
+       storageloc => $$opts{storageloc},
       );
 
     # what 'hardcopy' values do we loop through?
@@ -954,6 +967,8 @@ sub xml2html_bugs ($) {
        searchssi => $searchssi,
        headtitlepostfix => $headtitlepostfix,
        texttitlepostfix => $texttitlepostfix,
+
+       storageloc => $$opts{storageloc},
       );
 
     # what 'hardcopy' values do we loop through?
@@ -1110,6 +1125,8 @@ sub xml2html_register ($) {
        searchssi => $searchssi,
        headtitlepostfix => $headtitlepostfix,
        texttitlepostfix => $texttitlepostfix,
+
+       storageloc => $$opts{storageloc},
       );
 
     # we used to have register.xsl and register_live.xsl but
@@ -1212,6 +1229,8 @@ sub xml2html_multiple ($$$) {
        searchssi => $searchssi,
        headtitlepostfix => $headtitlepostfix,
        texttitlepostfix => $texttitlepostfix,
+
+       storageloc => $$opts{storageloc},
       );
 
     translate_file_hardcopy "$$opts{xslt}${pagename}.xsl", $dom, \%params;
@@ -1310,6 +1329,8 @@ sub xml2html_threadindex ($) {
        searchssi => $searchssi,
        headtitlepostfix => $headtitlepostfix,
        texttitlepostfix => $texttitlepostfix,
+
+       storageloc => $$opts{storageloc},
       );
 
     translate_file_hardcopy "$$opts{xslt}threadindex.xsl", $dom, \%params;
@@ -1567,6 +1588,8 @@ sub xml2html_thread ($) {
        imglinkicon => $imglinkicon,
        imglinkiconwidth => $imglinkiconwidth,
        imglinkiconheight => $imglinkiconheight,
+
+       storageloc => $$opts{storageloc},
       );
 
     # Hack to avoid translate_file_langs having to know the xslt path
@@ -1732,6 +1755,7 @@ sub process_xml ($$) {
 	   site => $site, type => $type, xslt => $stylesheets,
 	   outdir => $outdir, outurl => $outurl,
 	   store => $published,
+	   storageloc => $storageloc,
 	   updateby => $uname,
 	   version => $version,
 	   headtitlepostfix => $headtitlepostfix,
