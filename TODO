@@ -15,16 +15,6 @@ of other areas where this could be a problem.
 do we need to add proplang support to threadpage tag as well? Need to
 sort out threadindex stuff to support this too
 
-PROBLEM: need to send in storage location for threads so that we
-can find out whether they support multiple languages or not, but
-this can be done for cross-site threads, which means we need to
-send in multiple storage locations somehow... For the initial
-implementation restrict to no cross-site handling...
-
-Want to use an external XML file to say
-<storage><dir site="ciao">/foo/bar/</dir>...</storage>
-and send the location of this file as a parameter
-
 note:
 
   chips threads used threadInfo/syntax=sl or py to indicate langauge support
@@ -142,6 +132,7 @@ the ahelpindex.dat file in the mk_ahelp_*.pl files.
 This is ongoing work.
 
 *) thread_common.xsl can probably be refactrored in places
+   as can the threadlink-* templates in links.xsl
 
 *) Clean up config.dat file/location
 

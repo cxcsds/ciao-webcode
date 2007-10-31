@@ -1789,10 +1789,12 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</xsl:message>
       </xsl:when>
 
-      <!--*
-          * With the checks above we either have a single match or we
-	  * need to handle all the proglang values
-	  *-->
+      <xsl:when test="$nlang &gt; 0 and (boolean(@proglang) or $proglang != '')">
+	<xsl:call-template name="threadlink-single-proglang">
+	  <xsl:with-param name="in-thread" select="$in-thread"/>
+	</xsl:call-template>
+      </xsl:when>
+
       <xsl:when test="$nlang &gt; 1">
 	<xsl:call-template name="threadlink-multiple-proglang">
 	  <xsl:with-param name="in-thread" select="$in-thread"/>
@@ -1800,6 +1802,14 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:when>
 
       <xsl:otherwise>
+
+	<xsl:if test="boolean(@proglang)">
+	  <xsl:message>
+ WARNING: threadlink has @proglang=<xsl:value-of select="@proglang"/> but the thread,
+          name=<xsl:value-of select="$tname"/>, does not appear to be language-specific
+	  </xsl:message>
+	</xsl:if>
+
 	<xsl:call-template name="threadlink-simple">
 	  <xsl:with-param name="in-thread" select="$in-thread"/>
 	</xsl:call-template>
@@ -1807,6 +1817,8 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     </xsl:choose>
 
   </xsl:template> <!--* match=threadlink *-->
+
+  <!--* XXX TODO XXX refactor the threadlink-* templates *-->
 
   <!--* Handle a threadlink when we do not have to bother about proglang values *-->
   <xsl:template name="threadlink-simple">
@@ -1821,9 +1833,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:with-param name="in-thread" select="$in-thread"/>
     </xsl:call-template></xsl:variable>
 
-    <xsl:variable name="index">index<xsl:if
-    test="boolean(@proglang)"><xsl:value-of select="concat('.',@proglang)"/>
-    </xsl:if>.html</xsl:variable>
+    <xsl:variable name="index">index.html</xsl:variable>
     
     <!--*
 	* Process the contents, surrounded by styles.
@@ -1842,7 +1852,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 		    test="boolean(@id)"><xsl:value-of select="concat($index,'#',@id)"/></xsl:if></xsl:when>
 
 		<!--* 
-                    * if id only then we include the index.html in the URL to make
+                    * if id only then we include the page name in the URL to make
                     * offline browsing/site-packaging code to work
                     *-->
 		<xsl:when test="boolean(@id)"><xsl:value-of select="concat($index,'#',@id)"/></xsl:when>
@@ -1860,9 +1870,54 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   </xsl:template> <!--* name=threadlink-simple *-->
 
   <!--*
+      * Thread has multiple languages, use
+      * @proglang or $proglang to determine which to use
+      * (check for @proglang first, then fall back to $proglang)
+      *-->
+  <xsl:template name="threadlink-single-proglang">
+    <xsl:param name="in-thread" select="false()"/>
+
+    <xsl:variable name="urlfrag"><xsl:call-template name="handle-thread-site-link">
+      <xsl:with-param name="linktype"  select="'threadlink'"/>
+      <xsl:with-param name="in-thread" select="$in-thread"/>
+    </xsl:call-template></xsl:variable>
+
+    <xsl:variable name="index">index<xsl:choose>
+    <xsl:when test="boolean(@proglang)"><xsl:value-of select="concat('.',@proglang)"/></xsl:when>
+    <xsl:when test="$proglang != ''"><xsl:value-of select="concat('.',$proglang)"/></xsl:when>
+    <xsl:otherwise>
+      <xsl:message terminate="yes">
+ Internal error: neither @proglang or $proglang is available for threadlink disambiguation
+      </xsl:message>
+    </xsl:otherwise>
+    </xsl:choose>.html</xsl:variable>
+
+    <xsl:call-template name="add-text-styles">
+      <xsl:with-param name="contents">
+	<a>
+	  <xsl:attribute name="href"><xsl:value-of
+		select="$urlfrag"/><xsl:choose>
+	
+		<xsl:when test="boolean(@name)"><xsl:value-of select="concat(@name,'/',$index)"/><xsl:if
+		    test="boolean(@id)"><xsl:value-of select="concat('#',@id)"/></xsl:if></xsl:when>
+
+		<xsl:when test="boolean(@id)"><xsl:value-of select="concat($index,'#',@id)"/></xsl:when>
+
+		<xsl:otherwise><xsl:value-of select="$index"/></xsl:otherwise>
+	  </xsl:choose></xsl:attribute>
+
+	  <xsl:apply-templates/>
+	</a>
+      </xsl:with-param>
+    </xsl:call-template>
+
+  </xsl:template> <!--* name=threadlink-single-proglang *-->
+
+  <!--*
       * We have multiple programming languages to deal with,
       * and - at present - we assume these are always
-      * "sl" and "py".
+      * "sl" and "py". The output contains two links, one
+      * to each version.
       *-->
   <xsl:template name="threadlink-multiple-proglang">
     <xsl:param name="in-thread" select="false()"/>
@@ -1880,7 +1935,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <xsl:variable name="urltail">.html<xsl:if
     test="boolean(@id)"><xsl:value-of select="concat('#',@id)"/></xsl:if></xsl:variable>
     
-    <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
 	<xsl:apply-templates/>
@@ -2260,10 +2314,24 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   <func:function name="djb:read-in-thread-info">
     <xsl:choose>
       <xsl:when test="boolean(@site) and boolean(@name)">
-	<func:result select="document(djb:get-thread-filename(@name,@site))/thread/info"/>
+	<xsl:variable name="adoc" select="document(djb:get-thread-filename(@name,@site))"/>
+	<xsl:if test="count($adoc) = 0">
+	  <xsl:message>
+ WARNING: need to publish <xsl:value-of select="concat('thread=',@name,' site=',@site)"/>
+          and then re-publish this page.
+	  </xsl:message>
+	</xsl:if>
+	<func:result select="$adoc//thread/info"/>
       </xsl:when>
       <xsl:when test="boolean(@name)">
-	<func:result select="document(djb:get-thread-filename(@name))/thread/info"/>
+	<xsl:variable name="bdoc" select="document(djb:get-thread-filename(@name))"/>
+	<xsl:if test="count($bdoc) = 0">
+	  <xsl:message>
+ WARNING: need to publish <xsl:value-of select="concat('thread=',@name)"/>
+          and then re-publish this page.
+	  </xsl:message>
+	</xsl:if>
+	<func:result select="$bdoc//thread/info"/>
       </xsl:when>
       <xsl:when test="name(//*) = 'thread'">
 	<func:result select="//thread/info"/>
