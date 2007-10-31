@@ -69,7 +69,7 @@ depth_offset=0
 #
 
 +version 40beta
-number=4.0 Beta 2
+number=4.0 Beta 3
 
 # icon used to signify an 'image link' in threads
 # This is a holdout from the old design and should probably be removed
@@ -80,10 +80,10 @@ imglinkiconwidth=23
 imglinkiconheight=16
 
 # hyphen was moved to the XSL at CIAO 3.4
-headtitlepostfix=CIAO 4.0 Beta 2
-texttitlepostfix=CIAO 4.0 Beta 2
+headtitlepostfix=CIAO 4.0 Beta 3
+texttitlepostfix=CIAO 4.0 Beta 3
 
-version_string=4.0 Beta 2
+version_string=4.0 Beta 3
 
 # main CSS location
 %css=live /ciaobeta/ciao.css
@@ -280,16 +280,16 @@ prefix=/data/da/Docs/sherpaweb
 depth_offset=0
 
 +version 40beta
-number=4.0 Beta
+number=4.0 Beta 3
 
 imglinkicon=imgs/imageicon.gif
 imglinkiconwidth=23
 imglinkiconheight=16
 
-headtitlepostfix=Sherpa 4.0 Beta
-texttitlepostfix=Sherpa 4.0 Beta
+headtitlepostfix=Sherpa 4.0 Beta 3
+texttitlepostfix=Sherpa 4.0 Beta 3
 
-version_string=4.0 Beta
+version_string=4.0 Beta 3
 
 %css=live /ciaobeta/ciao.css
 %css=test /ciaobeta/ciao.css
@@ -370,12 +370,12 @@ prefix=/data/da/Docs/chipsweb
 depth_offset=0
 
 +version 40beta
-number=4.0 Beta
+number=4.0 Beta 3
 
-headtitlepostfix=ChIPS 4.0 Beta
-texttitlepostfix=ChIPS 4.0 Beta
+headtitlepostfix=ChIPS 4.0 Beta 3
+texttitlepostfix=ChIPS 4.0 Beta 3
 
-version_string=4.0 Beta
+version_string=4.0 Beta 3
 
 imglinkicon=imgs/imageicon.gif
 imglinkiconwidth=23
