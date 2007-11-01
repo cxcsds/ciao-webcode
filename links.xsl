@@ -671,7 +671,7 @@
 
 	  <xsl:text>Python</xsl:text>
 	</a>
-	<xsl:text>)</xsl:text>
+	<xsl:text> help)</xsl:text>
 
 
       </xsl:with-param>
