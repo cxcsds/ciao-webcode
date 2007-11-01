@@ -1283,13 +1283,14 @@ sub xml2html_threadindex ($) {
     # - we can delete them [if they exist] before the processor runs
     #   (since we write protect them after creation so the processor
     #    can't actually create the new files)
-    # - note: I'm too lazy to add the hardcopy versions to list_threadindex.xsl
-    # - note: the list of names returned by this stylesheet does not
-    #         include the installation directory
     #
-    my $pages = translate_file "$$opts{xslt}list_threadindex.xsl", $dom;
-    $pages =~ s/\s+/ /g;
-    my @soft = map { "${outdir}$_"; } split " ", $pages;
+    my $rnode = $dom->documentElement();
+    my @soft = qw ( index.html all.html );
+    push @soft, map { $_->textContent . ".html"; } $rnode->findnodes('section/id/name');
+    push @soft, "table.html"
+      if $rnode->findvalue("boolean(datatable)") eq "true";
+    @soft = map { "${outdir}$_"; } @soft;
+
     my @hard = map { my $a = $_; $a =~ s/\.html$/.hard.html/; $a; } @soft;
 
     # do not allow math in the threadindex (for now)
