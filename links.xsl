@@ -5,6 +5,8 @@
     * attempt to provide a common stylesheet for links
     *
     * Recent changes:
+    * 2007 Nov 01 ECG
+    *    changed version in download link to ciao4b3
     * 2007 Oct 31 DJB
     *    ahelp tag handling is now improved for pages with context=sl.*/py.*
     * 2007 Oct 29 DJB
@@ -1348,9 +1350,9 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 		  <xsl:otherwise>
 		    <!--*
 		        * XXX TODO XXX
-			* The hardcoded name ciao4b2 is less than ideal
+			* The hardcoded version is less than ideal
 			*-->
-		    <xsl:value-of select="concat('/cgi-gen/ciao/download_ciao4b2_',@type,'.cgi')"/>
+		    <xsl:value-of select="concat('/cgi-gen/ciao/download_ciao4b3_',@type,'.cgi')"/>
 		  </xsl:otherwise>
 		</xsl:choose>
 	      </xsl:when>
