@@ -5,6 +5,8 @@
     * attempt to provide a common stylesheet for links
     *
     * Recent changes:
+    * 2007 Oct 31 DJB
+    *    ahelp tag handling is now improved for pages with context=sl.*/py.*
     * 2007 Oct 29 DJB
     *    add support for proglang attribute for threadlink
     * 2007 Oct 19 DJB
@@ -351,6 +353,11 @@
       * I explicitly check for site attributes and die to make sure we 
       * clean up the input documents (all part of the move to per-site
       * ahelp files in the CIAO 4 series of releases).
+      *
+      * In CIAO 4 we have added the $proglang variable which, if set,
+      * is used to determine which of the context=sl.*/py.*  files
+      * to link to. If $proglang is not set and you have context=sl.*/py.*
+      * matches, we automatically link to both. 
       *-->
 
   <xsl:template match="ahelp">
@@ -404,8 +411,9 @@
         *-->
     <xsl:variable name="name" select="@name"/>
     <xsl:variable name="namematches" select="$ahelpindexfile//ahelp[key=$name]"/>
+    <xsl:variable name="num" select="count($namematches)"/>
 
-    <xsl:if test="count($namematches)=0">
+    <xsl:if test="$num=0">
 	<xsl:message terminate="yes">
 
  ERROR: have ahelp tag with unknown name of <xsl:value-of select="$name"/> 
@@ -413,14 +421,63 @@
       </xsl:message>
     </xsl:if>
 
+    <!--*
+        * Hack to link to both sl.* and py.* versions of a file if they
+	* exist and $proglang is not set.
+	*-->
+    <xsl:variable name="have-sl-py-context"
+		  select="$num = 2 and
+			  (substring($namematches[1]/context,1,3) = 'sl.' or substring($namematches[1]/context,1,3) = 'py.')
+			  and
+			  (substring($namematches[2]/context,1,3) = 'sl.' or substring($namematches[2]/context,1,3) = 'py.')"/>
+
+    <xsl:choose>
+      <xsl:when test="$have-sl-py-context and $proglang = '' and boolean(@context)=false()">
+	<xsl:call-template name="add-ahelp-multiple-context">
+	  <xsl:with-param name="name" select="$name"/>
+	  <xsl:with-param name="namematches" select="$namematches"/>
+	  <xsl:with-param name="num" select="$num"/>
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:call-template name="add-ahelp-single-context">
+	  <xsl:with-param name="name" select="$name"/>
+	  <xsl:with-param name="namematches" select="$namematches"/>
+	  <xsl:with-param name="num" select="$num"/>
+	  <xsl:with-param name="have-sl-py-context" select="$have-sl-py-context"/>
+	</xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </xsl:template> <!--* ahelp *-->
+
+  <!--*
+      * An ahelp link to a single file (ie not to both sl.* and py.*
+      * versions of the same ahelp file).
+      *-->
+  <xsl:template name="add-ahelp-single-context">
+    <xsl:param name="name"/>
+    <xsl:param name="namematches"/>
+    <xsl:param name="num"/>
+    <xsl:param name="have-sl-py-context"/>
+
     <xsl:variable name="context"><xsl:choose>
 	<xsl:when test="boolean(@context)"><xsl:value-of select="@context"/></xsl:when>
-	<xsl:when test="count($namematches)=1"><xsl:value-of select="$namematches/context"/></xsl:when>
+	<xsl:when test="$num=1"><xsl:value-of select="$namematches/context"/></xsl:when>
+
+	<!--*
+	    * Handle sl/py.* versions when $proglang is set. It is a bit cumbersome.
+	    *-->
+	<xsl:when test="$proglang != '' and $have-sl-py-context">
+	  <xsl:value-of select="$namematches[substring(context,1,2)=$proglang]/context"/>
+	</xsl:when>
+
 	<xsl:otherwise>
 	  <xsl:message terminate="yes">
 
  ERROR: have ahelp tag with name of <xsl:value-of select="$name"/>
-   that matches more than one context. You need to add a context attribute
+   that matches <xsl:value-of select="$num"/> contexts.
+   You need to add a context attribute to distinguish between them.
 
 	  </xsl:message>
 	</xsl:otherwise>
@@ -532,7 +589,95 @@
       </xsl:with-param>
     </xsl:call-template> <!--* add-text-styles *-->
     
-  </xsl:template> <!--* ahelp *-->
+  </xsl:template> <!--* name=add-ahelp-single-context *-->
+
+  <!--*
+      * An ahelp link to a file with both sl.* and py.* contexts,
+      * so we link to both of them.
+      *-->
+  <xsl:template name="add-ahelp-multiple-context">
+    <xsl:param name="name"/>
+    <xsl:param name="namematches"/>
+    <xsl:param name="num"/>
+
+    <!--* do not allow param matches here *-->
+    <xsl:if test="boolean(@param)">
+      <xsl:message terminate="yes">
+ ERROR: ahelp tag should not have param attribute (set to '<xsl:value-of select="@param"/>') for
+        name=<xsl:value-of select="$name"/>
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:variable name="slmatch" select="$namematches[substring(context,1,2)='sl']"/>
+    <xsl:variable name="pymatch" select="$namematches[substring(context,1,2)='py']"/>
+
+    <!--* what site is the ahelp page on (assume the same for both links)? *-->
+    <xsl:variable name="ahelpsite" select="$slmatch/site"/>
+
+    <!--*
+        * The ahelp page is either in this site or another one
+        *-->
+    <xsl:variable name="hrefstart"><xsl:choose>
+      <xsl:when test="$site != $ahelpsite"><xsl:value-of select="concat('/',$ahelpsite,'/ahelp/')"/></xsl:when>
+      <xsl:otherwise><xsl:call-template name="add-start-of-href">
+	<xsl:with-param name="extlink" select="0"/>
+	<xsl:with-param name="dirname" select="'ahelp/'"/>
+      </xsl:call-template></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
+    <!--* process the contents, surrounded by styles *-->
+    <xsl:call-template name="add-text-styles">
+      <xsl:with-param name="contents">
+	<xsl:call-template name="add-whylink-style"/>
+
+	<xsl:choose>
+	  <xsl:when test=".!=''"><xsl:apply-templates/></xsl:when>
+
+	  <xsl:otherwise>
+	    <xsl:call-template name="handle-uc">
+	      <xsl:with-param name="uc"   select="boolean(@uc) and @uc=1"/>
+	      <xsl:with-param name="text" select="@name"/>
+	    </xsl:call-template>
+	  </xsl:otherwise>
+	</xsl:choose>
+
+	<xsl:text> (</xsl:text>
+	<a>
+	  <xsl:if test="$slmatch/summary!=''">
+	    <xsl:attribute name="title">Ahelp (<xsl:value-of select="$slmatch/context"/>): <xsl:value-of select="$slmatch/summary"/></xsl:attribute>
+	  </xsl:if>
+
+	  <xsl:attribute name="href">
+	    <xsl:value-of select="$hrefstart"/>
+	    <xsl:value-of select="$slmatch/page"/>
+	    <xsl:text>.html</xsl:text>
+	    <xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
+	  </xsl:attribute>
+
+	  <xsl:text>S-Lang</xsl:text>
+	</a>
+	<xsl:text> or </xsl:text>
+	<a>
+	  <xsl:if test="$pymatch/summary!=''">
+	    <xsl:attribute name="title">Ahelp (<xsl:value-of select="$pymatch/context"/>): <xsl:value-of select="$pymatch/summary"/></xsl:attribute>
+	  </xsl:if>
+
+	  <xsl:attribute name="href">
+	    <xsl:value-of select="$hrefstart"/>
+	    <xsl:value-of select="$pymatch/page"/>
+	    <xsl:text>.html</xsl:text>
+	    <xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
+	  </xsl:attribute>
+
+	  <xsl:text>Python</xsl:text>
+	</a>
+	<xsl:text>)</xsl:text>
+
+
+      </xsl:with-param>
+    </xsl:call-template> <!--* add-text-styles *-->
+    
+  </xsl:template> <!--* name=add-ahelp-multiple-context *-->
 
   <!--*
       * handle FAQ tags:
