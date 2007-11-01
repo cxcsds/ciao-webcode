@@ -1702,11 +1702,14 @@ EOX
 </info>
 <text>
 <p>Please choose the S-Lang or Python version of the thread
-"${thread_title_long}".</p>
+"${thread_title_long}":</p>
 <list>
  <li><cxclink href="index.sl.html">S-Lang</cxclink></li>
  <li><cxclink href="index.py.html">Python</cxclink></li>
 </list>
+
+<p>or return to the Threads Page: <cxclink href="../">Top</cxclink> | <cxclink href="../all.html">All</cxclink>.</p>
+
 </text>
 </page>
 EOX
