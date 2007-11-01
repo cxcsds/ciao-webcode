@@ -1598,6 +1598,9 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *
       * This tag can NOT be used if $site=icxc
       *
+      * Do we need to support use in pages that have /<head>/info/proglang
+      * elements? e.g. <cxclink href="foo">...</cxclink> could link to both
+      * versions automaticallyt (or only one if within a given language page).
       *-->
 
   <xsl:template name="warn-in-cxclink">
@@ -1625,45 +1628,47 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     </xsl:if>
 
     <!--* warn if there's a better option *-->
-    <xsl:if test="contains(@href,'documents_thread') or contains(@href,'threads/')">
-      <xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'threadpage or threadlink'"/></xsl:call-template>
-    </xsl:if>
-    <xsl:if test="contains(@href,'documents_dictionary') or contains(@href,'dictionary/')">
-      <xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'dictionary'"/></xsl:call-template>
-    </xsl:if>
-    <xsl:if test="contains(@href,'documents_ahelp') or contains(@href,'ahelp/')">
-      <xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'ahelp'"/></xsl:call-template>
-    </xsl:if>
-    <xsl:if test="contains(@href,'documents_faq') or contains(@href,'faq/')">
-      <xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'faq'"/></xsl:call-template>
-    </xsl:if>
-    <xsl:if test="contains(@href,'documents_manual')">
-      <xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'manualpage'"/></xsl:call-template>
-    </xsl:if>
-    <xsl:if test="contains(@href,'html_manual')">
-      <xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'manual'"/></xsl:call-template>
-    </xsl:if>
-
-    <xsl:if test="contains(@href,'download/doc/data_products_guide')">
-      <xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'dpguide'"/></xsl:call-template>
-    </xsl:if>
-    <!--* if start with /ciao then assume linking to a specific version so allow it *-->
-    <xsl:if test="contains(@href,'download_ciao_reg') and not(starts-with(@href,'/ciao'))">
-      <xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'download'"/></xsl:call-template>
-    </xsl:if>
-
-    <xsl:if test="contains(@href,'caveats/')">
-      <xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'caveat'"/></xsl:call-template>
-    </xsl:if>
-    <xsl:if test="contains(@href,'why/')">
-      <xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'why'"/></xsl:call-template>
-    </xsl:if>
-    <xsl:if test="contains(@href,'aguide/')">
-      <xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'aguide'"/></xsl:call-template>
-    </xsl:if>
-
-    <xsl:if test="contains(@href,'POG')">
-      <xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'pog'"/></xsl:call-template>
+    <xsl:if test="boolean(@href)">
+      <xsl:if test="contains(@href,'documents_thread') or contains(@href,'threads/')">
+	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'threadpage or threadlink'"/></xsl:call-template>
+      </xsl:if>
+      <xsl:if test="contains(@href,'documents_dictionary') or contains(@href,'dictionary/')">
+	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'dictionary'"/></xsl:call-template>
+      </xsl:if>
+      <xsl:if test="contains(@href,'documents_ahelp') or contains(@href,'ahelp/')">
+	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'ahelp'"/></xsl:call-template>
+      </xsl:if>
+      <xsl:if test="contains(@href,'documents_faq') or contains(@href,'faq/')">
+	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'faq'"/></xsl:call-template>
+      </xsl:if>
+      <xsl:if test="contains(@href,'documents_manual')">
+	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'manualpage'"/></xsl:call-template>
+      </xsl:if>
+      <xsl:if test="contains(@href,'html_manual')">
+	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'manual'"/></xsl:call-template>
+      </xsl:if>
+      
+      <xsl:if test="contains(@href,'download/doc/data_products_guide')">
+	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'dpguide'"/></xsl:call-template>
+      </xsl:if>
+      <!--* if start with /ciao then assume linking to a specific version so allow it *-->
+      <xsl:if test="contains(@href,'download_ciao_reg') and not(starts-with(@href,'/ciao'))">
+	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'download'"/></xsl:call-template>
+      </xsl:if>
+      
+      <xsl:if test="contains(@href,'caveats/')">
+	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'caveat'"/></xsl:call-template>
+      </xsl:if>
+      <xsl:if test="contains(@href,'why/')">
+	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'why'"/></xsl:call-template>
+      </xsl:if>
+      <xsl:if test="contains(@href,'aguide/')">
+	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'aguide'"/></xsl:call-template>
+      </xsl:if>
+      
+      <xsl:if test="contains(@href,'POG')">
+	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'pog'"/></xsl:call-template>
+      </xsl:if>
     </xsl:if>
 
     <!--* process the contents, surrounded by styles *-->
@@ -1672,10 +1677,10 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	<a>
 	  <!--* note the ugly way I find the name of the root node (ie 'name(//*)') *-->
 	  <xsl:attribute name="href">
-	    <xsl:if test="starts-with(@href,'/')=false() and name(//*)='navbar'"><xsl:call-template name="add-path">
-		<xsl:with-param name="idepth" select="$depth"/>
-	      </xsl:call-template></xsl:if>
-	    <xsl:value-of select="@href"/><xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
+	    <xsl:if test="boolean(@href)"><xsl:if test="starts-with(@href,'/')=false() and name(//*)='navbar'"><xsl:call-template name="add-path">
+	      <xsl:with-param name="idepth" select="$depth"/>
+	    </xsl:call-template></xsl:if><xsl:value-of select="@href"/></xsl:if>
+	    <xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
 	  </xsl:attribute>
 	  <xsl:apply-templates/>
 	</a>

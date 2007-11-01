@@ -49,7 +49,7 @@
     *
     *  . install=full path to directory where to install file
     *
-    *  . pagename=name of page (ie wothout .xml or .html)
+    *  . pagename=name of page (ie without .xml or .html or any proglang additions)
     *
     *  . url=URL of page (on live server)
     *
