@@ -1,7 +1,5 @@
 #!/data/da/Docs/local/perl/bin/perl -w
 #
-# $Id: check_valid_page.pl,v 1.4 2005/02/28 20:47:02 dburke Exp $
-#
 # Usage:
 #   ./check_valid_page.pl <URL>
 #            --doctype=default, h401t, h32, h20

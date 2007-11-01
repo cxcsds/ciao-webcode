@@ -161,3 +161,6 @@ we need to create the thread indexes/threadlink tags?
 The allowed-pdf/sites/download-types checks done by the stylesheet
 could perhaps be done by giving the list of values in the config
 file and then checking against these in publish.pl.
+
+*) add a tag to info section to indicate no hardcopy output
+

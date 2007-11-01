@@ -1,7 +1,5 @@
 #!/data/da/Docs/local/perl/bin/perl -w
 #
-# $Id: check_valid.pl,v 1.3 2004/09/13 20:35:18 dburke Exp $
-#
 # Usage:
 #   ./check_valid.pl <site>
 #
