@@ -36,8 +36,6 @@ use XML::LibXML;
 
 ## Code
 #
-my $version = (split( / /, '$Revision: 1.3 $' ))[1];
-
 my %sites = map { ($_,1); } qw( ciao sherpa chart caldb atomdb );
 my $sitelist = join( "  ", sort keys %sites );
 
@@ -64,7 +62,7 @@ my %pages;
 
 my $ua = LWP::UserAgent->new();
 
-$ua->agent( "check_valid/$version " . $ua->agent );
+$ua->agent( "check_valid/1.0 " . $ua->agent );
 
 my $parser = XML::LibXML->new()
   or die "Unable to create XML parser\n";

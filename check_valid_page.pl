@@ -73,8 +73,6 @@ sub parse_response ($$$) {
 
 ## Code
 #
-my $version = (split( / /, '$Revision: 1.4 $' ))[1];
-
 my $progname = (split( m{/}, $0 ))[-1];
 
 my %doctypes = (
@@ -114,7 +112,7 @@ die "Error: argument '$url' does not appear to be a HTTP: URI.\n"
 
 # Create the user agent
 my $ua = LWP::UserAgent->new();
-$ua->agent( "check_valid/$version " . $ua->agent );
+$ua->agent( "check_valid/1.0 " . $ua->agent );
 
 my $parser = XML::LibXML->new()
   or die "Unable to create XML parser\n";
