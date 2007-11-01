@@ -1,102 +1,10 @@
 
 *** CURRENTLY ***
 
-problem:
-
-links to index.html#foo now need to check whether to index.<lang>.html#foo, as in the
-thread toc. Should we send in the output file name to the script? If so then
-this is a big change - e.g. it can be used in <xsl:document> calls -
-but would avoid some issues (would there be problems with those that create
-multiple pages - probably...)
-
-I think I have this fixed for the thread publishing itself, but there's 
-of other areas where this could be a problem.
-
-do we need to add proplang support to threadpage tag as well? Need to
-sort out threadindex stuff to support this too
-
 note:
 
   chips threads used threadInfo/syntax=sl or py to indicate langauge support
   (from a quick hack in beta 2 that Liz used)
-
-*) S-Lang/Python support in threads
-
-a) threadlink tag
-
-It can check if going to a multi-language page and say
-
-  "Name of thread" (<Python> or <S-Lang>) 
-
-where <Python>/<S-Lang> are the acutal links. If you want to link to
-a specific version then you have to add an attribute (proglang) to
-say whether "sl" or "py", in which case you just get
-
-  "<Name of thread>"
-
-as before (ie the thread name is the link).
-
-See also the discussion below when used in a thread itself.
-
-DONE
-
-b) pages
-
-add to metadata 
-
-    <proglang>sl</proglang>
-    <proglang>py</proglang>
-
-to indicate a multi-language thread. I decided against having these in
-a container as we don't really need them; I'm sure this will come back
-to haunt me (and may change if the code gets too painful). If there
-are no proglang tags then you just get a single file (as before). The
-presence of a proglang tag means that you get index.<sl|py>.html and
-an index.html file created. You can have only a single proglang tag,
-which means you get the index.<sl|py>.html file and index.html is a
-referral to it.
-
-DONE
-
-i) ahelp tags
-
-If we leave off the context then we can let ahelp + knowledge of proglang
-decide which context (eg sl.sherpa) to use. This could be extended to
-other links/pages/etc. We could also add a proglang attribute to ahelp
-tags but it's unclear how that would play out (ie if you give it then
-couldn't you just say 'context="sl.sherpa"' anyway)?
-
-DONE
-
-ii) threadlink tags
-
-We should be able to make these clever enough as with ahelp.
-
-DONE
-
-iii) hardcopy
-
-need separate s-lang and python PDF versions
-
-DONE
-
-iv) img<n>.html
-
-do these need to be separate? I think they do - need to update code to
-allow this
-
-DONE
-
-v) general contents
-
-Add restrict="sl"/restrict="py" attributes to
-say what should be included. So
-
- <p restrict="sl">...</p>
-
-DONE
-
-QUS: how to handle thread indexes?
 
 *) URLs in PDFs
 
@@ -127,7 +35,7 @@ Convert publish.pl to use the DOM rather than stylesheets to extract
 simple information from files. Done for many simple cases. There are
 still 
   list.xsl, list_<x>.xsl for
-    <x> = faq, thread, threadindex, dictionary
+    <x> = faq, dictionary
 
 mk_ahelp_setup.pl uses DOM to parse the ahelp files but then stores
 the information in a set of perl structures which it then uses to 
@@ -163,4 +71,6 @@ could perhaps be done by giving the list of values in the config
 file and then checking against these in publish.pl.
 
 *) add a tag to info section to indicate no hardcopy output
+
+*) use XInclude rather than the home grown include code (eg in threads)?
 

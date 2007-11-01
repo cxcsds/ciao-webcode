@@ -1671,14 +1671,20 @@ EOX
       $infostr = "page";
       $process = \&xml2html_page;
 
-      my $thread_title_short = $rnode->findvalue('info/title/short');
-      my $thread_title_long;
-      if ($rnode->findvalue('boolean(info/title/long)') eq "true") {
-	$thread_title_long = $rnode->findvalue('info/title/long');
-      } else {
-	$thread_title_long = $thread_title_short;
-      }
-	
+      # Ugly, as not clear what rules the threads use.
+      #
+      my $has_title_long  = $rnode->findvalue('boolean(info/title/long)') eq "true";
+      my $has_title_short = $rnode->findvalue('boolean(info/title/short)') eq "true";
+
+      die "ERROR: thread '$in' is missing both /thread/info/title/long and /thread/info/title/short\n"
+	if $has_title_long == 0 and $has_title_short == 0;
+
+      my $thread_title_long  = $has_title_long ? $rnode->findvalue('info/title/long') : "";
+      my $thread_title_short = $has_title_short ? $rnode->findvalue('info/title/short') : "";
+
+      $thread_title_long  = $thread_title_short if $thread_title_long eq "";
+      $thread_title_short = $thread_title_long  if $thread_title_short eq "";
+
       # For now no navbar or meta information
       #
       $xml_text .= <<"EOX";

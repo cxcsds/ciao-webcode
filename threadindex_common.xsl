@@ -58,7 +58,7 @@
     *   v1.2 - made links to script be aware of the site
     *   v1.1 - was v1.4 of ciao_threadindex_common.xsl
     *
-    * process the sections of the thread index for the CIAO & Sherpa pages
+    * process the sections of the thread index for the CIAO, ChIPS, and Sherpa pages
     *
     * Parameters set in threadindex.xsl
     *  . threadDir - location of input thread XML files
@@ -81,6 +81,9 @@
     *    the information needed to create the index. This would then
     *    be read in rather than the thread itself, reducing time/memory
     *    requirements.
+    *
+    *  - For CIAO 4 we need to deal with language-specific versions of
+    *    some threads
     *-->
 
 <xsl:stylesheet version="1.0"
@@ -204,7 +207,11 @@
       *-->
   <xsl:template name="list-thread">
 
-    <!--* read the thread into a variable to avoid multiple parses of the file *-->
+    <!--*
+	* Read the thread into a variable to avoid multiple parses of the file.
+	* As we are sure of the site of this thread we can use $threadDir and
+	* not $storageloc
+	*-->
     <xsl:variable name="thisThread" select="document(concat($threadDir,@name,'/thread.xml'))"/>
     <xsl:variable name="thisThreadInfo" select="$thisThread/thread/info"/>
 
@@ -215,8 +222,26 @@
         *   depth-handling/etc consistent???
         *   OR, do we assume that as we are in the thread index everything
         *   is in the sub-directory of this page so we needn't bother?
+	*
+	* As we now have to bother about language-specific versions it
+	* would be nice to consolidate the logic.
         *-->
-    <a class="threadlink" href="{$thisThreadInfo/name}/"><xsl:value-of select="$thisThreadInfo/title/long"/></a>
+    <xsl:variable name="num" select="count($thisThreadInfo/proglang)"/>
+    <xsl:choose>
+      <xsl:when test="$num=0">
+	<a class="threadlink" href="{$thisThreadInfo/name}/"><xsl:value-of select="$thisThreadInfo/title/long"/></a>
+      </xsl:when>
+      <xsl:when test="$num=1">
+	<a class="threadlink" href="{$thisThreadInfo/name}/index.{$thisThreadInfo/proglang}.html"><xsl:value-of select="$thisThreadInfo/title/long"/></a>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:value-of select="concat($thisThreadInfo/title/long,' (')"/>
+	<a class="threadlink" href="{$thisThreadInfo/name}/index.sl.html">S-Lang</a>
+	<xsl:text> or </xsl:text>
+	<a class="threadlink" href="{$thisThreadInfo/name}/index.py.html">Python</a>
+	<xsl:text>)</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <!--*
         * handle any script items

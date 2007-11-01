@@ -92,7 +92,7 @@ my @prefixes =
    "/data/da/Docs/sherpaweb/40beta",
    "/data/da/Docs/chipsweb/40beta",
 
-   "/Users/doug/doc/ahelp/",
+   "/Users/doug/doc/ahelp/", # Doug's testing
   );
 
 my %_types = map { ($_,1); } qw( test live trial );
@@ -351,7 +351,7 @@ if ( defined $threadindex ) {
     chdir $dir;
 
     # and do the actual publishing
-    system $script,
+    system @pexe, $script,
       "--type=$type", $force ? "--force" : "--noforce",
       @files
 	and die "\nerror in\n dir=$dir\n with files=" . join(" ",@files) . "\n\n";

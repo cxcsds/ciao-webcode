@@ -1902,9 +1902,13 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:message>
     </xsl:if>
 
-    <xsl:if test="boolean(@name)=false() and name(//*)!='thread'">
+    <!--*
+        * How do we handle threadlink tags from included files?
+	* XXX TODO XXX send in thread name?
+	*-->
+    <xsl:if test="boolean(@name)=false() and name(//*)!='thread' and $threadName = ''">
       <xsl:message terminate="yes">
- Internal error: need to support threadlink use within an included file!
+ Internal error: threadlink has no @name, not in a thread, and $threadName=''
       </xsl:message>
     </xsl:if>
 
@@ -2451,7 +2455,10 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   <!--*
       * Returns the //thread/info node for either the current document
       * (ie when dealing with the current thread) or that of a separate
-      * document - determined by the @name attribute.
+      * document - determined by the @name attribute. To handle (ie hack)
+      * threadlink calls that occur in included files we also check to
+      * see whether the threadname "global" parameter has been set, and
+      * use that when no @name and name(//*)!='thread'
       *
       * I am trying this in the hope that it will always return a node set,
       * since I am having troubles with handling the external files
@@ -2485,9 +2492,28 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</xsl:if>
 	<func:result select="$bdoc//thread/info"/>
       </xsl:when>
+
       <xsl:when test="name(//*) = 'thread'">
 	<func:result select="//thread/info"/>
+<!--	<func:result select="$threadInfo"/>   should be able to say this but haven't tested it -->
       </xsl:when>
+
+      <!--*
+          * This is a hack to deal with threadlink tags in an included
+	  * file that refer to the parent thread
+	  *-->
+
+      <xsl:when test="$threadName != ''">
+	<xsl:variable name="cdoc" select="document(djb:get-thread-filename($threadName))"/>
+	<xsl:if test="count($cdoc) = 0">
+	  <xsl:message>
+ WARNING: need to publish <xsl:value-of select="concat('thread=',$threadName)"/>
+          and then re-publish this page.
+	  </xsl:message>
+	</xsl:if>
+	<func:result select="$cdoc//thread/info"/>
+      </xsl:when>
+
       <xsl:otherwise>
 	<xsl:message terminate="yes">
   ERROR: internal error - djb:read-in-thread-info
