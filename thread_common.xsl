@@ -770,9 +770,7 @@
 	
 	<!--* Images (if any) *-->
 	<xsl:if test="boolean(images)">
-	  <xsl:apply-templates select="images" mode="toc">
-	    <xsl:with-param name="pageName" select="$pageName"/>
-	  </xsl:apply-templates>
+	  <xsl:apply-templates select="images" mode="toc"/>
 	</xsl:if>
 	
       </ul>
@@ -1350,11 +1348,16 @@ or do we, as this case is already caught in add-parameters?
     <xsl:variable name="thispos" select="position()"/>
     <xsl:variable name="id" select="../image[position()=$thispos]/@id"/>
 
+    <xsl:variable name="langid"><xsl:choose>
+      <xsl:when test="$proglang=''"/>
+      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
     <li>
       <a>
 	<xsl:attribute name="href"><xsl:choose>
 	    <xsl:when test="$hardcopy = 1">#img-<xsl:value-of select="$id"/></xsl:when>
-	    <xsl:otherwise>img<xsl:value-of select="$thispos"/>.html</xsl:otherwise>
+	    <xsl:otherwise><xsl:value-of select="concat('img',$thispos,$langid,'.html')"/></xsl:otherwise>
 	  </xsl:choose></xsl:attribute>
 	<xsl:value-of select='title'/>
       </a>
