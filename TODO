@@ -38,6 +38,8 @@ as before (ie the thread name is the link).
 
 See also the discussion below when used in a thread itself.
 
+DONE
+
 b) pages
 
 add to metadata 
@@ -54,7 +56,7 @@ an index.html file created. You can have only a single proglang tag,
 which means you get the index.<sl|py>.html file and index.html is a
 referral to it.
 
-Qus: how to encode lang-specific text/sections/...
+DONE
 
 i) ahelp tags
 
@@ -64,9 +66,13 @@ other links/pages/etc. We could also add a proglang attribute to ahelp
 tags but it's unclear how that would play out (ie if you give it then
 couldn't you just say 'context="sl.sherpa"' anyway)?
 
+DONE
+
 ii) threadlink tags
 
 We should be able to make these clever enough as with ahelp.
+
+DONE
 
 iii) hardcopy
 
