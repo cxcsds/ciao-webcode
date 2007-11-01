@@ -3,10 +3,6 @@
 
 <!--* lists the FAQ pages created by the transformation
     *
-    * $Id: list_faq.xsl,v 1.4 2004/05/14 15:34:25 dburke Exp $ 
-    *-->
-
-<!--* 
     * Recent changes:
     *   v1.4 - we no longer include the installation directory, so
     *          we do not need parameters or any checks

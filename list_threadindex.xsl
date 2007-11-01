@@ -3,10 +3,6 @@
 
 <!--* lists the 'thread index' pages created by the transformation
     *
-    * $Id: list_threadindex.xsl,v 1.3 2004/05/14 15:17:51 dburke Exp $ 
-    *-->
-
-<!--* 
     * Recent changes:
     *   v1.3 - removed a lot of extraneous/un-needed info and removed checks
     *          to avoid pulling in helper.xsl and hence set up params
