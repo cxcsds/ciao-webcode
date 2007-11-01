@@ -1401,7 +1401,7 @@ sub xml2html_thread ($) {
     $threadDir = $store;
     $threadDir =~ s/\/[^\/]+\/$/\//;
 
-    print "Parsing [thread]: $in";
+    print "Parsing [thread]: $threadname";
 
     # Find out information about this conversion
     #
@@ -1422,9 +1422,9 @@ sub xml2html_thread ($) {
     # We assume that there are either 0, 1, or 2 proglang elements below,
     # and that they are unique.
     #
-    die "Unexpected number of //thread/info/proglang elements in $in\n"
+    die "Unexpected number of //thread/info/proglang elements in $threadname\n"
       if $#lang >= 2;
-    die "Repeated //thread/info/proglang elements in $in\n"
+    die "Repeated //thread/info/proglang elements in $threadname\n"
       if $#lang == 1 and $lang[0] eq $lang[1];
 
     if ($#lang == -1) {
@@ -1439,7 +1439,7 @@ sub xml2html_thread ($) {
       }
     }
 
-    die "Error: no HTML files to be generated for thread=$in!\n"
+    die "Error: no HTML files to be generated for thread=$threadname!\n"
       if $#html == -1;
 
     # What files need pre-processing before being included?
@@ -1592,6 +1592,13 @@ sub xml2html_thread ($) {
 
        storageloc => $$opts{storageloc},
       );
+
+    # Safety check: ensure all restrict attributes are set to sl or py
+    #
+    my @fails = $rnode->findnodes('//@restrict[. != "sl" and . != "py"]');
+    die "ERROR: thread=$threadname restrict attribute can only be 'sl' or 'py', not:\n\t" .
+      join (" ", map { $_->textContent; } @fails ) . "\n"
+	unless $#fails == -1;
 
     # Hack to avoid translate_file_langs having to know the xslt path
     # (not a very good idea)
