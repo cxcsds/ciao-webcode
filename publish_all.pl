@@ -265,8 +265,8 @@ while ( <$pipe> ) {
 	next;
     }
     if ( -e "$path/RCS/$fname,v" ) {
-	my $dummy = `rlog -L -R -l RCS/$fname,v`;
-	die "Error: problem running 'rlog -L -R -l RCS/$fname,v'\n"
+	my $dummy = `rlog -L -R -l $path/RCS/$fname,v`;
+	die "Error: problem running 'rlog -L -R -l $path/RCS/$fname,v'\n"
 	  unless $? == 0;
 	if ( $dummy ne "" ) {
 	    print "skipping $dname/$fname as checked out [RCS]\n";
