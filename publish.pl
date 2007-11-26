@@ -1708,7 +1708,7 @@ EOX
  <li><cxclink href="index.py.html">Python</cxclink></li>
 </list>
 
-<p>or return to the Threads Page: <cxclink href="../">Top</cxclink> | <cxclink href="../all.html">All</cxclink>.</p>
+<p>or return to the Threads Page: <cxclink href="../">Top</cxclink> | <cxclink href="../all.html">All</cxclink></p>
 
 </text>
 </page>
