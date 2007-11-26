@@ -347,11 +347,15 @@ logotext=Sherpa Logo
 %storageloc=test /data/da/Docs/ciaoweb/storage.40beta.test.xml
 %storageloc=trial /data/da/Docs/ciaoweb/storage.40beta.trial.xml
 
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/
+
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/40beta/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
 %ahelpindexdir=trial /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
 
-ahelpindexnavbar=analysis
+ahelpindexnavbar=ahelp
 
 -version
 
@@ -439,6 +443,10 @@ logotext=ChIPS Logo
 %storageloc=live /data/da/Docs/ciaoweb/storage.40beta.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.40beta.test.xml
 %storageloc=trial /data/da/Docs/ciaoweb/storage.40beta.trial.xml
+
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/
 
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/40beta/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
