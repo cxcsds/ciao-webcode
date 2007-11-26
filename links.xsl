@@ -265,7 +265,6 @@
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
 	<a>
-	  <xsl:call-template name="add-whylink-style"/>
 
 	  <xsl:attribute name="title">
 	    <xsl:text>Ahelp index (</xsl:text>
@@ -531,7 +530,7 @@
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
 	<a>
-	  <xsl:call-template name="add-whylink-style"/>
+	  <xsl:attribute name="class">helplink</xsl:attribute>
 
 	  <!--*
               * Add the summary as a title attribute. There should be
@@ -630,7 +629,7 @@
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
-	<xsl:call-template name="add-whylink-style"/>
+        <xsl:attribute name="class">helplink</xsl:attribute>
 
 	<xsl:choose>
 	  <xsl:when test=".!=''"><xsl:apply-templates/></xsl:when>
@@ -760,7 +759,6 @@
       <xsl:with-param name="contents">
 	<!--* are we linking to the whole file, or a specific part of it? *-->
 	<a>
-	  <xsl:call-template name="add-whylink-style"/>
 	  <xsl:attribute name="title">CIAO Frequently Asked Questions</xsl:attribute>
 	  <xsl:attribute name="href"><xsl:value-of select="$hrefstart"/><xsl:if test="boolean(@id)"><xsl:value-of select="@id"/>.html</xsl:if></xsl:attribute>
 
@@ -817,7 +815,6 @@
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
 	<a>
-	  <xsl:call-template name="add-whylink-style"/>
 	  <xsl:attribute name="title">CIAO Dictionary</xsl:attribute>
 	  <xsl:attribute name="href">
 
@@ -867,7 +864,6 @@
 
     <!--* are we linking to the index page or a specific one *-->
     <a>
-      <xsl:call-template name="add-whylink-style"/>
       <xsl:attribute name="title">The Proposers' Observatory Guide</xsl:attribute>
       <xsl:attribute name="href">
 	<xsl:text>/proposer/POG/</xsl:text>
@@ -1207,7 +1203,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:with-param name="contents">
 	<!--* link to analysis guides *-->
 	<a>
-	  <xsl:call-template name="add-whylink-style"/>
 	  <xsl:attribute name="title">CIAO Analysis Guides</xsl:attribute>
 	  <xsl:attribute name="href">
 	    <xsl:call-template name="add-start-of-href">
@@ -1255,7 +1250,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:with-param name="contents">
 	<!--* link to why documents *-->
 	<a>
-	  <xsl:call-template name="add-whylink-style"/>
 	  <xsl:attribute name="title">CIAO "Why" Topics</xsl:attribute>
 	  <xsl:attribute name="href">
 	    <xsl:call-template name="add-start-of-href">
@@ -1780,7 +1774,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:with-param name="contents">
 	<!--* could just set href directly but want class to appear first (for testing) *-->
 	<a>
-	  <xsl:call-template name="add-whylink-style"/>
 	  <xsl:attribute name="title">CXC Helpdesk</xsl:attribute>
 	  <xsl:attribute name="href">/helpdesk/</xsl:attribute>
 	  <xsl:choose>
@@ -2375,15 +2368,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
   </xsl:template> <!--* name=sort-out-anchor *-->
 
-  <!--*
-      * Indicate this is an "informational" link.
-      * It is up to the stylesheet + browser to render this
-      * - I hope it does not mess up htmldoc
-      *-->
-  <xsl:template name="add-whylink-style">
-    <xsl:attribute name="class">helplink</xsl:attribute>
-  </xsl:template>
-    
   <!--*
       * This should perhaps be in helper.xsl
       * It is used to check that links contain text (or a tag)
