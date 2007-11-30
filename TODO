@@ -84,3 +84,12 @@ links as we increase the support for this - need to support
   - $proglang set   -> link to the language-specific version
 
 behavior?
+
+*) ahelp index file: use named ID's
+
+Should we use ID/IDREFs so that we can link together entries (in
+part wondering whether we can make the new code that handles creating
+   key (context: sl py)
+links more efficient.
+
+

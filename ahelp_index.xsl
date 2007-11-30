@@ -452,9 +452,30 @@
 	    </xsl:when>
 
 	    <xsl:when test="$ahelpobj/@samekey = 2">
-	      <xsl:call-template name="add-navbar-entry-key-context">
-		<xsl:with-param name="ahelpobj" select="$ahelpobj"/>
-	      </xsl:call-template>
+	      <xsl:variable name="contail" select="substring($ahelpobj/context,4)"/>
+	      <xsl:choose>
+		<xsl:when test="starts-with($ahelpobj/context,'sl.')">
+		  <xsl:if test="count($ahelpobj/preceding-sibling::ahelp[key=$ahelpobj/key and context=concat('py.',$contail)]) = 0">
+		    <xsl:call-template name="add-navbar-entry-key-slpy-context">
+		      <xsl:with-param name="slobj" select="$ahelpobj"/>
+		      <xsl:with-param name="context"  select="$contail"/>
+		    </xsl:call-template>
+		  </xsl:if>
+		</xsl:when>
+		<xsl:when test="starts-with($ahelpobj/context,'py.')">
+		  <xsl:if test="count($ahelpobj/preceding-sibling::ahelp[key=$ahelpobj/key and context=concat('sl.',$contail)]) = 0">
+		    <xsl:call-template name="add-navbar-entry-key-pysl-context">
+		      <xsl:with-param name="pyobj" select="$ahelpobj"/>
+		      <xsl:with-param name="context"  select="$contail"/>
+		    </xsl:call-template>
+		  </xsl:if>
+		</xsl:when>
+		<xsl:otherwise>
+		  <xsl:call-template name="add-navbar-entry-key-context">
+		    <xsl:with-param name="ahelpobj" select="$ahelpobj"/>
+		  </xsl:call-template>
+		</xsl:otherwise>
+	      </xsl:choose>
 	    </xsl:when>
 
 	    <xsl:otherwise>
@@ -464,7 +485,6 @@
 	    </xsl:otherwise>
 	  </xsl:choose>
 
-	  <xsl:call-template name="add-br"/>
 	</xsl:for-each> <!--* itemlist/item *-->
 
 	<xsl:text disable-output-escaping="yes">&amp;nbsp;&lt;br&gt;&lt;/dd&gt;</xsl:text>
@@ -500,6 +520,7 @@
       <xsl:with-param name="url" select="concat($ahelpobj/page,'.html')"/>
       <xsl:with-param name="txt"><xsl:value-of select="$ahelpobj/key"/></xsl:with-param>
     </xsl:call-template> 
+    <xsl:call-template name="add-br"/>
 
   </xsl:template> <!--* name=add-navbar-entry-key *-->
 
@@ -515,9 +536,67 @@
       <xsl:with-param name="url" select="concat($ahelpobj/page,'.html')"/>
       <xsl:with-param name="txt"><xsl:value-of select="concat($ahelpobj/key,' (',$ahelpobj/context,')')"/></xsl:with-param>
     </xsl:call-template> 
+    <xsl:call-template name="add-br"/>
 
-  </xsl:template> <!--* name=add-navbar-entry-key *-->
+  </xsl:template> <!--* name=add-navbar-entry-key-context *-->
 
+  <!--*
+      * Add a link to the navbar to an ahelp entry which has
+      * multi-language support. Place Python first.
+      * The ahelpobj sent in represents the sl.* version
+      *-->
+  <xsl:template name="add-navbar-entry-key-slpy-context">
+    <xsl:param name="slobj" select="''"/>
+    <xsl:param name="context"  select="''"/>
+
+    <xsl:variable name="key" select="$slobj/key"/>
+    <xsl:variable name="pyobj" select="$slobj/following-sibling::ahelp[key=$key and context=concat('py.',$context)]"/>
+
+    <xsl:value-of select="concat($key,' (',$context,': ')"/>
+    <xsl:call-template name="add-link-to-text">
+      <xsl:with-param name="title" select="concat('Ahelp (',$pyobj/context,'): ',$pyobj/summary)"/>
+      <xsl:with-param name="url" select="concat($pyobj/page,'.html')"/>
+      <xsl:with-param name="txt">py</xsl:with-param>
+    </xsl:call-template> 
+    <xsl:text> </xsl:text>
+    <xsl:call-template name="add-link-to-text">
+      <xsl:with-param name="title" select="concat('Ahelp (',$slobj/context,'): ',$slobj/summary)"/>
+      <xsl:with-param name="url" select="concat($slobj/page,'.html')"/>
+      <xsl:with-param name="txt">sl</xsl:with-param>
+    </xsl:call-template> 
+    <xsl:text>)</xsl:text>
+    <xsl:call-template name="add-br"/>
+
+  </xsl:template> <!--* name=add-navbar-entry-key-slpy-context *-->
+
+  <!--*
+      * Add a link to the navbar to an ahelp entry which has
+      * multi-language support. Place Python first.
+      * The ahelpobj sent in represents the py.* version
+      *-->
+  <xsl:template name="add-navbar-entry-key-pysl-context">
+    <xsl:param name="pyobj" select="''"/>
+    <xsl:param name="context"  select="''"/>
+
+    <xsl:variable name="key" select="$pyobj/key"/>
+    <xsl:variable name="slobj" select="$pyobj/following-sibling::ahelp[key=$key and context=concat('sl.',$context)]"/>
+
+    <xsl:value-of select="concat($key,' (',$context,': ')"/>
+    <xsl:call-template name="add-link-to-text">
+      <xsl:with-param name="title" select="concat('Ahelp (',$pyobj/context,'): ',$pyobj/summary)"/>
+      <xsl:with-param name="url" select="concat($pyobj/page,'.html')"/>
+      <xsl:with-param name="txt">py</xsl:with-param>
+    </xsl:call-template> 
+    <xsl:text> </xsl:text>
+    <xsl:call-template name="add-link-to-text">
+      <xsl:with-param name="title" select="concat('Ahelp (',$slobj/context,'): ',$slobj/summary)"/>
+      <xsl:with-param name="url" select="concat($slobj/page,'.html')"/>
+      <xsl:with-param name="txt">sl</xsl:with-param>
+    </xsl:call-template> 
+    <xsl:text>)</xsl:text>
+    <xsl:call-template name="add-br"/>
+
+  </xsl:template> <!--* name=add-navbar-entry-key-pysl-context *-->
 
   <!--*
       * create the "quick links" section of the navbar
