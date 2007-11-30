@@ -98,28 +98,14 @@
 	  * - if CALDB, as CIAO
 	  *-->
 
-      <xsl:choose>
-	<xsl:when test="boolean(//links)">
-	  <!--* add the links section *-->
-	  <xsl:apply-templates select="//links" mode="create"/>
-	</xsl:when>
-      </xsl:choose>
+      <xsl:if test="boolean(//links)">
+	<xsl:apply-templates select="//links" mode="create"/>
+      </xsl:if>
 
-      <xsl:choose>
-	<xsl:when test="$site='ciao' and count(//news/item)!=0">
-	  <!--* add the News table *-->
-	  <xsl:apply-templates select="//news" mode="create"/>
-	</xsl:when>
+      <xsl:if test="($site='ciao' or $site='chips' or $site='sherpa' or $site='caldb') and count(//news/item)!=0">
+	<xsl:apply-templates select="//news" mode="create"/>
+      </xsl:if>
 	
-	<xsl:when test="$site='sherpa' and count(//news/item)!=0">
-	  <xsl:apply-templates select="//news" mode="create"/>
-	</xsl:when>
-	
-	<xsl:when test="$site='caldb' and count(//news/item)!=0">
-	  <xsl:apply-templates select="//news" mode="create"/>
-	</xsl:when>
-      </xsl:choose>
-
     </div>
 
     <!--* re-start the indexing *-->
