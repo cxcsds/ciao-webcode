@@ -11,6 +11,9 @@
 
 <!--* 
     * Recent changes:
+    *  Nov 30 2007 DJB
+    *    minor refactoring of ahelp link code in preparation for improved support of
+    *    context=py.*/sl.* pages
     *  Oct 17 2007 DJB
     *    navbar for ahelp pages now contains a link to the home page for that
     *    site.
@@ -424,6 +427,12 @@
 	    * loop through each help file
             * - try and be clever if have multiple items with the
             *   same key but different contexts
+	    *   have @samekey=1  => single match so can just use key
+	    *                 2  => two matches, so either have to say
+	    *                         "key (context)"
+	    *                       OR we want to combine because context=sl.*/py.*
+	    *       NOTE: the latter option is not supported yet
+            *                 _  => error
             *-->
 	<xsl:for-each select="itemlist/item">
 	  <xsl:variable name="thisid"   select="@id"/>
@@ -435,16 +444,26 @@
 	    </xsl:message>
 	  </xsl:if>
 
-	  <xsl:variable name="thiskey"  select="$ahelpobj/key"/>
-	  <xsl:variable name="thiscon"  select="$ahelpobj/context"/>
-	  <xsl:variable name="mkey"     select="$ahelpobj/@samekey != 1"/>
+	  <xsl:choose>
+	    <xsl:when test="$ahelpobj/@samekey = 1">
+	      <xsl:call-template name="add-navbar-entry-key">
+		<xsl:with-param name="ahelpobj" select="$ahelpobj"/>
+	      </xsl:call-template>
+	    </xsl:when>
 
-	  <xsl:call-template name="add-link-to-text">
-	    <xsl:with-param name="title" select="concat('Ahelp (',$thiscon,'): ',$ahelpobj/summary)"/>
-	    <xsl:with-param name="url" select="concat($ahelpobj/page,'.html')"/>
-	    <xsl:with-param name="txt"><xsl:value-of select="$thiskey"/><xsl:if
-		test="$mkey"> (<xsl:value-of select="$thiscon"/>)</xsl:if></xsl:with-param>
-	  </xsl:call-template> 
+	    <xsl:when test="$ahelpobj/@samekey = 2">
+	      <xsl:call-template name="add-navbar-entry-key-context">
+		<xsl:with-param name="ahelpobj" select="$ahelpobj"/>
+	      </xsl:call-template>
+	    </xsl:when>
+
+	    <xsl:otherwise>
+	      <xsl:message terminate="yes">
+ ERROR: ahelp key=<xsl:value-of select="$ahelpobj/key"/> context=<xsl:value-of select="$ahelpobj/context"/> @samekey=<xsl:value-of select="$ahelpobj/@samekey"/>
+	      </xsl:message>
+	    </xsl:otherwise>
+	  </xsl:choose>
+
 	  <xsl:call-template name="add-br"/>
 	</xsl:for-each> <!--* itemlist/item *-->
 
@@ -468,6 +487,37 @@
     </xsl:document>
 
   </xsl:template> <!--* name=make-navbar *-->
+
+  <!--*
+      * Add a link to the navbar to an ahelp entry; only the key is needed
+      * here
+      *-->
+  <xsl:template name="add-navbar-entry-key">
+    <xsl:param name="ahelpobj" select="''"/>
+
+    <xsl:call-template name="add-link-to-text">
+      <xsl:with-param name="title" select="concat('Ahelp (',$ahelpobj/context,'): ',$ahelpobj/summary)"/>
+      <xsl:with-param name="url" select="concat($ahelpobj/page,'.html')"/>
+      <xsl:with-param name="txt"><xsl:value-of select="$ahelpobj/key"/></xsl:with-param>
+    </xsl:call-template> 
+
+  </xsl:template> <!--* name=add-navbar-entry-key *-->
+
+  <!--*
+      * Add a link to the navbar to an ahelp entry; both the key
+      * and context are needed here
+      *-->
+  <xsl:template name="add-navbar-entry-key-context">
+    <xsl:param name="ahelpobj" select="''"/>
+
+    <xsl:call-template name="add-link-to-text">
+      <xsl:with-param name="title" select="concat('Ahelp (',$ahelpobj/context,'): ',$ahelpobj/summary)"/>
+      <xsl:with-param name="url" select="concat($ahelpobj/page,'.html')"/>
+      <xsl:with-param name="txt"><xsl:value-of select="concat($ahelpobj/key,' (',$ahelpobj/context,')')"/></xsl:with-param>
+    </xsl:call-template> 
+
+  </xsl:template> <!--* name=add-navbar-entry-key *-->
+
 
   <!--*
       * create the "quick links" section of the navbar
