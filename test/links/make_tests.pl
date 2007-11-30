@@ -37,7 +37,9 @@
 #   2007 Oct 16 DJB
 #     Updated to handle new site-specific ahelp versions for CIAO 4
 #   2007 Oct 29 DJB
-#     Initial suport for threadlink/proglang handling.
+#     Initial support for threadlink/proglang handling.
+#   2007 Nov 30 DJB
+#     class="helplink" only used with ahelp tag now.
 #
 
 use strict;
@@ -72,7 +74,7 @@ my @basic =
 my %helplink_tags =
   map { ($_,1); }
   qw(
-     ahelppage ahelp faq dictionary pog aguide why helpdesk
+     ahelp
     );
 
 # used by add_test
@@ -282,7 +284,7 @@ add_test "download_id", "download",
 
 add_test "download_type", "download",
   { type => 'linux6', @text },
-  { href => '/cgi-gen/ciao/download_ciao4b2_linux6.cgi', deftext => '', styles => 'no_uc', no_depth => 1, @text };
+  { href => '/cgi-gen/ciao/download_ciao4b3_linux6.cgi', deftext => '', styles => 'no_uc', no_depth => 1, @text };
 
 add_test "script_name", "script",
   { name => 'foo' },
@@ -844,7 +846,7 @@ EOD
         set out = out/xslt.$h
 
         if ( -e $out ) rm -f $out
-        $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml --stringparam storage `pwd`/storage/ test.xsl in/${id}.xml > $out
+        $xsltproc --stringparam type $type --stringparam site $site --stringparam depth $depth --stringparam ahelpindex `pwd`/ahelpindexfile.xml --stringparam storageloc `pwd`/storageloc.xml test.xsl in/${id}.xml > $out
         diff out/${h} $out
         if ( $status == 0 ) then
           printf "OK:   %3d  [%s]\n" $ctr $h
