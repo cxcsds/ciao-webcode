@@ -541,16 +541,16 @@
   </xsl:template> <!--* name=add-navbar-entry-key-context *-->
 
   <!--*
-      * Add a link to the navbar to an ahelp entry which has
-      * multi-language support. Place Python first.
-      * The ahelpobj sent in represents the sl.* version
+      * Add the actual text + link for a ahelp page with
+      * a multi-language context.
+      * Place Python first.
       *-->
-  <xsl:template name="add-navbar-entry-key-slpy-context">
+  <xsl:template name="add-navbar-entry-lang">
+    <xsl:param name="pyboj" select="''"/>
     <xsl:param name="slobj" select="''"/>
-    <xsl:param name="context"  select="''"/>
 
     <xsl:variable name="key" select="$slobj/key"/>
-    <xsl:variable name="pyobj" select="$slobj/following-sibling::ahelp[key=$key and context=concat('py.',$context)]"/>
+    <xsl:variable name="context" select="substr($slobj/context,4)"/>
 
     <xsl:value-of select="concat($key,' (',$context,': ')"/>
     <xsl:call-template name="add-link-to-text">
@@ -566,6 +566,24 @@
     </xsl:call-template> 
     <xsl:text>)</xsl:text>
     <xsl:call-template name="add-br"/>
+  </xsl:template> <!--* name=add-navbar-entry-lang *-->
+
+  <!--*
+      * Add a link to the navbar to an ahelp entry which has
+      * multi-language support. Place Python first.
+      * The ahelpobj sent in represents the sl.* version
+      *-->
+  <xsl:template name="add-navbar-entry-key-slpy-context">
+    <xsl:param name="slobj" select="''"/>
+    <xsl:param name="context"  select="''"/>
+
+    <xsl:variable name="key" select="$slobj/key"/>
+    <xsl:variable name="pyobj" select="$slobj/following-sibling::ahelp[key=$key and context=concat('py.',$context)]"/>
+
+    <xsl:call-template name="add-navbar-entry-lang">
+      <xsl:with-param name="pyobj" select="$pyobj"/>
+      <xsl:with-param name="slobj" select="$slobj"/>
+    </xsl:call-template>
 
   </xsl:template> <!--* name=add-navbar-entry-key-slpy-context *-->
 
@@ -581,20 +599,10 @@
     <xsl:variable name="key" select="$pyobj/key"/>
     <xsl:variable name="slobj" select="$pyobj/following-sibling::ahelp[key=$key and context=concat('sl.',$context)]"/>
 
-    <xsl:value-of select="concat($key,' (',$context,': ')"/>
-    <xsl:call-template name="add-link-to-text">
-      <xsl:with-param name="title" select="concat('Ahelp (',$pyobj/context,'): ',$pyobj/summary)"/>
-      <xsl:with-param name="url" select="concat($pyobj/page,'.html')"/>
-      <xsl:with-param name="txt">py</xsl:with-param>
-    </xsl:call-template> 
-    <xsl:text> </xsl:text>
-    <xsl:call-template name="add-link-to-text">
-      <xsl:with-param name="title" select="concat('Ahelp (',$slobj/context,'): ',$slobj/summary)"/>
-      <xsl:with-param name="url" select="concat($slobj/page,'.html')"/>
-      <xsl:with-param name="txt">sl</xsl:with-param>
-    </xsl:call-template> 
-    <xsl:text>)</xsl:text>
-    <xsl:call-template name="add-br"/>
+    <xsl:call-template name="add-navbar-entry-lang">
+      <xsl:with-param name="pyobj" select="$pyobj"/>
+      <xsl:with-param name="slobj" select="$slobj"/>
+    </xsl:call-template>
 
   </xsl:template> <!--* name=add-navbar-entry-key-pysl-context *-->
 
