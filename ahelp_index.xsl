@@ -550,9 +550,8 @@
     <xsl:param name="slobj" select="''"/>
 
     <xsl:variable name="key" select="$slobj/key"/>
-    <xsl:variable name="context" select="substr($slobj/context,4)"/>
 
-    <xsl:value-of select="concat($key,' (',$context,': ')"/>
+    <xsl:value-of select="concat($key,' - ')"/>
     <xsl:call-template name="add-link-to-text">
       <xsl:with-param name="title" select="concat('Ahelp (',$pyobj/context,'): ',$pyobj/summary)"/>
       <xsl:with-param name="url" select="concat($pyobj/page,'.html')"/>
@@ -564,7 +563,6 @@
       <xsl:with-param name="url" select="concat($slobj/page,'.html')"/>
       <xsl:with-param name="txt">sl</xsl:with-param>
     </xsl:call-template> 
-    <xsl:text>)</xsl:text>
     <xsl:call-template name="add-br"/>
   </xsl:template> <!--* name=add-navbar-entry-lang *-->
 
