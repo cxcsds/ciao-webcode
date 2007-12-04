@@ -546,7 +546,7 @@
       * Place Python first.
       *-->
   <xsl:template name="add-navbar-entry-lang">
-    <xsl:param name="pyboj" select="''"/>
+    <xsl:param name="pyobj" select="''"/>
     <xsl:param name="slobj" select="''"/>
 
     <xsl:variable name="key" select="$slobj/key"/>
