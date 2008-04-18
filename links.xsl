@@ -840,9 +840,17 @@
       <xsl:when test="@site = 'ciao'">/ciao/dictionary/</xsl:when>
       <xsl:when test="@site = 'csc'">/csc/dictionary/</xsl:when>
 
-      <xsl:otherwise>
+      <xsl:when test="$site = 'csc'">
         <xsl:call-template name="add-start-of-href">
 	  <xsl:with-param name="extlink" select="0"/>
+	  <xsl:with-param name="dirname" select="'dictionary/'"/>
+	</xsl:call-template>
+      </xsl:when>
+
+      <!-- ciao, chips, sherpa, etc. //-->
+      <xsl:otherwise>
+        <xsl:call-template name="add-start-of-href">
+	    <xsl:with-param name="extlink" select="$extlink"/>
 	  <xsl:with-param name="dirname" select="'dictionary/'"/>
 	</xsl:call-template>
       </xsl:otherwise>
