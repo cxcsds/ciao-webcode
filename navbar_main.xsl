@@ -108,6 +108,10 @@
 	  </div>
 	</xsl:if>
 
+        <xsl:if test="$site='chart'">
+	  <hr/>
+	</xsl:if>
+
         <xsl:apply-templates select="//links" mode="create"/>
       </xsl:if>
 
