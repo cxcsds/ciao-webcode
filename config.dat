@@ -794,9 +794,9 @@ logotext=Chandra Source Catalog logo
 %searchssi=test /csc1/csc_search.ssi
 %searchssi=trial /sds/csc/csc_search.ssi
 
-%stylesheets=live /data/da/Docs/web4/csc1/stylesheets/
-%stylesheets=test /data/da/Docs/web4/csc1/stylesheets/
-%stylesheets=trial /data/da/Docs/web4/csc1/stylesheets/
+%stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc/htdocs/csc1/
 %outdir=test /proj/web-cxc-test/htdocs/csc1/
