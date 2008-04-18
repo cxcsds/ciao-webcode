@@ -3,6 +3,7 @@
 
 <!--* 
     * Recent changes:
+    * 2008 Apr 18 ECG: added dictionary_onepage as an allowed-pdf
     * 2008 Mar 13 ECG
     *  added cscdb as an allowed-pdf
     * [2008 Feb 14] ECG
@@ -143,7 +144,7 @@
       * the spaces around each root name are important for the simple checking we do
       * - should these be node sets rather than strings?
       *-->
-  <xsl:variable name="allowed-pdf" select="' page faq dictionary bugs register threadindex thread cscdb '"/>
+  <xsl:variable name="allowed-pdf" select="' page faq dictionary dictionary_onepage bugs register threadindex thread cscdb '"/>
   <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc '"/>
   <xsl:variable name="allowed-download-types" select="' solaris linux6 linux8 fc4 fc7 osx osx_ppc osx_intel caldb atomdb '"/>
 
