@@ -833,25 +833,51 @@
     <!--* are we in the ciao pages or not (ie is this an `external' link or not) *-->
     <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
 
+
+    <!--// if there is an attribute, use it 
+	   otherwise, link to the "in-site" dictionary //-->
+    <xsl:variable name="hrefstart"><xsl:choose>    
+      <xsl:when test="@site = 'ciao'">/ciao/dictionary/</xsl:when>
+      <xsl:when test="@site = 'csc'">/csc/dictionary/</xsl:when>
+
+      <xsl:otherwise>
+        <xsl:call-template name="add-start-of-href">
+	  <xsl:with-param name="extlink" select="0"/>
+	  <xsl:with-param name="dirname" select="'dictionary/'"/>
+	</xsl:call-template>
+      </xsl:otherwise>
+      </xsl:choose></xsl:variable>
+
+
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
 	<a>
-	  <xsl:attribute name="title">CIAO Dictionary</xsl:attribute>
-	  <xsl:attribute name="href">
+	  <xsl:choose>
+	    <xsl:when test="($site != 'csc') or (@site = 'ciao')">
+ 	      <xsl:attribute name="title">CIAO Dictionary</xsl:attribute>
+  
+	      <xsl:attribute name="href">
+	        <xsl:value-of select="$hrefstart"/>
+		<xsl:if test="boolean(@id)">
+		  <xsl:value-of select="@id"/>.html</xsl:if>
+	      </xsl:attribute> 
+	    </xsl:when>
 
-	    <!--* where do we find the dictionary directory? *-->
-	    <xsl:call-template name="add-start-of-href">
-	      <xsl:with-param name="extlink" select="$extlink"/>
-	      <xsl:with-param name="dirname" select="'dictionary/'"/>
-	    </xsl:call-template>
-	    
-	    <xsl:if test="boolean(@id)"><xsl:value-of select="@id"/>.html</xsl:if>
-	  </xsl:attribute>
+	    <xsl:when test="($site = 'csc') or (@site = 'csc')">
+ 	      <xsl:attribute name="title">CSC Dictionary</xsl:attribute>
+  
+	      <xsl:attribute name="href">
+	        <xsl:value-of select="$hrefstart"/>
+		<xsl:if test="boolean(@id)">entries.html#<xsl:value-of select="@id"/></xsl:if>
+	      </xsl:attribute>
+	    </xsl:when>
+	  </xsl:choose>
 
 	  <!--* text *-->
 	  <xsl:apply-templates/>
 	</a>
+
       </xsl:with-param>
     </xsl:call-template>
     
