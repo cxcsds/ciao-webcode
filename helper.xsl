@@ -3,6 +3,7 @@
 
 <!--* 
     * Recent changes:
+    *  21 Feb 2008 ECG - updated copyright statement to extend to 2008
     * 2007 Oct 29 DJB
     *    added is-proglang-valid
     * 2007 Oct 22 DJB
@@ -364,7 +365,7 @@
 	    <br/>
 	    Smithsonian Institution, Copyright 
 	    <xsl:text disable-output-escaping="yes">&amp;copy;</xsl:text>
-	    1998-2007. All rights reserved. 
+	    1998-2008. All rights reserved. 
 	  </font>
 	</td>
 	<td align="right" valign="center">
@@ -762,7 +763,7 @@
 	    <br/>
 	    Smithsonian Institution, Copyright 
 	    <xsl:text disable-output-escaping="yes">&amp;copy; </xsl:text>
-	    1998-2007. All rights reserved.
+	    1998-2008. All rights reserved.
 	  </font>
 	</td>
       </tr>

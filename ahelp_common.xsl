@@ -5,6 +5,7 @@
 
 <!--* 
     * Recent changes:
+    *  21 Feb 2008 ECG - updated copyright statement to extend to 2008
     *  Oct 15 2007 DJB
     *    added $allowed-sites, removed dist from $allowed-types; copyright statement
     *    now 2007
@@ -642,7 +643,7 @@
 	    <br/>
 	    Smithsonian Institution, Copyright 
 	    <xsl:text disable-output-escaping="yes">&amp;copy;</xsl:text>
-	    1998-2007. All rights reserved. 
+	    1998-2008. All rights reserved. 
 	  </font>
 	</td>
 	<td align="right" valign="center">
