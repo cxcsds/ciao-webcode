@@ -3,6 +3,10 @@
 
 <!--* 
     * Recent changes:
+    * 2008 Mar 13 ECG
+    *  added cscdb as an allowed-pdf
+    * [2008 Feb 14] ECG
+    *  added csc as an allowed-site
     *  21 Feb 2008 ECG - updated copyright statement to extend to 2008
     * 2007 Oct 29 DJB
     *    added is-proglang-valid
@@ -139,8 +143,8 @@
       * the spaces around each root name are important for the simple checking we do
       * - should these be node sets rather than strings?
       *-->
-  <xsl:variable name="allowed-pdf" select="' page faq dictionary bugs register threadindex thread '"/>
-  <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc '"/>
+  <xsl:variable name="allowed-pdf" select="' page faq dictionary bugs register threadindex thread cscdb '"/>
+  <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc '"/>
   <xsl:variable name="allowed-download-types" select="' solaris linux6 linux8 fc4 fc7 osx osx_ppc osx_intel caldb atomdb '"/>
 
   <!--* note that '' is also allowed for proglang but this is checked for separately *-->
