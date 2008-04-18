@@ -5,6 +5,9 @@
     * Useful templates for creating the CIAO threads
     *
     * Recent changes:
+    * 2007 Dec 18 ECG
+    *    parentheses are added to endstr at different point in 
+    *	 "add-htmlhead-site-thread"
     * 2007 Oct 29 DJB
     *    updating to support proglang; fix for newer libxslt/xml (need to
     *    explicitly list params to stylesheet with xsl:param ?)
@@ -1821,13 +1824,12 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       <xsl:otherwise><xsl:value-of select="$threadInfo/title/long"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
 
-    <xsl:variable name="endstr"><xsl:choose>
-      <xsl:when test="$proglang = ''"><xsl:value-of select="$siteversion"/></xsl:when>
-      <xsl:otherwise><xsl:value-of select="concat(djb:get-proglang-string(),', ',$siteversion)"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
+    <xsl:variable name="endstr"><xsl:if test="$proglang != ''">
+      <xsl:value-of select="concat(' (',djb:get-proglang-string(),')')"/>
+    </xsl:if></xsl:variable>
 
     <xsl:call-template name="add-htmlhead">
-      <xsl:with-param name="title" select="concat($start,' - ',djb:get-sitename-string(),' (',$endstr,')')"/>
+       <xsl:with-param name="title" select="concat($start,' - ',djb:get-sitename-string(),' ',$siteversion,$endstr)"/>
     </xsl:call-template>
 
   </xsl:template> <!--* name=add-htmlhead-site-thread *-->
