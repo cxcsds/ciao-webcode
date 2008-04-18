@@ -5,6 +5,17 @@
     * attempt to provide a common stylesheet for links
     *
     * Recent changes:
+    *
+    * 2008 Feb 20 ECG
+    *    put back beta site refs that are at least needed for sherpabeta
+    *
+    * 2008 Jan 30 ECG
+    *    xsl:choose added to ahelp section so that sherpa links point
+    *	 to /sherpabeta/; removed some old beta site refs that aren't
+    *	 needed any longer.
+    *
+    * 2007 Dec 04 ECG
+    *    changed version in download link to ciao4.0
     * 2007 Nov 01 ECG
     *    changed version in download link to ciao4b3
     * 2007 Oct 31 DJB
@@ -361,6 +372,7 @@
       * matches, we automatically link to both. 
       *-->
 
+
   <xsl:template match="ahelp">
 
     <!--* temporary check for the site attribute, as should not be used *-->
@@ -519,7 +531,17 @@
         * The ahelp page is either in this site or another one
         *-->
     <xsl:variable name="hrefstart"><xsl:choose>
-      <xsl:when test="$site != $ahelpsite"><xsl:value-of select="concat('/',$ahelpsite,'/ahelp/')"/></xsl:when>
+      <xsl:when test="$site != $ahelpsite">
+        <xsl:choose>
+          <xsl:when test="$ahelpsite = 'sherpa'">
+	    <xsl:value-of select="concat('/sherpabeta','/ahelp/')"/>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:value-of select="concat('/',$ahelpsite,'/ahelp/')"/>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:when>
+
       <xsl:otherwise><xsl:call-template name="add-start-of-href">
 	<xsl:with-param name="extlink" select="0"/>
 	<xsl:with-param name="dirname" select="'ahelp/'"/>
@@ -1346,7 +1368,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 		        * XXX TODO XXX
 			* The hardcoded version is less than ideal
 			*-->
-		    <xsl:value-of select="concat('/cgi-gen/ciao/download_ciao4b3_',@type,'.cgi')"/>
+		    <xsl:value-of select="concat('/cgi-gen/ciao/download_ciao4.0_',@type,'.cgi')"/>
 		  </xsl:otherwise>
 		</xsl:choose>
 	      </xsl:when>
