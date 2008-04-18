@@ -141,7 +141,8 @@
 #                stylesheet to query file, use DOM instead.
 #  26 Oct 07 DJB Started adding support for separate S-Lang/Python threads
 #                (a long way to go)
-#
+#  11 Mar 08 ECG allow dictionary in CSC site
+#  ?? ??? 08 ECG created cscdb page type
  
 use strict;
 $|++;
@@ -900,6 +901,106 @@ sub xml2html_page ($) {
     print "\nThe page can be viewed on:\n  ${outurl}$in.html\n\n";
 
 } # sub: xml2html_page
+
+
+# xml2html_cscdb - called by xml2html
+#
+# note: $xslt, $outdir, and $outurl end in a /
+#
+sub xml2html_cscdb ($) {
+    my $opts = shift;
+
+    my $in     = $$opts{xml};
+    my $dom    = $$opts{xml_dom};
+    my $depth  = $$opts{depth};
+    my $outdir = $$opts{outdir};
+    my $outurl = $$opts{outurl};
+
+    my $lastmod = $$opts{lastmod};
+
+    # the navbarlink is currently not used by the code
+    # - see the comments in helper.xsl
+    # - note that I do not believe $nlink is set to
+    #   a sensible value by the following !!
+#    my $nlink = $$opts{navbar_link};
+#    $nlink .= "${in}.html" unless $in eq "index";
+
+    print "Parsing [cscdb]: $in\n";
+
+    # we 'hardcode' the output of the transformation
+    my @pages = ( "${outdir}${in}.html", "${outdir}${in}_alpha.html" );
+    my @hard  = ( "${outdir}${in}.hard.html", "${outdir}${in}_alpha.hard.html" ) unless $site eq "icxc"; 
+
+    # how about math pages?
+    #
+    my @math = find_math_pages $dom;
+
+    # do we need to recreate (include the equations created by any math blocks)
+    return if should_we_skip $in, @pages, map( { "${outdir}${_}.gif"; } @math );
+    print "\n";
+
+    # remove files [already ensured the dir exists]
+    initialise_pages( @pages, @hard );
+    clean_up_math( $outdir, @math );
+
+    # used to set up the list of parameters sent to the
+    # stylesheet
+    #
+    my %params =
+      (
+       type => $$opts{type},
+       site => $$opts{site},
+       lastmod => $lastmod,
+       install => $outdir,
+       pagename => $in,
+       #	  navbarlink => $nlink,
+       url => "${outurl}${in}.html",
+       urlhead => $outurl,
+       sourcedir => cwd() . "/",
+       updateby => $$opts{updateby},
+       depth => $depth,
+       siteversion => $site_version,
+       # ahelpindex added in CIAO 3.0
+       ahelpindex => $ahelpindex,
+       cssfile => $css,
+       cssprintfile => $cssprint,
+       newsfile => $newsfile,
+       newsfileurl => $newsfileurl,
+       watchouturl => $watchouturl,
+       searchssi => $searchssi,
+       headtitlepostfix => $headtitlepostfix,
+       texttitlepostfix => $texttitlepostfix,
+
+       storageloc => $$opts{storageloc},
+      );
+
+    # what 'hardcopy' values do we loop through?
+    #
+    my @hardcopy = ( 0 );
+    push @hardcopy, 1 unless $site eq "icxc";
+
+    translate_file_hardcopy "$$opts{xslt}cscdb.xsl", $dom, \%params, \@hardcopy;
+
+    # success or failure?
+    check_for_page( @pages );
+
+    # math?
+    process_math( $outdir, @math );
+
+    # create the hardcopy pages
+    foreach my $page ( @hard ) {
+	die "Error: transformation did not create $page\n"
+	  unless -e $page;
+	mysetmods $page;
+	$page =~ s/^.+\/([^\/]+).hard.html$/$1/;
+	create_hardcopy $outdir, $page unless $site eq "icxc";
+    }
+
+    print "\nThe pages can be viewed at:\n  ${outurl}$in.html\n";
+    print "and:\n  ${outurl}$in\_alpha.html\n\n";
+
+} # sub: xml2html_cscdb
+
 
 # xml2html_bugs - called by xml2html
 #
@@ -1833,10 +1934,13 @@ sub process_xml ($$) {
 	    xml2html_multiple $opts, "faq", [ "ciao", "sherpa", "chips" ];
 	} elsif ( $root eq "dictionary" ) {
 	    die_if_icxc $root;
-	    xml2html_multiple $opts, "dictionary", [ "ciao" ];
+	    xml2html_multiple $opts, "dictionary", [ "ciao", "csc" ];
 	} elsif ( $root eq "cxchelptopics" ) {
 	    die_if_icxc $root;
 	    die "Error: ahelp files should be processed using the --ahelp option\n";
+	} elsif ( $root eq "cscdb" ) {
+	    die_if_icxc $root;
+	    xml2html_cscdb $opts;
 	} else {
 	    die "Error: $in.xml has an unknown root node [$root]\n";
 	}
