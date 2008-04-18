@@ -101,7 +101,14 @@
 	  *-->
 
       <xsl:if test="boolean(//links)">
-	<xsl:apply-templates select="//links" mode="create"/>
+
+        <xsl:if test="$site!='chart'">
+	  <div class="newsbar">
+	    <h2>Analysis Notes</h2>
+	  </div>
+	</xsl:if>
+
+        <xsl:apply-templates select="//links" mode="create"/>
       </xsl:if>
 
       <xsl:if test="($site='ciao' or $site='chips' or $site='sherpa' or $site='caldb' or $site='csc') and count(//news/item)!=0">
@@ -250,17 +257,23 @@
     </div>
   </xsl:template> <!--* match=item mode=create *-->
 
+
+
   <!--* 
-      * create the links section for Sherpa/ChaRT/iCXC pages
+      * create the links section 
       * - have a mode of create to replicate "news" template for CIAO pages
       *-->
   <xsl:template match="links" mode="create">
 
-    <!--* add a separator *-->
-    <hr/>
     <xsl:apply-templates/>
 
+    <xsl:if test="position() != last()">
+      <hr/>
+    </xsl:if>
+
   </xsl:template> <!--* match=links mode=create *-->
+
+
 
   <!--*
       * we use a mode to disambiguate ourselves from the
