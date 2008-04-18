@@ -5,6 +5,9 @@
     * Convert navbar.xml into the SSI pages
     * 
     * Recent changes:
+    *  19 Mar 2008 ECG
+    *    added csc as a site for news section 
+    *	 removed a br from news markup
     *  Oct 19 2007 DJB
     *    Re-written so that we only process a single depth at a time
     *   v1.6 - use CSS for news section of navbar
@@ -83,7 +86,6 @@
 	  <xsl:with-param name="matchid" select="$matchid"/>
 	</xsl:apply-templates>
       </dl>
-      <br/>
 
       <!--*
 	  * anything else? (site-specific)
@@ -102,7 +104,7 @@
 	<xsl:apply-templates select="//links" mode="create"/>
       </xsl:if>
 
-      <xsl:if test="($site='ciao' or $site='chips' or $site='sherpa' or $site='caldb') and count(//news/item)!=0">
+      <xsl:if test="($site='ciao' or $site='chips' or $site='sherpa' or $site='caldb' or $site='csc') and count(//news/item)!=0">
 	<xsl:apply-templates select="//news" mode="create"/>
       </xsl:if>
 	
@@ -176,7 +178,6 @@
       *   item attribute elsewhere
       *-->
   <xsl:template match="news" mode="create">
-    <hr/>
 
     <div>
 
