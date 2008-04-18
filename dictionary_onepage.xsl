@@ -82,7 +82,7 @@
     </xsl:if>
 
     <!--* check there's a navbar element *-->
-    <xsl:if test="boolean(dictionary/info/navbar) = false()">
+    <xsl:if test="boolean(dictionary_onepage/info/navbar) = false()">
       <xsl:message terminate="yes">
   Error: the info block does not contain a navbar element.
       </xsl:message>
@@ -91,13 +91,13 @@
     <xsl:choose>
       <xsl:when test="$hardcopy = 1">
 	<!--* hardcopy *-->
-	<xsl:apply-templates select="dictionary" mode="make-hardcopy"/>
+	<xsl:apply-templates select="dictionary_onepage" mode="make-hardcopy"/>
 	<xsl:apply-templates select="//entries" mode="make-hardcopy"/>
       </xsl:when>
 
       <xsl:otherwise>
 	<!--* softcopy *-->
-	<xsl:apply-templates select="dictionary" mode="make-viewable"/>
+	<xsl:apply-templates select="dictionary_onepage" mode="make-viewable"/>
 	<xsl:apply-templates select="//entries" mode="make-viewable"/>
       </xsl:otherwise>
 
@@ -112,7 +112,7 @@
   <xsl:variable name="ucletters" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
   <xsl:variable name="lcletters" select="'abcdefghijklmnopqrstuvwxyz'"/>
 
-  <xsl:template match="dictionary" mode="make-viewable">
+  <xsl:template match="dictionary_onepage" mode="make-viewable">
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>index.html</xsl:variable>
 
@@ -172,13 +172,13 @@
       </html>
 
     </xsl:document>
-  </xsl:template> <!--* match=dictionary mode=make-viewable *-->
+  </xsl:template> <!--* match=dictionary_onepage mode=make-viewable *-->
 
   <!--* 
       * create: index.hard.html
       *-->
 
-  <xsl:template match="dictionary" mode="make-hardcopy">
+  <xsl:template match="dictionary_onepage" mode="make-hardcopy">
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>index.hard.html</xsl:variable>
     <xsl:variable name="url"><xsl:value-of select="$urlhead"/></xsl:variable>
@@ -267,7 +267,7 @@
 	  <tr>
 	    <!--* add the navbar (we force page to have one) *-->
 	    <xsl:call-template name="add-navbar">
-	      <xsl:with-param name="name" select="/dictionary/info/navbar"/>
+	      <xsl:with-param name="name" select="/dictionary_onepage/info/navbar"/>
 	    </xsl:call-template>
 
 	    <!--* the main text *-->
