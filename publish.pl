@@ -1934,7 +1934,10 @@ sub process_xml ($$) {
 	    xml2html_multiple $opts, "faq", [ "ciao", "sherpa", "chips" ];
 	} elsif ( $root eq "dictionary" ) {
 	    die_if_icxc $root;
-	    xml2html_multiple $opts, "dictionary", [ "ciao", "csc" ];
+	    xml2html_multiple $opts, "dictionary", [ "ciao" ];
+	} elsif ( $root eq "dictionary_onepage" ) {
+	    die_if_icxc $root;
+	    xml2html_multiple $opts, "dictionary_onepage", [ "csc" ];
 	} elsif ( $root eq "cxchelptopics" ) {
 	    die_if_icxc $root;
 	    die "Error: ahelp files should be processed using the --ahelp option\n";
