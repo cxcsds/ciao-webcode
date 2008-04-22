@@ -120,7 +120,7 @@ logotext=CIAO Logo
 # location of the stylesheets
 %stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
 %stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
-%stylesheets=trial /data/da/Docs/web4/devel/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel
 
 # what's the location for the output files?
 %outdir=live /proj/web-cxc/htdocs/ciao4.0/
@@ -352,7 +352,7 @@ imglinkiconheight=16
 
 %stylesheets=live /data/da/Docs/web4/chart/stylesheets/
 %stylesheets=test /data/da/Docs/web4/chart/stylesheets/
-%stylesheets=trial /data/da/Docs/web4/devel/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel
 
 %outdir=live /proj/web-cxc/htdocs/chart/
 %outdir=test /proj/web-cxc-test/htdocs/chart/
@@ -440,7 +440,7 @@ logotext=Sherpa Logo
 
 %stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
 %stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
-%stylesheets=trial /data/da/Docs/web4/devel/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel
 
 %outdir=live /proj/web-cxc/htdocs/sherpabeta/
 %outdir=test /proj/web-cxc-test/htdocs/sherpabeta/
@@ -537,7 +537,7 @@ logotext=ChIPS Logo
 
 %stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
 %stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
-%stylesheets=trial /data/da/Docs/web4/devel/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel
 
 %outdir=live /proj/web-cxc/htdocs/chips4.0/
 %outdir=test /proj/web-cxc-test/htdocs/chips4.0/
@@ -796,7 +796,7 @@ logotext=Chandra Source Catalog logo
 
 %stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
 %stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
-%stylesheets=trial /data/da/Docs/web4/devel/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel
 
 %outdir=live /proj/web-cxc/htdocs/csc1/
 %outdir=test /proj/web-cxc-test/htdocs/csc1/
