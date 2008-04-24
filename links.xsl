@@ -1337,7 +1337,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	    </xsl:when>
 
 	    <xsl:when test="($site = 'csc') or (@site = 'csc')">
- 	      <xsl:attribute name="title">CSC Why Topic</xsl:attribute>
+ 	      <xsl:attribute name="title">CSC How and Why Topic</xsl:attribute>
 	    </xsl:when>
 	  </xsl:choose>
 
