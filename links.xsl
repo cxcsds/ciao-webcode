@@ -6,6 +6,9 @@
     *
     * Recent changes:
     *
+    * 2008 Apr 24 ECG
+    *    distinguish between why links in CIAO and CSC sites
+    *
     * 2008 Feb 20 ECG
     *    put back beta site refs that are at least needed for sherpabeta
     *
@@ -1301,17 +1304,45 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <!--* are we in the ciao pages or not (ie is this an `external' link or not) *-->
     <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
 
+    <!--// if there is an attribute, use it 
+	   otherwise, link to the "in-site" why topic //-->
+    <xsl:variable name="hrefstart"><xsl:choose>    
+      <xsl:when test="@site = 'ciao'">/ciao/why/</xsl:when>
+      <xsl:when test="@site = 'csc'">/csc/why/</xsl:when>
+
+      <xsl:when test="$site = 'csc'">
+        <xsl:call-template name="add-start-of-href">
+	  <xsl:with-param name="extlink" select="0"/>
+	  <xsl:with-param name="dirname" select="'why/'"/>
+	</xsl:call-template>
+      </xsl:when>
+
+      <!-- ciao, chips, sherpa, etc. //-->
+      <xsl:otherwise>
+        <xsl:call-template name="add-start-of-href">
+	    <xsl:with-param name="extlink" select="$extlink"/>
+	  <xsl:with-param name="dirname" select="'why/'"/>
+	</xsl:call-template>
+      </xsl:otherwise>
+      </xsl:choose></xsl:variable>
+
+
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
-	<!--* link to why documents *-->
 	<a>
-	  <xsl:attribute name="title">CIAO "Why" Topics</xsl:attribute>
+	  <xsl:choose>
+	    <xsl:when test="($site != 'csc') or (@site = 'ciao')">
+ 	      <xsl:attribute name="title">CIAO Why Topic</xsl:attribute>
+	    </xsl:when>
+
+	    <xsl:when test="($site = 'csc') or (@site = 'csc')">
+ 	      <xsl:attribute name="title">CSC Why Topic</xsl:attribute>
+	    </xsl:when>
+	  </xsl:choose>
+
 	  <xsl:attribute name="href">
-	    <xsl:call-template name="add-start-of-href">
-	      <xsl:with-param name="extlink" select="$extlink"/>
-	      <xsl:with-param name="dirname" select="'why/'"/>
-	    </xsl:call-template>
+	    <xsl:value-of select="$hrefstart"/>
 	    <xsl:call-template name="sort-out-anchor"/>
 	  </xsl:attribute>
 	  <xsl:apply-templates/>
