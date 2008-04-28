@@ -5,6 +5,9 @@
     * Create the dictionary HTML pages from one XML source file
     *
     * Recent changes:
+    *
+    * 2008 Apr 28 ECG: removed "br" before "hr"
+    *
     * 2007 Oct 19 DJB
     *    depth parameter is now a global, no need to send around
     *  v1.16 - sort on case-insensitive titles so that index is
@@ -425,7 +428,6 @@
     </xsl:if>
 
     <!--* create the list of topics *-->
-    <br/>
     <hr/>
     <div align="center">
       <xsl:if test="$nea != 0"><a href="#a">A</a><xsl:text> </xsl:text></xsl:if>
@@ -456,7 +458,6 @@
       <xsl:if test="$nez != 0"><a href="#z">Z</a><xsl:text> </xsl:text></xsl:if>
     </div>
     <hr/>
-    <br/>
 
     <!--* and now the alphabetic list of entries *-->
     <dl>

@@ -7,7 +7,8 @@
     * Recent changes:
     *
     * 2008 Apr 28 ECG: corrected PDF link in footer of entries.html;
-    *		       entries page is alpha by "@id"
+    *		       entries page is alpha by "@id";
+    *		       removed "br" before "hr"
     *
     * 2008 Mar 13 ECG: CSC dictionary is one index page and one long 
     *		       entries page
@@ -464,7 +465,6 @@
     </xsl:if>
 
     <!--* create the list of topics *-->
-    <br/>
     <hr/>
     <div align="center">
       <xsl:if test="$nea != 0"><a href="#a">A</a><xsl:text> </xsl:text></xsl:if>
@@ -495,7 +495,6 @@
       <xsl:if test="$nez != 0"><a href="#z">Z</a><xsl:text> </xsl:text></xsl:if>
     </div>
     <hr/>
-    <br/>
 
     <!--* and now the alphabetic list of entries *-->
     <dl>
