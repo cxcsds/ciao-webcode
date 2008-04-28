@@ -5,6 +5,10 @@
     * Create the CSC dictionary HTML pages from one XML source file
     *
     * Recent changes:
+    *
+    * 2008 Apr 28 ECG: corrected PDF link in footer of entries.html;
+    *		       entries page is alpha by "@id"
+    *
     * 2008 Mar 13 ECG: CSC dictionary is one index page and one long 
     *		       entries page
     * 2007 Oct 19 DJB
@@ -280,7 +284,7 @@
 	      <hr/>
 	  
 	    <xsl:for-each select="entry">
-	      <xsl:sort select="translate(title, $lcletters, $ucletters)"/>
+	      <xsl:sort select="translate(@id, $lcletters, $ucletters)"/>
 
 	      <!--* entry title *-->
 	      <a name="{@id}"/>
@@ -302,7 +306,7 @@
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="name"  select="'index'"/>
+	  <xsl:with-param name="name"  select="'entries'"/>
 	</xsl:call-template>
 
 	<!--* add </body> tag [the <body> is included in a SSI] *-->
@@ -357,7 +361,7 @@
 	      <hr/>
 	  
 	    <xsl:for-each select="entry">
-	      <xsl:sort select="translate(title, $lcletters, $ucletters)"/>
+	      <xsl:sort select="translate(@id, $lcletters, $ucletters)"/>
 
 	      <!--* entry title *-->
 	      <a name="{@id}"/>
