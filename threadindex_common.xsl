@@ -3,6 +3,7 @@
 
 <!--* 
     * Recent changes:
+    * 2008 Apr 29 ECG - adjust '|' around thread quicklinks
     * 2007 Oct 19 DJB
     *    depth parameter is now a global, no need to send around
     *  v1.35 - only create "Download Data" link in thread datatable if
@@ -474,18 +475,22 @@
       *-->
   <xsl:template name="add-threadindex-quicklink">
     <div class="qlinkbar" align="center"><font size="-1">
-	| <a href="index.html">Top</a> |
+	<a href="index.html">Top</a> |
 	<a href="all.html">All</a> |
 	<!--* 
 	    * note: use absolute xpath location here since not always
             * called with threadindex as its context node (eg datatable)
             *-->
 	<xsl:for-each select="//threadindex/section/id">
-	  <a href="{name}.html"><xsl:apply-templates select="text"/></a> | 
+	  <a href="{name}.html"><xsl:apply-templates select="text"/></a> 
+
+	  <xsl:if test="position() != last()">
+	  | 
+	  </xsl:if>
 	</xsl:for-each>
 	<!--* do we have a data table ? *-->
 	<xsl:if test="boolean(//threadindex/datatable)">
-	  <a href="table.html">Datasets</a>
+	  | <a href="table.html">Datasets</a>
 	</xsl:if>
 	<!--* sort out the separator: | if no external links, || if there are *-->
 	<xsl:choose>
