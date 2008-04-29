@@ -143,7 +143,7 @@
 #                (a long way to go)
 #  11 Mar 08 ECG allow dictionary in CSC site
 #  ?? ??? 08 ECG created cscdb page type
-#  29 Apr 2008 ECG   math gifs go in /imgs subdir
+#  29 Apr 2008 ECG   math gifs should be cleaned up by script
  
 use strict;
 $|++;
@@ -656,7 +656,7 @@ sub clean_up_math {
 #
 sub process_math {
     my $outdir = shift;
-    foreach my $page ( @_ ) { math2gif $page, "${outdir}imgs/${page}.gif"; }
+    foreach my $page ( @_ ) { math2gif $page, "${outdir}${page}.gif"; }
 } # process_math()
 
 # Usage:

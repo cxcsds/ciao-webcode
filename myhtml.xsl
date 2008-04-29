@@ -3,7 +3,6 @@
 
 <!--* 
     * Recent changes:
-    * 2008 Apr 29 ECG - math gifs go in /imgs subdir
     * 2007 Oct 19 DJB
     *    depth parameter is now a global, no need to send around
     *  v1.35 - moved "screen" code from thread_common.xsl to myhtml.xsl
@@ -677,7 +676,7 @@
     </xsl:document>
 
     <!--* and add the img tag to the resulting tree, within an anchor *-->
-    <a name="{name}"><img src="imgs/{name}.gif" alt="{text}"/></a>
+    <a name="{name}"><img src="{name}.gif" alt="{text}"/></a>
 
   </xsl:template> <!--* match=math *-->
 
