@@ -143,6 +143,7 @@
 #                (a long way to go)
 #  11 Mar 08 ECG allow dictionary in CSC site
 #  ?? ??? 08 ECG created cscdb page type
+#  29 Apr 2008 ECG   math gifs go in /imgs subdir
  
 use strict;
 $|++;
@@ -578,9 +579,9 @@ sub math2gif ($$) {
     system "cp", "$head.gif", $gif;
 
     # clean up and return
-    foreach my $ext ( qw( log aux dvi eps tex gif.0 gif.1 ) ) { myrm $head . ".$ext"; }
+    foreach my $ext ( qw( log aux dvi eps tex gif gif.0 gif.1 ) ) { myrm $head . ".$ext"; }
     mysetmods $gif;
-    print "Created: $gif\n";
+    print "\nCreated: $gif\n";
 
 } # sub: math2gif()
 
@@ -655,7 +656,7 @@ sub clean_up_math {
 #
 sub process_math {
     my $outdir = shift;
-    foreach my $page ( @_ ) { math2gif $page, "${outdir}${page}.gif"; }
+    foreach my $page ( @_ ) { math2gif $page, "${outdir}imgs/${page}.gif"; }
 } # process_math()
 
 # Usage:
