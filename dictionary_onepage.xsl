@@ -6,6 +6,9 @@
     *
     * Recent changes:
     *
+    * 2008 May 01 ECG: revert: entries page needs to be alpha by
+    *		       "title" to match TOC
+    *
     * 2008 Apr 28 ECG: corrected PDF link in footer of entries.html;
     *		       entries page is alpha by "@id";
     *		       removed "br" before "hr"
@@ -285,7 +288,7 @@
 	      <hr/>
 	  
 	    <xsl:for-each select="entry">
-	      <xsl:sort select="translate(@id, $lcletters, $ucletters)"/>
+	      <xsl:sort select="translate(title, $lcletters, $ucletters)"/>
 
 	      <!--* entry title *-->
 	      <a name="{@id}"/>
@@ -362,7 +365,7 @@
 	      <hr/>
 	  
 	    <xsl:for-each select="entry">
-	      <xsl:sort select="translate(@id, $lcletters, $ucletters)"/>
+	      <xsl:sort select="translate(title, $lcletters, $ucletters)"/>
 
 	      <!--* entry title *-->
 	      <a name="{@id}"/>
