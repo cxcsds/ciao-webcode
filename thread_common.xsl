@@ -103,6 +103,13 @@
   <!--* we create the HTML files using xsl:document statements *-->
   <xsl:output method="text"/>
 
+  <!--* This is used to map from @id to figure number *-->
+  <xsl:variable name="figlist">
+    <xsl:for-each select="//figure">
+      <figure id="{@id}" pos="{position()}"/>
+    </xsl:for-each>
+  </xsl:variable>
+
   <!--*
       * set up the "top level" links for the HTML page
       * [links to processing/names threads, thread index,
@@ -2227,7 +2234,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     </xsl:if>
 
     <!--* work out the figure number *-->
-    <xsl:variable name="pos" select="1 + count(preceding-sibling::figure)"/>
+    <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
 
     <xsl:variable name="title"><xsl:value-of select="concat('Figure ',$pos)"/><xsl:if
       test="boolean(title)"><xsl:value-of select="concat(': ',normalize-space(title))"/></xsl:if></xsl:variable>
@@ -2348,14 +2355,12 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
   </xsl:template>
 
   <xsl:template match="figlink[normalize-space(.)='']">
-    <xsl:variable name="id" select="@id"/>
-    <xsl:variable name="pos"><xsl:apply-templates select="//figure[@id=$id]" mode="get-number"/></xsl:variable>
+    <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
     <a href="{concat('#',@id)}"><xsl:value-of select="concat('Figure ',$pos)"/></a>
   </xsl:template>
 
   <xsl:template match="figlink">
-    <xsl:variable name="id" select="@id"/>
-    <xsl:variable name="pos"><xsl:apply-templates select="//figure[@id=$id]" mode="get-number"/></xsl:variable>
+    <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
     <a href="{concat('#',@id)}"><xsl:apply-templates/><xsl:value-of select="concat(' (Figure ',$pos,')')"/></a>
   </xsl:template>
 
@@ -2366,18 +2371,23 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       *
       *-->
   <xsl:template match="figure" mode="toc">
-    <xsl:variable name="pos"><xsl:apply-templates select="." mode="get-number"/></xsl:variable>
+    <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
     <li><a href="{concat('#',@id)}">
       <xsl:value-of select="concat('Figure ',$pos,': ',title)"/>
     </a></li>
   </xsl:template> <!--* match=figure mode=toc *-->
 
   <!--*
-      * helper routine to get the number of the figure; may be
-      * better ways to do this
+      * helper routine to get the number of the figure
       *-->
-  <xsl:template match="figure" mode="get-number">
-    <xsl:value-of select="1 + count(preceding-sibling::figure)"/>
-  </xsl:template> <!--* match=figure mode=get-number -->
+  <func:function name="djb:get-figure-number">
+    <xsl:param name="id" select="''"/>
+    <xsl:if test="$id=''">
+      <xsl:message terminate="yes">
+ ERROR: djb:get-figure-number called with no argument
+      </xsl:message>
+    </xsl:if>
+    <func:result><xsl:value-of select="exsl:node-set($figlist)/figure[@id=$id]/@pos"/></func:result>
+  </func:function>
 
 </xsl:stylesheet>
