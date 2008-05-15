@@ -1461,6 +1461,11 @@ sub xml2html_thread ($) {
     push @image,
       map { $_->getAttribute('ps'); } $rnode->findnodes('images/image[boolean(@ps)]');
 
+    # support the new "figure" environment
+    push @image,
+      map { $_->textContent }
+      ($rnode->findnodes('//figure/bitmap'), $rnode->findnodes('//figure/vector'));
+
     my @file = map { $_->textContent; } $rnode->findnodes('info/files/file');
 
     # Check the files exist and find which of these is the "youngest" file,
