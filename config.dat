@@ -68,6 +68,117 @@ depth_offset=0
 # values
 #
 
++version ciao40
+number=4.0
+
+# icon used to signify an 'image link' in threads
+# This is a holdout from the old design and should probably be removed
+# (can perhaps use CSS instead?)
+#
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# hyphen was moved to the XSL at CIAO 3.4
+headtitlepostfix=CIAO 4.0
+texttitlepostfix=CIAO 4.0
+
+version_string=4.0
+
+# main CSS location
+%css=live /ciao4.0/ciao.css
+%css=test /ciao4.0/ciao.css
+%css=trial /sds/ciao4.0_trial/ciao.css
+
+%cssprint=live /ciao4.0/ciao.print.css
+%cssprint=test /ciao4.0/ciao.print.css
+%cssprint=trial /sds/ciao4.0_trial/ciao.print.css
+
+# location of the news file for the "What's new" link
+%newsfile=live /proj/web-cxc/htdocs/ciao4.0/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciao4.0/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao4.0_trial/news.html
+
+%newsurl=live /ciao4.0/news.html
+%newsurl=test /ciao4.0/news.html
+%newsurl=trial /sds/ciao4.0_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /ciao4.0/watchout.html
+%watchouturl=test /ciao4.0/watchout.html
+%watchouturl=trial /sds/ciao4.0_trial/watchout.html
+
+# location of the search ssi
+%searchssi=live /ciao4.0/ciao_search.ssi
+%searchssi=test /ciao4.0/ciao_search.ssi
+%searchssi=trial /sds/ciao4.0_trial/ciao_search.ssi
+
+# logo/text to use for navbar
+logoimage=imgs/ciao_logo_navbar.gif
+logotext=CIAO Logo
+
+# location of the stylesheets
+%stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
+
+# what's the location for the output files?
+%outdir=live /proj/web-cxc/htdocs/ciao4.0/
+%outdir=test /proj/web-cxc-test/htdocs/ciao4.0/
+%outdir=trial /proj/web-icxc/htdocs/sds/ciao4.0_trial/
+
+%outurl=live http://cxc.harvard.edu/ciao4.0/
+%outurl=test http://cxc-test.harvard.edu/ciao4.0/
+%outurl=trial http://icxc.harvard.edu/sds/ciao4.0_trial/
+
+# location of the "storage" space
+%storage=live /data/da/Docs/ciaoweb/published/ciao40/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao40/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao40/trial/
+
+# We are moving away from the use of %storage and towards
+# %storageloc, which gives the location of an XML file,
+# format
+#   <storage><dir site="ciao">/data/da/Docs/ciaoweb/published/ciao40/live/</dir>...</storage>
+# but we have not converted everything yet
+#
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao40.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao40.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao40.trial.xml
+
+## ahelp section
+#
+# where do the ahelp files (ie the XML files) live
+#
+# for CIAO 4 this should *NOT* be $ASCDS_INSTALL since we have to
+# first pre-process these files to generate *.sl.xml and *.py.xml
+# versions for the multi-context files. This should not be needed,
+# since it can be handled by the processing code, but would require
+# significant amount of work, so we are leaving this for a future
+# date.
+#
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+# - for the trial site we just use the version from the test site
+#   [it may be a problem in rare cases]
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao40/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao40/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao40/test/ahelp/
+
+# what navbar to use for the ahelp index pages
+ahelpindexnavbar=analysis
+
+-version
+
+
 +version 40beta
 number=4.0 Beta 3
 
@@ -241,7 +352,7 @@ imglinkiconheight=16
 
 %stylesheets=live /data/da/Docs/web4/chart/stylesheets/
 %stylesheets=test /data/da/Docs/web4/chart/stylesheets/
-%stylesheets=trial /data/da/Docs/web4/devel/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 %outdir=live /proj/web-cxc/htdocs/chart/
 %outdir=test /proj/web-cxc-test/htdocs/chart/
@@ -289,36 +400,36 @@ prefix=/data/da/Docs/sherpaweb
 depth_offset=0
 
 +version 40beta
-number=4.0 Beta 3
+number=4.0 Beta
 
 imglinkicon=imgs/imageicon.gif
 imglinkiconwidth=23
 imglinkiconheight=16
 
-headtitlepostfix=Sherpa 4.0 Beta 3
-texttitlepostfix=Sherpa 4.0 Beta 3
+headtitlepostfix=Sherpa 4.0 Beta
+texttitlepostfix=Sherpa 4.0 Beta
 
-version_string=4.0 Beta 3
+version_string=4.0 Beta
 
-%css=live /ciaobeta/ciao.css
-%css=test /ciaobeta/ciao.css
+%css=live /ciao/ciao.css
+%css=test /ciao/ciao.css
 %css=trial /sds/ciao_beta_trial/ciao.css
 
-%cssprint=live /ciaobeta/ciao.print.css
-%cssprint=test /ciaobeta/ciao.print.css
-%cssprint=trial /sds/ciao_beta_trial/ciao.print.css
+%cssprint=live /ciao/ciao.print.css
+%cssprint=test /ciao/ciao.print.css
+%cssprint=trial /sds/ciao4.0_trial/ciao.print.css
 
-%newsfile=live /proj/web-cxc/htdocs/ciaobeta/news.html
-%newsfile=test /proj/web-cxc-test/htdocs/ciaobeta/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_beta_trial/news.html
+%newsfile=live /proj/web-cxc/htdocs/ciao/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciao/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao4.0_trial/news.html
 
-%newsurl=live /ciaobeta/news.html
-%newsurl=test /ciaobeta/news.html
-%newsurl=trial /sds/ciao_beta_trial/news.html
+%newsurl=live /ciao/news.html
+%newsurl=test /ciao/news.html
+%newsurl=trial /sds/ciao4.0_trial/news.html
 
-%watchouturl=live /ciaobeta/watchout.html
-%watchouturl=test /ciaobeta/watchout.html
-%watchouturl=trial /sds/ciao_beta_trial/watchout.html
+%watchouturl=live /ciao/watchout.html
+%watchouturl=test /ciao/watchout.html
+%watchouturl=trial /sds/ciao4.0_trial/watchout.html
 
 logoimage=imgs/sherpa_logo_navbar.gif
 logotext=Sherpa Logo
@@ -327,9 +438,9 @@ logotext=Sherpa Logo
 %searchssi=test /sherpabeta/sherpa_search.ssi
 %searchssi=trial /sds/sherpa_beta_trial/sherpa_search.ssi
 
-%stylesheets=live /data/da/Docs/web4/40beta/stylesheets/
-%stylesheets=test /data/da/Docs/web4/40beta/stylesheets/
-%stylesheets=trial /data/da/Docs/web4/devel/
+%stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 %outdir=live /proj/web-cxc/htdocs/sherpabeta/
 %outdir=test /proj/web-cxc-test/htdocs/sherpabeta/
@@ -351,9 +462,9 @@ logotext=Sherpa Logo
 %ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/
 %ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/
 
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/40beta/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao40/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao40/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao40/test/ahelp/
 
 ahelpindexnavbar=ahelp
 
@@ -384,6 +495,78 @@ group=cxcweb_ciao
 prefix=/data/da/Docs/chipsweb
 
 depth_offset=0
+
++version ciao40
+number=4.0
+
+headtitlepostfix=ChIPS 4.0
+texttitlepostfix=ChIPS 4.0
+
+version_string=4.0
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+%css=live /ciao4.0/ciao.css
+%css=test /ciao4.0/ciao.css
+%css=trial /sds/ciao4.0_trial/ciao.css
+
+%cssprint=live /ciao4.0/ciao.print.css
+%cssprint=test /ciao4.0/ciao.print.css
+%cssprint=trial /sds/ciao4.0_trial/ciao.print.css
+
+%newsfile=live /proj/web-cxc/htdocs/ciao4.0/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciao4.0/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao4.0_trial/news.html
+
+%newsurl=live /ciao4.0/news.html
+%newsurl=test /ciao4.0/news.html
+%newsurl=trial /sds/ciao4.0_trial/news.html
+
+%watchouturl=live /ciao4.0/watchout.html
+%watchouturl=test /ciao4.0/watchout.html
+%watchouturl=trial /sds/ciao4.0_trial/watchout.html
+
+logoimage=imgs/chips_logo_navbar.gif
+logotext=ChIPS Logo
+
+%searchssi=live /chips4.0/chips_search.ssi
+%searchssi=test /chips4.0/chips_search.ssi
+%searchssi=trial /sds/chips4.0_trial/chips_search.ssi
+
+%stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
+#%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
+%stylesheets=trial /data/dburke2/data/hg/webcode/
+
+%outdir=live /proj/web-cxc/htdocs/chips4.0/
+%outdir=test /proj/web-cxc-test/htdocs/chips4.0/
+%outdir=trial /proj/web-icxc/htdocs/sds/chips4.0_trial/
+
+%outurl=live http://cxc.harvard.edu/chips4.0/
+%outurl=test http://cxc-test.harvard.edu/chips4.0/
+%outurl=trial http://icxc.harvard.edu/sds/chips4.0_trial/
+
+%storage=live /data/da/Docs/chipsweb/published/ciao40/live/
+%storage=test /data/da/Docs/chipsweb/published/ciao40/test/
+%storage=trial /data/da/Docs/chipsweb/published/ciao40/trial/
+
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao40.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao40.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao40.trial.xml
+
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/
+
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao40/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao40/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao40/test/ahelp/
+
+ahelpindexnavbar=ahelp
+
+-version
 
 +version 40beta
 number=4.0 Beta 3
@@ -556,6 +739,93 @@ headtitlepostfix=CALDB 2
 @stylesheets=myhtml
 
 -site  # end of caldb
+
+
++site csc
+
+group=cxcweb_ciao
+
+@types=live
+@types=test
+@types=trial
+
+prefix=/data/da/Docs/cscweb
+
+depth_offset=0
+
++version csc1
+
+# is this used for anything other than ahelp?
+number=1.0
+
+headtitlepostfix=CSC
+texttitlepostfix=CSC
+
+# only used for ahelp files
+# version_string=4.0
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+%css=live /csc1/csc.css
+%css=test /csc1/csc.css
+%css=trial /sds/csc_trial/csc.css
+
+%cssprint=live /csc1/csc.print.css
+%cssprint=test /csc1/csc.print.css
+%cssprint=trial /sds/csc_trial/csc.print.css
+
+%newsfile=live /proj/web-cxc/htdocs/csc1/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/csc1/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/csc_trial/news.html
+
+%newsurl=live /csc1/news.html
+%newsurl=test /csc1/news.html
+%newsurl=trial /sds/csc_trial/news.html
+
+%watchouturl=live /csc1/watchout.html
+%watchouturl=test /csc1/watchout.html
+%watchouturl=trial /sds/csc_trial/watchout.html
+
+logoimage=imgs/csc_logo_navbar.gif
+logotext=Chandra Source Catalog logo
+
+%searchssi=live /csc1/csc_search.ssi
+%searchssi=test /csc1/csc_search.ssi
+%searchssi=trial /sds/csc/csc_search.ssi
+
+%stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
+
+%outdir=live /proj/web-cxc/htdocs/csc1/
+%outdir=test /proj/web-cxc-test/htdocs/csc1/
+%outdir=trial /proj/web-icxc/htdocs/sds/csc_trial/
+
+%outurl=live http://cxc.harvard.edu/csc1/
+%outurl=test http://cxc-test.harvard.edu/csc1/
+%outurl=trial http://icxc.harvard.edu/sds/csc_trial/
+
+%storage=live /data/da/Docs/cscweb/published/csc1/live/
+%storage=test /data/da/Docs/cscweb/published/csc1/test/
+%storage=trial /data/da/Docs/cscweb/published/csc1/trial/
+
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao40.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao40.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao40.trial.xml
+
+-version
+
+@stylesheets=page
+@stylesheets=navbar
+@stylesheets=redirect
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=myhtml
+
+-site  # end of csc
+
 
 +site icxc
 
