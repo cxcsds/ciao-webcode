@@ -2233,9 +2233,8 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       </xsl:if>
     </xsl:if>
 
-    <!--* work out the figure number *-->
+    <!--* work out the figure number/title *-->
     <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
-
     <xsl:variable name="title" select="djb:make-figure-title($pos)"/>
 
     <xsl:choose>
@@ -2316,9 +2315,12 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     <flink><text>PDF</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
   </xsl:template>
   <xsl:template match="*|text()" mode="list-figure-versions">
+<!--
     <xsl:message terminate="yes">
  ERROR: match=*|text() mode=list-figure-versions template has been called!
+        node=<xsl:value-of select="name()"/> contents=<xsl:value-of select="."/>
     </xsl:message>
+-->
   </xsl:template>
 
   <xsl:template match="flinks[count(flink)=0]" mode="add-figure-versions"/>

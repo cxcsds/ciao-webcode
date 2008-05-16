@@ -453,10 +453,19 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     }
     dbg "  *** params (end) ***";
 
-    # We could trap errors, but no real need at present.
-    #
+    # How do find out if there has been an error in the
+    # transformation (e.g. xsl:message with terminate="yes"
+    # called)? No error is thrown, so no point in using
+    # an eval block (although left in just in case).
+    # Is this a module version thing, ie only seen on
+    # Sun with old code? Seems to be.
+    # 
+#    my ($results, $retval);
+#    eval {
     my $results = $sheet->transform($xml, %newparams);
     my $retval  = $sheet->output_string($results);
+#    };
+#    die "ERROR from transformation: $@\n" if $@;
 
     dbg "*** XSLT (end) ***";
     return $retval;
