@@ -2236,8 +2236,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     <!--* work out the figure number *-->
     <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
 
-    <xsl:variable name="title"><xsl:value-of select="concat('Figure ',$pos)"/><xsl:if
-      test="boolean(title)"><xsl:value-of select="concat(': ',normalize-space(title))"/></xsl:if></xsl:variable>
+    <xsl:variable name="title" select="djb:make-figure-title($pos)"/>
 
     <xsl:choose>
       <xsl:when test="$hardcopy = 0">
@@ -2372,9 +2371,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       *-->
   <xsl:template match="figure" mode="toc">
     <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
-    <li><a href="{concat('#',@id)}">
-      <xsl:value-of select="concat('Figure ',$pos,': ',title)"/>
-    </a></li>
+    <li><a href="{concat('#',@id)}"><xsl:value-of select="djb:make-figure-title($pos)"/></a></li>
   </xsl:template> <!--* match=figure mode=toc *-->
 
   <!--*
@@ -2389,5 +2386,40 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     </xsl:if>
     <func:result><xsl:value-of select="exsl:node-set($figlist)/figure[@id=$id]/@pos"/></func:result>
   </func:function>
+
+  <!--*
+      * helper routine to create the figure title. It must be
+      * called with the figure block as the context node.
+      *-->
+  <func:function name="djb:make-figure-title">
+    <xsl:param name="pos" select="''"/>
+    <xsl:if test="$pos=''">
+      <xsl:message terminate="yes">
+ ERROR: djb:make-figure-title called with no argument
+      </xsl:message>
+    </xsl:if>
+    <xsl:if test="name()!='figure'">
+      <xsl:message terminate="yes">
+ ERROR: djb:make-figure-title must be called with a figure node as the context node
+      </xsl:message>
+    </xsl:if>
+    <func:result><xsl:value-of select="concat('Figure ',$pos)"/><xsl:if test="boolean(title)">
+    <xsl:text>: </xsl:text>
+    <xsl:apply-templates select="title" mode="title-parsing"/>
+    </xsl:if></func:result>
+  </func:function>
+
+  <!--*
+`     * This is ugly; do we handle this better in other parts of the system?
+      * (we need a different mode since there must be an explicit title template
+      * somewhere that ignores the content, presumably to handle section/subsection
+      * title elements).
+      *
+      * I added this so that we could include some mark up in the title element of
+      * figures, but so far it does not seem to actually do this.
+      *-->
+  <xsl:template match="title" mode="title-parsing">
+    <xsl:apply-templates/>
+  </xsl:template>
 
 </xsl:stylesheet>
