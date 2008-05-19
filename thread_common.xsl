@@ -2256,12 +2256,27 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       <xsl:when test="$hardcopy = 0">
 	<div class="figure">
 	  <div class="{$classname}">
-	    <img alt="{$alt-text}">
-	      <xsl:attribute name="src"><xsl:choose>
-		<xsl:when test="$has-thumb"><xsl:value-of select="normalize-space(bitmap[@thumbnail])"/></xsl:when>
-		<xsl:otherwise><xsl:value-of select="normalize-space(bitmap)"/></xsl:otherwise>
-	      </xsl:choose></xsl:attribute>
-	    </img>
+
+	    <xsl:variable name="img-code">
+	      <img alt="{$alt-text}">
+		<xsl:attribute name="src"><xsl:choose>
+		  <xsl:when test="$has-thumb"><xsl:value-of select="normalize-space(bitmap[@thumbnail])"/></xsl:when>
+		  <xsl:otherwise><xsl:value-of select="normalize-space(bitmap)"/></xsl:otherwise>
+		</xsl:choose></xsl:attribute>
+	      </img>
+	    </xsl:variable>
+
+	    <!--* do we have a link to a full-size version here? *-->
+	    <xsl:choose>
+	      <xsl:when test="$has-thumb">
+		<a href="{normalize-space(bitmap[boolean(@thumbnail)=false()])}">
+		  <xsl:copy-of select="$img-code"/>
+		</a>
+	      </xsl:when>
+	      <xsl:otherwise>
+		<xsl:copy-of select="$img-code"/>
+	      </xsl:otherwise>
+	    </xsl:choose>
 
 	    <!--*
 		* Process the images to create a set of nodes that detail the
