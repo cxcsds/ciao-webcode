@@ -810,6 +810,12 @@ logotext=Chandra Source Catalog logo
 %storage=test /data/da/Docs/cscweb/published/csc1/test/
 %storage=trial /data/da/Docs/cscweb/published/csc1/trial/
 
+# where does the ahelp 'index' file live
+# needed for linking
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao40/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao40/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao40/test/ahelp/
+
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao40.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao40.test.xml
 %storageloc=trial /data/da/Docs/ciaoweb/storage.ciao40.trial.xml
