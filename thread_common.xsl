@@ -2240,34 +2240,39 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     <xsl:choose>
       <xsl:when test="$hardcopy = 0">
 	<div class="figure">
-	  <h3><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
-	  <img alt="{$alt-text}">
-	    <xsl:attribute name="src"><xsl:choose>
-	      <xsl:when test="$has-thumb"><xsl:value-of select="normalize-space(bitmap[@thumbnail])"/></xsl:when>
-	      <xsl:otherwise><xsl:value-of select="normalize-space(bitmap)"/></xsl:otherwise>
-	    </xsl:choose></xsl:attribute>
-	  </img>
+	  <div class="image">
+	    <img alt="{$alt-text}">
+	      <xsl:attribute name="src"><xsl:choose>
+		<xsl:when test="$has-thumb"><xsl:value-of select="normalize-space(bitmap[@thumbnail])"/></xsl:when>
+		<xsl:otherwise><xsl:value-of select="normalize-space(bitmap)"/></xsl:otherwise>
+	      </xsl:choose></xsl:attribute>
+	    </img>
 
-	  <!--*
-	      * Process the images to create a set of nodes that detail the
-	      * available versions, then process that.
-	      *-->
-	  <xsl:variable name="versions">
-	    <flinks>
-	      <xsl:apply-templates select="bitmap" mode="list-figure-versions"/>
-	      <xsl:apply-templates select="vector" mode="list-figure-versions"/>
-	    </flinks>
-	  </xsl:variable>
-	  <xsl:apply-templates select="exsl:node-set($versions)" mode="add-figure-versions"/>
+	    <!--*
+		* Process the images to create a set of nodes that detail the
+		* available versions, then process that.
+		*-->
+	    <xsl:variable name="versions">
+	      <flinks>
+		<xsl:apply-templates select="bitmap" mode="list-figure-versions"/>
+		<xsl:apply-templates select="vector" mode="list-figure-versions"/>
+	      </flinks>
+	    </xsl:variable>
+	    <xsl:apply-templates select="exsl:node-set($versions)" mode="add-figure-versions"/>
+	  </div>
 
-	  <xsl:apply-templates select="caption" mode="figure"/>
+	  <div class="caption">
+	    <h3><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
+	    <xsl:apply-templates select="caption" mode="figure"/>
+	  </div>
 	</div> <!--* class=figure *-->
+	<!--* I want to remove the float behavior, so I add in an ugly empty div *-->
+	<div class="clearfloat"/>
       </xsl:when>
       <xsl:otherwise>
 	<br/>
         <center>
 	  <div>
-	    <h3 align="center"><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
 	    <img align="center" alt="{$alt-text}">
 	      <xsl:attribute name="src"><xsl:choose>
 		<xsl:when test="$has-bmap-hard"><xsl:value-of select="normalize-space(bitmap[@hardcopy])"/></xsl:when>
@@ -2277,6 +2282,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	    <!-- QUS: does htmldoc honor the @size attribute? It does not appear to -->
 	    <font size="-1">
 	      <table border="0" cellspacing="0" bgcolor="#eeeeee"><tr><td>
+		<h3 align="center"><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
 		<xsl:apply-templates select="caption" mode="figure"/>
 	      </td></tr></table>
 	    </font>
@@ -2334,10 +2340,10 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
   </xsl:template>
 
   <!--*
-      * Create the caption for a figure
+      * Create the caption for a figure; may not need the mode, but leave in for now
       *-->
   <xsl:template match="caption" mode="figure">
-    <div class="caption"><xsl:apply-templates/></div>
+    <xsl:apply-templates/>
   </xsl:template> <!--* match=caption mode=figure *-->
 
   <!--*
