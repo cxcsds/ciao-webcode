@@ -184,7 +184,7 @@ sub get_ahelp_link($) {
 sub get_dictionary_link($$) {
     my $name     = shift;
     my $contents = shift;
-    return '<a class="helplink" title="CIAO Dictionary" href="%sdictionary/' . $name . '.html">' . $contents . "</a>";
+    return '<a title="CIAO Dictionary" href="%sdictionary/' . $name . '.html">' . $contents . "</a>";
 }
 
 # for the moment we assume that

@@ -260,19 +260,19 @@ add_test "aguide_page_id", "aguide",
 
 add_test "why", "why",
   { @text },
-  { href => 'why/', deftext => '', styles => 'no_uc', title => 'CIAO "Why" Topics', @text };
+  { href => 'why/', deftext => '', styles => 'no_uc', title => 'CIAO Why Topic', @text };
 
 add_test "why_id", "why",
   { id => 'foo-1', @text },
-  { href => 'why/index.html#foo-1', deftext => '', styles => 'no_uc', title => 'CIAO "Why" Topics', @text };
+  { href => 'why/index.html#foo-1', deftext => '', styles => 'no_uc', title => 'CIAO Why Topic', @text };
 
 add_test "why_page", "why",
   { page => 'foo', @text },
-  { href => 'why/foo.html', deftext => '', styles => 'no_uc', title => 'CIAO "Why" Topics', @text };
+  { href => 'why/foo.html', deftext => '', styles => 'no_uc', title => 'CIAO Why Topic', @text };
 
 add_test "why_page_id", "why",
   { page => 'foo', id => 'foo-1', @text },
-  { href => 'why/foo.html#foo-1', deftext => '', styles => 'no_uc', title => 'CIAO "Why" Topics', @text };
+  { href => 'why/foo.html#foo-1', deftext => '', styles => 'no_uc', title => 'CIAO Why Topic', @text };
 
 add_test "download", "download",
   { @text },
@@ -282,9 +282,12 @@ add_test "download_id", "download",
   { id => 'foo-1', @text },
   { href => 'download/index.html#foo-1', deftext => '', styles => 'no_uc', @text };
 
+# It is ugly that we have to change this test each
+# time we change the version
+#
 add_test "download_type", "download",
   { type => 'linux6', @text },
-  { href => '/cgi-gen/ciao/download_ciao4b3_linux6.cgi', deftext => '', styles => 'no_uc', no_depth => 1, @text };
+  { href => '/cgi-gen/ciao/download_ciao4.0_linux6.cgi', deftext => '', styles => 'no_uc', no_depth => 1, @text };
 
 add_test "script_name", "script",
   { name => 'foo' },

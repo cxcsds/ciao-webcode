@@ -21,6 +21,6 @@
 </div>
 <div class="section">
 <h2><a name="bar">Boo</a></h2>
-<p>Some text with a <a class="helplink" title="CIAO Dictionary" href="dictionary/bob.html">dictionary link</a> in it.</p>
+<p>Some text with a <a title="CIAO Dictionary" href="dictionary/bob.html">dictionary link</a> in it.</p>
 </div>
 </div><br>

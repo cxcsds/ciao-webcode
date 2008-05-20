@@ -82,7 +82,7 @@ add_test "links",
   <li>another <ahelp name="dmextract" tt="1">link</ahelp> and <strong>some text</strong>.</li>
  </list>
 </links>',
-'<hr>
+'
  <ul>
   <li>a <a href="%dlink.html">link</a>
 </li>
@@ -115,7 +115,7 @@ add_test "news-item",
   </list>
  </item>
 </news>',
-'<hr><div>
+'<div>
 <div class="newsbar">
 <h2>News</h2>
 <a href="/ciao9.9/news.html">Previous Items</a>
@@ -261,14 +261,17 @@ LOGO-HERE
   <dd>a <a href="%dlink.html">link</a>
 </dd>
   <dd>another <tt>' . get_ahelp_link("link") . '</tt> and <strong>some text</strong>.</dd>
- </dl>
-<br>
+ </dl>DELME
 </div>
 <!--/htdig_noindex-->
 ';
 
+# For some reason the spacing of the div/dl elements depends
+# on what is going on
+#
 my $navbar_out = $navbar_base_out;
-$navbar_out =~ s{LOGO-HERE\n}{};
+$navbar_out =~ s{\nLOGO-HERE\n}{};
+$navbar_out =~ s{DELME\n}{};
 
 add_test "navbar-basedir-nologo", $navbar_basedir_xsl, $navbar_in, $navbar_out,
   logoimage => "", logotext => "";
@@ -282,6 +285,7 @@ add_test "navbar-subdir-logo-image", $navbar_subdir_xsl, $navbar_in, $navbar_out
 
 $navbar_out = $navbar_base_out;
 $navbar_out =~ s{LOGO-HERE}{<p align="center"><img src="%dlogo.gif" alt="[Logo Text]"></p>};
+$navbar_out =~ s{DELME}{};
 add_test "navbar-basedir-logo-both", $navbar_basedir_xsl, $navbar_in, $navbar_out,
   logoimage => "logo.gif", logotext => "Logo Text";
 add_test "navbar-subdir-logo-both", $navbar_subdir_xsl, $navbar_in, $navbar_out,
@@ -289,6 +293,7 @@ add_test "navbar-subdir-logo-both", $navbar_subdir_xsl, $navbar_in, $navbar_out,
 
 $navbar_out = $navbar_base_out;
 $navbar_out =~ s{LOGO-HERE}{<p align="center">Logo Text</p>};
+$navbar_out =~ s{DELME}{};
 add_test "navbar-basedir-logo-text", $navbar_basedir_xsl, $navbar_in, $navbar_out,
   logoimage => "", logotext => "Logo Text";
 add_test "navbar-subdir-logo-text", $navbar_subdir_xsl, $navbar_in, $navbar_out,

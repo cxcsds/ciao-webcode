@@ -579,7 +579,7 @@ $xsl
 "
   Error:
     site parameter [unknown] is unknown
-    allowed values:  ciao sherpa chips chart caldb pog icxc 
+    allowed values:  ciao sherpa chips chart caldb pog icxc csc 
 " ) if $site eq "unknown";
 
 	    # note: the space after icxc above is important
