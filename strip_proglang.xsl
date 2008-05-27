@@ -38,6 +38,9 @@
       * so we have to be a lot uglier
       *-->
 
+  <!--* We do not want the restrict attribute to enter the output document *-->
+  <xsl:template match="@restrict"/>
+
   <xsl:template match="@*|text()">
     <xsl:copy>
       <xsl:apply-templates select="*|@*|text()"/>
