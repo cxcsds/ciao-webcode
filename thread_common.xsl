@@ -2353,6 +2353,9 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
   <xsl:template match="vector[@format='ps']" mode="list-figure-versions">
     <flink><text>postscript</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
   </xsl:template>
+  <xsl:template match="vector[@format='eps']" mode="list-figure-versions">
+    <flink><text>encapsulated postscript</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
+  </xsl:template>
   <xsl:template match="vector[@format='pdf']" mode="list-figure-versions">
     <flink><text>PDF</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
   </xsl:template>
