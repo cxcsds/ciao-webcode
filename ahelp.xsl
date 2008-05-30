@@ -195,7 +195,8 @@
       * Start processing here: "/"
       *   
       * start with the root node since we may want to loop over
-      * cxchelptopics multiple times
+      * cxchelptopics multiple times (NOTE: this is no longer
+      * true but leave as is for now).
       *
       *-->
   <xsl:template match="/">
@@ -252,7 +253,7 @@
 
     <!--* end of checks *-->
 
-    <xsl:apply-templates name="cxchelptopics" mode="make-viewable"/>
+    <xsl:apply-templates name="cxchelptopics"/>
 
     <!--* and that's it *-->
 

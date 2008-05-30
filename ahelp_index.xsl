@@ -262,8 +262,8 @@
         * what pages do we create?
         *-->
     <xsl:call-template name="make-navbar"/>
-    <xsl:call-template name="make-alphabet-viewable"/>
-    <xsl:call-template name="make-context-viewable"/>
+    <xsl:call-template name="make-alphabet"/>
+    <xsl:call-template name="make-context"/>
 
     <!--* and that's it *-->
 
@@ -596,9 +596,9 @@
   </xsl:template> <!--* name=add-navbar-alphabet *-->
 
   <!--* 
-      * create: index_alphabet.html (Web)
+      * create: index_alphabet.html
       *-->
-  <xsl:template name="make-alphabet-viewable">
+  <xsl:template name="make-alphabet">
 
     <xsl:variable name="pagename">index_alphabet</xsl:variable>
     <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$pagename"/>.html</xsl:variable>
@@ -617,7 +617,7 @@
 	</xsl:call-template>
 
 	<!--* add header and banner *-->
-	<xsl:call-template name="add-cxc-header-viewable"/>
+	<xsl:call-template name="add-cxc-header"/>
 	<xsl:call-template name="add-standard-banner-header">
 	  <xsl:with-param name="lastmod"  select="$lastmod"/>
 	</xsl:call-template>
@@ -645,14 +645,14 @@
 	<xsl:call-template name="add-standard-banner-footer">
 	  <xsl:with-param name="lastmod"  select="$lastmod"/>
 	</xsl:call-template>
-	<xsl:call-template name="add-cxc-footer-viewable"/>
+	<xsl:call-template name="add-cxc-footer"/>
 	
 	<!--* add </body> tag [the <body> is included in a SSI] *-->
 	<xsl:call-template name="add-end-body"/>
       </html>
       
     </xsl:document>
-  </xsl:template> <!--* name=make-alphabet-viewable *-->
+  </xsl:template> <!--* name=make-alphabet *-->
 
   <!--* add a set of 'jump to' links for the alphabetical list *-->
   <xsl:template name="add-alphabet-jump">
@@ -794,7 +794,7 @@
   <!--* 
       * create: index_context.html (Web)
       *-->
-  <xsl:template name="make-context-viewable">
+  <xsl:template name="make-context">
 
     <xsl:variable name="pagename">index_context</xsl:variable>
     <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$pagename"/>.html</xsl:variable>
@@ -813,7 +813,7 @@
 	</xsl:call-template>
 
 	<!--* add header and banner *-->
-	<xsl:call-template name="add-cxc-header-viewable"/>
+	<xsl:call-template name="add-cxc-header"/>
 	<xsl:call-template name="add-standard-banner-header">
 	  <xsl:with-param name="lastmod"  select="$lastmod"/>
 	</xsl:call-template>
@@ -841,14 +841,14 @@
 	<xsl:call-template name="add-standard-banner-footer">
 	  <xsl:with-param name="lastmod"  select="$lastmod"/>
 	</xsl:call-template>
-	<xsl:call-template name="add-cxc-footer-viewable"/>
+	<xsl:call-template name="add-cxc-footer"/>
 
 	<!--* add </body> tag [the <body> is included in a SSI] *-->
 	<xsl:call-template name="add-end-body"/>
       </html>
       
     </xsl:document>
-  </xsl:template> <!--* name=make-context-viewable *-->
+  </xsl:template> <!--* name=make-context *-->
 
   <!--*
       * Create the contextual index

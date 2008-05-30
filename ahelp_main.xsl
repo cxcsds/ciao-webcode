@@ -37,7 +37,7 @@
       * change for later as it requires re-jigging the entire
       * publishing setup, not just this stylesheet.
       *-->
-  <xsl:template match="cxchelptopics" mode="make-viewable">
+  <xsl:template match="cxchelptopics">
 
     <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$outname"/>.html</xsl:variable>
 
@@ -66,7 +66,7 @@
 	</head>
 
 	<!--* add header and banner *-->
-	<xsl:call-template name="add-cxc-header-viewable"/>
+	<xsl:call-template name="add-cxc-header"/>
 	<xsl:call-template name="add-standard-banner-header">
 	  <xsl:with-param name="lastmod"  select="//LASTMODIFIED"/>
 	</xsl:call-template>
@@ -84,7 +84,7 @@
 	      <a name="maintext"/>
 
 	      <!--* parse the text *--> 
-	      <xsl:apply-templates select="ENTRY" mode="viewable"/>
+	      <xsl:apply-templates select="ENTRY"/>
 	    </td>
 	  </tr>
 	</table>
@@ -93,20 +93,18 @@
 	<xsl:call-template name="add-standard-banner-footer">
 	  <xsl:with-param name="lastmod"  select="//LASTMODIFIED"/>
 	</xsl:call-template>
-	<xsl:call-template name="add-cxc-footer-viewable"/>
+	<xsl:call-template name="add-cxc-footer"/>
 
 	<!--* add </body> tag [the <body> is included in a SSI] *-->
 	<xsl:call-template name="add-end-body"/>
       </html>
 
     </xsl:document>
-  </xsl:template> <!--* match=cxchelptopics mode=make-viewable *-->
+  </xsl:template> <!--* match=cxchelptopics *-->
 
   <!--* begin DTD templates *-->
 
   <!--*
-      * create the viewable HTML contents
-      * 
       * we use a pull-style approach here
       * 
       * DTD Entry:
@@ -118,10 +116,10 @@
       * we generate the syntax line automatically
       * 
       *-->
-  <xsl:template match="ENTRY" mode="viewable">
+  <xsl:template match="ENTRY">
 
     <xsl:call-template name="add-ahelp-qlinks"/>
-    <xsl:call-template name="add-page-header-viewable"/>
+    <xsl:call-template name="add-page-header"/>
     <br/>
 
     <xsl:apply-templates select="SYNOPSIS"/>
@@ -138,13 +136,13 @@
     <xsl:apply-templates select="BUGS"/>
     <xsl:call-template   name="add-seealso"/>
 
-  </xsl:template>  <!--* match=ENTRY mode=viewable *-->
+  </xsl:template>  <!--* match=ENTRY *-->
 
   <!--*
-      * output another page "header" - for type=web viewable HTML
+      * output another page "header"
       *
       *-->
-  <xsl:template name="add-page-header-viewable">
+  <xsl:template name="add-page-header">
 
     <table class="ahelpheader" width="100%">
       <tr>
@@ -156,7 +154,7 @@
       </tr>
     </table>
 
-  </xsl:template> <!--* name=add-page-header-viewable *-->
+  </xsl:template> <!--* name=add-page-header *-->
 
   <!--*
       * DTD Entry:

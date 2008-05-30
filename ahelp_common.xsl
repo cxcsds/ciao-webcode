@@ -314,11 +314,11 @@
   </xsl:template> <!--* name=add-cxc-search-ssi *-->
 
   <!--*
-      * add the CXC header for the web-page
+      * add the CXC header
       * - depends on the type (live, test, trial) of the transform
       *-->
 
-  <xsl:template name="add-cxc-header-viewable">
+  <xsl:template name="add-cxc-header">
 
     <xsl:if test='$type!="live"'>
       <!--* add the body tag (start) and test header info *-->
@@ -335,7 +335,7 @@
       </xsl:otherwise>
     </xsl:choose>
     
-  </xsl:template> <!--* add-cxc-header-viewable *-->
+  </xsl:template> <!--* add-cxc-header *-->
 
   <!--*
       * add the standard header files
@@ -455,15 +455,15 @@
   </xsl:template> <!--* name=add-cxc-test-banner *-->
 
   <!--*
-      * output the page "footer" - for format=web viewable HTML
+      * output the page "footer"
       *-->
-  <xsl:template name="add-cxc-footer-viewable">
+  <xsl:template name="add-cxc-footer">
 
     <br/>
     <xsl:comment>#include virtual="/incl/footer.html"</xsl:comment>
     <xsl:call-template name="newline"/>
 
-  </xsl:template> <!--* add-cxc-footer-viewable *-->
+  </xsl:template> <!--* add-cxc-footer *-->
 
   <!--* taken from helper.xsl *-->
 
