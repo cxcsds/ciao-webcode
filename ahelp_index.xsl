@@ -11,6 +11,7 @@
 
 <!--* 
     * Recent changes:
+    *  2008 May 30 DJB Removed PDF/hardcopy generation
     *  Nov 30 2007 DJB
     *    minor refactoring of ahelp link code in preparation for improved support of
     *    context=py.*/sl.* pages
@@ -22,73 +23,6 @@
     *    watchouturl params
     *  Oct 15 2007 DJB
     *    Updated to allow site-specific indexes
-    *  v1.38 - changed page headers and index titles to use
-    *	       htmltitlepostfix value 
-    *  v1.37 - <html> changed to <html lang="en"> following
-    *            http://www.w3.org/TR/2005/WD-i18n-html-tech-lang-20050224/
-    *
-    *  not sure when got out of sync
-    *
-    *  v1.35 - added htdig_noindex /htdig_noindex comments around navbar contents
-    *  v1.34 - TEMPORARY HACK needed for v1.21 of ahelp_common.xsl: need
-    *          a global url variable (need to sort out properly)
-    *  v1.33 - finished off the job of 1.32. We could rationalise a lot of
-    *          the templates now.
-    *  v1.32 - updated to handle the fact that now called twice: with
-    *          hardcopy set to 0/1.
-    *          updated whatsnew link to make the div a noprint class
-    *  v1.31 - added print-media stylesheet
-    *  v1.30 - navbar now starts with the CIAO logo (logoimage/text params)
-    *  v1.29 - merged in changes from v1.28.1.2; these update the look
-    *          of the navigation bar to better match the rest of the CIAO 3
-    *          site (not checked the changes made correctly)
-    *  v1.28 - major changes to the way the ahelp files/indexes are created
-    *          This script just creates index_alphabet.html, index_context.html
-    *          - index.html is now created manually
-    *          The format parameter has been removed: you now use
-    *            type=live, test, trial, or dist
-    *  v1.27 - watch out/what's new links now contain title attributes
-    *  v1.26 - navbar links now contain title attributes
-    *  v1.25 - format=web navigation bar name now taken from navbarname parameter
-    *          ie not hard-coded to ahelp
-    *  v1.24 - format=web uses watchouturl parameter
-    *  v1.23 - added maintext anchors to index pages
-    *  v1.22 - added searchssi parameter (format=web only)
-    *  v1.21 - rationalise format: remove some excessive use of tables
-    *  v1.20 - format=web uses newsfile/newsfileurl parameters
-    *  v1.19 - format=web use CIAO 3.0 layout, use cssfile parameter
-    *          fixed hardopy of index page (markup was stripped from ahelpindexfile)
-    *          for the same unknown reason it was when developing the index.html version 
-    *  v1.18 - use CSS in navbar (format=web)
-    *  v1.17 - fix 'jump to' on the context page (link to alphabetical page not itself)
-    *  v1.16 - change 'Jump to' text to match new 'main page' nomenclature
-    *          more work on "quick links" of the ahelp navbar
-    *  v1.15 - changed CSS code to use external file as worked out how to do it
-    *          and get it work in netscape v4.76
-    *          index page: changed 'Document index:' to 'Lost of all Ahelp files:'
-    *          navbar for ahelp pages: changed links a bit
-    *  v1.14 - navbar containing alphabetical list of tools is now called
-    *          navbar_ahelp_index.incl since navbar_ahelp.incl is now used
-    *          by the navbar itself (rather, that is the name someone has used)
-    *          dist=web (not ahrdcopy) now include CSS for navbar
-    *  v1.13 - navbar is now navbar_ahelp.incl not navbar_documents.incl (format=web)
-    *          added the "What's new" link to the main index pages
-    *  v1.12 - added support for ahelpindexfile (format=web only)
-    *  v1.11 - corrected links in index.html of distribution
-    *  v1.10 - removed support for multiple directories
-    *   v1.9 - param: install -> outdir; btcolour default value changed to match
-    *          navbar colour; tables now have bgcolor on odd lines for format=web (cf format=dist)
-    *          added depth parameter as a sop to ahelp_common.xsl
-    *          make better use of ahelpindex XML DOM
-    *          added (doomed) support for multiple directories contianing the ahelp files
-    *   v1.7 - added support for format=dist; added btcolor parameter
-    *   v1.6 - added input parameter: updateby
-    *   v1.5 - added hardcopy support for format=web; now uses ahelp_common.xsl
-    *   v1.4 - navbar now uses a simpler format (suggested by Liz)
-    *   v1.3 - navbar is now created with font size of -1
-    *   v1.2 - can create viewable versions of navbar_ahelp, index, index_[alphabet|context]
-    *          no hardcopy and no support for format!=web
-    *   v1.1 - original version (copy of v1.4 of ahelp.xsl)
     * 
     * Create the "index" pages for the ahelp pages - at least the
     * alphabetical and contextual listings.
@@ -102,10 +36,6 @@
     *      determines where the HTML files are created
     *      trial is a "developer only" value
     *
-    *  . hardcopy - integer, optional, default=0
-    *    if 0 then create the "softcopy" version, if 1 then the "hardcopy"
-    *    version.
-    *
     *  . site - string, required
     *    what site are we to generate the index for, should be
     *    one of ciao, chips, or sherpa
@@ -113,7 +43,8 @@
     *  . url - TEMPORARY HACK - see v1.21 of ahelp_common
     *
     *  . urlbase - string
-    *    base URL of pages (used when creating the hardcopy versions)
+    *    base URL of pages (MAY NOT BE NEEDED AS NO LONGER
+    *       GENERATE PDF VERSION)
     *
     *  . updateby - string
     *    name of person publishing the page (output of whoami is sufficient)
@@ -175,10 +106,7 @@
     *    (see http://www.exslt.org/). 
     *    Actually, could have used an input parameter to do this
     * 
-    *  . the viewable/hardcopy templates could be amalgamated into
-    *    one (and the alphabet/context ones further merged into
-    *    a single template) since they're essentially the same
-    *    [would make updating the format easier]
+    *  . can some of these templates be amalgamated/abstracted?
     * 
     *-->
 
@@ -194,9 +122,6 @@
   <xsl:include href="ahelp_common.xsl"/>
 
   <xsl:output method="text"/>
-
-  <!--* parameters to be set by stylesheet processor *-->
-  <xsl:param name="hardcopy" select="0"/>
 
   <xsl:param name="site" select="''"/>
 
@@ -336,21 +261,9 @@
     <!--*
         * what pages do we create?
         *-->
-
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 0">
-	<!--* web site: softcopy *-->
-	<xsl:call-template name="make-navbar"/>
-	<xsl:call-template name="make-alphabet-viewable"/>
-	<xsl:call-template name="make-context-viewable"/>
-      </xsl:when>
-
-      <xsl:otherwise>
-	<!--* web site: hardcopy *-->
-	<xsl:call-template name="make-alphabet-hardcopy"/>
-	<xsl:call-template name="make-context-hardcopy"/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="make-navbar"/>
+    <xsl:call-template name="make-alphabet-viewable"/>
+    <xsl:call-template name="make-context-viewable"/>
 
     <!--* and that's it *-->
 
@@ -707,7 +620,6 @@
 	<xsl:call-template name="add-cxc-header-viewable"/>
 	<xsl:call-template name="add-standard-banner-header">
 	  <xsl:with-param name="lastmod"  select="$lastmod"/>
-	  <xsl:with-param name="pagename" select="$pagename"/>
 	</xsl:call-template>
 
 	<table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
@@ -732,7 +644,6 @@
 	<!--* add the banner *-->
 	<xsl:call-template name="add-standard-banner-footer">
 	  <xsl:with-param name="lastmod"  select="$lastmod"/>
-	  <xsl:with-param name="pagename" select="$pagename"/>
 	</xsl:call-template>
 	<xsl:call-template name="add-cxc-footer-viewable"/>
 	
@@ -742,52 +653,6 @@
       
     </xsl:document>
   </xsl:template> <!--* name=make-alphabet-viewable *-->
-
-  <!--* 
-      * create: index_alphabet.hard.html
-      *-->
-  <xsl:template name="make-alphabet-hardcopy">
-
-    <xsl:variable name="pagename">index_alphabet</xsl:variable>
-    <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$pagename"/>.hard.html</xsl:variable>
-    <xsl:variable name="url"><xsl:value-of select="$urlbase"/><xsl:value-of select="$pagename"/>.html</xsl:variable>
-
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="us-ascii">
-      
-      <html lang="en">
-
-	<xsl:call-template name="add-htmlhead">
-	  <xsl:with-param name="title">Ahelp (alphabetical) - <xsl:value-of select="$headtitlepostfix"/></xsl:with-param>
-	  <xsl:with-param name="withcss">0</xsl:with-param>
-	</xsl:call-template>
-
-	<!--* add header *-->
-	<xsl:call-template name="add-cxc-header-hardcopy">
-	  <xsl:with-param name="lastmod"  select="$lastmod"/>
-	  <xsl:with-param name="url"      select="$url"/>
-	</xsl:call-template>
-	<xsl:call-template name="newline"/>
-
-	<!--* the main text (no 'navbar' in hardcopy) *-->
-	<xsl:apply-templates select="ahelpindex/alphabet[@site=$site]"/>
-
-	<!--* add the footer text *-->
-	<xsl:call-template name="add-cxc-footer-hardcopy">
-	  <xsl:with-param name="lastmod"  select="$lastmod"/>
-	  <xsl:with-param name="url"      select="$url"/>
-	</xsl:call-template>
-	
-	<!--* add </body> tag [the <body> is included in a SSI] *-->
-	<xsl:call-template name="add-end-body"/>
-      </html>
-      
-    </xsl:document>
-  </xsl:template> <!--* name=make-alphabet-hardcopy *-->
 
   <!--* add a set of 'jump to' links for the alphabetical list *-->
   <xsl:template name="add-alphabet-jump">
@@ -833,10 +698,8 @@
     <!--* title *-->
     <h2 align="center">Alphabetical list of Ahelp files for <xsl:value-of select="$headtitlepostfix"/></h2>
 
-    <!--* add text/links depending on the format *-->
-    <xsl:if test="$hardcopy=0">
-      <xsl:call-template name="add-alphabet-jump"/>
-    </xsl:if>
+    <!--* add text/links *-->
+    <xsl:call-template name="add-alphabet-jump"/>
     <hr/><br/>
 
     <!--* create the list of letters/links *-->
@@ -923,8 +786,8 @@
     </table>
     
     <br/>
-    <!--* jump back links only if not hardcopy *-->
-    <xsl:if test="$hardcopy=0"><xsl:call-template name="add-alphabet-jump"/></xsl:if>
+    <!--* jump back links *-->
+    <xsl:call-template name="add-alphabet-jump"/>
     
   </xsl:template> <!--* name=handle-alphabet *-->
 
@@ -953,7 +816,6 @@
 	<xsl:call-template name="add-cxc-header-viewable"/>
 	<xsl:call-template name="add-standard-banner-header">
 	  <xsl:with-param name="lastmod"  select="$lastmod"/>
-	  <xsl:with-param name="pagename" select="$pagename"/>
 	</xsl:call-template>
 
 	<table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
@@ -978,7 +840,6 @@
 	<!--* add the banner *-->
 	<xsl:call-template name="add-standard-banner-footer">
 	  <xsl:with-param name="lastmod"  select="$lastmod"/>
-	  <xsl:with-param name="pagename" select="$pagename"/>
 	</xsl:call-template>
 	<xsl:call-template name="add-cxc-footer-viewable"/>
 
@@ -988,52 +849,6 @@
       
     </xsl:document>
   </xsl:template> <!--* name=make-context-viewable *-->
-
-  <!--* 
-      * create: index_context.hard.html
-      *-->
-  <xsl:template name="make-context-hardcopy">
-
-    <xsl:variable name="pagename">index_context</xsl:variable>
-    <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$pagename"/>.hard.html</xsl:variable>
-    <xsl:variable name="url"><xsl:value-of select="$urlbase"/><xsl:value-of select="$pagename"/>.html</xsl:variable>
-
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="us-ascii">
-      
-      <html lang="en">
-
-	<xsl:call-template name="add-htmlhead">
-	  <xsl:with-param name="title">Ahelp (contextual) - <xsl:value-of select="$headtitlepostfix"/></xsl:with-param>
-	  <xsl:with-param name="withcss">0</xsl:with-param>
-	</xsl:call-template>
-
-	<!--* add header *-->
-	<xsl:call-template name="add-cxc-header-hardcopy">
-	  <xsl:with-param name="lastmod"  select="$lastmod"/>
-	  <xsl:with-param name="url"      select="$url"/>
-	</xsl:call-template>
-	<xsl:call-template name="newline"/>
-
-	<!--* the main text (no 'navbar' in hardcopy) *-->
-	<xsl:apply-templates select="ahelpindex/context[@site=$site]"/>
-
-	<!--* add the footer text *-->
-	<xsl:call-template name="add-cxc-footer-hardcopy">
-	  <xsl:with-param name="lastmod"  select="$lastmod"/>
-	  <xsl:with-param name="url"      select="$url"/>
-	</xsl:call-template>
-	
-	<!--* add </body> tag [the <body> is included in a SSI] *-->
-	<xsl:call-template name="add-end-body"/>
-      </html>
-      
-    </xsl:document>
-  </xsl:template> <!--* name=make-context-hardcopy *-->
 
   <!--*
       * Create the contextual index
@@ -1065,10 +880,8 @@
     <!--* title *-->
     <h2 align="center">Contextual list of Ahelp files for <xsl:value-of select="$headtitlepostfix"/></h2>
 
-    <!--* add text/links depending on the format *-->
-    <xsl:if test="$hardcopy=0">
-      <xsl:call-template name="add-context-jump"/>
-    </xsl:if>
+    <!--* add text/links *-->
+    <xsl:call-template name="add-context-jump"/>
     <hr/><br/>
 
     <!--* create the list of concepts/links *-->
@@ -1139,8 +952,8 @@
     </table>
     
     <br/>
-    <!--* jump back links only if not hardcopy *-->
-    <xsl:if test="$hardcopy=0"><xsl:call-template name="add-context-jump"/></xsl:if>
+    <!--* jump back links *-->
+    <xsl:call-template name="add-context-jump"/>
     
   </xsl:template> <!--* name=handle-context *-->
 
@@ -1186,14 +999,14 @@
 
 <xsl:text>&gt;</xsl:text><xsl:value-of select="$txt"/><xsl:text disable-output-escaping="yes">&lt;/a&gt;</xsl:text>
 
-  </xsl:template>
+  </xsl:template> <!--* name=add-link-to-text *-->
 
   <!--*
       * do we make the bgcolor attribute equal to $btcolor?
-      * - should use CSS, with a fall-back for the hardcopy version
+      * TODO: use CSS
       *-->
   <xsl:template name="add-table-bg-color">
-    <xsl:if test="$hardcopy = 0 and @number mod 2 = 0">
+    <xsl:if test="@number mod 2 = 0">
       <xsl:attribute name="bgcolor">#<xsl:value-of select="$btcolor"/></xsl:attribute>
     </xsl:if>
   </xsl:template>

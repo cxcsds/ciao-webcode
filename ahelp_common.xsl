@@ -5,46 +5,11 @@
 
 <!--* 
     * Recent changes:
+    *  30 May 2008 DJB Removed links to PDF version in header/footer
     *  21 Feb 2008 ECG - updated copyright statement to extend to 2008
     *  Oct 15 2007 DJB
     *    added $allowed-sites, removed dist from $allowed-types; copyright statement
     *    now 2007
-    *  v1.24 - updated copyright statement to "1998-2006"
-    *  v1.23 - added br (hidden by CSS) between lastmodbar and urlbar
-    *  v1.22 - only add the URL (v1.21) if it is not empty - NEED TO SORT
-    *          out these empty cases (the index pages?)
-    *  v1.21 - added URL to the 'header' (with the last modified date)
-    *  v1.20 - clean up of highlighting code
-    *  v1.19 - major revamp of highlighting code to be more CSS friendly and
-    *          just more sensible all round (and minor hardcopy=0/1 changes)
-    *  v1.18 - start of major revamp for CIAO 3.1: the text is now marked up
-    *          much-more naturally, rather than using a dl list. Goes with v1.18
-    *          of ahelp_common.xsl. This works, but want to use more CSS which
-    *          means separating out the soft/hardcopy code, which is coming next.
-    *  v1.17 - 2003 changed to 2004 for the copyright info. This should
-    *          be read in froma n external file rather than being hard-coded
-    *          here!
-    *  v1.16 - updated the test banner template to remove the 'Test version'
-    *          text since the new server makes it blindingly-obvious we are
-    *          on a test site.
-    *  v1.15 - allowed-formats variable removed, " dist " added to allowed-types
-    *          added 'slashcheck' "method" to check-param
-    *  v1.14 - PDF links now have a title attribute
-    *  v1.13 - minor change: no longer sets up a searchbar div
-    *  v1.12 - header includes "jump to main text" link hidden from most browsers
-    *  v1.11 - use searchssi parameter for search bar location
-    *          more table-related changes for format=web
-    *  v1.10 - rationalise format: remove some excessive use of tables
-    *   v1.9 - format=web use CIAO 3.0 layout
-    *   v1.8 - better handling of highlight tables being within PARA blocks
-    *          use new depth parameter for creating hadrcopy links
-    *   v1.7 - search button is now the ciao version (not the /incl/ version) for ciao pages
-    *   v1.6 - added dist to list of allowed formats
-    *   v1.5 - fix for templates copied over from helper.xsl
-    *   v1.4 - typo fix
-    *   v1.3 - test header/footer can now use SSI files (now testing on asc-bak)
-    *   v1.2 - initial working version
-    *   v1.1 - copy of v1.5/6 of ahelp.xsl
     * 
     * Common templates used by ahelp.xsl and ahelp_index.xsl. These stylesheets
     * will define a number of parameters used below (don't describe them here
@@ -148,9 +113,7 @@
   <xsl:template name="end-para"><xsl:text disable-output-escaping="yes">&lt;/p&gt;</xsl:text></xsl:template>
 
   <!--*
-      * We 'highlight' the text. This is rather messy since we use
-      * CSS on the main page but use a TABLE for the hardcopy
-      * (since htmldoc doesn't handle CSS).
+      * We 'highlight' the text.
       *
       * Prior to CIAO 3.1 (v1.19 of this file) this template used to
       * be split into two (add-start/end-highlight) AND it used to
@@ -174,18 +137,8 @@
       </xsl:message>
     </xsl:if>
 
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 1">
-	<!--* hack for htmldoc *-->
-	<table border="0" cellspacing="0" bgcolor="#{$bocolor}"><tr><td><table border="0" cellspacing="0" bgcolor="#{$bgcolor}"><tr><td><pre>
-<xsl:copy-of select="$contents"/>
-</pre></td></tr></table></td></tr></table>
-      </xsl:when>
-      <xsl:otherwise>
-	<!--* yay CSS (although highlight is a poor class name) *-->
-<pre class="highlight"><xsl:copy-of select="$contents"/></pre>
-      </xsl:otherwise>
-    </xsl:choose>
+    <!--* yay CSS (although highlight is a poor class name) *-->
+    <pre class="highlight"><xsl:copy-of select="$contents"/></pre>
 
   </xsl:template> <!--* name=add-highlight *-->
 
@@ -272,52 +225,27 @@
   </xsl:template> <!--* name=add-navbar *-->
 
   <!--*
-      * create the hardcopy links
-      *
-      * Parameters:
-      *   pagename - string, required
-      *     name of page (without trailing size and .pdf)
-      *-->
-  <xsl:template name="add-pdf-links">
-    <xsl:param name="pagename" select="''"/>
-
-    <xsl:call-template name="check-input-param">
-      <xsl:with-param name="name"     select="'pagename'"/>
-      <xsl:with-param name="value"    select="$pagename"/>
-      <xsl:with-param name="template" select="'add-pdf-links'"/>
-    </xsl:call-template>
-
-    <font size="-1">
-      Hardcopy (PDF):
-      <a title="PDF (A4 format) version of the page" href="{$depth}{$pagename}.a4.pdf">A4</a>
-      <xsl:text> | </xsl:text>
-      <a title="PDF (US Letter format) version of the page" href="{$depth}{$pagename}.letter.pdf">Letter</a>
-    </font>
-  </xsl:template> <!--* name=add-pdf-links *-->
-
-  <!--*
       * output the standard banner (head) for format=web
       *
       * Parameters:
-      *   pagename - string, required
-      *     name of page (without trailing size and .pdf)
-      *
       *   lastmod - string, required
       *     last modified date
       *
       *-->
   <xsl:template name="add-standard-banner-header">
     <xsl:param name="lastmod"  select="''"/>
-    <xsl:param name="pagename" select="''"/>
+    <xsl:param name="pagename"  select="''"/>
+
+    <!--* TODO: remove me when happy stylesheets have been cleaned up *-->
+    <xsl:if test="$pagename != ''">
+      <xsl:message terminate="yes">
+ ERROR: add-standard-banner-header called with pagename=<xsl:value-of select="$pagename"/>
+      </xsl:message>
+    </xsl:if>
 
     <xsl:call-template name="check-input-param">
       <xsl:with-param name="name"     select="'lastmod'"/>
       <xsl:with-param name="value"    select="$lastmod"/>
-      <xsl:with-param name="template" select="'add-standard-banner-header'"/>
-    </xsl:call-template>
-    <xsl:call-template name="check-input-param">
-      <xsl:with-param name="name"     select="'pagename'"/>
-      <xsl:with-param name="value"    select="$pagename"/>
       <xsl:with-param name="template" select="'add-standard-banner-header'"/>
     </xsl:call-template>
 
@@ -347,51 +275,34 @@
       </xsl:if>
     </div>
 
-    <!--* add links to PDF files *-->
-    <div class="topbar">
-      <div class="pdfbar">
-	Hardcopy (PDF):
-	<a title="PDF (A4 format) version of the page" href="{$pagename}.a4.pdf">A4</a>
-	<xsl:text> | </xsl:text>
-	<a title="PDF (US Letter format) version of the page" href="{$pagename}.letter.pdf">Letter</a>
-      </div>
-    </div>
-
   </xsl:template> <!--* name=add-standard-banner-header *-->
 
   <!--*
       * output the standard banner (foot) for format=web
       *
       * Parameters:
-      *   pagename - string, required
-      *     name of page (without trailing size and .pdf)
-      *
       *   lastmod - string, required
       *     last modified date
       *
       *-->
   <xsl:template name="add-standard-banner-footer">
     <xsl:param name="lastmod"  select="''"/>
-    <xsl:param name="pagename" select="''"/>
+    <xsl:param name="pagename"  select="''"/>
+
+    <!--* TODO: remove me when happy stylesheets have been cleaned up *-->
+    <xsl:if test="$pagename != ''">
+      <xsl:message terminate="yes">
+ ERROR: add-standard-banner-footer called with pagename=<xsl:value-of select="$pagename"/>
+      </xsl:message>
+    </xsl:if>
 
     <xsl:call-template name="check-input-param">
       <xsl:with-param name="name"     select="'lastmod'"/>
       <xsl:with-param name="value"    select="$lastmod"/>
       <xsl:with-param name="template" select="'add-standard-banner-footer'"/>
     </xsl:call-template>
-    <xsl:call-template name="check-input-param">
-      <xsl:with-param name="name"     select="'pagename'"/>
-      <xsl:with-param name="value"    select="$pagename"/>
-      <xsl:with-param name="template" select="'add-standard-banner-footer'"/>
-    </xsl:call-template>
 
     <div class="bottombar">
-      <div>
-	Hardcopy (PDF):
-	<a title="PDF (A4 format) version of the page" href="{$pagename}.a4.pdf">A4</a>
-	<xsl:text> | </xsl:text>
-	<a title="PDF (US Letter format) version of the page" href="{$pagename}.letter.pdf">Letter</a>
-      </div>
       <div>Last modified: <xsl:value-of select="$lastmod"/></div>
     </div>
 
@@ -544,52 +455,6 @@
   </xsl:template> <!--* name=add-cxc-test-banner *-->
 
   <!--*
-      * add the CXC header for the hardcopy page
-      *
-      * Parameters:
-      *   url - string, required
-      *     URL of page
-      *
-      *   lastmod - string, required
-      *     last modified date
-      *
-      *-->
-  <xsl:template name="add-cxc-header-hardcopy">
-    <xsl:param name="lastmod"  select="''"/>
-    <xsl:param name="url"      select="''"/>
-
-    <xsl:call-template name="check-input-param">
-      <xsl:with-param name="name"     select="'lastmod'"/>
-      <xsl:with-param name="value"    select="$lastmod"/>
-      <xsl:with-param name="template" select="'add-cxc-header-hardcopy'"/>
-    </xsl:call-template>
-    <xsl:call-template name="check-input-param">
-      <xsl:with-param name="name"     select="'url'"/>
-      <xsl:with-param name="value"    select="$url"/>
-      <xsl:with-param name="template" select="'add-cxc-header-hardcopy'"/>
-    </xsl:call-template>
-
-    <table border="0" width="100%">
-      <tr>
-	<td align="left" valign="top">
-	  <!--* using just [/sds]/incl/header_left.gif seemed to cause htmldoc pain so add full URL *-->
-	  <img alt="[Chandra Science]" src="http://cxc.harvard.edu/incl/header_left.gif"/>
-	</td>
-	<td align="right" valign="center">
-	  <font size="-1">
-	    URL: <a href="{$url}"><xsl:value-of select="$url"/></a>
-	    <br/>
-	    Last modified: <xsl:value-of select="$lastmod"/>
-	  </font>
-	</td>
-      </tr>
-    </table>
-    <xsl:call-template name="add-hr-strong"/>
-    <br/>
-
-  </xsl:template> <!--* add-cxc-header-hardcopy *-->
-
-  <!--*
       * output the page "footer" - for format=web viewable HTML
       *-->
   <xsl:template name="add-cxc-footer-viewable">
@@ -599,64 +464,6 @@
     <xsl:call-template name="newline"/>
 
   </xsl:template> <!--* add-cxc-footer-viewable *-->
-
-  <!--*
-      * output the page "footer" - for format=web hardcopy HTML
-      * - depends on value of $type 
-      *
-      * Parameters:
-      *   url - string, required
-      *     URL of page
-      *
-      *   lastmod - string, required
-      *     last modified date
-      *
-      * We could read the copyright information from the index file
-      * (but need more thinking/planning)
-      *
-      *-->
-  <xsl:template name="add-cxc-footer-hardcopy">
-    <xsl:param name="lastmod"  select="''"/>
-    <xsl:param name="url"      select="''"/>
-
-    <xsl:call-template name="check-input-param">
-      <xsl:with-param name="name"     select="'lastmod'"/>
-      <xsl:with-param name="value"    select="$lastmod"/>
-      <xsl:with-param name="template" select="'add-cxc-footer-hardcopy'"/>
-    </xsl:call-template>
-    <xsl:call-template name="check-input-param">
-      <xsl:with-param name="name"     select="'url'"/>
-      <xsl:with-param name="value"    select="$url"/>
-      <xsl:with-param name="template" select="'add-cxc-footer-hardcopy'"/>
-    </xsl:call-template>
-
-    <br/>
-    <xsl:call-template name="add-hr-strong"/>
-    <br/>
-    <table border="0" width="100%">
-      <tr>
-	<td align="left" valign="top">
-	  <font size="-1">
-	    The Chandra X-Ray Center (CXC) is operated for NASA by the Smithsonian Astrophysical Observatory.
-	    <br/>
-	    60 Garden Street, Cambridge, MA 02138 USA.
-	    <br/>
-	    Smithsonian Institution, Copyright 
-	    <xsl:text disable-output-escaping="yes">&amp;copy;</xsl:text>
-	    1998-2008. All rights reserved. 
-	  </font>
-	</td>
-	<td align="right" valign="center">
-	  <font size="-1">
-	    URL: <a href="{$url}"><xsl:value-of select="$url"/></a>
-	    <br/>
-	    Last modified: <xsl:value-of select="$lastmod"/>
-	  </font>
-	</td>
-      </tr>
-    </table>
-
-  </xsl:template> <!--* add-cxc-footer-hardcopy *-->
 
   <!--* taken from helper.xsl *-->
 

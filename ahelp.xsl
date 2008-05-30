@@ -5,47 +5,15 @@
 
 <!--* 
     * Recent changes:
+    *  2008 May 30 DJB Removed PDF/hardcopy generation
     *  2007 Oct 16 DJB
     *    Removed support for type=dist
-    *  v1.18 - fixed default setting of global hardcopy param
-    *  v1.17 - strip space from PARA as well as SYNTAX blocks to clean a
-    *          few things up.
-    *  v1.16 - big change for CIAO 3.1: the stylesheet now either creates
-    *          the soft or hard-copy version of the page, NOT both
-    *          There is also support for the new more-CSS-friendly
-    *          versions of ahelp_main/common.xsl.
-    *  v1.15 - updated for the new scheme for creating ahelp pages
-    *          [where the index-creationg is separated from the pages]
-    *          url parameter now urlbase
-    *  v1.14 - added searchssi parameter (format=web only)
-    *  v1.13 - added cssfile parameter (format=web only)
-    *  v1.12 - added bugs to quick links (just defines have-bugs variable here)
-    *  v1.11 - pagename input param changed to outname, install to outdir
-    *          added depth parameter (string containing '../'s and NOT a number)
-    *          Updated maxlen to better match CIAO 3.0 ahelp (80 column display)
-    *          Moved out a lot of code to ahelp_main.xsl (helps testing)
-    *  v1.10 - corrected bugs/error links in the standard "bugs" section
-    *   v1.9 - added support for format=dist
-    *   v1.8 - added input parameter: updateby
-    *   v1.7 - added hardcopy support for format=web; now uses ahelp_common.xsl
-    *   v1.6 - fixed parameter table (header and data rows weren't in sync);
-    *          greater hacks to the URL/text of a HREF block
-    *   v1.5 - fixed See Also code; remove example numbers from text; format changes
-    *          to the viewable HTML output; change asc to cxc in HREF blocks
-    *   v1.4 - output back to ahelp/foo.html
-    *   v1.3 - reworked the LINE handling (now a pull approach from SYNTAX) +
-    *          output now to ahelp/foo/index.html not ahelp/foo.html [format=web]
-    *   v1.2 - reworked: still needs work before usable
-    *   v1.1 - original version (from /data/da/Docs/ahelp2html/)
     * 
-    * We have two versions/flavours of HTML output:
-    *   a) HTML for CIAO web page (http://cxc.harvard.edu/ciao/ahelp/foo.html)
-    *   b) HTML used to create PDF for CIAO web site using htmldoc
-    *      (page not seen by users; in fact it's deleted after PDF are created
-    *       but that's external to this stylesheet)
-    *   
     * The stylesheet produces a text output - to STDOUT - listing the files it
-    * has created (it uses xsl:document to create the HTML files).
+    * has created (it uses xsl:document to create the HTML files). This is
+    * because it used to create two different versions of the file: one for
+    * the web site and a temporary one for use in generating PDF files. The
+    * latter is no longer produced but we leave the text output for now.
     *   
     * User (ie by the stylesheet processor) defineable parameters:
     *  . type - string, required
@@ -53,13 +21,12 @@
     *      determines where the HTML files are created
     *      trial is a "developer only" value
     *
-    *  . hardcopy - integer, optional, default=0
-    *    if 0 then create the "softcopy" version, if 1 then the "hardcopy"
-    *    version.
-    *
     *  . urlbase - string, required
     *    base URL of page [ie full URL without the trailing foo.html]
-    *    (used when creating the hardcopy versions). Must end in a '/'
+    *    Must end in a '/'.
+    *    NOTE: THIS MAY NO LONGER BE NEEDED NOW WE DO NOT GENERATE PDF
+    *      VERSIONS (UNLESS WE WANT TO ADD IT TO THE HTML AND HIDE IT
+    *      FROM USERS USING CSS?)
     *
     *  . updateby - string, required
     *    name of person publishing the page (output of whoami is sufficient)
@@ -103,13 +70,6 @@
     *
     *
     * Notes:
-    *  . As of CIAO 3.1 we have separated out the creation of the soft and
-    *    hardcopy versions - ie you need to run the stylesheet twice and set
-    *    the hardcopy flag to 1 to get the 'hardcopy' version. This is
-    *    less efficient but it simplifies the stylesheets (and should make it
-    *    simpler when we get to the point we can finally stop producing the
-    *    hardcopy/PDF versions)
-    *
     *  . we make use of EXSLT functions for date/time
     *    (see http://www.exslt.org/). 
     *    Actually, could have used an input parameter to do this
@@ -147,7 +107,6 @@
   <xsl:strip-space elements="SYNTAX PARA"/>
 
   <!--* parameters to be set by stylesheet processor *-->
-  <xsl:param name="hardcopy" select="0"/>
 
   <xsl:param name="cssfile"/>
   <xsl:param name="cssprintfile"/>
@@ -293,30 +252,7 @@
 
     <!--* end of checks *-->
 
-    <!--*
-        * what pages do we create?
-        *-->
-
-    <xsl:choose>
-      <!--* pages for the web site (softcopy) *-->
-      <xsl:when test="$hardcopy = '0'">
-	<xsl:apply-templates name="cxchelptopics" mode="make-viewable"/>
-      </xsl:when>
-
-      <!--* the version from which we create the PDF *-->
-      <xsl:when test="$hardcopy = '1'">
-	<xsl:apply-templates name="cxchelptopics" mode="make-hardcopy"/>
-      </xsl:when>
-
-      <xsl:otherwise>
-	<xsl:message terminate="yes">
- Error:
-   Unrecognised value for hardcopy parameter: '<xsl:value-of select="$hardcopy"/>'
-   Should be 0 or 1
-
-	</xsl:message>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:apply-templates name="cxchelptopics" mode="make-viewable"/>
 
     <!--* and that's it *-->
 
