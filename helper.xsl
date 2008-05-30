@@ -4,6 +4,7 @@
 <!--* 
     * Recent changes:
     * 2008 May 30 DJB Removed generation of PDF links in header/footer
+    *   except for threads
     * 2008 Apr 18 ECG: added dictionary_onepage as an allowed-pdf
     * 2008 Mar 13 ECG
     *  added cscdb as an allowed-pdf
@@ -46,7 +47,8 @@
       * used to determine whether the site is valid
       *
       * used to determine whether or not to add PDF links to header/footer
-      * - see add-header/add-footer
+      * - see add-header/add-footer. Will be removed once we convert
+      *   threads to the new figure environment.
       *
       * used to determine whether a download type is recognised
       * (to catch user error rather than any real need to restrict the types)
@@ -56,7 +58,7 @@
       * the spaces around each root name are important for the simple checking we do
       * - should these be node sets rather than strings?
       *-->
-  <xsl:variable name="allowed-pdf" select="' page faq dictionary dictionary_onepage bugs register threadindex thread cscdb '"/>
+  <xsl:variable name="allowed-pdf" select="' thread '"/>
   <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc '"/>
   <xsl:variable name="allowed-download-types" select="' solaris linux6 linux8 fc4 fc7 osx osx_ppc osx_intel caldb atomdb '"/>
 
@@ -442,14 +444,14 @@
       * used in two places, the leading "internal-" in the template name
       * indicates that it's only meant to be used deep within other templates
       *
-      * This is now an error as we no longer create these PDF pages. Left
-      * in until I am sure all uses have been correctly removed.
+      * Can be removed once we clean up the threads.
       *-->
   <xsl:template name="internal-add-hardcopy-links">
+<!--
     <xsl:message terminate="yes">
  ERROR: internal-add-hardcopy-links has been called
     </xsl:message>
-<!--
+-->
     <xsl:param name="name"  select="''"/>
 
     <xsl:if test="$name = ''">
@@ -461,7 +463,7 @@
     Hardcopy (PDF):
     <a title="PDF (A4 format) version of the page" href="{$name}.a4.pdf">A4</a> |
     <a title="PDF (US Letter format) version of the page" href="{$name}.letter.pdf">Letter</a>
--->
+
   </xsl:template> <!--* name=internal-add-hardcopy-links *-->
 
   <!--*
@@ -538,8 +540,7 @@
       </xsl:if>
     </div>
 
-    <!--* add links to PDF files - WHICH WE NOW REMOVE *-->
-<!--
+    <!--* add links to PDF files - WHICH WE ARE REMOVING *-->
     <xsl:if test="$site != 'icxc' and contains($allowed-pdf,concat(' ',$root,' '))">
       <div class="topbar">
 	<div class="pdfbar">
@@ -549,7 +550,6 @@
 	</div>
       </div>
     </xsl:if>
--->
 
   </xsl:template> <!--* name=add-header *-->
 
@@ -632,9 +632,8 @@
     <!--* add the "standard" banner *-->
     <xsl:variable name="root" select="name(//*)"/>
 
-    <!--* add links to PDF files - WHICH WE NOW REMOVED *-->
+    <!--* add links to PDF files - WHICH WE ARE NOW REMOVING *-->
     <div class="bottombar">
-<!--
       <xsl:if test="$site != 'icxc' and contains($allowed-pdf,concat(' ',$root,' '))">
 	<div>
 	  <xsl:call-template name="internal-add-hardcopy-links">
@@ -642,7 +641,6 @@
 	  </xsl:call-template>
 	</div>
       </xsl:if>
--->
       <div>Last modified: <xsl:value-of select="$lastmod"/></div>
     </div>
 
