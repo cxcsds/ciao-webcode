@@ -485,6 +485,7 @@
   <xsl:template name="add-header">
     <xsl:param name="name"  select="''"/>
 
+    <!--* TODO: invert the logic of this check once we remove the PDF support in threads *-->
     <xsl:if test="$name = ''">
       <xsl:message terminate="yes">
   Internal Error: add-header called with no name attribute
@@ -623,6 +624,7 @@
   <xsl:template name="add-footer">
     <xsl:param name="name"  select="''"/>
 
+    <!--* TODO: invert the logic of this check once we remove the PDF support in threads *-->
     <xsl:if test="$name = ''">
       <xsl:message terminate="yes">
   Internal Error: add-footer called with no name attribute

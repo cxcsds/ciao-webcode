@@ -4,21 +4,13 @@
 <!--* 
     * Create the thread index pages - site agnostic
     *
-    * ***NOTE*** - hardcopy code could be made more modular (lots of repeated stuff)
-    *
     * Recent changes:
+    * 2008 May 30 DJB Removed generation of PDF version
+    *
     * 2007 Oct 19 DJB
     *    depth parameter is now a global, no need to send around
     *    also changed a few name attributes of xsl:apply-template nodes
     *    to select attributes (why hasn't this caused a problem previously?)
-    *   v1.7 - We are no called with hardcopy=0 or 1 and this determines
-    *          the type of the file created (CIAO 3.1)
-    *   v1.6 - updated to handle head/texttitlepostfix
-    *   v1.5 - added newsfile/newsfileurl parameters + use of globalparams_thread.xsl
-    *   v1.4 - added cssfile parameter
-    *   v1.3 - ensured that type is listed as a parameter here (used in threadindex_common.xsl)
-    *   v1.2 - changed comments from v1.2 - no functional change
-    *   v1.1 - copy of v1.18 of ciao_threadinex.xsl
     *
     *-->
 
@@ -47,7 +39,7 @@
       *   index.html
       *   all.html
       *   <section>.html
-      *   table.html (if datatabel section is present)
+      *   table.html (if datatable section is present)
       *   
       *-->
 
@@ -69,27 +61,12 @@
     </xsl:call-template>
     <!--* end checks *-->
 
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 1">
-	<!--* hardcopy *-->
-	<xsl:apply-templates select="threadindex" mode="make-index-hard"/>
-	<xsl:apply-templates select="threadindex" mode="make-all-hard"/>
-	<xsl:apply-templates select="threadindex/section" mode="make-section-hard"/>
-	<xsl:if test="boolean(//threadindex/datatable)">
-	  <xsl:apply-templates select="threadindex" mode="make-table-hard"/>
-	</xsl:if>
-      </xsl:when>
-
-      <xsl:otherwise>
-	<!--* softcopy *-->
-	<xsl:apply-templates select="threadindex" mode="make-index"/>
-	<xsl:apply-templates select="threadindex" mode="make-all"/>
-	<xsl:apply-templates select="threadindex/section" mode="make-section"/>
-	<xsl:if test="boolean(//threadindex/datatable)">
-	  <xsl:apply-templates select="threadindex" mode="make-table"/>
-	</xsl:if>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:apply-templates select="threadindex" mode="make-index"/>
+    <xsl:apply-templates select="threadindex" mode="make-all"/>
+    <xsl:apply-templates select="threadindex/section" mode="make-section"/>
+    <xsl:if test="boolean(//threadindex/datatable)">
+      <xsl:apply-templates select="threadindex" mode="make-table"/>
+    </xsl:if>
 
   </xsl:template> <!--* match=/ *-->
 

@@ -5,34 +5,16 @@
     * Create the 'live' version of a register page (in HTML version)
     *
     * Recent changes:
+    * 2008 May 30 DJB Removed generation of PDF version
     * 2007 Oct 19 DJB
     *    depth parameter is now a global, no need to send around
-    *  v1.14 - <html> changed to <html lang="en"> following
-    *            http://www.w3.org/TR/2005/WD-i18n-html-tech-lang-20050224/
-    *  v1.13 - removed the regtype variable as no-longer used by the reglink tag
-    *          Moved the reglink tag into this stylesheet as no longer needs to
-    *          be in links.xsl.
-    *  v1.12 - support for calling with hardcopy=0/1
-    *          CIAO 3.1 updates (no longer need to create the _reg form)
-    *  v1.11 - bug fix (type) for v1.10
-    *  v1.10 - support for head/texttitlepostfix parameters
-    *   v1.9 - added maintext anchor
-    *   v1.8 - removing tables from header/footer
-    *   v1.7 - added newsfile/newsfileurl parameters + use of globalparams.xsl
-    *   v1.6 - reorganised header/footer for new look, added cssfile parameter
-    *   v1.5 - ahelpindex support (CIAO 3.0)
-    *   v1.4 - removed xsl-revision/version as pointless
-    *   v1.3 - added support for siteversion parameter
-    *   v1.2 - uses a special 'navbar'
-    *   v1.1 - initial version (based on register.xsl and v1.8 of page.xsl)
     *
     * Variables:
     *  . regtype=data - used by links template in helper.xsl
     *
     * Note:
     *  creates:
-    *    ${pagename}_src.html    hardcopy=0
-    *    ${pagename}.hard.html   hardcopy=1
+    *    ${pagename}_src.html
     *
     * As of CIAO 3.1 we no longer need to create a _reg version of the
     * file, so we have dropped the register.xsl file.
@@ -72,8 +54,7 @@
 
   <!--*
       * top level: create
-      *   ${pagename}_src.html   hardcopy=0
-      *   ${pagename}.hard.html  hardcopy=1
+      *   ${pagename}_src.html
       *
       *-->
   <xsl:template match="/">
@@ -87,15 +68,7 @@
       </xsl:message>
     </xsl:if>
 
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 1">
-	<xsl:apply-templates name="register" mode="make-hardcopy"/>
-      </xsl:when>
-
-      <xsl:otherwise>
-	<xsl:apply-templates name="register" mode="make-live"/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:apply-templates select="register"/>
 
   </xsl:template> <!--* match=/ *-->
 
@@ -103,7 +76,7 @@
       * create: ${pagename}_src.html
       *-->
 
-  <xsl:template match="register" mode="make-live">
+  <xsl:template match="register">
 
     <xsl:variable name="filename"><xsl:value-of select="$head"/>_src.html</xsl:variable>
 
@@ -127,7 +100,7 @@
 	    * a test version or the actual production HTML 
             *-->
 	<xsl:call-template name="add-header">
-	  <xsl:with-param name="name" select="$pagename"/> <!--* PDF's are called pagename.<size>.pdf *-->
+	  <xsl:with-param name="name" select="$pagename"/>
 	</xsl:call-template>
 	<xsl:call-template name="newline"/>
 
@@ -172,48 +145,7 @@
       </html>
 
     </xsl:document>
-  </xsl:template> <!--* match=page mode=make-viewable *-->
-
-  <!--* 
-      * create: <page>.hard.html
-      *-->
-
-  <xsl:template match="register" mode="make-hardcopy">
-
-    <xsl:variable name="filename"><xsl:value-of select="$head"/>.hard.html</xsl:variable>
-
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="us-ascii">
-
-      <!--* we start processing the XML file here *-->
-      <html lang="en">
-
-	<!--* make the HTML head node *-->
-	<xsl:call-template name="add-htmlhead-standard"/>
-
-	<!--* and now the main part of the text *-->
-	<body>
-
-	  <xsl:call-template name="add-hardcopy-banner-top">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	  <!--* do not need to bother with navbar's here as the hardcopy version *-->
-	  <xsl:apply-templates select="text"/>
-      
-	  <xsl:call-template name="add-hardcopy-banner-bottom">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	</body>
-      </html>
-
-    </xsl:document>
-  </xsl:template> <!--* match=register mode=make-hardcopy *-->
+  </xsl:template> <!--* match=register *-->
 
   <!--* note: we process the text so we can handle our `helper' tags *-->
   <xsl:template match="text">

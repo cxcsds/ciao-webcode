@@ -5,14 +5,9 @@
     * Create the bugs HTML page from XML source file
     *
     * Recent changes:
+    * 2008 May 30 DJB Removed generation of PDF version
     * 2007 Oct 19 DJB
     *    depth parameter is now a global, no need to send around
-    *   v1.4 - fixlist takes "ver" and "vername" b.c of Beta releases
-    *   v1.3 - now uses "add-image" template to add an image, changed
-    *	       date tag to have day/month/year attributes
-    *   v1.2 - fixed summary to allow for updated and new tags added
-    *	       manually; added "date" information to summary
-    *   v1.1 - copy of v1.16 of faq.xsl
     *
     *-->
 
@@ -55,20 +50,7 @@
     </xsl:call-template>
 
     <!--* what do we create *-->
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 1">
-	<xsl:if test="$site = 'icxc'">
-	  <xsl:message terminate="yes">
-PROGRAMMING ERROR: site=icxc and hardcopy=1
-	  </xsl:message>
-	</xsl:if>
-	<xsl:apply-templates name="bugs" mode="make-hardcopy"/>
-      </xsl:when>
-      
-      <xsl:otherwise>
-	<xsl:apply-templates name="bugs" mode="make-viewable"/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:apply-templates select="bugs"/>
 
   </xsl:template> <!--* match=/ *-->
 
@@ -76,7 +58,7 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
       * create: <bugs>.html
       *-->
 
-  <xsl:template match="bugs" mode="make-viewable">
+  <xsl:template match="bugs">
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$pagename"/>.html</xsl:variable>
 
@@ -324,7 +306,7 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
 	    
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="name"  select="$pagename"/>
+	  <xsl:with-param name="name" select="$pagename"/>
 	</xsl:call-template>
 
 	<!--* add </body> tag [the <body> is included in a SSI] *-->
@@ -332,187 +314,12 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
       </html>
 
     </xsl:document>
-  </xsl:template> <!--* match=bugs mode=make-viewable *-->
-
-  <!--* 
-      * create: <bugs>.hard.html
-      *-->
-
-  <xsl:template match="bugs" mode="make-hardcopy">
-
-    <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$pagename"/>.hard.html</xsl:variable>
-
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="us-ascii">
-
-      <!--* we start processing the XML file here *-->
-      <html lang="en">
-
-	<!--* make the HTML head node *-->
-	<xsl:call-template name="add-htmlhead-standard"/>
-
-	<!--* and now the main part of the text *-->
-	<body>
-
-	  <xsl:call-template name="add-hardcopy-banner-top">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	  <!--* do not need to bother with navbar's here as the hardcopy version *-->
-
-	      <div align="center">
-	        <h2>
-		  <xsl:value-of select="/bugs/info/title/short"/>
-		</h2>
-	      </div>
-
-	      <!--* add any intro text (often used for scripts) *-->
-	      <xsl:if test="intro/note">
-	        <xsl:apply-templates select="intro/note"/>
-	      </xsl:if>
-
-	      <xsl:if test="not(//buglist)">
-
-		<p>
-		  There are currently no known bugs.
-		</p>
-
-	      </xsl:if>
-
-	      <xsl:if test="//fixlist">
-		  <p>
-		    A list of bugs fixed in CIAO <xsl:value-of
-		    select="//fixlist/@vername"/> is included at the end
-		    of this document.
-		  </p>		  
-	      </xsl:if>
-
-	      <xsl:if test="//scriptlist">
-		  <p>
-		    A list of bugs fixed in version <xsl:value-of
-		    select="//scriptlist/@ver"/> of this script is
-		    available. 
-		  </p>		  
-	      </xsl:if>
-
-              <xsl:if test="(intro/note) or (//fixlist) or (//scriptlist)">
-                <hr/>
-              </xsl:if>
-
-	      <!--// end front materials //-->
-
-	      <xsl:if test="//buglist/entry[@cav]">
-
-	        <h2>Caveats</h2>
-
-		<ol>
-		  <xsl:apply-templates select="//buglist/entry[@cav]" mode="main"/>
-		</ol>
-
-		<hr/>
-	      </xsl:if>
-
-	      <xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
-
-	        <h2>Bugs</h2>
-
-	      <xsl:choose>
-	        <xsl:when test="//buglist/subbuglist">
-		  <xsl:apply-templates select="//buglist/subbuglist" mode="main"/>
-	        </xsl:when>
-
-		<xsl:otherwise>
-		  <ol>
-		    <xsl:apply-templates select="//buglist/entry[not(@cav)]" mode="main"/>
-		  </ol>
-		</xsl:otherwise>
-	      </xsl:choose>
-
-	      </xsl:if>
-
-
-	      <!--// add "fixed in CIAO x.x" section if applicable //-->
-	      <xsl:if test="//fixlist">
-
-	        <xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
-	          <hr/>
-		</xsl:if>
-
-		<h2>
-		  <a>
-		    <xsl:attribute name="name">
-		      <xsl:value-of select="concat('ciao',//fixlist/@ver)"/>
-		    </xsl:attribute>
-		    
-		    <xsl:text>Bugs fixed in CIAO </xsl:text>
-		      <xsl:value-of select="//fixlist/@vername"/>
-		  </a>
-		</h2>
-
-		<p>
-		  The following is a list of bugs that were fixed
-		  in the CIAO <xsl:value-of select="//fixlist/@vername"/>
-		  software release.
-		</p>
-
-		<ol>
-		  <xsl:apply-templates select="//fixlist/entry" mode="main"/>
-		</ol>
-	      </xsl:if>
-	      <!--// end "fixed in CIAO x.x" section //-->
-
-	      <!--// add "fixed in version x.x of the script" section if applicable //-->
-	      <xsl:if test="//scriptlist">
-
-	        <xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist) or (//fixlist)">
-	          <hr/>
-		</xsl:if>
-
-		<h2>
-		  <a>
-		    <xsl:attribute name="name">
-		      <xsl:value-of select="concat('ciao',//scriptlist/@ver)"/>
-		    </xsl:attribute>
-		    
-		    <xsl:text>Bugs fixed in version </xsl:text>
-		      <xsl:value-of select="//scriptlist/@ver"/>
-		    <xsl:text> of this script</xsl:text>
-
-		  </a>
-		</h2>
-
-		<p>
-		  The following is a list of bugs that were fixed
-		  in version <xsl:value-of select="//scriptlist/@ver"/>
-		  of this script.
-		</p>
-
-		<ol>
-		  <xsl:apply-templates select="//scriptlist/entry" mode="main"/>
-		</ol>
-	      </xsl:if>
-	      <!--// end "fixed in version x.x" section //-->
-
-
-	  <xsl:call-template name="add-hardcopy-banner-bottom">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	</body>
-      </html>
-
-    </xsl:document>
-  </xsl:template> <!--* match=bugs mode=make-hardcopy *-->
+  </xsl:template> <!--* match=bugs *-->
 
   <!--* note: we process the text so we can handle our `helper' tags *-->
   <xsl:template match="text">
    <xsl:apply-templates/>
   </xsl:template>
-
 
   <!-- subbuglist table of contents template -->
   <xsl:template match="subbuglist" mode="toc">

@@ -6,6 +6,8 @@
     *
     * Recent changes:
     *
+    * 2008 May 30 DJB Removed generation of PDF version
+    *
     * 2008 May 01 ECG: revert: entries page needs to be alpha by
     *		       "title" to match TOC
     *
@@ -15,28 +17,6 @@
     *
     * 2008 Mar 13 ECG: CSC dictionary is one index page and one long 
     *		       entries page
-    * 2007 Oct 19 DJB
-    *    depth parameter is now a global, no need to send around
-    *  v1.16 - sort on case-insensitive titles so that index is
-    *	       alphabetical
-    *  v1.15 - hyphen added to (head/text)titlepostfix instances
-    *  v1.14 - <html> changed to <html lang="en"> following
-    *            http://www.w3.org/TR/2005/WD-i18n-html-tech-lang-20050224/
-    *  v1.13 - We are now called with hardopy=0 or 1 and this determines
-    *          the type of the file created (CIAO 3.1)
-    *  v1.12 - support for head/texttitlepostfix parameters
-    *  v1.11 - added maintext anchor
-    *  v1.10 - removing tables from header/footer
-    *   v1.9 - added newsfile/newsfileurl parameters + use of globalparams.xsl
-    *   v1.8 - re-organisation of layout for CIAO 3.0
-    *          added cssfile parameter
-    *   v1.7 - ahelpindex support (CIAO 3.0)
-    *   v1.6 - added support for siteversion parameter
-    *   v1.5 - fixed pdf links (now to corrct version, not the index)
-    *   v1.4 - introduced the external parameter updateby
-    *   v1.3 - removed '[A4,L]' links from index
-    *   v1.2 - initial version
-    *   v1.1 - copy of v1.2 of faq.xsl
     *
     *-->
 
@@ -75,7 +55,6 @@
       * top level: create
       *   index.html
       *   individual pages
-      *   hardcopy versions of above
       *
       *-->
   <xsl:template match="/">
@@ -96,20 +75,8 @@
       </xsl:message>
     </xsl:if>
 
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 1">
-	<!--* hardcopy *-->
-	<xsl:apply-templates select="dictionary_onepage" mode="make-hardcopy"/>
-	<xsl:apply-templates select="//entries" mode="make-hardcopy"/>
-      </xsl:when>
-
-      <xsl:otherwise>
-	<!--* softcopy *-->
-	<xsl:apply-templates select="dictionary_onepage" mode="make-viewable"/>
-	<xsl:apply-templates select="//entries" mode="make-viewable"/>
-      </xsl:otherwise>
-
-    </xsl:choose>
+    <xsl:apply-templates select="dictionary_onepage"/>
+    <xsl:apply-templates select="//entries"/>
 
   </xsl:template> <!--* match=/ *-->
 
@@ -120,7 +87,7 @@
   <xsl:variable name="ucletters" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
   <xsl:variable name="lcletters" select="'abcdefghijklmnopqrstuvwxyz'"/>
 
-  <xsl:template match="dictionary_onepage" mode="make-viewable">
+  <xsl:template match="dictionary_onepage">
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>index.html</xsl:variable>
 
@@ -180,59 +147,13 @@
       </html>
 
     </xsl:document>
-  </xsl:template> <!--* match=dictionary_onepage mode=make-viewable *-->
+  </xsl:template> <!--* match=dictionary_onepage *-->
 
   <!--* 
-      * create: index.hard.html
+      * create: dictionary entries page
       *-->
 
-  <xsl:template match="dictionary_onepage" mode="make-hardcopy">
-
-    <xsl:variable name="filename"><xsl:value-of select="$install"/>index.hard.html</xsl:variable>
-    <xsl:variable name="url"><xsl:value-of select="$urlhead"/></xsl:variable>
-
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="us-ascii">
-
-      <!--* we start processing the XML file here *-->
-      <html lang="en">
-
-	<!--* make the HTML head node *-->
-	<xsl:call-template name="add-htmlhead-standard"/>
-
-	<!--* and now the main part of the text *-->
-	<body>
-
-	  <xsl:call-template name="add-hardcopy-banner-top">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	  <!--* add the intro text *-->
-	  <xsl:apply-templates select="intro"/>
-	      
-	  <!--* create the list of entries *--> 
-	  <xsl:apply-templates select="entries" mode="toc"/>
-
-	  <xsl:call-template name="add-hardcopy-banner-bottom">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	</body>
-      </html>
-
-    </xsl:document>
-  </xsl:template> <!--* match=faq mode=make-hardcopy *-->
-
-
-  <!--* 
-      * create: dictionary entries page (viewable)
-      *-->
-
-  <xsl:template match="entries" mode="make-viewable">
+  <xsl:template match="entries">
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/>entries.html</xsl:variable>
 
@@ -318,80 +239,7 @@
       </html>
 
     </xsl:document>
-  </xsl:template> <!--* match=dictionary mode=make-viewable *-->
-
-
-  <!--* 
-      * create: entries.hard.html
-      *-->
-
-  <xsl:template match="entries" mode="make-hardcopy">
-
-    <xsl:variable name="filename"><xsl:value-of select="$install"/>entries.hard.html</xsl:variable>
-    <xsl:variable name="url"><xsl:value-of select="$urlhead"/></xsl:variable>
-
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="us-ascii">
-
-      <!--* we start processing the XML file here *-->
-      <html lang="en">
-
-	<!--*
-            * make the HTML head node
-            *
-            * note: need to supply the text for the page title
-            *       because it's not visible to add-htmlhead-standard
-            *	    from this level of the document
-	    *
-            *-->
-
-	<xsl:call-template name="add-htmlhead">
-	  <xsl:with-param name="title">Dictionary Entries</xsl:with-param>
-	</xsl:call-template>
-
-	<!--* and now the main part of the text *-->
-	<body>
-
-	  <xsl:call-template name="add-hardcopy-banner-top">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	      <div align="center"><h1>CSC Dictionary Entries</h1></div>
-	      
-	      <hr/>
-	  
-	    <xsl:for-each select="entry">
-	      <xsl:sort select="translate(title, $lcletters, $ucletters)"/>
-
-	      <!--* entry title *-->
-	      <a name="{@id}"/>
-	      <h2><xsl:apply-templates select="title"/></h2>
-
-	      <!--* add the explanation *-->
-	      <xsl:apply-templates select="text"/>
-
-	      <div class="qlinkbar">
-	        Return to: <a href=".">Dictionary index</a>
-	      </div>
-	  
-	      <br/><hr/>
-	    </xsl:for-each>
-
-
-	  <xsl:call-template name="add-hardcopy-banner-bottom">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	</body>
-      </html>
-
-    </xsl:document>
-  </xsl:template> <!--* match=faq mode=make-hardcopy *-->
-
+  </xsl:template> <!--* match=dictionary *-->
 
   <!--*
       * Create the list of dictionary entries

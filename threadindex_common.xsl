@@ -3,61 +3,10 @@
 
 <!--* 
     * Recent changes:
+    * 2008 May 30 DJB Removed generation of PDF version
     * 2008 Apr 29 ECG - adjust '|' around thread quicklinks
     * 2007 Oct 19 DJB
     *    depth parameter is now a global, no need to send around
-    *  v1.35 - only create "Download Data" link in thread datatable if
-    *	       datasets tag exists
-    *  v1.34 - only create thread datatable if the tag exists
-    *  v1.33 - ??
-    *  v1.32 - hyphen added to (head/text)titlepostfix instances
-    *  v1.31 - allow "text" tag in "sublist" for more description in  
-    *	       thread index; needed for ispec section reorganization
-    *  v1.30 - related to v1.28 edit: added "xsl:when" construct so
-    *	       that link is correct in CIAO and Sherpa sites
-    *  v1.29 - removed "xsl:if" that is no longer necessary b.c of
-    *	       v1.28 edit
-    *  v1.28 - removed code that created links to Provisional Data
-    *	       Retrieval Interface in datasets table.  Replaced
-    *	       "Archive search form" link with link to "How to
-    *	       Download Chandra Data from the Archive" thread. 
-    *  v1.27 - <html> changed to <html lang="en"> following
-    *          http://www.w3.org/TR/2005/WD-i18n-html-tech-lang-20050224/
-    *  v1.26 - adds a br to the end of a sublist if followed by an item
-    *  v1.25 - sublists can now nest (not a 100% brilliant design)
-    *  v1.24 - thread links now have the threadlink class
-    *  v1.23 - improve new/updated text in headers of index.html
-    *          (removed actual numbers of threads)
-    *          Added id="threaddatatable" to the data table
-    *  v1.22 - changed layout of text; remove dl and use h3/div's instead
-    *          and some changes to the list-handling code
-    *  v1.21 - added class=qlinkbar to the 'quick links' div's
-    *  v1.20 - scripts: 'See also:' -> 'Uses:', no longer link to scripts
-    *  v1.19 - oops, missed a few cases for the 1.18 fix
-    *  v1.18 - added an anchor for the 'skip nav. bar' link
-    *  v1.17 - updated to handle head/texttitlepostfix
-    *  v1.16 - minor fix to not use p../p when text block contains one
-    *  v1.15 - removed use of tables where easy
-    *          "all" page now uses a dl rather than ul to list sections
-    *  v1.14 - re-organisation of layout for CIAO 3.0
-    *  v1.13 - stopped adding 2000 to year from threads if > 1999 (year 3999 problem)
-    *  v1.12 - no need for separate css style as a.tablehead:link now in main ciao.css
-    *  v1.11 - added " - " between section title and # of new/updated threads
-    *  v1.10 - oops: forgot to add "Updated" to the text for updated threads
-    *   v1.9 - The initial index page no-longer lists the actual new/updated
-    *          threads, just that there are some.
-    *   v1.8 - changing titles of pages to include a WHATS NEW link
-    *   v1.7 - added support for synopsis block in sections
-    *          more code cleanups/consolidation
-    *   v1.6 - more consolidation - moved page-creation code from *_threadindex.xsl
-    *          tidied up quick link (added ||)
-    *          removed separate ciao/sherpa_threadindex.xsl stylesheets but this
-    *          doesn't affect this stylesheet (at the moment)
-    *   v1.5 - consolidation of "quicklink" code from ciao/sherpa pages
-    *          it can now include links to "external" thread pages
-    *   v1.3/4 - typo fixes
-    *   v1.2 - made links to script be aware of the site
-    *   v1.1 - was v1.4 of ciao_threadindex_common.xsl
     *
     * process the sections of the thread index for the CIAO, ChIPS, and Sherpa pages
     *
@@ -585,60 +534,6 @@
     </xsl:document>
   </xsl:template> <!--* match=section mode=make-section *-->
 
-  <!--* create the hardcopy versions of the individual section pages *-->
-  <xsl:template match="section" mode="make-section-hard">
-
-    <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select='id/name'/>.hard.html</xsl:variable>
-    <xsl:variable name="version" select="/threadindex/version"/>
-
-    <xsl:variable name="url"><xsl:value-of select="$urlhead"/><xsl:value-of select='id/name'/>.html</xsl:variable>
-    
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-    
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html" 
-      version="4.0" encoding="us-ascii">
-
-      <!--* we start processing the XML file here *-->
-      <html lang="en">
-
-	<!--* make the HTML head node *-->
-	<xsl:call-template name="add-htmlhead">
-	  <xsl:with-param name="title"><xsl:value-of select="id/title"/> Threads<xsl:value-of select="concat(' - ',$headtitlepostfix)"/></xsl:with-param>
-	</xsl:call-template>
-
-	<!--* and now the main part of the text *-->
-	<body>
-
-	  <xsl:call-template name="add-hardcopy-banner-top">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	  <!--* set up the title block of the page *-->
-	  <xsl:call-template name="add-threadindex-title">
-	    <xsl:with-param name="title" select="id/title"/>
-	    <xsl:with-param name="hardcopy" select="1"/>
-	  </xsl:call-template>
-
-	  <!--* do we have a synopsis? *-->
-	  <xsl:apply-templates select="synopsis" mode="section-page"/>
-
-	  <!--* process the section *-->
-	  <xsl:apply-templates select="." mode="section-page"/>
-
-	  <br/><br/>
-
-	  <xsl:call-template name="add-hardcopy-banner-bottom">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	</body>
-      </html>
-
-    </xsl:document>
-  </xsl:template> <!--* match=section mode=make-section-hard *-->
-
   <!--*
       * create: table.html (the data table page)
       **-->
@@ -703,54 +598,6 @@
 
     </xsl:document>
   </xsl:template> <!--* match=threadindex mode=make-table *-->
-
-  <!--*
-      * create: table.hard.html
-      **-->
-  <xsl:template match="threadindex" mode="make-table-hard">
-
-    <xsl:variable name="filename"><xsl:value-of select="$install"/>table.hard.html</xsl:variable>
-    <xsl:variable name="version" select="/threadindex/version"/>
-
-    <xsl:variable name="url"><xsl:value-of select="$urlhead"/>table.html</xsl:variable>
-    
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-    
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html" 
-      version="4.0" encoding="us-ascii">
-
-      <!--* we start processing the XML file here *-->
-      <html lang="en">
-
-	<!--* make the HTML head node *-->
-	<xsl:call-template name="add-htmlhead">
-	  <xsl:with-param name="title">Data for Threads<xsl:value-of select="concat(' - ',$headtitlepostfix)"/></xsl:with-param>
-	</xsl:call-template>
-
-	<!--* and now the main part of the text *-->
-	<body>
-
-	  <xsl:call-template name="add-hardcopy-banner-top">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	  <!-- set up the title block of the page -->
-	  <h1 align="center">Data for CIAO <xsl:value-of select="$siteversion"/> Science Threads</h1>
-
-	  <!--* add the data table *-->
-	  <xsl:call-template name="make-datatable"/>
-
-	  <xsl:call-template name="add-hardcopy-banner-bottom">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	</body>
-      </html>
-
-    </xsl:document>
-  </xsl:template> <!--* match=threadindex mode=make-table-hard *-->
 
   <!--* 
       * create: index.html 
@@ -841,84 +688,6 @@
   </xsl:template> <!--* match=threadindex mode=make-index *-->
 
   <!--* 
-      * create: index.hard.html 
-      *-->
-  <xsl:template match="threadindex" mode="make-index-hard">
-
-    <xsl:variable name="filename"><xsl:value-of select="$install"/>index.hard.html</xsl:variable>
-    <xsl:variable name="version" select="/threadindex/version"/>
-
-    <xsl:variable name="url"><xsl:value-of select="$urlhead"/>index.html</xsl:variable>
-    
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-    
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html" 
-      version="4.0" encoding="us-ascii">
-
-      <!--* we start processing the XML file here *-->
-      <html lang="en">
-
-	<!--* make the HTML head node *-->
-	<xsl:call-template name="add-htmlhead">
-	  <xsl:with-param name="title"><xsl:if test="$site='sherpa'">Sherpa </xsl:if>Threads<xsl:value-of select="concat(' - ',$headtitlepostfix)"/></xsl:with-param>
-	</xsl:call-template>
-
-	<!--* and now the main part of the text *-->
-	<body>
-
-	  <xsl:call-template name="add-hardcopy-banner-top">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	  <!-- set up the title block of the page -->
-	  <xsl:call-template name="add-threadindex-title">
-	    <xsl:with-param name="hardcopy" select="1"/>
-	  </xsl:call-template>
-
-	  <!--* include the header text *-->
-	  <xsl:apply-templates select="header"/>
-
-	  <div class="threadindex">
-	    <div class="threadsection">
-	      <h3><a href="all.html"><em>All</em> threads</a></h3>
-	      <div class="threadsynopsis">
-		<p>
-		  A list of all the threads on one page.
-		</p>
-	      </div>
-	    </div>
-		
-	    <!--* process the sections in the index *-->
-	    <xsl:apply-templates select="section" mode="index-page"/>
-	    
-	    <!--* do we have a data table? *-->
-	    <xsl:if test="boolean(//threadindex/datatable)">
-	      <div class="threadsection">
-		<h3><a href="table.html">Datasets</a></h3>
-		<div class="threadsynopsis">
-		  <p>
-		    Links to the datasets used in the threads.
-		  </p>
-		</div>
-	      </div>
-	    </xsl:if>
-	    
-	  </div>
-	  <br/>
-
-	  <xsl:call-template name="add-hardcopy-banner-bottom">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	</body>
-      </html>
-
-    </xsl:document>
-  </xsl:template> <!--* match=threadindex mode=make-index-hard *-->
-
-  <!--* 
       * create: all.html 
       *-->
   <xsl:template match="threadindex" mode="make-all">
@@ -985,69 +754,12 @@
     </xsl:document>
   </xsl:template> <!--* match=threadindex mode=make-all *-->
 
-  <!--* 
-      * create: all.hard.html 
-      *-->
-  <xsl:template match="threadindex" mode="make-all-hard">
-
-    <xsl:variable name="filename"><xsl:value-of select="$install"/>all.hard.html</xsl:variable>
-    <xsl:variable name="version" select="/threadindex/version"/>
-
-    <xsl:variable name="url"><xsl:value-of select="$urlhead"/>all.html</xsl:variable>
-    
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-    
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html" 
-      version="4.0" encoding="us-ascii">
-
-      <!--* we start processing the XML file here *-->
-      <html lang="en">
-
-	<!--* make the HTML head node *-->
-	<xsl:call-template name="add-htmlhead">
-	  <xsl:with-param name="title">All Threads<xsl:value-of select="concat(' - ',$headtitlepostfix)"/></xsl:with-param>
-	</xsl:call-template>
-
-	<!--* and now the main part of the text *-->
-	<body>
-
-	  <xsl:call-template name="add-hardcopy-banner-top">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	  <!-- set up the title block of the page -->
-	  <xsl:call-template name="add-threadindex-title">
-	    <xsl:with-param name="hardcopy" select="1"/>
-	  </xsl:call-template>
-	  
-	  <!--* process the sections in the index *-->
-	  <div class="threadindex">
-	    <xsl:apply-templates select="section" mode="all-page"/>
-	  </div>
-
-	  <br/><br/>
-
-	  <!--* add the data table *-->
-	  <xsl:call-template name="make-datatable"/>
-
-	  <xsl:call-template name="add-hardcopy-banner-bottom">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	</body>
-      </html>
-
-    </xsl:document>
-  </xsl:template> <!--* match=threadindex mode=make-all-hard *-->
-
   <!--*
       * create the start of an index page
       *
       * Parameters:
       *   title - title of page (appears in head block so should be concise)
-      *   name  - name of page (w/out .html); pdf files called $name.[a4|letter].pdf
+      *   name  - name of page (w/out .html)
       *
       * NOTE:
       *  we *NO LONGER* create a html tag but we do create a BODY tag; ugh!
@@ -1056,7 +768,7 @@
     <xsl:param name="title" select="'Threads'"/>
     <xsl:param name="name"  select="''"/>
 
-    <!--* safety check *-->
+    <!--* TODO: remove the name parameter when remove PDF suppport from threads *-->
     <xsl:if test="$name=''">
       <xsl:message terminate="yes">
  Error: add-threadindex-start called with no name attribute
@@ -1252,13 +964,9 @@
       *   title, string, optional
       *     title to use, otherwise guesses one bnased on the site
       * 
-      *   hardcopy, 0 or 1, defaults to 0
-      *     is this a hardcopy (PDF) or web page?
-      * 
       *-->
   <xsl:template name="add-threadindex-title">
     <xsl:param name="title" select="''"/>
-    <xsl:param name="hardcopy" select="0"/>
 
     <h1 align="center"><xsl:choose>
 	<xsl:when test="$title = ''"><xsl:choose>
@@ -1270,10 +978,9 @@
       </xsl:choose></h1>
 
     <!--* create the list of section links *-->
-    <xsl:if test="$hardcopy = 0">
-      <xsl:call-template name="add-whatsnew-link"/>
-      <xsl:call-template name="add-threadindex-quicklink"/>
-    </xsl:if>
+    <xsl:call-template name="add-whatsnew-link"/>
+    <xsl:call-template name="add-threadindex-quicklink"/>
+
   </xsl:template> <!--* name=add-threadindex-title *-->
 
   <!--*
