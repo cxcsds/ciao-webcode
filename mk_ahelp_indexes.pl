@@ -42,6 +42,7 @@
 #  16 Oct 07 DJB Removed support for type=dist and newsfile[url]/
 #                watchouturl params as not needed for ahelp files.
 #  17 Oct 07 DJB Removed support for xsltproc tool
+#  30 May 08 DJB Removed PDF generation
 #
 # To Do:
 #  - 
@@ -67,11 +68,10 @@ use CIAODOC qw( :util :xslt :cfg );
 #
 
 ## set up variables that are also used in CIAODOC
-use vars qw( $configfile $verbose $group $htmldoc $site );
+use vars qw( $configfile $verbose $group $site );
 $configfile = "$FindBin::Bin/config.dat";
 $verbose = 0;
 $group = "";
-$htmldoc = "";
 $site = "";
 
 ## Variables
@@ -120,13 +120,6 @@ my $ostype = get_ostype;
 # check the options
 my $config = parse_config( $configfile );
 dbg "Parsed the config file";
-
-# Get the names of executable/library locations
-#
-$htmldoc = get_config_main_type( $config, "htmldoc", $ostype );
-
-check_executable_runs "htmldoc", $htmldoc, "--version";
-dbg "Found executable/library paths";
 
 # most of the config stuff is parsed below, but we need these two here
 my $site_config;
@@ -195,7 +188,6 @@ dbg "  outdir=$outdir";
 dbg "  stylesheets=$stylesheets";
 dbg "  ahelpindex=$ahelpindex";
 dbg " ---";
-dbg "  htmldoc=$htmldoc";
 
 # start work
 #
@@ -271,9 +263,8 @@ my @s = qw( navbar_ahelp_index.incl index_alphabet.html index_context.html );
 my @h = qw( index_alphabet index_context );
 
 my @soft = map { "${outdir}${_}"; } @s;
-my @hard = map { "${outdir}${_}.hard.html"; } @h;
 
-foreach my $page ( @soft, @hard ) {
+foreach my $page ( @soft ) {
     dbg " ---> deleting (if it exists) $page";
     myrm( $page );
 }
@@ -286,10 +277,10 @@ my %paramlist = (
 		 @extra
 		);
 
-translate_file_hardcopy "${stylesheets}ahelp_index.xsl", $ahelpindex, \%paramlist;
+translate_file "${stylesheets}ahelp_index.xsl", $ahelpindex, \%paramlist;
 
 # success or failure?
-foreach my $page ( @soft, @hard ) {
+foreach my $page ( @soft ) {
     #die "Error: transformation did not create $page\n"
     #  unless -e $page;
     unless ( -e $page ) {
@@ -298,12 +289,6 @@ foreach my $page ( @soft, @hard ) {
     }
     mysetmods( $page );
     dbg("Created: $page");
-}
-
-# create the hardcopy pages [if required]
-foreach my $page ( @hard ) {
-    $page =~ s/^.*\/([^\/].+)\.hard\.html$/$1/;
-    create_hardcopy( $outdir, $page );
 }
 
 print "Try page(s) at: ${outurl}$dhead\n";
