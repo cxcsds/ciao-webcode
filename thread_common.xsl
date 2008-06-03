@@ -1751,10 +1751,23 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
   <!--*
       * Display the thread title in its own block,
       * with ancillary information (at present what language this is for)
+      *
+      * We also include the CXC logo so that it is included in print
+      * media output, and explicitly excluded from screen media versions.
       *-->
   <xsl:template name="add-thread-title">
     <div align="center">
       <h1><xsl:value-of select="$threadInfo/title/long"/></h1>
+
+      <div class="printmedia">
+	<img class="cxclogo" alt="[CXC Logo]">
+	  <xsl:attribute name="src"><xsl:choose>
+	    <xsl:when test="$site = 'pog'">../cxc-logo.gif</xsl:when>
+	    <xsl:when test="$site = 'ciao'">../../imgs/cxc-logo.gif</xsl:when>
+	    <xsl:otherwise>/ciao/imgs/cxc-logo.gif</xsl:otherwise>
+	  </xsl:choose></xsl:attribute>
+	</img>
+      </div>
 
       <h3><xsl:choose>
 	<xsl:when test="$site = 'ciao'">CIAO <xsl:value-of select="$siteversion"/> Science Threads</xsl:when>
@@ -2221,7 +2234,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	      </img>
 	    </xsl:variable>
 
-	    <div class="displaymedia">
+	    <div class="screenmedia">
 	      <xsl:choose>
 		<xsl:when test="$has-bmap-thumb">
 		  <a>
@@ -2230,7 +2243,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 		      <xsl:when test="$has-bmap-hard"><xsl:value-of select="$bmap-hard"/></xsl:when>
 		      <xsl:otherwise>
 			<xsl:message terminate="yes">
- ERROR: internal error choosing image; apparently no images to use (displaymedia)
+ ERROR: internal error choosing image; apparently no images to use (screenmedia)
 			</xsl:message>
 		      </xsl:otherwise>
 		    </xsl:choose></xsl:attribute>
@@ -2241,9 +2254,22 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 		  <xsl:copy-of select="$img-code"/>
 		</xsl:otherwise>
 	      </xsl:choose>
+
+	      <!--*
+		  * Process the images to create a set of nodes that detail the
+		  * available versions, then process that. Only useful in the
+		  * screen media version.
+		  *-->
+	      <xsl:variable name="versions">
+		<flinks>
+		  <xsl:apply-templates select="bitmap" mode="list-figure-versions"/>
+		  <xsl:apply-templates select="vector" mode="list-figure-versions"/>
+		</flinks>
+	      </xsl:variable>
+	      <xsl:apply-templates select="exsl:node-set($versions)" mode="add-figure-versions"/>
 	    </div>
 
-	    <div class="screenmedia">
+	    <div class="printmedia">
 	      <img alt="{concat('[Print media version: ',normalize-space(description),']')}">
 		<xsl:attribute name="src"><xsl:choose>
 		  <xsl:when test="$has-bmap-hard"><xsl:value-of select="$bmap-hard"/></xsl:when>
@@ -2272,17 +2298,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
 	    </div>
 
-	    <!--*
-		* Process the images to create a set of nodes that detail the
-		* available versions, then process that.
-		*-->
-	    <xsl:variable name="versions">
-	      <flinks>
-		<xsl:apply-templates select="bitmap" mode="list-figure-versions"/>
-		<xsl:apply-templates select="vector" mode="list-figure-versions"/>
-	      </flinks>
-	    </xsl:variable>
-	    <xsl:apply-templates select="exsl:node-set($versions)" mode="add-figure-versions"/>
 	  </div>
 
 	  <div class="caption">
