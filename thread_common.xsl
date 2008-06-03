@@ -2247,6 +2247,26 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 		  <xsl:otherwise><xsl:value-of select="$bmap-simple"/></xsl:otherwise>
 		</xsl:choose></xsl:attribute>
 	      </img>
+
+<!--* unfortunately neither the img tag or the object tag works for ps/pdf output,
+    * at least on Firefox 2.0.0.14 on OS-X Intel
+    * (seeing some bizarre issues so not 100% convinced about this, but not implementing
+    *  it for now as I doubt it works reliably)
+    *
+	      <xsl:if test="vector[@format='ps']">
+		<img alt="POSTSCRIPT HACK" src="{normalize-space(vector[@format='ps'])}"/>
+		<object data="{normalize-space(vector[@format='ps'])}" type="application/ps">
+		  POSTSCRIPT HACK VIA OBJECT
+		</object>
+	      </xsl:if>
+	      <xsl:if test="vector[@format='pdf']">
+		<img alt="PDF HACK" src="{normalize-space(vector[@format='pdf'])}"/>
+		<object data="{normalize-space(vector[@format='pdf'])}" type="application/pdf">
+		  PDF HACK VIA OBJECT
+		</object>
+	      </xsl:if>
+*-->
+
 	    </div>
 
 	    <!--*
