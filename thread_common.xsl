@@ -2118,9 +2118,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       *    htmldoc does not support ps/pdf images, so they are only useful
       *    for the HTML version.
       *
-      * TODO:
-      *   - if have bitmap[@hardcopy] version then this should be included in the
-      *   "versions" link in the screen version of the output.
       *-->
   <xsl:template match="figure">
 
@@ -2308,19 +2305,48 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       * display - ie the "[versions: full-size, postscript, pdf]"
       * link.
       *
-      * We only want the bitmap image if it is full-size, we also have a thumbnail
-      * version. We pick the non-hardcopy version in preference
+      * We want the bitmap images if:
+      *   - hardcopy = 1
+      *   - no hardcopy or thumbnail attributes but only when
+      *     there is also a bitmap[@thumbnail=1] version
       *
+      * The checks should be enforced by a schema, but we do not
+      * do this yet (if we are ever going to do it).
+      *
+      * TODO:
+      *    we should really re-order items so that we can
+      *    ensure the "full-size bitmap" link is first
       *-->
+  <xsl:template match="bitmap[@thumbnail=1 and @hardcopy=1]" mode="list-figure-versions">
+    <xsl:message terminate="yes">
+ ERROR: bitmap nodes must not have both thumbail and hardcopy attributes set to 1
+   value=<xsl:value-of select="normalize-space(.)"/>
+    </xsl:message>
+  </xsl:template>
+  <xsl:template match="bitmap[boolean(@format)=false()]" mode="list-figure-versions">
+    <xsl:message terminate="yes">
+ ERROR: bitmap nodes must contain a format attribute
+   value=<xsl:value-of select="normalize-space(.)"/>
+    </xsl:message>
+  </xsl:template>
+  <xsl:template match="vector[boolean(@format)=false()]" mode="list-figure-versions">
+    <xsl:message terminate="yes">
+ ERROR: vector nodes must contain a format attribute
+   value=<xsl:value-of select="normalize-space(.)"/>
+    </xsl:message>
+  </xsl:template>
+
   <xsl:template match="bitmap[@thumbnail=1]" mode="list-figure-versions"/>
-  <xsl:template match="bitmap[(@thumbnail=0 or boolean(@thumbnail)=false()) and
+  <xsl:template match="bitmap[@hardcopy=1]" mode="list-figure-versions">
+    <flink>
+      <text><xsl:value-of select="translate(@format,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/></text>
+      <image><xsl:value-of select="normalize-space(.)"/></image>
+    </flink>
+  </xsl:template>
+  <xsl:template match="bitmap[(@thumbnail=0 or (boolean(@thumbnail)=false() and boolean(@hardcopy)=false())) and
 		       (count(preceding-sibling::bitmap[@thumbnail=1]) != 0 or
 		       count(following-sibling::bitmap[@thumbnail=1]) != 0)]" mode="list-figure-versions">
-    <xsl:if test="@hardcopy='0' or boolean(@hardcopy)=false() or
-		  (count(preceding-sibling::bitmap[@hardcopy='0' or boolean(@hardcopy)=false()]) = 0 and
-		  count(following-sibling::bitmap[@hardcopy='0' or boolean(@hardcopy)=false()]) = 0)">
-      <flink><text>full-size</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
-    </xsl:if>
+    <flink><text>full-size</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
   </xsl:template>
   <xsl:template match="vector[@format='ps']" mode="list-figure-versions">
     <flink><text>postscript</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
