@@ -2349,12 +2349,39 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       *     there is also a bitmap[@thumbnail=1] version
       *
       * The checks should be enforced by a schema, but we do not
-      * do this yet (if we are ever going to do it).
+      * do this yet (if we are ever going to do it). They could/should
+      * be done elsewhere, but we do them here as it is easy to do
+      * so.
       *
       * TODO:
       *    we should really re-order items so that we can
       *    ensure the "full-size bitmap" link is first
       *-->
+  <xsl:template match="bitmap[boolean(@hard)]" mode="list-figure-versions">
+    <xsl:message terminate="yes">
+ ERROR: bitmap node found with attribute name of hard rather than hardcopy
+   value=<xsl:value-of select="normalize-space(.)"/>
+    </xsl:message>
+  </xsl:template>
+  <xsl:template match="bitmap[boolean(@thumb)]" mode="list-figure-versions">
+    <xsl:message terminate="yes">
+ ERROR: bitmap node found with attribute name of thumb rather than thumbnail
+   value=<xsl:value-of select="normalize-space(.)"/>
+    </xsl:message>
+  </xsl:template>
+  <xsl:template match="vector[boolean(@hard) or boolean(@hardcopy)]" mode="list-figure-versions">
+    <xsl:message terminate="yes">
+ ERROR: vector node found with hardcopy (or hard) attribute. Not needed here!
+   value=<xsl:value-of select="normalize-space(.)"/>
+    </xsl:message>
+  </xsl:template>
+  <xsl:template match="vector[boolean(@thumbnail) or boolean(@thumb)]" mode="list-figure-versions">
+    <xsl:message terminate="yes">
+ ERROR: vector node found with thumbnail (or thumb) attribute. Not needed here!
+   value=<xsl:value-of select="normalize-space(.)"/>
+    </xsl:message>
+  </xsl:template>
+
   <xsl:template match="bitmap[@thumbnail=1 and @hardcopy=1]" mode="list-figure-versions">
     <xsl:message terminate="yes">
  ERROR: bitmap nodes must not have both thumbail and hardcopy attributes set to 1
