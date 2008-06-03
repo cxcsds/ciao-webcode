@@ -1252,15 +1252,14 @@ sub xml2html_register ($) {
 #
 # $pagename is the string used to describe the page (for screen output)
 # - e.g. "faq" or "dictionary"
-# more importantly, IT also must match the stylesheet names:
+# more importantly, IT also must match the stylesheet name:
 #    $pagename.xsl - the main stylesheet
-#    list_$pagename.xsl - prints out the pages that are created
 #
 # @sitelist is the list of sites that can contain this page
 #
 # xml2html_multiple - called by xml2html
 #
-# process pages thaty create multiple output pages:
+# process pages that can create multiple output pages:
 # e.g. faq, dictionary
 #
 # note: $xslt, $outdir, and $outurl end in a /
@@ -1284,15 +1283,31 @@ sub xml2html_multiple ($$$) {
 
     print "Parsing [$pagename]: $in";
 
+    my $rnode = $dom->documentElement();
+
     # get a list of the pages: we need this so that:
     # - we can create the directory if necessary
     # - we can delete them [if they exist] before the processor runs
     #   (since we write protect them after creation so the processor
     #    can't actually create the new files)
     #
-    my $pages = translate_file "$$opts{xslt}list_${pagename}.xsl", $dom;
-    $pages =~ s/\s+/ /g;
-    my @soft = map { "${outdir}$_"; }split " ", $pages;
+    # I want to calculate the list of pages without calling a separate
+    # stylesheet. The pages we currently expect to create are:
+    #     'index.html'
+    #     concat(//<nodename>/@id,'.html')
+    # where <nodename> is faqentry for FAQ and entry for dictionaries
+    # Really it would be nice if we consolidated the two cases, but
+    # for now live with this. It also means that any additions to the
+    # "multiple page" case - ie a new page type - will need to be reflected
+    # here.
+    #
+    my %nodename = ( dictionary => "entry", faq => "faqentry" );
+    die "Need to update nodename mapping for multiple page style '$pagename'\n"
+      unless exists $nodename{$pagename};
+    my @pages = ( "index.html" );
+    push @pages, map { $_->textContent . ".html"; } $rnode->findnodes("//" . $nodename{$pagename} . "/\@id");
+
+    my @soft = map { "${outdir}$_"; } @pages;
     my @hard = map { my $a = $_; $a =~ s/\.html$/.hard.html/; $a; } @soft;
 
     # how about math pages?
