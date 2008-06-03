@@ -1824,11 +1824,14 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       <!--*
 	  * just add the logo directly
 	  * don't use any templates, since this is a bit of a fudge
+	  * It doesn't seem to work for ChIPS threads and can not be bothered
+	  * to work out why
 	  *-->
       <img alt="[CXC Logo]">
 	<xsl:attribute name="src"><xsl:choose>
 	  <xsl:when test="$site = 'pog'">../cxc-logo.gif</xsl:when>
-	  <xsl:otherwise>../../imgs/cxc-logo.gif</xsl:otherwise>
+	  <xsl:when test="$site = 'ciao'">../../imgs/cxc-logo.gif</xsl:when>
+	  <xsl:otherwise>/ciao/imgs/cxc-logo.gif</xsl:otherwise>
 	</xsl:choose></xsl:attribute>
       </img>
 
