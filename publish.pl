@@ -1296,16 +1296,22 @@ sub xml2html_multiple ($$$) {
     #     'index.html'
     #     concat(//<nodename>/@id,'.html')
     # where <nodename> is faqentry for FAQ and entry for dictionaries
-    # Really it would be nice if we consolidated the two cases, but
-    # for now live with this. It also means that any additions to the
-    # "multiple page" case - ie a new page type - will need to be reflected
-    # here.
     #
-    my %nodename = ( dictionary => "entry", faq => "faqentry" );
-    die "Need to update nodename mapping for multiple page style '$pagename'\n"
+    # We special case if for the dictionary_onepage case which creates
+    # index.html and entries.html
+    #
+    my %nodename = ( dictionary => "entry", faq => "faqentry", dictionary_onepage => undef );
+    die "\nNeed to update nodename mapping for multiple page style '$pagename' (publish.pl)\n"
       unless exists $nodename{$pagename};
     my @pages = ( "index.html" );
-    push @pages, map { $_->textContent . ".html"; } $rnode->findnodes("//" . $nodename{$pagename} . "/\@id");
+
+    if (defined $nodename{$pagename}) {
+	push @pages, map { $_->textContent . ".html"; } $rnode->findnodes("//" . $nodename{$pagename} . "/\@id");
+    } elsif ($pagename eq "dictionary_onepage") {
+	push @pages, "entries.html";
+    } else {
+	die "\nNeed to handle an undef entry for page style '$pagename' in publish.pl\n";
+    }
 
     my @soft = map { "${outdir}$_"; } @pages;
     my @hard = map { my $a = $_; $a =~ s/\.html$/.hard.html/; $a; } @soft;
