@@ -2459,19 +2459,64 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       *    but should work (would probably only fail if we used an empty tag like
       *     <figlink><foo/></figlink> which is unlikely to happen)
       *-->
+  <xsl:template match="figlink[boolean(@id)=false]">
+    <xsl:message terminate="yes">
+ ERROR: figlink tag found with no id attribute
+    contents=<xsl:value-of select="."/>
+    </xsl:message>
+  </xsl:template>
+
   <xsl:template match="figlink[boolean(@nonumber) and normalize-space(.)!='']">
+    <xsl:call-template name="check-fig-id-exists">
+      <xsl:with-param name="id" select="@id"/>
+    </xsl:call-template>
     <a href="{concat('#',@id)}"><xsl:apply-templates/></a>
   </xsl:template>
 
   <xsl:template match="figlink[normalize-space(.)='']">
+    <xsl:call-template name="check-fig-id-exists">
+      <xsl:with-param name="id" select="@id"/>
+    </xsl:call-template>
     <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
     <a href="{concat('#',@id)}"><xsl:value-of select="concat('Figure ',$pos)"/></a>
   </xsl:template>
 
   <xsl:template match="figlink">
+    <xsl:call-template name="check-fig-id-exists">
+      <xsl:with-param name="id" select="@id"/>
+    </xsl:call-template>
     <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
     <a href="{concat('#',@id)}"><xsl:apply-templates/><xsl:value-of select="concat(' (Figure ',$pos,')')"/></a>
   </xsl:template>
+
+  <!--*
+      * This is called when processing both figlink and figure tags,
+      * which results in excess checks, but we will live with the
+      * extra work.
+      *-->
+  <xsl:template name="check-fig-id-exists">
+    <xsl:param name="id" select="''"/>
+    <xsl:if test="$id = ''">
+      <xsl:message terminate="yes">
+ ERROR: check-fig-id-exists called with an empty id argument.
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:variable name="nmatches" select="count(//figure[@id=$id])"/>
+    <xsl:choose>
+      <xsl:when test="$nmatches=1"/>
+      <xsl:when test="$nmatches=0">
+	<xsl:message terminate="yes">
+ ERROR: there is no figure with an id of '<xsl:value-of select="$id"/>'.
+	</xsl:message>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:message terminate="yes">
+ ERROR: there are multiple (<xsl:value-of select="$nmatches"/>) figures with an id of '<xsl:value-of select="$id"/>'.
+	</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template> <!--* name=check-fig-id-exists *-->
 
   <!--*
       * Link to a figure in the TOC
@@ -2480,6 +2525,11 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       *
       *-->
   <xsl:template match="figure" mode="toc">
+
+    <xsl:call-template name="check-fig-id-exists">
+      <xsl:with-param name="id" select="@id"/>
+    </xsl:call-template>
+
     <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
     <li><a href="{concat('#',@id)}"><xsl:value-of select="djb:make-figure-title($pos)"/></a></li>
   </xsl:template> <!--* match=figure mode=toc *-->
