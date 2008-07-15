@@ -5,63 +5,11 @@
 
 <!--* 
     * Recent changes:
+    *  2008 May 30 DJB Remove support for PDF generation
     *  2007 Oct 17 DJB 
     *    Try and handle TABLE's the same way that ahelp does; if all rows (but the first)
     *    of a column are empty then do not display that column.
     *    Removed support for type=dist
-    *  v1.26 - changed page headers and other items to use
-    *	       htmltitlepostfix value 
-    *  v1.25 - <html> changed to <html lang="en"> following
-    *            http://www.w3.org/TR/2005/WD-i18n-html-tech-lang-20050224/
-    *  v1.24 - Fixed bug in parameter tables (did not print out autoname value)
-    *          and made empty elements have a '&nbsp;' in parameter table
-    *          (another case of undefined variable/attribute not being set to ''
-    *           in new xml2). Test cases added for these.
-    *  v1.23 - Fixed bug in syntax-line generator found by move to new libxml2/xslt
-    *          An undefined attribute does not get set to ''; at least if the
-    *          DTD is not available.
-    *          [not sure where version numbers got out of sync]
-    *  v1.21 - addded headerrow class to first row of a TABLE and the header
-    *          of the parameter list
-    *  v1.20 - improved support for PARA blocks containing only 1 SYNTAX or
-    *          EQUATION block. Wanted to 'merge' consecutive EQUATION blocks
-    *          but does not seem possible.
-    *  v1.19 - hardcopy=0 or 1 for the stylesheet (we no longer create both types
-    *          in one run of the stylesheet)
-    *          More updates for the CSS-friendly approach; a lot of work on the
-    *          highlighting section in particular (also the first rows in tables
-    *          are not marked as headers)
-    *  v1.18 - start of major revamp for CIAO 3.1: the text is now marked up
-    *          much-more naturally, rather than using a dl list. Goes with v1.18
-    *          of ahelp_common.xsl. This works, but want to use more CSS which
-    *          means separating out the soft/hardcopy code, which is coming next.
-    *  v1.17 - added print-media stylesheet
-    *  v1.16 - updates for the new scheme for creating ahelp pages
-    *          format parameter is now type; most changes have been adding
-    *          title attributes to links
-    *  v1.15 - hopefully removed "seealso" tags from the output forever
-    *          (see copy-of statement in add-seealso template)
-    *  v1.14 - added maintext anchor
-    *  v1.13 - removed use of width attribute for main text (use CSS for this)
-    *  v1.12 - less excessive use of tables
-    *  v1.11 - use CIAO 3.0 layout (format=web)
-    *  v1.10 - use $cssfile (format=web)
-    *   v1.9 - use CSS in navbar (format=web)
-    *   v1.8 - emphasize v1.7 by marking text as strong
-    *   v1.7 - emphasize AHELP page in 'header' 
-    *   v1.6 - now uses navbar_ahelp_index.incl rather than navbar_ahelp.incl
-    *   v1.5 - added a space between 'Jump To:' and qlinks
-    *          added links to ADESC(with title) blocks
-    *   v1.4 - qlinks now normal font size + 'Jump To' in bold
-    *   v1.3 - In "qlinks", have BUGS before "See Also"
-    *   v1.2 - Make use of new depth parameter
-    *          removed the "standard" BUGS entry
-    *          add-standard-banner:pagename->name
-    *          CIAO 3.0 DTD changes:
-    *            PARAMLIST, QEXAMPLELIST, initial SYNATX can be missing
-    *          Tables now have border=1 frame=void (was border=0)
-    *          "Quick Links" section now includes bugs section
-    *   v1.1 - broke out of ahelp.xsl
     *
     * These are the routines that actually transfrom the ahelp document
     * - broken out of ahelp.xsl to make it easier to test
@@ -83,9 +31,13 @@
   <xsl:param name="texttitlepostfix"  select='""'/>
 
   <!--* 
-      * create: $outname.html (Web)
+      * create: $outname.html
+      * We now no-longer need to use the xsl:document trick
+      * as we only create a single file now, but leave that
+      * change for later as it requires re-jigging the entire
+      * publishing setup, not just this stylesheet.
       *-->
-  <xsl:template match="cxchelptopics" mode="make-viewable">
+  <xsl:template match="cxchelptopics">
 
     <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$outname"/>.html</xsl:variable>
 
@@ -114,10 +66,9 @@
 	</head>
 
 	<!--* add header and banner *-->
-	<xsl:call-template name="add-cxc-header-viewable"/>
+	<xsl:call-template name="add-cxc-header"/>
 	<xsl:call-template name="add-standard-banner-header">
 	  <xsl:with-param name="lastmod"  select="//LASTMODIFIED"/>
-	  <xsl:with-param name="pagename" select="$outname"/>
 	</xsl:call-template>
 
 	<table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
@@ -133,7 +84,7 @@
 	      <a name="maintext"/>
 
 	      <!--* parse the text *--> 
-	      <xsl:apply-templates select="ENTRY" mode="viewable"/>
+	      <xsl:apply-templates select="ENTRY"/>
 	    </td>
 	  </tr>
 	</table>
@@ -141,64 +92,19 @@
 	<!--* add the banner *-->
 	<xsl:call-template name="add-standard-banner-footer">
 	  <xsl:with-param name="lastmod"  select="//LASTMODIFIED"/>
-	  <xsl:with-param name="pagename" select="$outname"/>
 	</xsl:call-template>
-	<xsl:call-template name="add-cxc-footer-viewable"/>
+	<xsl:call-template name="add-cxc-footer"/>
 
 	<!--* add </body> tag [the <body> is included in a SSI] *-->
 	<xsl:call-template name="add-end-body"/>
       </html>
 
     </xsl:document>
-  </xsl:template> <!--* match=cxchelptopics mode=make-viewable *-->
-
-  <!--* 
-      * create: $outname.hard.html
-      *-->
-  <xsl:template match="cxchelptopics" mode="make-hardcopy">
-
-    <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$outname"/>.hard.html</xsl:variable>
-
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="us-ascii">
-      
-      <html lang="en">
-	<head>
-	  <title>Ahelp: <xsl:value-of select="ENTRY/@key"/> - <xsl:value-of select="$headtitlepostfix"/></title>
-	</head>
-
-	<!--* add header *-->
-	<xsl:call-template name="add-cxc-header-hardcopy">
-	  <xsl:with-param name="lastmod"  select="//LASTMODIFIED"/>
-	  <xsl:with-param name="url"      select="$url"/>
-	</xsl:call-template>
-	<xsl:call-template name="newline"/>
-
-	<!--* parse the text (no 'navbar' in hardcopy) *--> 
-	<xsl:apply-templates select="ENTRY" mode="hardcopy"/>
-
-	<!--* add the footer text *-->
-	<xsl:call-template name="add-cxc-footer-hardcopy">
-	  <xsl:with-param name="lastmod"  select="//LASTMODIFIED"/>
-	  <xsl:with-param name="url"      select="$url"/>
-	</xsl:call-template>
-
-	<!--* add </body> tag [the <body> is included in a SSI] *-->
-	<xsl:call-template name="add-end-body"/>
-      </html>
-
-    </xsl:document>
-  </xsl:template> <!--* match=cxchelptopics mode=make-hardcopy *-->
+  </xsl:template> <!--* match=cxchelptopics *-->
 
   <!--* begin DTD templates *-->
 
   <!--*
-      * create the viewable HTML contents
-      * 
       * we use a pull-style approach here
       * 
       * DTD Entry:
@@ -210,10 +116,10 @@
       * we generate the syntax line automatically
       * 
       *-->
-  <xsl:template match="ENTRY" mode="viewable">
+  <xsl:template match="ENTRY">
 
     <xsl:call-template name="add-ahelp-qlinks"/>
-    <xsl:call-template name="add-page-header-viewable"/>
+    <xsl:call-template name="add-page-header"/>
     <br/>
 
     <xsl:apply-templates select="SYNOPSIS"/>
@@ -230,46 +136,13 @@
     <xsl:apply-templates select="BUGS"/>
     <xsl:call-template   name="add-seealso"/>
 
-  </xsl:template>  <!--* match=ENTRY mode=viewable *-->
+  </xsl:template>  <!--* match=ENTRY *-->
 
   <!--*
-      * create the hardcopy HTML contents (type=web)
-      * 
-      * we use a pull-style approach here
-      * 
-      * see ENTRY mode=viewable for the DTD
-      * 
-      *-->
-  <xsl:template match="ENTRY" mode="hardcopy">
-
-    <!--* start with the header *-->
-    <xsl:call-template name="add-page-header-hardcopy"/>
-    <br/>
-
-    <xsl:call-template name="add-ahelp-qlinks"/>
-
-    <!--* parse the text: use a 'pull'-type approach *--> 
-    <xsl:apply-templates select="SYNOPSIS"/>
-
-    <!--*
-        * SYNTAX handling is a bit complicated in CIAO 3.0
-        *-->
-    <xsl:call-template name="handle-entry-syntax"/>
-
-    <xsl:apply-templates select="DESC"/>
-    <xsl:apply-templates select="QEXAMPLELIST"/>
-    <xsl:apply-templates select="PARAMLIST"/>
-    <xsl:apply-templates select="ADESC"/>
-    <xsl:apply-templates select="BUGS"/>
-    <xsl:call-template   name="add-seealso"/>
-    
-  </xsl:template>  <!--* match=ENTRY mode=hardcopy *-->
-
-  <!--*
-      * output another page "header" - for type=web viewable HTML
+      * output another page "header"
       *
       *-->
-  <xsl:template name="add-page-header-viewable">
+  <xsl:template name="add-page-header">
 
     <table class="ahelpheader" width="100%">
       <tr>
@@ -281,26 +154,7 @@
       </tr>
     </table>
 
-  </xsl:template> <!--* name=add-page-header-viewable *-->
-
-  <!--*
-      * output the page "header" - for type=web hardcopy HTML
-      *
-      * Note: we make the page name extra large
-      *
-      *-->
-  <xsl:template name="add-page-header-hardcopy">
-
-    <table class="ahelpheader" width="100%">
-      <tr>
-	<td align="left" width="30%"><strong>AHELP for <xsl:value-of select="$headtitlepostfix"/></strong></td>
-      <td align="center" width="40%"><h1><xsl:value-of select="@key"/></h1></td>
-      <td align="right" width="30%">Context: 
-	  <a title="Jump to context list of Ahelp pages" href="{$depth}index_context.html#{@context}"><xsl:value-of select="@context"/></a></td>
-      </tr>
-    </table>
-
-  </xsl:template> <!--* name=add-page-header-hardcopy *-->
+  </xsl:template> <!--* name=add-page-header *-->
 
   <!--*
       * DTD Entry:
@@ -394,9 +248,6 @@
 	  <xsl:with-param name="contents"><xsl:apply-templates/></xsl:with-param>
 	</xsl:call-template>
 
-	<!--* add a br to act as a spacer for HTLMDOC only *-->
-	<xsl:if test="$hardcopy = 1"><br/></xsl:if>
-
       </div> <!--* class=ahelpsyntax *-->
 
       <xsl:if test="$in-para = 1">
@@ -483,9 +334,6 @@
 	    <xsl:with-param name="text"><xsl:call-template name="create-syntax-from-paramlist"/></xsl:with-param>
 	  </xsl:call-template></xsl:with-param>
       </xsl:call-template>
-
-      <!--* add a br to act as a spacer for HTLMDOC only *-->
-      <xsl:if test="$hardcopy = 1"><br/></xsl:if>
 
     </div> <!--* class=ahelpsyntax *-->
   </xsl:template> <!--* name=create-entry-syntax *-->
@@ -765,9 +613,7 @@
       <xsl:call-template name="end-para"/>
     </xsl:if>
 
-    <!--* note the htmldoc concession (align=center) *-->
     <div class="ahelpequation">
-      <xsl:if test="$hardcopy = 1"><xsl:attribute name="align">center</xsl:attribute></xsl:if>
       <xsl:call-template name="add-highlight">
 	<xsl:with-param name="contents" select="normalize-space(.)"/>
       </xsl:call-template>
@@ -811,8 +657,7 @@
       *   <!ELEMENT TABLE        ( CAPTION?, ROW*)>
       *
       * For CIAO 3.0 changed to have a border of 1 - previously had border = 0
-      *   and added frame="void". Should be done by CSS but kept in for
-      *   hardcopy version.
+      *   and added frame="void". Should be done by CSS.
       *
       * Note: the 'hidden' rule is that the first row of the
       * table is taken to be a header row, even there is no
@@ -884,8 +729,8 @@
     <xsl:variable name="expected_ncols" select="count($colflags/flag)"/>
     <xsl:variable name="found_ncols" select="count(DATA)"/>
 
-    <!--* only warn once per file (assuming always run with hardcopy=0) *-->
-    <xsl:if test="$found_ncols != $expected_ncols and $hardcopy = '0'">
+    <!--* only warn once per file *-->
+    <xsl:if test="$found_ncols != $expected_ncols">
       <xsl:message>
 	<xsl:value-of select="concat('WARNING: ROW contains ',$found_ncols,
 	  ' DATA elements but expected to find ',$expected_ncols,' of them ',
@@ -1282,7 +1127,6 @@
 	  </td>
 	</tr>
       </table>
-      <xsl:if test="$hardcopy = 1"><br/></xsl:if>
       <hr/><br/>
       </div> <!--* class=noprint *-->
     </xsl:if>

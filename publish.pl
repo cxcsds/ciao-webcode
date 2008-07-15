@@ -144,7 +144,8 @@
 #  11 Mar 08 ECG allow dictionary in CSC site
 #  ?? ??? 08 ECG created cscdb page type
 #  29 Apr 2008 ECG   math gifs should be cleaned up by script
- 
+#  29 May 08 DJB Beginning to remove support for PDF generation
+#
 use strict;
 $|++;
 
@@ -495,6 +496,9 @@ sub undup_stderr ($) {
 #
 # uses the global variable $force
 #
+# TODO:
+#   - remove support for hard-copy files
+#
 sub should_we_skip ($@) {
     my $in = shift;
     my @files = @_;
@@ -838,7 +842,6 @@ sub xml2html_page ($) {
 
     # we 'hardcode' the output of the transformation
     my @pages = ( "${outdir}${in}.html" );
-    push @pages, "${outdir}${in}.hard.html" unless $site eq "icxc";
 
     # how about math pages?
     #
@@ -882,22 +885,13 @@ sub xml2html_page ($) {
        storageloc => $$opts{storageloc},
       );
 
-    # what 'hardcopy' values do we loop through?
-    #
-    my @hardcopy = ( 0 );
-    push @hardcopy, 1 unless $site eq "icxc";
-
-    translate_file_hardcopy "$$opts{xslt}page.xsl", $dom, \%params, \@hardcopy;
+    translate_file "$$opts{xslt}page.xsl", $dom, \%params;
 
     # success or failure?
     check_for_page( @pages );
 
     # math?
     process_math( $outdir, @math );
-
-    # create the hardcopy pages
-    #
-    create_hardcopy $outdir, $in unless $site eq "icxc";
 
     print "\nThe page can be viewed on:\n  ${outurl}$in.html\n\n";
 
@@ -930,7 +924,6 @@ sub xml2html_cscdb ($) {
 
     # we 'hardcode' the output of the transformation
     my @pages = ( "${outdir}${in}.html", "${outdir}${in}_alpha.html" );
-    my @hard  = ( "${outdir}${in}.hard.html", "${outdir}${in}_alpha.hard.html" ) unless $site eq "icxc"; 
 
     # how about math pages?
     #
@@ -941,7 +934,7 @@ sub xml2html_cscdb ($) {
     print "\n";
 
     # remove files [already ensured the dir exists]
-    initialise_pages( @pages, @hard );
+    initialise_pages( @pages );
     clean_up_math( $outdir, @math );
 
     # used to set up the list of parameters sent to the
@@ -975,27 +968,13 @@ sub xml2html_cscdb ($) {
        storageloc => $$opts{storageloc},
       );
 
-    # what 'hardcopy' values do we loop through?
-    #
-    my @hardcopy = ( 0 );
-    push @hardcopy, 1 unless $site eq "icxc";
-
-    translate_file_hardcopy "$$opts{xslt}cscdb.xsl", $dom, \%params, \@hardcopy;
+    translate_file "$$opts{xslt}cscdb.xsl", $dom, \%params;
 
     # success or failure?
     check_for_page( @pages );
 
     # math?
     process_math( $outdir, @math );
-
-    # create the hardcopy pages
-    foreach my $page ( @hard ) {
-	die "Error: transformation did not create $page\n"
-	  unless -e $page;
-	mysetmods $page;
-	$page =~ s/^.+\/([^\/]+).hard.html$/$1/;
-	create_hardcopy $outdir, $page unless $site eq "icxc";
-    }
 
     print "\nThe pages can be viewed at:\n  ${outurl}$in.html\n";
     print "and:\n  ${outurl}$in\_alpha.html\n\n";
@@ -1029,7 +1008,6 @@ sub xml2html_bugs ($) {
 
     # we 'hardcode' the output of the transformation
     my @pages = ( "${outdir}${in}.html" );
-    push @pages, "${outdir}${in}.hard.html" unless $site eq "icxc";
 
     # how about math pages?
     #
@@ -1073,22 +1051,13 @@ sub xml2html_bugs ($) {
        storageloc => $$opts{storageloc},
       );
 
-    # what 'hardcopy' values do we loop through?
-    #
-    my @hardcopy = ( 0 );
-    push @hardcopy, 1 unless $site eq "icxc";
-
-    translate_file_hardcopy "$$opts{xslt}bugs.xsl", $dom, \%params, \@hardcopy;
+    translate_file "$$opts{xslt}bugs.xsl", $dom, \%params;
 
     # success or failure?
     check_for_page( @pages );
 
     # math?
     process_math( $outdir, @math );
-
-    # create the hardcopy pages
-    #
-    create_hardcopy $outdir, $in unless $site eq "icxc";
 
     print "\nThe page can be viewed on:\n  ${outurl}$in.html\n\n";
 
@@ -1185,7 +1154,7 @@ sub xml2html_register ($) {
     # we 'hardcode' the output of the transformation
     # (as of CIAO 3.1 it is rather simple)
     #
-    my @pages = map { "${outdir}${in}$_"; } qw( _src.html .hard.html );
+    my @pages = map { "${outdir}${in}$_"; } qw( _src.html );
 
     # check for math blocks (can't be bothered to handle in register blocks)
     #
@@ -1235,13 +1204,10 @@ sub xml2html_register ($) {
     # we no longer need to create so-many different versions
     # as of CIAO 3.1
     #
-    translate_file_hardcopy "$$opts{xslt}register_live.xsl", $dom, \%params;
+    translate_file "$$opts{xslt}register_live.xsl", $dom, \%params;
 
     # success or failure?
     check_for_page( @pages );
-
-    # create the hardcopy pages
-    create_hardcopy $outdir, $in;
 
     print "\nThe pages can be viewed on:\n  ${outurl}${in}_src.html\n\n";
 
@@ -1314,7 +1280,6 @@ sub xml2html_multiple ($$$) {
     }
 
     my @soft = map { "${outdir}$_"; } @pages;
-    my @hard = map { my $a = $_; $a =~ s/\.html$/.hard.html/; $a; } @soft;
 
     # how about math pages?
     #
@@ -1322,12 +1287,12 @@ sub xml2html_multiple ($$$) {
 
     # do we need to recreate
     return
-      if should_we_skip $in, @soft, @hard,
+      if should_we_skip $in, @soft,
 	map( { "${outdir}${_}.gif"; } @math );
     print "\n";
 
     # create dirs/remove files
-    initialise_pages( @soft, @hard );
+    initialise_pages( @soft );
     clean_up_math( $outdir, @math );
 
     my %params =
@@ -1356,22 +1321,13 @@ sub xml2html_multiple ($$$) {
        storageloc => $$opts{storageloc},
       );
 
-    translate_file_hardcopy "$$opts{xslt}${pagename}.xsl", $dom, \%params;
+    translate_file "$$opts{xslt}${pagename}.xsl", $dom, \%params;
 
     # check the softcopy versions
     check_for_page( @soft );
 
     # math?
     process_math( $outdir, @math );
-
-    # create the hardcopy pages
-    foreach my $page ( @hard ) {
-	die "Error: transformation did not create $page\n"
-	  unless -e $page;
-	mysetmods $page;
-	$page =~ s/^.+\/([^\/]+).hard.html$/$1/;
-	create_hardcopy $outdir, $page;
-    }
 
     print "\nThe $pagename page can be viewed at:\n  $outurl\n\n";
 
@@ -1414,8 +1370,6 @@ sub xml2html_threadindex ($) {
       if $rnode->findvalue("boolean(datatable)") eq "true";
     @soft = map { "${outdir}$_"; } @soft;
 
-    my @hard = map { my $a = $_; $a =~ s/\.html$/.hard.html/; $a; } @soft;
-
     # do not allow math in the threadindex (for now)
     #
     my @math = find_math_pages $dom;
@@ -1427,7 +1381,7 @@ sub xml2html_threadindex ($) {
     # depend on so many files)
     #
     # create dirs/remove files
-    initialise_pages( @soft, @hard );
+    initialise_pages( @soft );
 
     my %params =
       (
@@ -1457,19 +1411,10 @@ sub xml2html_threadindex ($) {
        storageloc => $$opts{storageloc},
       );
 
-    translate_file_hardcopy "$$opts{xslt}threadindex.xsl", $dom, \%params;
+    translate_file "$$opts{xslt}threadindex.xsl", $dom, \%params;
 
     # check the softcopy versions
     check_for_page( @soft );
-
-    # create the hardcopy pages
-    foreach my $page ( @hard ) {
-	die "Error: transformation did not create $page\n"
-	  unless -e $page;
-	mysetmods $page;
-	$page =~ s/^.+\/([^\/]+).hard.html$/$1/;
-	create_hardcopy $outdir, $page;
-    }
 
     print "\nThe thread index pages can be viewed at:\n  $outurl\n\n";
 
@@ -1488,6 +1433,9 @@ sub xml2html_threadindex ($) {
 # At present we do not have language-specific versions of the
 # files we copy or include - e.g. as indicated by the screen tag -
 # which could need changing.
+#
+# TODO
+#    remove hardcopy code when appropriate
 #
 sub xml2html_thread ($) {
     my $opts = shift;

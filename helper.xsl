@@ -3,6 +3,8 @@
 
 <!--* 
     * Recent changes:
+    * 2008 May 30 DJB Removed generation of PDF links in header/footer
+    *   except for threads
     * 2008 Apr 18 ECG: added dictionary_onepage as an allowed-pdf
     * 2008 Mar 13 ECG
     *  added cscdb as an allowed-pdf
@@ -16,95 +18,6 @@
     * 2007 Oct 19 DJB
     *    depth parameter is now a global, no need to send around
     *    Need to check users of add-attribute, add-image
-    *  v1.75 - "fc4" is allowed-download-types
-    *  v1.74 - "osx_ppc" and "osx_intel" are allowed-download-types
-    *  v1.73 - added "chips" to allowed-sites list
-    *  v1.72 - hyphen added to (head/text)titlepostfix instances
-    *  v1.71 - updated copyright statement to "1998-2006"
-    *  v1.70 - added "bugs" to allowed-pdf list
-    *  v1.69 - htmlscript tag now passes along the type attribute
-    *          (needed for DTD compliance). Contains a test that can be
-    *          removed when schema validation is enabled.
-    *  v1.68 - added br (hidden by CSS) between lastmodbar and urlbar
-    *  v1.67 - added URL to the header (will be hidden by CSS for most users)
-    *          NOTE: only for stylesheets which produce a single page
-    *            eg not threads/dictionaries/faqs
-    *  v1.66 - whats new does not create anything if hardcopy=1
-    *  v1.65 - whats new links are now in a div of class noprint
-    *  v1.64 - added is-download-type-valid
-    *  v1.63 - Now adds a CSS link for print media ($cssprintfile)
-    *  v1.62 - Added add-htmlhead-standard template
-    *  v1.61 - Added support for site=caldb
-    *  v1.60 - Updated copyright to 2004 from 2003 (the copyright info
-    *          should really be read from an external file but that would
-    *          mean more changes)
-    *  v1.59 - removed 'Last update by/at' from header of site=icxc
-    *  v1.58 - removed search bar from headers of site=icxc pages
-    *  v1.57 - removed add-marker template since no-longer used in navbar
-    *  v1.56 - test banner for test site now just lists update time/author
-    *  v1.55 - PDF links now have a title attribute, as do "What's New/Watchout" links
-    *  v1.54 - whatsnew now also links to the "watch out" page (if watchouturl
-    *          parameter is set)
-    *  v1.53 - minor change: no longer sets up a searchbar div
-    *  v1.52 - adds a "skip navigation" section for "lynx" users (non CSS)
-    *  v1.51 - add-header/footer do not use tables
-    *          searchssi parameter used tfor location of search bar
-    *  v1.50 - damn had two - next to each other in a comment
-    *  v1.49 - DAMN: #flastmod can not use ../ or absolute paths
-    *            which means we can't get the "last-modified" date of news pages
-    *  v1.48 - location of "whatsnew" file now determined by newsfile/newsfileurl parameters
-    *  v1.47 - add-header/footer now complain if no name attribute
-    *  v1.46 - Oops: use XML comments rather than C ones...
-    *  v1.45 - added some commented-out code to auto highlight navbar links
-    *          Needs more thinking about (see add-htmlhead)
-    *  v1.44 - moving towards more CSS/changed layout taking advantage of CSS
-    *          removed add-standard-banner; revamped a number of others
-    *          CSS location now set by cssfile input parameter
-    *          added thread to allowed-pdf list
-    *  v1.43 - removing excess whitespace in the header/footer
-    *  v1.42 - removal of media attribute in link tag means can use external CSS file
-    *          using netscape 4.76: always refers to /ciao/ciao.css
-    *          fixed "last updated" date to work for type=live ($type not $site)
-    *  v1.41 - added add-whatsnew-link template;
-    *          use of css for navbar [issues with netscape 4 seem to suggest
-    *          can not use an external file for the stylesheet (don't know why)
-    *  v1.40 - add-hr-strong changed from width=3 to width=5 for CIAO threads
-    *          - should we have instead added add-hr-verystrong?
-    *  v1.39 - added sherpa to list of valid sites and for search banner
-    *  v1.38 - changed copyright year end to 2003
-    *  v1.37 - output date=fixed value when testing and updateby=a_tester
-    *          [used to make testing easier]
-    *  v1.36 - site=chart type=test is now on asc-bak, not icxc; chart search bar uses 'chart specific'
-    *      ? - search header is now site specific (ciao pages have a different version)
-    *  v1.35 - began support for site=icxc
-    *  v1.34 - trial/chart header should link to cxc not icxc for ciao
-    *  v1.32 - re-complicate since want chart still on icxc (temporarily?)
-    *  v1.31 - try and use asc_bak as the test site (easier header handling)
-    *  v1.30 - all navbar's now have a blue background
-    *  v1.29 - output a newline after adding a SSI comment (for CGI register scripts)
-    *  v1.28 - use EXSLT functions for date last updated (no longer an input parameter)
-    *  v1.27 - fixed up some HTML output
-    *  v1.26 - added support for root=dictionary + improved code (add-header/footer)
-    *  v1.25 - added support for root=faq (add-header/footer)
-    *  v1.24 - added support for root=register (add-header/footer) &
-    *          htmlscript tag to the info block of a page (add-htmlhead)
-    *  v1.23 - added pog to the list of allowed sites (is-site-valid)
-    *  v1.22 - add-footer now contains thread-specific output
-    *  v1.21 - add-header/footer now calls add-standard-banner
-    *  v1.20 - navbar is now blue for all CIAO sites [test & live]
-    *  v1.19 - having fun getting a logo into the hardcopy version (htmldoc issue?)
-    *  v1.18 - added add-standard-banner (deleted add-last-modified/add-hardcopy-links);
-    *          added spacer after navbar
-    *  v1.17 - may as well do the footer whilst I'm at it
-    *  v1.16 - added more header output to test site to make it 'look like the real thing'
-    *  v1.15 - added fake search button to test header (to see how PDF links look)
-    *  v1.14 - changed gif used in test header
-    *  v1.13 - added add-hr-strong, add-id-hardcopy from ciao_thread_common.xsl
-    *  v1.12 - add-thread-qlinks template moved to ciao_thread.xsl
-    *  v1.11 - added thread templates (add-hardcopy-links, add-thread-qlinks)
-    *  v1.10 - changed header output in test case (uses less screen space)
-    *   v1.9 - new/updated/drop.gif are now looked for in imgs/ (not gifs/)
-    *   v1.8 - added simple css support to add-htmlhead template
     *
     * "helper" templates
     *
@@ -134,7 +47,8 @@
       * used to determine whether the site is valid
       *
       * used to determine whether or not to add PDF links to header/footer
-      * - see add-header/add-footer
+      * - see add-header/add-footer. Will be removed once we convert
+      *   threads to the new figure environment.
       *
       * used to determine whether a download type is recognised
       * (to catch user error rather than any real need to restrict the types)
@@ -144,7 +58,7 @@
       * the spaces around each root name are important for the simple checking we do
       * - should these be node sets rather than strings?
       *-->
-  <xsl:variable name="allowed-pdf" select="' page faq dictionary dictionary_onepage bugs register threadindex thread cscdb '"/>
+  <xsl:variable name="allowed-pdf" select="' thread '"/>
   <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc '"/>
   <xsl:variable name="allowed-download-types" select="' solaris linux6 linux8 fc4 fc7 osx osx_ppc osx_intel caldb atomdb '"/>
 
@@ -529,8 +443,15 @@
       * Add the links to the PDF versions of the web page: factored out as
       * used in two places, the leading "internal-" in the template name
       * indicates that it's only meant to be used deep within other templates
+      *
+      * Can be removed once we clean up the threads.
       *-->
   <xsl:template name="internal-add-hardcopy-links">
+<!--
+    <xsl:message terminate="yes">
+ ERROR: internal-add-hardcopy-links has been called
+    </xsl:message>
+-->
     <xsl:param name="name"  select="''"/>
 
     <xsl:if test="$name = ''">
@@ -542,6 +463,7 @@
     Hardcopy (PDF):
     <a title="PDF (A4 format) version of the page" href="{$name}.a4.pdf">A4</a> |
     <a title="PDF (US Letter format) version of the page" href="{$name}.letter.pdf">Letter</a>
+
   </xsl:template> <!--* name=internal-add-hardcopy-links *-->
 
   <!--*
@@ -563,6 +485,7 @@
   <xsl:template name="add-header">
     <xsl:param name="name"  select="''"/>
 
+    <!--* TODO: invert the logic of this check once we remove the PDF support in threads *-->
     <xsl:if test="$name = ''">
       <xsl:message terminate="yes">
   Internal Error: add-header called with no name attribute
@@ -618,7 +541,7 @@
       </xsl:if>
     </div>
 
-    <!--* add links to PDF files *-->
+    <!--* add links to PDF files - WHICH WE ARE REMOVING *-->
     <xsl:if test="$site != 'icxc' and contains($allowed-pdf,concat(' ',$root,' '))">
       <div class="topbar">
 	<div class="pdfbar">
@@ -701,6 +624,7 @@
   <xsl:template name="add-footer">
     <xsl:param name="name"  select="''"/>
 
+    <!--* TODO: invert the logic of this check once we remove the PDF support in threads *-->
     <xsl:if test="$name = ''">
       <xsl:message terminate="yes">
   Internal Error: add-footer called with no name attribute
@@ -710,7 +634,7 @@
     <!--* add the "standard" banner *-->
     <xsl:variable name="root" select="name(//*)"/>
 
-    <!--* add links to PDF files *-->
+    <!--* add links to PDF files - WHICH WE ARE NOW REMOVING *-->
     <div class="bottombar">
       <xsl:if test="$site != 'icxc' and contains($allowed-pdf,concat(' ',$root,' '))">
 	<div>

@@ -71,6 +71,9 @@
     *    version. Setting to 1 with site=icxc is not valid but we do not
     *    check for this
     *
+    *    THIS PARAMETER IS BEING PHASED OUT AND IS CURRENTLY ONLY SUPPORTED
+    *    FOR THREADS
+    *
     *  . storage - string, optional, default=''
     *    gives the location of the "storage" files - ie the copies of the
     *    published XML documents for the site/version. This is currently
@@ -102,7 +105,6 @@
   extension-element-prefixes="func djb">
 
   <!--* these should be over-ridden from the command line *-->
-  <xsl:param name="hardcopy"     select="0"/>
 
   <xsl:param name="cssfile"      select='""'/>
   <xsl:param name="cssprintfile" select='""'/>
@@ -123,6 +125,9 @@
 
   <xsl:param name="headtitlepostfix" select='""'/>
   <xsl:param name="texttitlepostfix" select='""'/>
+
+  <!--* ONLY USED BY THREADS; WILL BE REMOVED SOON *-->
+  <xsl:param name="hardcopy"     select="0"/>
 
   <!--* load in the ahelp index file *-->
   <xsl:param name="ahelpindex"  select='""'/>

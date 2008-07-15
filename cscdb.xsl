@@ -5,6 +5,9 @@
     * Convert an XML web page into an HTML one
     *
     * Recent changes:
+    *
+    * 2008 May 30 DJB Removed generation of PDF version
+    *
     * 2008 Mar/Feb ECG
     *	 new stylesheet for cscdb page type
     *
@@ -49,22 +52,8 @@
     </xsl:call-template>
 
     <!--* what do we create *-->
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 1">
-	<xsl:if test="$site = 'icxc'">
-	  <xsl:message terminate="yes">
-PROGRAMMING ERROR: site=icxc and hardcopy=1
-	  </xsl:message>
-	</xsl:if>
-	<xsl:apply-templates name="cscdb" mode="make-hardcopy"/>
-	<xsl:apply-templates name="cscdb" mode="make-hardcopy-alphabet"/>
-      </xsl:when>
-      
-      <xsl:otherwise>
-	<xsl:apply-templates name="cscdb" mode="make-viewable"/>
-	<xsl:apply-templates name="cscdb" mode="make-viewable-alphabet"/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:apply-templates select="cscdb"/>
+    <xsl:apply-templates select="cscdb" mode="alphabet"/>
 
   </xsl:template> <!--* match=/ *-->
 
@@ -72,7 +61,7 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
       * create: <page>.html
       *-->
 
-  <xsl:template match="cscdb" mode="make-viewable">
+  <xsl:template match="cscdb">
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$pagename"/>.html</xsl:variable>
 
@@ -211,114 +200,13 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
       </html>
 
     </xsl:document>
-  </xsl:template> <!--* match=page mode=make-viewable *-->
-
-  <!--* 
-      * create: <page>.hard.html
-      *-->
-
-  <xsl:template match="cscdb" mode="make-hardcopy">
-
-    <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$pagename"/>.hard.html</xsl:variable>
-    <xsl:variable name="url"><xsl:value-of select="$urlhead"/></xsl:variable>
-
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="us-ascii">
-
-      <!--* we start processing the XML file here *-->
-      <html lang="en">
-
-	<!--* make the HTML head node *-->
-	<xsl:call-template name="add-htmlhead-standard"/>
-
-	<!--* and now the main part of the text *-->
-	<body>
-
-	  <xsl:call-template name="add-hardcopy-banner-top">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	  <!--* do not need to bother with navbar's here as the hardcopy version *-->
-
-	      <!--* add the intro text *-->
-	      <xsl:if test="intro">
-	        <xsl:apply-templates select="intro"/>
-
-		<hr/>
-	      </xsl:if>
-
-
-	 <!--// start database column table //-->
-	 <table width="100%" border="0" cellspacing="2" cellpadding="4">
-	 <tr>
-	   <th>Context</th>
-	   <th>Column Name</th>
-	   <th>Type</th>
-	   <th>Units</th>
-	   <th>Description</th>
-	 </tr>
-
-	 <xsl:for-each select="//objgrp">
-
-	   <xsl:for-each select="group">
-	   <xsl:variable name="rowcount"><xsl:value-of select="count(cols/col)"/></xsl:variable>
-	   <tr>
-	      <td valign="top" rowspan="{$rowcount}">
-
-	      <xsl:variable name="grpname">
-	        <xsl:value-of select="@id"/>
-	      </xsl:variable>
-
-	      <a name="{$grpname}">
-	        <strong><xsl:value-of select="title"/></strong>
-	      </a>
-              </td>
-	    
-	    <xsl:for-each select="cols/col">
-	      <xsl:if test="position() = 1">
-	        <xsl:call-template name="add-dbcols"/>
-	      </xsl:if>
-	    </xsl:for-each>
-	   </tr>
-
-	    <xsl:for-each select="cols/col">
-	      <xsl:if test="position() != 1">
-	      <tr>
-	        <xsl:call-template name="add-dbcols"/>
-	      </tr>
-	      </xsl:if>
-	    </xsl:for-each>
-
-	      <xsl:if test="last()">
-	        <tr><td colspan="5"><hr/></td></tr>
-	      </xsl:if>
-
-	   </xsl:for-each>  <!--// end select="group" //-->
-
-	 </xsl:for-each>  <!--// end select="objgroup" //-->
-
-	 </table>
-	 <!--// end database column table //-->
-      
-	  <xsl:call-template name="add-hardcopy-banner-bottom">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	</body>
-      </html>
-
-    </xsl:document>
-  </xsl:template> <!--* match=page mode=make-hardcopy *-->
+  </xsl:template> <!--* match=cscdb *-->
 
   <!--* 
       * create: <page>_alpha.html
       *-->
 
-  <xsl:template match="cscdb" mode="make-viewable-alphabet">
+  <xsl:template match="cscdb" mode="alphabet">
 
     <xsl:variable name="alphapagename"><xsl:value-of select="$pagename"/>_alpha</xsl:variable>
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$alphapagename"/>.html</xsl:variable>
@@ -412,79 +300,7 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
       </html>
 
     </xsl:document>
-  </xsl:template> <!--* match=page mode=make-viewable *-->
-
-
-  <!--* 
-      * create: <page>_alpha.hard.html
-      *-->
-
-  <xsl:template match="cscdb" mode="make-hardcopy-alphabet">
-
-    <xsl:variable name="alphapagename"><xsl:value-of select="$pagename"/>_alpha</xsl:variable>
-    <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$alphapagename"/>.hard.html</xsl:variable>
-    <xsl:variable name="url"><xsl:value-of select="$urlhead"/></xsl:variable>
-
-    <!--* output filename to stdout *-->
-    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="us-ascii">
-
-      <!--* we start processing the XML file here *-->
-      <html lang="en">
-
-	<!--* make the HTML head node *-->
-	<xsl:call-template name="add-htmlhead-standard"/>
-
-	<!--* and now the main part of the text *-->
-	<body>
-
-	  <xsl:call-template name="add-hardcopy-banner-top">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	  <!--* do not need to bother with navbar's here as the hardcopy version *-->
-
-	      <!--* add the intro text *-->
-	      <xsl:if test="intro">
-	        <xsl:apply-templates select="intro"/>
-
-		<hr/>
-	      </xsl:if>
-
-
-	 <!--// start database column table //-->
-	 <table width="100%" border="0" cellspacing="2" cellpadding="4">
-	 <tr>
-	   <th>Column Name</th>
-	   <th>Type</th>
-	   <th>Units</th>
-	   <th>Description</th>
-	 </tr>
-
-	    <xsl:for-each select="//objgrp/group/cols/col">
-	     <xsl:sort select="@name"/>
-
-	      <tr>
-	        <xsl:call-template name="add-dbcols"/>
-	      </tr>
-  
-	    </xsl:for-each>
-
-	 </table>
-	 <!--// end database column table //-->
-
-	  <xsl:call-template name="add-hardcopy-banner-bottom">
-	    <xsl:with-param name="url" select="$url"/>
-	  </xsl:call-template>
-
-	</body>
-      </html>
-
-    </xsl:document>
-  </xsl:template> <!--* match=page mode=make-hardcopy *-->
+  </xsl:template> <!--* match=cscdb mode=alphabet *-->
 
 
   <xsl:template name="add-dbcols">
@@ -549,7 +365,7 @@ PROGRAMMING ERROR: site=icxc and hardcopy=1
   </xsl:template>
 
   <xsl:template name="add-table-bg-color">
-    <xsl:if test="$hardcopy = 0 and position() mod 2 = 0">
+    <xsl:if test="position() mod 2 = 0">
       <xsl:attribute name="class">oddrow</xsl:attribute>
     </xsl:if>
   </xsl:template>

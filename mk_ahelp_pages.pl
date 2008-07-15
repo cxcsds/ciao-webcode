@@ -16,7 +16,7 @@
 #   The --verbose option is useful for testing/debugging the code.
 #
 # Aim:
-#   Convert an ahelp XML file (or more than one) to HTML/PDF format.
+#   Convert an ahelp XML file (or more than one) to HTML format.
 #
 #   If no files are given then process all *xml files in the doc/xml/ and
 #   contrib/doc/xml/ sub-directories of the ahelpfiles directory
@@ -51,6 +51,7 @@
 #  16 Oct 07 DJB Handle site-specific pages
 #                Removed support for type=dist
 #  17 Oct 07 DJB Removed support for xsltproc tool
+#  30 May 08 DJB Removed PDF generation
 #
 # To Do:
 #  - 
@@ -79,11 +80,10 @@ sub read_ahelpindex ($);
 sub find_ahelpfiles ($$);
 
 ## set up variables that are also used in CIAODOC
-use vars qw( $configfile $verbose $group $htmldoc $site );
+use vars qw( $configfile $verbose $group $site );
 $configfile = "$FindBin::Bin/config.dat";
 $verbose = 0;
 $group = "";
-$htmldoc = "";
 $site = "";
 
 ## Variables
@@ -134,13 +134,6 @@ my $ostype = get_ostype;
 my $config = parse_config( $configfile );
 dbg "Parsed the config file";
 
-# Get the names of executable/library locations
-#
-$htmldoc = get_config_main_type( $config, "htmldoc", $ostype );
-
-check_executable_runs "htmldoc", $htmldoc, "--version";
-dbg "Found executable/library paths";
-
 # most of the config stuff is parsed below, but we need these two here
 my $site_config;
 ( $site, $site_config ) = find_site $config, $dname;
@@ -161,6 +154,7 @@ check_ahelp_site_valid $site;
 #   a dummy variable which we manipulate (so
 #   perl doesn't complain) and then don't do anything with
 #   [depth information is stored in the 'database' files]
+#   Why don't I just ignore it from the return value then?
 #
 $group = get_group $site_config;
 my ( $version, $version_config, $dhead, $_depth ) = check_location $site_config, $dname;
@@ -259,7 +253,6 @@ dbg "  ahelpindex_xml=$ahelpindex_xml";
 dbg "  ahelpindex_dat=$ahelpindex_dat";
 dbg "  version=$version";
 dbg " ---";
-dbg "  htmldoc=$htmldoc";
 
 # start work
 #
@@ -331,10 +324,6 @@ dbg "*** CONFIG DATA (end) ***";
 
 my %paramlist = @extra;
 
-# what 'hardcopy' values do we loop through?
-#
-my @hardcopy = ( 0, 1 );
-
 # Loop through each file
 #
 foreach my $in ( @names ) {
@@ -350,7 +339,7 @@ foreach my $in ( @names ) {
     # we 'hardcode' the output of the transformation
     # and ensure that any old files have been deleted
     #
-    my @names = ( $outname, "${outname}.hard" );
+    my @names = ( $outname );
 
     my @pages = map { "${outdir}${_}.html"; } @names;
     foreach my $page ( @pages ) {
@@ -362,26 +351,15 @@ foreach my $in ( @names ) {
     $paramlist{seealsofile} = "${ahelpstore}$seealso_name";
     $paramlist{depth} = '../' x ($depth-1);
 
-    # loop through the hardcopy flags
+    my $flag = translate_file "${stylesheets}ahelp.xsl",
+      "${in}.xml", \%paramlist;
+
+    # we skip further processing on error
     #
-    foreach my $hflag ( @hardcopy ) {
-
-      $paramlist{hardcopy} = $hflag;
-      my $flag = translate_file "${stylesheets}ahelp.xsl",
-	"${in}.xml", \%paramlist;
-
-	# we skip further processing on error
-	# - we might want to skip this file completely (ie if fail on hardcopy=0
-        #   then do not bother with hardcopy=1). This is more complicated to code
-        #   and I think we can live with repeated failures as they should not
-        #   happen in production use
-        #
-	unless ( defined $flag ) {
-	    print "-> problem generating HTML for $in with hardcopy=$hflag\n";
-	    next;
-	}
-
-    } # foreach: @hardcopy
+    unless ( defined $flag ) {
+	print "-> problem generating HTML for $in\n";
+	next;
+    }
 
     # success or failure?
     foreach my $page ( @pages ) {
@@ -394,9 +372,6 @@ foreach my $in ( @names ) {
 	mysetmods( $page );
 	dbg("Created: $page");
     }
-
-    # create the hardcopy pages
-    create_hardcopy( $outdir, $outname );
 
 } # foreach: $in
 
