@@ -118,8 +118,8 @@ logoimage=imgs/ciao_logo_navbar.gif
 logotext=CIAO Logo
 
 # location of the stylesheets
-%stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
-%stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=live /data/da/Docs/web4/ciao4/
+%stylesheets=test /data/da/Docs/web4/ciao4/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 # what's the location for the output files?
@@ -229,8 +229,8 @@ logoimage=imgs/ciao_logo_navbar.gif
 logotext=CIAO Logo
 
 # location of the stylesheets
-%stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
-%stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=live /data/da/Docs/web4/ciao4/
+%stylesheets=test /data/da/Docs/web4/ciao4/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 # what's the location for the output files?
@@ -550,8 +550,8 @@ logotext=Sherpa Logo
 %searchssi=test /sherpa4.1/sherpa_search.ssi
 %searchssi=trial /sds/sherpa4.1_trial/sherpa_search.ssi
 
-%stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
-%stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=live /data/da/Docs/web4/ciao4/
+%stylesheets=test /data/da/Docs/web4/ciao4/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 %outdir=live /proj/web-cxc/htdocs/sherpa4.1/
@@ -622,8 +622,8 @@ logotext=Sherpa Logo
 %searchssi=test /sherpabeta/sherpa_search.ssi
 %searchssi=trial /sds/sherpa_beta_trial/sherpa_search.ssi
 
-%stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
-%stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=live /data/da/Docs/web4/ciao4/
+%stylesheets=test /data/da/Docs/web4/ciao4/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 %outdir=live /proj/web-cxc/htdocs/sherpabeta/
@@ -719,8 +719,8 @@ logotext=ChIPS Logo
 %searchssi=test /chips4.1/chips_search.ssi
 %searchssi=trial /sds/chips4.1_trial/chips_search.ssi
 
-%stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
-%stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=live /data/da/Docs/web4/ciao4/
+%stylesheets=test /data/da/Docs/web4/ciao4/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 %outdir=live /proj/web-cxc/htdocs/chips4.1/
@@ -791,8 +791,8 @@ logotext=ChIPS Logo
 %searchssi=test /chips4.0/chips_search.ssi
 %searchssi=trial /sds/chips4.0_trial/chips_search.ssi
 
-%stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
-%stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=live /data/da/Docs/web4/ciao4/
+%stylesheets=test /data/da/Docs/web4/ciao4/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 %outdir=live /proj/web-cxc/htdocs/chips4.0/
@@ -1050,8 +1050,8 @@ logotext=Chandra Source Catalog logo
 %searchssi=test /csc1/csc_search.ssi
 %searchssi=trial /sds/csc/csc_search.ssi
 
-%stylesheets=live /data/da/Docs/web4/ciao4/stylesheets/
-%stylesheets=test /data/da/Docs/web4/ciao4/stylesheets/
+%stylesheets=live /data/da/Docs/web4/ciao4/
+%stylesheets=test /data/da/Docs/web4/ciao4/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 %outdir=live /proj/web-cxc/htdocs/csc1/
