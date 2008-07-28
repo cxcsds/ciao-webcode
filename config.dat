@@ -459,8 +459,8 @@ imglinkiconheight=16
 %searchssi=test /chart/chart_search.ssi
 %searchssi=trial /sds/chart_trial/chart_search.ssi
 
-%stylesheets=live /data/da/Docs/web4/chart/stylesheets/
-%stylesheets=test /data/da/Docs/web4/chart/stylesheets/
+%stylesheets=live /data/da/Docs/web4/chart/
+%stylesheets=test /data/da/Docs/web4/chart/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 %outdir=live /proj/web-cxc/htdocs/chart/
@@ -956,8 +956,8 @@ headtitlepostfix=CALDB 2
 %searchssi=test /caldb/caldb_search.ssi
 %searchssi=trial /sds/caldb_trial/caldb_search.ssi
 
-%stylesheets=live /data/da/Docs/web4/caldb/stylesheets/
-%stylesheets=test /data/da/Docs/web4/caldb/stylesheets/
+%stylesheets=live /data/da/Docs/web4/caldb/
+%stylesheets=test /data/da/Docs/web4/caldb/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
 # we have a versioned directory name for the live site
@@ -1108,7 +1108,7 @@ logotext=Science Data Systems
 %css=test /sds/ciao.css
 %cssprint=test /sds/ciao.print.css
 
-%stylesheets=test /data/da/Docs/web4/icxc/stylesheets/
+%stylesheets=test /data/da/Docs/web4/icxc/
 
 %outdir=test /proj/web-icxc/htdocs/sds/
 %outurl=test http://icxc.harvard.edu/sds/
