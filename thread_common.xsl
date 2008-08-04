@@ -1528,7 +1528,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       
       <!--* make the header *-->
       <xsl:call-template name="add-header">
-	<xsl:with-param name="name"  select="//thread/info/name"/>
+	<xsl:with-param name="name"  select="djb:get-pdf-head()"/>
       </xsl:call-template>
 
       <!--* link back to thread *-->
