@@ -6,6 +6,9 @@
     *
     * Recent changes:
     *
+    * 2008 Aug 26 ECG
+    *    download link version is taken from version tag in page,
+    *    not hardcoded
     * 2008 Apr 24 ECG
     *    distinguish between why links in CIAO and CSC sites
     *
@@ -1429,11 +1432,8 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 		    <xsl:value-of select="concat('download/',@type,'.html')"/>
 		  </xsl:when>
 		  <xsl:otherwise>
-		    <!--*
-		        * XXX TODO XXX
-			* The hardcoded version is less than ideal
-			*-->
-		    <xsl:value-of select="concat('/cgi-gen/ciao/download_ciao4.0_',@type,'.cgi')"/>
+		    <xsl:variable name="linkversion"><xsl:value-of select="$siteversion"/></xsl:variable>
+		    <xsl:value-of select="concat('/cgi-gen/ciao/download_ciao',$linkversion,'_',@type,'.cgi')"/>
 		  </xsl:otherwise>
 		</xsl:choose>
 	      </xsl:when>
