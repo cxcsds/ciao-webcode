@@ -25,7 +25,7 @@
 # OS type values can be sun, lin, or osx
 #
 %htmldoc=sun /usr/bin/env LD_LIBRARY_PATH=/data/da/Docs/local/lib/ /data/da/Docs/local/bin/htmldoc
-%listseealso=sun /data/da/Docs/web4/list_seealso.ciao4.sun
+%listseealso=sun /data/da/Docs/web4/utilities/list_seealso.ciao4.sun
 %perl=sun /data/da/Docs/local/perl/bin/perl
 
 # Linux values tailored to Liz's machine (rory). I had tried
@@ -33,7 +33,7 @@
 # on rory, so go back to the 64-bit versions
 #
 %htmldoc=lin /data/da/Docs/local/linux_x86_64/bin/htmldoc
-%listseealso=lin /data/da/Docs/web4/list_seealso.ciao4.lin
+%listseealso=lin /data/da/Docs/web4/utilities/list_seealso.ciao4.lin
 %perl=lin /usr/bin/env PERL5LIB=/data/da/Docs/local/linux_x86_64/lib64/perl5/site_perl:/data/da/Docs/local/linux_x86_64/lib64/perl5:/data/da/Docs/local/linux_x86_64/lib/perl5/site_perl perl
 
 # OS-X: specific to Doug's laptop, should be changed to more general values
