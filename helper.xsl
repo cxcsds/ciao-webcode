@@ -959,7 +959,7 @@ Programming error: add-ssi-include called with an empty file parameter
       <xsl:message terminate="yes">
 
   ERROR: at the moment the whatsnew tag/link is only available
-    to site=ciao or sherpa, not site=<xsl:value-of select="$site"/>
+    to site=ciao, chips, or sherpa, not site=<xsl:value-of select="$site"/>
 
       </xsl:message>
     </xsl:if>
