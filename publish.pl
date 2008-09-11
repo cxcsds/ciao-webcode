@@ -1353,7 +1353,7 @@ sub xml2html_threadindex ($) {
     my $lastmod = $$opts{lastmod};
 
     # temporary
-    site_check( $site, "threadindex", [ "ciao", "sherpa", "chips" ] );
+    site_check( $site, "threadindex", [ "ciao", "sherpa", "chips", "csc" ] );
 
     print "Parsing [threadindex]: $in\n";
 
