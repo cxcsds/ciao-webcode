@@ -1825,6 +1825,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	<xsl:when test="$site = 'ciao'">CIAO <xsl:value-of select="$siteversion"/> Science Threads</xsl:when>
 	<xsl:when test="$site = 'chips'">ChIPS Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
 	<xsl:when test="$site = 'sherpa'">Sherpa Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
+	<xsl:when test="$site = 'csc'">CSC Threads</xsl:when>
 	<xsl:when test="$site = 'pog'">POG Threads (<xsl:value-of select="$siteversion"/>)</xsl:when>
       </xsl:choose></h3>
 	  
@@ -1871,6 +1872,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	<xsl:when test="$site = 'chips'">ChIPS Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
 	<xsl:when test="$site = 'sherpa'">Sherpa Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
 	<xsl:when test="$site = 'chart'">ChaRT Threads</xsl:when>
+	<xsl:when test="$site = 'csc'">CSC Threads</xsl:when>
 	<xsl:when test="$site = 'pog'">Proposal Threads for <xsl:value-of select="$siteversion"/></xsl:when>
       </xsl:choose></h2>
 
@@ -1905,6 +1907,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	<xsl:when test="$site = 'chips'">ChIPS Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
 	<xsl:when test="$site = 'sherpa'">Sherpa Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
 	<xsl:when test="$site = 'chart'">ChaRT Threads</xsl:when>
+	<xsl:when test="$site = 'csc'">CSC Threads</xsl:when>
 	<xsl:when test="$site = 'pog'">Proposal Threads for <xsl:value-of select="$siteversion"/></xsl:when>
       </xsl:choose></h2>
       <xsl:call-template name="add-proglang-sub-header"/>
