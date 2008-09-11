@@ -59,6 +59,7 @@
       <xsl:when test="$site = 'chart'"><xsl:call-template name="add-top-links-chart-html"/></xsl:when>
       <xsl:when test="$site = 'chips'"><xsl:call-template name="add-top-links-chips-html"/></xsl:when>
       <xsl:when test="$site = 'sherpa'"><xsl:call-template name="add-top-links-sherpa-html"/></xsl:when>
+      <xsl:when test="$site = 'csc'"><xsl:call-template name="add-top-links-csc-html"/></xsl:when>
       <xsl:when test="$site = 'pog'"><xsl:call-template name="add-top-links-pog-html"/></xsl:when>
       <xsl:otherwise>
 	<xsl:message terminate="yes">
@@ -171,6 +172,32 @@
   </xsl:template> <!--* name=add-top-links-chips-html *-->
 
   <!--*
+      * set up the "top level" links for the HTML page (CSC)
+      * [links to processing/names threads, thread index,
+      *  and hardcopy versions]
+      *
+      * Parameters:
+      *
+      *-->
+  <xsl:template name="add-top-links-csc-html">
+
+    <!--* safety check *-->
+    <xsl:if test="$site != 'csc'">
+      <xsl:message terminate="yes">
+  Error: template add-top-links-csc-html called but not for a CSC thread
+      </xsl:message>
+    </xsl:if>
+
+    <div class="topbar">
+      <div class="qlinkbar">
+      <!--* create links to threads *-->
+	<xsl:call-template name="add-thread-qlinks"/>
+      </div>
+    </div>
+
+  </xsl:template> <!--* name=add-top-links-csc-html *-->
+
+  <!--*
       * set up the "top level" links for the HTML page (POG)
       * [links to processing/names threads, thread index,
       *  and hardcopy versions]
@@ -214,6 +241,7 @@
       <xsl:when test="$site = 'chart'"><xsl:call-template name="add-bottom-links-chart-html"/></xsl:when>
       <xsl:when test="$site = 'chips'"><xsl:call-template name="add-bottom-links-chips-html"/></xsl:when>
       <xsl:when test="$site = 'sherpa'"><xsl:call-template name="add-bottom-links-sherpa-html"/></xsl:when>
+      <xsl:when test="$site = 'csc'"><xsl:call-template name="add-bottom-links-csc-html"/></xsl:when>
       <xsl:when test="$site = 'pog'"><xsl:call-template name="add-bottom-links-pog-html"/></xsl:when>
       <xsl:otherwise>
 	<xsl:message terminate="yes">
@@ -317,6 +345,30 @@
     </div>
 
   </xsl:template> <!--* name=add-bottom-links-chips-html *-->
+
+  <!--*
+      * set up the "trailing" links for the HTML page (CSC)
+      * [links to thread indexes and hardcopy versions]
+      *
+      * Parameters:
+      *
+      *-->
+  <xsl:template name="add-bottom-links-csc-html">
+
+    <!--* safety check *-->
+    <xsl:if test="$site != 'csc'">
+      <xsl:message terminate="yes">
+  Error: template add-bottom-links-csc-html called but not for a CSC thread
+      </xsl:message>
+    </xsl:if>
+
+    <!--* create the trailing links to threads *-->
+    <div class="bottombar">
+      <!--* create links to threads *-->
+      <xsl:call-template name="add-thread-qlinks"/>
+    </div>
+
+  </xsl:template> <!--* name=add-bottom-links-csc-html *-->
 
   <!--*
       * set up the "trailing" links for the HTML page (POG)
@@ -1869,6 +1921,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       <xsl:when test="$site = 'chips'">ChIPS</xsl:when>
       <xsl:when test="$site = 'sherpa'">Sherpa</xsl:when>
       <xsl:when test="$site = 'chart'">ChaRT</xsl:when>
+      <xsl:when test="$site = 'csc'">CSC</xsl:when>
       <xsl:when test="$site = 'pog'">POG</xsl:when>
       <xsl:otherwise>
 	<xsl:message terminate="yes">
