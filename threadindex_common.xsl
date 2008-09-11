@@ -973,12 +973,17 @@
 	    <xsl:when test="$site = 'ciao'">Science</xsl:when>
 	    <xsl:when test="$site = 'sherpa'">Sherpa</xsl:when>
 	    <xsl:when test="$site = 'chips'">ChIPS</xsl:when>
+	    <xsl:when test="$site = 'csc'">CSC</xsl:when>
 	  </xsl:choose><xsl:value-of select="concat(' ',$ciaothreadver)"/></xsl:when>
 	<xsl:otherwise><xsl:value-of select="$title"/></xsl:otherwise>
       </xsl:choose></h1>
 
     <!--* create the list of section links *-->
-    <xsl:call-template name="add-whatsnew-link"/>
+
+    <xsl:if test="$site != 'csc'">
+      <xsl:call-template name="add-whatsnew-link"/>
+    </xsl:if>
+
     <xsl:call-template name="add-threadindex-quicklink"/>
 
   </xsl:template> <!--* name=add-threadindex-title *-->
