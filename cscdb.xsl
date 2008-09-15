@@ -340,7 +340,7 @@
 	    </xsl:when>
 
 	    <xsl:when test="@units='n-hi-cm'">
-	      N&#160;<sub>HI&#160;atoms</sub>&#160;cm<sup>-2</sup>
+	      N&#160;<sub>HI&#160;atoms</sub>&#160;10<sup>20</sup>&#160;cm<sup>-2</sup>
 	    </xsl:when>
 
 	    <xsl:otherwise>
