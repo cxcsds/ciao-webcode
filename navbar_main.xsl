@@ -102,7 +102,7 @@
 
       <xsl:if test="boolean(//links)">
 
-        <xsl:if test="$site!='chart'">
+        <xsl:if test="$site!='chart' and $site!='csc'">
 	  <div class="newsbar">
 	    <h2>Analysis Notes</h2>
 	  </div>
