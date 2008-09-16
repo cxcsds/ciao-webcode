@@ -5,6 +5,8 @@
     * Useful templates for creating the CIAO threads
     *
     * Recent changes:
+    * 2008 Sep 16 ECG
+    *    don't include siteversion in header of CSC threads
     * 2008 May 14 DJB
     *    support new "figure" markup as an alternative to the images version
     * 2007 Dec 18 ECG
@@ -1851,9 +1853,20 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       <xsl:value-of select="concat(' (',djb:get-proglang-string(),')')"/>
     </xsl:if></xsl:variable>
 
-    <xsl:call-template name="add-htmlhead">
-       <xsl:with-param name="title" select="concat($start,' - ',djb:get-sitename-string(),' ',$siteversion,$endstr)"/>
-    </xsl:call-template>
+      <xsl:choose>
+	<!--// don't put siteversion in head of CSC threads //-->
+	<xsl:when test="$site = 'csc'">
+	  <xsl:call-template name="add-htmlhead">
+            <xsl:with-param name="title" select="concat($start,' - ',djb:get-sitename-string(),' ',$endstr)"/>
+	  </xsl:call-template>
+	</xsl:when>
+
+	<xsl:otherwise>
+	  <xsl:call-template name="add-htmlhead">
+            <xsl:with-param name="title" select="concat($start,' - ',djb:get-sitename-string(),' ',$siteversion,$endstr)"/>
+	  </xsl:call-template>
+	</xsl:otherwise>
+      </xsl:choose>
 
   </xsl:template> <!--* name=add-htmlhead-site-thread *-->
 
