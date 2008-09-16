@@ -969,12 +969,24 @@
     <xsl:param name="title" select="''"/>
 
     <h1 align="center"><xsl:choose>
-	<xsl:when test="$title = ''"><xsl:choose>
+	<xsl:when test="$title = ''">
+	  <xsl:choose>
 	    <xsl:when test="$site = 'ciao'">Science</xsl:when>
 	    <xsl:when test="$site = 'sherpa'">Sherpa</xsl:when>
 	    <xsl:when test="$site = 'chips'">ChIPS</xsl:when>
 	    <xsl:when test="$site = 'csc'">CSC</xsl:when>
-	  </xsl:choose><xsl:value-of select="concat(' ',$ciaothreadver)"/></xsl:when>
+	  </xsl:choose>
+
+	  <!--// don't include "Threads for CIAO version" in CSC //-->
+	  <xsl:if test="$site != 'csc'">
+	    <xsl:value-of select="concat(' ',$ciaothreadver)"/>
+	  </xsl:if>
+	  <xsl:if test="$site = 'csc'">
+	    <xsl:text> Threads</xsl:text>
+	  </xsl:if>
+	</xsl:when>
+
+
 	<xsl:otherwise><xsl:value-of select="$title"/></xsl:otherwise>
       </xsl:choose></h1>
 
