@@ -1039,6 +1039,10 @@ headtitlepostfix=CALDB 4
 %storage=trial /data/da/Docs/caldbweb/published/caldb4/trial/
 
 # point to the CIAO ahelp file indexes
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao41.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao41.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao41.trial.xml
+
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao41/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
 %ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
