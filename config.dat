@@ -987,6 +987,65 @@ headtitlepostfix=CALDB 2
 
 -version
 
++version caldb4
+
+# we do not have a 'number' variable since that is used to indicate
+# the version of CIAO being used and we (probably) want the CALDB
+# area to be independent of this
+#
+##number=4.0
+
+headtitlepostfix=CALDB 4
+##texttitlepostfix=- CALDB 4
+
+%css=live /ciao/ciao.css
+%css=test /ciao/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+%cssprint=live /ciao/ciao.print.css
+%cssprint=test /ciao/ciao.print.css
+%cssprint=trial /sds/ciao_trial/ciao.print.css
+
+%newsfile=live /proj/web-cxc/htdocs/caldb4/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/caldb4/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/caldb4/news.html
+
+%newsurl=live /caldb4/news.html
+%newsurl=test /caldb4/news.html
+%newsurl=trial /sds/caldb4_trial/news.html
+
+%searchssi=live /caldb4/caldb_search.ssi
+%searchssi=test /caldb4/caldb_search.ssi
+%searchssi=trial /sds/caldb4_trial/caldb_search.ssi
+
+%stylesheets=live /data/da/Docs/web4/caldb/
+%stylesheets=test /data/da/Docs/web4/caldb/
+%stylesheets=trial /data/da/Docs/web4/devel/
+
+# we have a versioned directory name for the live site
+# but not the test one (since I only realised I needed a
+# 'versioned' name here after testing had begun)
+#
+%outdir=live /proj/web-cxc/htdocs/caldb4/
+%outdir=test /proj/web-cxc-test/htdocs/caldb4/
+%outdir=trial /proj/web-icxc/htdocs/sds/caldb4_trial/
+
+%outurl=live http://cxc.harvard.edu/caldb4/
+%outurl=test http://cxc-test.harvard.edu/caldb4/
+%outurl=trial http://icxc.harvard.edu/sds/caldb4_trial/
+
+%storage=live /data/da/Docs/caldbweb/published/caldb4/live/
+%storage=test /data/da/Docs/caldbweb/published/caldb4/test/
+%storage=trial /data/da/Docs/caldbweb/published/caldb4/trial/
+
+# point to the CIAO ahelp file indexes
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao41/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
+
+-version
+
+
 @stylesheets=page
 @stylesheets=navbar
 @stylesheets=redirect
