@@ -1140,6 +1140,10 @@ logotext=Chandra Source Catalog logo
 %storage=test /data/da/Docs/ciaoweb/published/ciao40/test/
 %storage=trial /data/da/Docs/ciaoweb/published/ciao40/trial/
 
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao40.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao40.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao40.trial.xml
+
 -version
 
 @stylesheets=page
