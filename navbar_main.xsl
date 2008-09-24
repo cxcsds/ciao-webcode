@@ -79,7 +79,12 @@
 	
       <!--* add the logo/link if required *-->
       <xsl:call-template name="add-logo-section"/>
-      
+
+      <xsl:if test="boolean(//links) and $site='csc'">
+
+        <xsl:apply-templates select="//links" mode="create"/>
+      </xsl:if>
+
       <!--* create the various sections *-->
       <dl>
 	<xsl:apply-templates select="//section" mode="create">
@@ -100,9 +105,9 @@
 	  * - if CALDB, as CIAO
 	  *-->
 
-      <xsl:if test="boolean(//links)">
+      <xsl:if test="boolean(//links) and $site!='csc'">
 
-        <xsl:if test="$site!='chart' and $site!='csc'">
+        <xsl:if test="$site!='chart'">
 	  <div class="newsbar">
 	    <h2>Analysis Notes</h2>
 	  </div>
