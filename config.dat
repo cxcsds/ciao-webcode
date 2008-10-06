@@ -1118,7 +1118,7 @@ logotext=Chandra Source Catalog logo
 %stylesheets=test /data/da/Docs/web4/ciao4/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
-#%outdir=live /proj/web-cxc/htdocs/csc1/
+%outdir=live /proj/web-cxc/htdocs/csc1/
 %outdir=test /proj/web-cxc-test/htdocs/csc1/
 %outdir=trial /proj/web-icxc/htdocs/sds/csc_trial/
 
