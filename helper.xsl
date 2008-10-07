@@ -995,6 +995,40 @@ Programming error: add-ssi-include called with an empty file parameter
 
   </xsl:template> <!--* name=add-whatsnew-link *-->
 
+
+  <!--*
+      * adds the skymap table include to the CSC website
+      * - only for csc site
+      *
+      * - the location of the file on disk is fixed
+      *-->
+
+  <xsl:template match="l3progress">
+    <xsl:call-template name="add-progress-link"/>
+  </xsl:template>
+
+  <xsl:template name="add-progress-link">
+
+    <xsl:if test="$site != 'csc'">
+      <xsl:message terminate="yes">
+
+      ERROR: at the moment the l3progress tag/link is only available
+      to site=csc, not site=<xsl:value-of select="$site"/>
+
+      </xsl:message>
+    </xsl:if>
+
+    <div class="l3progress">
+        <xsl:call-template name="add-ssi-include">
+          <xsl:with-param name="file" select="'/csc/skymap/l3progress.html'"/>
+        </xsl:call-template>
+      <br/>
+    </div>
+
+  </xsl:template> <!--* name=add-progress-link *-->
+
+
+
   <!--*
       * Convert the $proglang variable into printable text.
       * It is not expected to be called when $proglang is empty.
