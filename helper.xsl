@@ -365,6 +365,11 @@
       <!--* any scripts ? *-->
       <xsl:apply-templates select="info/htmlscripts"/>
 
+      <!--// all CSC pages get cscview.js //-->
+      <xsl:if test="$site = 'csc'">
+	<script type="text/javascript" language="JavaScript" src="/csc/cscview.js"/>
+      </xsl:if>
+      
       <!--* add main stylesheets *-->
       <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" href="{$cssfile}"/>
       <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" media="print" href="{$cssprintfile}"/>

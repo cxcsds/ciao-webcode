@@ -1639,6 +1639,15 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:with-param name="contents">
 	<a>
 	  <xsl:attribute name="href"><xsl:value-of select="@href"/><xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if></xsl:attribute>
+
+	  <!--// allow javascripty goodness //-->
+          <xsl:if test="boolean(@onclick)">
+	    <xsl:attribute name="onclick"><xsl:value-of select="@onclick"/></xsl:attribute>
+	  </xsl:if>
+          <xsl:if test="boolean(@target)">
+	    <xsl:attribute name="target"><xsl:value-of select="@target"/></xsl:attribute>
+	  </xsl:if>
+
 	  <xsl:apply-templates/>
 	</a>
       </xsl:with-param>
