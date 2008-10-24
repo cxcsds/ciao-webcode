@@ -1197,6 +1197,9 @@ logotext=Science Data Systems
 
 +site pog
 
+# separate config.dat is made for CDO; 
+# this might not be up-to-date with the current cycle
+
 group=cxcweb_cdo
 
 @types=live
