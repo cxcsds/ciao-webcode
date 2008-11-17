@@ -1213,6 +1213,105 @@ prefix=/data/cdo1/threads
 #
 depth_offset=1
 
++version cyc11
+
+# this number appears in the hardcopy title (and the HTML head block)
+number=Cycle 11
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# main CSS location
+%css=live /proposer/threads/proposer.css
+%css=test /proposer/threads/proposer.css
+
+%cssprint=live /proposer/threads/proposer.print.css
+%cssprint=test /proposer/threads/proposer.print.css
+
+## location of the search ssi
+%searchssi=live /incl/search.html
+%searchssi=test /incl/search.html
+
+%stylesheets=live /data/cdo1/threads/stylesheets/
+%stylesheets=test /data/cdo1/threads/stylesheets/
+
+%outdir=live /proj/web-cxc/htdocs/proposer/threads/
+##%outdir=test /proj/web-cxc-test/htdocs/proposer/threads/
+%outdir=test /proj/web-cxc-prev/htdocs/proposer/threads/
+
+# what is the test URL?
+%outurl=live http://cxc.harvard.edu/proposer/threads/
+%outurl=test http://cxc-prev.cfa.harvard.edu/proposer/threads/
+
+# umm, don't really want this, but haven't the time to
+# sort out saying "no storage"
+# ie this is a temporary HACK
+#
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao41/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
+
+-version
+
+
++version cyc10
+
+# this number appears in the hardcopy title (and the HTML head block)
+number=Cycle 10
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+# main CSS location
+%css=live /proposer/threads/proposer.css
+%css=test /proposer/threads/proposer.css
+
+%cssprint=live /proposer/threads/proposer.print.css
+%cssprint=test /proposer/threads/proposer.print.css
+
+## location of the search ssi
+%searchssi=live /incl/search.html
+%searchssi=test /incl/search.html
+
+%stylesheets=live /data/cdo1/threads/stylesheets/
+%stylesheets=test /data/cdo1/threads/stylesheets/
+
+%outdir=live /proj/web-cxc/htdocs/proposer/threads/
+##%outdir=test /proj/web-cxc-test/htdocs/proposer/threads/
+%outdir=test /proj/web-cxc-prev/htdocs/proposer/threads/
+
+# what is the test URL?
+%outurl=live http://cxc.harvard.edu/proposer/threads/
+%outurl=test http://cxc-prev.cfa.harvard.edu/proposer/threads/
+
+# umm, don't really want this, but haven't the time to
+# sort out saying "no storage"
+# ie this is a temporary HACK
+#
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao34/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao34/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao34/trial/ahelp/
+
+-version
+
 +version cyc9
 
 number=Cycle 9
