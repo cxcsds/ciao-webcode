@@ -1233,8 +1233,8 @@ imglinkiconheight=16
 %searchssi=live /incl/search.html
 %searchssi=test /incl/search.html
 
-%stylesheets=live /data/cdo1/threads/stylesheets/
-%stylesheets=test /data/cdo1/threads/stylesheets/
+%stylesheets=live /data/da/Docs/web4/ciao4/
+%stylesheets=test /data/da/Docs/web4/ciao4/
 
 %outdir=live /proj/web-cxc/htdocs/proposer/threads/
 ##%outdir=test /proj/web-cxc-test/htdocs/proposer/threads/
