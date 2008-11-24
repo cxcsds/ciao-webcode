@@ -33,7 +33,7 @@
 # on rory, so go back to the 64-bit versions
 #
 %htmldoc=lin /data/da/Docs/local/linux_x86_64/bin/htmldoc
-%listseealso=lin /data/da/Docs/web4/utilities/list_seealso.ciao4.lin
+%listseealso=lin ciaorun /data/da/Docs/web4/utilities/binexe/list_seealso.ciao41.lin
 %perl=lin /usr/bin/env PERL5LIB=/data/da/Docs/local/linux_x86_64/lib64/perl5/site_perl:/data/da/Docs/local/linux_x86_64/lib64/perl5:/data/da/Docs/local/linux_x86_64/lib/perl5/site_perl perl
 
 # OS-X: specific to Doug's laptop, should be changed to more general values
