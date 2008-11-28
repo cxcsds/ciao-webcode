@@ -1251,6 +1251,15 @@ imglinkiconheight=16
 %storage=live /data/cdo1/threads/storage/live/
 %storage=test /data/cdo1/threads/storage/test/
 
+# We are moving away from the use of %storage and towards
+# %storageloc, which gives the location of an XML file,
+# format
+#   <storage><dir site="ciao">/data/da/Docs/ciaoweb/published/ciao40/live/</dir>...</storage>
+# but we have not converted everything yet
+#
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao41.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao41.test.xml
+
 # where does the ahelp 'index' file live
 # - ie the directory that contains
 #     ahelpindex.xml
