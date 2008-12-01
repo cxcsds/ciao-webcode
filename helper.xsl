@@ -60,7 +60,7 @@
       *-->
   <xsl:variable name="allowed-pdf" select="' thread '"/>
   <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc '"/>
-  <xsl:variable name="allowed-download-types" select="' solaris linux6 linux8 fc4 fc7 osx osx_ppc osx_intel caldb atomdb '"/>
+  <xsl:variable name="allowed-download-types" select="' solaris fc4 fc8 osx_ppc osx_intel caldb atomdb '"/>
 
   <!--* note that '' is also allowed for proglang but this is checked for separately *-->
   <xsl:variable name="allowed-proglang" select="' py sl '"/>
