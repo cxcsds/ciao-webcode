@@ -270,8 +270,7 @@
         *-->
     <xsl:variable name="hrefstart"><xsl:choose>
 	<xsl:when test="boolean(@site)"><xsl:value-of select="concat('/',@site,'/ahelp/')"/></xsl:when>
-	<xsl:when test="$site != 'ciao' and $site != 'chips' and $site != 'sherpa'
-			and $site != 'ciaobeta' and $site != 'chipsbeta' and $site != 'sherpabeta'">/ciao/ahelp/</xsl:when>
+	<xsl:when test="$site != 'ciao' and $site != 'chips' and $site != 'sherpa' and $site != 'ciaobeta' and $site != 'chipsbeta' and $site != 'sherpabeta'">/ciao/ahelp/</xsl:when>
 	<xsl:otherwise><xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="0"/>
 	    <xsl:with-param name="dirname" select="'ahelp/'"/>
@@ -538,14 +537,7 @@
         *-->
     <xsl:variable name="hrefstart"><xsl:choose>
       <xsl:when test="$site != $ahelpsite">
-        <xsl:choose>
-          <xsl:when test="$ahelpsite = 'sherpa'">
-	    <xsl:value-of select="concat('/sherpabeta','/ahelp/')"/>
-	  </xsl:when>
-	  <xsl:otherwise>
 	    <xsl:value-of select="concat('/',$ahelpsite,'/ahelp/')"/>
-	  </xsl:otherwise>
-	</xsl:choose>
       </xsl:when>
 
       <xsl:otherwise><xsl:call-template name="add-start-of-href">
