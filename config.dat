@@ -926,67 +926,6 @@ prefix=/data/da/Docs/caldbweb
 # setting this to 0 makes some of the code a little easier
 depth_offset=0
 
-+version caldb2
-
-# we do not have a 'number' variable since that is used to indicate
-# the version of CIAO being used and we (probably) want the CALDB
-# area to be independent of this
-#
-##number=3.0
-
-headtitlepostfix=CALDB 2
-##texttitlepostfix=- CALDB 2
-
-%css=live /ciao/ciao.css
-%css=test /ciao/ciao.css
-%css=trial /sds/ciao_trial/ciao.css
-
-%cssprint=live /ciao/ciao.print.css
-%cssprint=test /ciao/ciao.print.css
-%cssprint=trial /sds/ciao_trial/ciao.print.css
-
-%newsfile=live /proj/web-cxc/htdocs/caldb/news.html
-%newsfile=test /proj/web-cxc-test/htdocs/caldb/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/caldb/news.html
-
-%newsurl=live /caldb/news.html
-%newsurl=test /caldb/news.html
-%newsurl=trial /sds/caldb_trial/news.html
-
-%searchssi=live /caldb2/caldb_search.ssi
-%searchssi=test /caldb/caldb_search.ssi
-%searchssi=trial /sds/caldb_trial/caldb_search.ssi
-
-%stylesheets=live /data/da/Docs/web4/caldb/
-%stylesheets=test /data/da/Docs/web4/caldb/
-%stylesheets=trial /data/da/Docs/web4/devel/
-
-# we have a versioned directory name for the live site
-# but not the test one (since I only realised I needed a
-# 'versioned' name here after testing had begun)
-#
-%outdir=live /proj/web-cxc/htdocs/caldb2/
-%outdir=test /proj/web-cxc-test/htdocs/caldb/
-%outdir=trial /proj/web-icxc/htdocs/sds/caldb_trial/
-
-%outurl=live http://cxc.harvard.edu/caldb/
-%outurl=test http://cxc-test.harvard.edu/caldb/
-%outurl=trial http://icxc.harvard.edu/sds/caldb_trial/
-
-%storage=live /data/da/Docs/caldbweb/published/caldb2/live/
-%storage=test /data/da/Docs/caldbweb/published/caldb2/test/
-%storage=trial /data/da/Docs/caldbweb/published/caldb2/trial/
-
-#%storageloc=live /data/da/Docs/ciaoweb/storage.40beta.live.xml
-#%storageloc=test /data/da/Docs/ciaoweb/storage.40beta.test.xml
-#%storageloc=trial /data/da/Docs/ciaoweb/storage.40beta.trial.xml
-
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/40beta/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
-
--version
-
 +version caldb4
 
 # we do not have a 'number' variable since that is used to indicate
@@ -1046,6 +985,68 @@ headtitlepostfix=CALDB 4
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao41/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
 %ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
+
+-version
+
+
++version caldb2
+
+# we do not have a 'number' variable since that is used to indicate
+# the version of CIAO being used and we (probably) want the CALDB
+# area to be independent of this
+#
+##number=3.0
+
+headtitlepostfix=CALDB 2
+##texttitlepostfix=- CALDB 2
+
+%css=live /caldb3/ciao.css
+%css=test /caldb3/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
+
+%cssprint=live /caldb3/ciao.print.css
+%cssprint=test /caldb3/ciao.print.css
+%cssprint=trial /sds/ciao_trial/ciao.print.css
+
+%newsfile=live /proj/web-cxc/htdocs/caldb3/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/caldb3/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/caldb/news.html
+
+%newsurl=live /caldb3/news.html
+%newsurl=test /caldb3/news.html
+%newsurl=trial /sds/caldb_trial/news.html
+
+%searchssi=live /caldb3/caldb_search.ssi
+%searchssi=test /caldb3/caldb_search.ssi
+%searchssi=trial /sds/caldb_trial/caldb_search.ssi
+
+%stylesheets=live /data/da/Docs/web4/caldb/
+%stylesheets=test /data/da/Docs/web4/caldb/
+%stylesheets=trial /data/da/Docs/web4/devel/
+
+# we have a versioned directory name for the live site
+# but not the test one (since I only realised I needed a
+# 'versioned' name here after testing had begun)
+#
+%outdir=live /proj/web-cxc/htdocs/caldb3/
+%outdir=test /proj/web-cxc-test/htdocs/caldb3/
+%outdir=trial /proj/web-icxc/htdocs/sds/caldb_trial/
+
+%outurl=live http://cxc.harvard.edu/caldb3/
+%outurl=test http://cxc-test.harvard.edu/caldb3/
+%outurl=trial http://icxc.harvard.edu/sds/caldb_trial/
+
+%storage=live /data/da/Docs/caldbweb/published/caldb2/live/
+%storage=test /data/da/Docs/caldbweb/published/caldb2/test/
+%storage=trial /data/da/Docs/caldbweb/published/caldb2/trial/
+
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao40.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao40.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao40.trial.xml
+
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/40beta/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
 
 -version
 
