@@ -1213,6 +1213,88 @@ sub xml2html_register ($) {
 
 } # sub: xml2html_register
 
+# xml2html_relnotes - called by xml2html
+#
+# note: $xslt, $outdir, and $outurl end in a /
+#
+sub xml2html_relnotes ($) {
+    my $opts = shift;
+
+    my $in     = $$opts{xml};
+    my $dom    = $$opts{xml_dom};
+    my $depth  = $$opts{depth};
+    my $outdir = $$opts{outdir};
+    my $outurl = $$opts{outurl};
+
+    my $lastmod = $$opts{lastmod};
+
+    # the navbarlink is currently not used by the code
+    # - see the comments in helper.xsl
+    # - note that I do not believe $nlink is set to
+    #   a sensible value by the following !!
+#    my $nlink = $$opts{navbar_link};
+#    $nlink .= "${in}.html" unless $in eq "index";
+
+    print "Parsing [relnotes]: $in";
+
+    # we 'hardcode' the output of the transformation
+    my @pages = ( "${outdir}${in}.html" );
+
+    # how about math pages?
+    #
+    my @math = find_math_pages $dom;
+
+    # do we need to recreate (include the equations created by any math blocks)
+    return if should_we_skip $in, @pages, map( { "${outdir}${_}.gif"; } @math );
+    print "\n";
+
+    # remove files [already ensured the dir exists]
+    foreach my $page ( @pages ) { myrm $page; }
+    clean_up_math( $outdir, @math );
+
+    # used to set up the list of parameters sent to the
+    # stylesheet
+    #
+    my %params =
+      (
+       type => $$opts{type},
+       site => $$opts{site},
+       lastmod => $lastmod,
+       install => $outdir,
+       pagename => $in,
+       #	  navbarlink => $nlink,
+       url => "${outurl}${in}.html",
+       sourcedir => cwd() . "/",
+       updateby => $$opts{updateby},
+       depth => $depth,
+       siteversion => $site_version,
+       # ahelpindex added in CIAO 3.0
+       ahelpindex => $ahelpindex,
+       cssfile => $css,
+       cssprintfile => $cssprint,
+       newsfile => $newsfile,
+       newsfileurl => $newsfileurl,
+       watchouturl => $watchouturl,
+       searchssi => $searchssi,
+       headtitlepostfix => $headtitlepostfix,
+       texttitlepostfix => $texttitlepostfix,
+
+       storageloc => $$opts{storageloc},
+      );
+
+    translate_file "$$opts{xslt}relnotes.xsl", $dom, \%params;
+
+    # success or failure?
+    check_for_page( @pages );
+
+    # math?
+    process_math( $outdir, @math );
+
+    print "\nThe page can be viewed on:\n  ${outurl}$in.html\n\n";
+
+} # sub: xml2html_relnotes
+
+
 # Usage:
 #   xml2html_multiple $opts, $pagename, \@sitelist;
 #
@@ -1919,6 +2001,9 @@ sub process_xml ($$) {
 	} elsif ( $root eq "cscdb" ) {
 	    die_if_icxc $root;
 	    xml2html_cscdb $opts;
+	} elsif ( $root eq "relnotes" ) {
+	    die_if_icxc $root;
+	    xml2html_relnotes $opts;
 	} else {
 	    die "Error: $in.xml has an unknown root node [$root]\n";
 	}
