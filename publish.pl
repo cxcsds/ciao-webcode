@@ -1850,6 +1850,13 @@ EOX
       $thread_title_long  = $thread_title_short if $thread_title_long eq "";
       $thread_title_short = $thread_title_long  if $thread_title_short eq "";
 
+      my $thread_page_string;
+      if ($site eq "pog") {
+        $thread_page_string = "or return to <cxclink href=\"../\">the Threads Page<\/cxclink>";
+      } else {
+	$thread_page_string = "or return to the Threads Page: <cxclink href=\"../\">Top<\/cxclink> | <cxclink href=\"../all.html\">All<\/cxclink>";
+      }       
+
       # For now no navbar or meta information
       #
       $xml_text .= <<"EOX";
@@ -1866,7 +1873,7 @@ EOX
  <li><cxclink href="index.py.html">Python</cxclink></li>
 </list>
 
-<p>or return to the Threads Page: <cxclink href="../">Top</cxclink> | <cxclink href="../all.html">All</cxclink></p>
+<p>${thread_page_string}</p>
 
 </text>
 </page>
