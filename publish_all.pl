@@ -81,7 +81,7 @@ my @prefixes =
    "/data/da/Docs/ciaoweb/ciao31",
    "/data/da/Docs/sherpaweb/ciao31",
    "/data/da/Docs/chartweb/internal",
-   "/data/da/Docs/caldbweb/caldb2",
+   "/data/da/Docs/caldbweb/caldb3",
    "/data/da/Docs/ciaoweb/ciao32",
    "/data/da/Docs/sherpaweb/ciao32",
    "/data/da/Docs/ciaoweb/ciao33",
