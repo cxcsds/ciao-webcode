@@ -911,9 +911,6 @@ ahelpindexnavbar=ahelp
 
 +site caldb
 
-# we have a slight mis-match below: some directories are labelled
-# as caldb2 and some are not
-#
 group=cxcweb_caldb
 
 # no live site for now
@@ -989,7 +986,7 @@ headtitlepostfix=CALDB 4
 -version
 
 
-+version caldb2
++version caldb3
 
 # we do not have a 'number' variable since that is used to indicate
 # the version of CIAO being used and we (probably) want the CALDB
@@ -997,8 +994,7 @@ headtitlepostfix=CALDB 4
 #
 ##number=3.0
 
-headtitlepostfix=CALDB 2
-##texttitlepostfix=- CALDB 2
+headtitlepostfix=CALDB 3
 
 %css=live /caldb3/ciao.css
 %css=test /caldb3/ciao.css
@@ -1036,9 +1032,9 @@ headtitlepostfix=CALDB 2
 %outurl=test http://cxc-test.harvard.edu/caldb3/
 %outurl=trial http://icxc.harvard.edu/sds/caldb_trial/
 
-%storage=live /data/da/Docs/caldbweb/published/caldb2/live/
-%storage=test /data/da/Docs/caldbweb/published/caldb2/test/
-%storage=trial /data/da/Docs/caldbweb/published/caldb2/trial/
+%storage=live /data/da/Docs/caldbweb/published/caldb3/live/
+%storage=test /data/da/Docs/caldbweb/published/caldb3/test/
+%storage=trial /data/da/Docs/caldbweb/published/caldb3/trial/
 
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao40.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao40.test.xml
