@@ -59,7 +59,7 @@
       * - should these be node sets rather than strings?
       *-->
   <xsl:variable name="allowed-pdf" select="' thread '"/>
-  <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc '"/>
+  <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc obsvis '"/>
   <xsl:variable name="allowed-download-types" select="' solaris fc4 fc8 osx_ppc osx_intel caldb atomdb '"/>
 
   <!--* note that '' is also allowed for proglang but this is checked for separately *-->
