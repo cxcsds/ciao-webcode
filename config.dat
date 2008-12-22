@@ -1152,6 +1152,89 @@ logotext=Chandra Source Catalog logo
 
 -site  # end of csc
 
++site obsvis
+
+group=cxcweb_ciao
+
+@types=live
+@types=test
+@types=trial
+
+prefix=/data/da/Docs/obsvisweb
+
+depth_offset=0
+
++version website
+
+# is this used for anything other than ahelp?
+number=1.0
+
+headtitlepostfix=ObsVis
+texttitlepostfix=ObsVis
+
+# only used for ahelp files
+# version_string=4.0
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+%css=live /ciao/ciao.css
+%css=test /ciao/ciao.css
+%css=trial /sds/ciao4.1_trial/ciao.css
+
+%cssprint=live /ciao/ciao.print.css
+%cssprint=test /ciao/ciao.print.css
+%cssprint=trial /sds/ciao4.1_trial/ciao.print.css
+
+logoimage=imgs/obsvis_logo_navbar.gif
+logotext=ObsVis logo
+
+%searchssi=live /obsvis/search.ssi
+%searchssi=test /obsvis/search.ssi
+%searchssi=trial /sds/obsvis_trial/search.ssi
+
+%stylesheets=live /data/da/Docs/web4/ciao4/
+%stylesheets=test /data/da/Docs/web4/ciao4/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
+
+%outdir=live /proj/web-cxc/htdocs/obsvis/
+%outdir=test /proj/web-cxc-test/htdocs/obsvis/
+%outdir=trial /proj/web-icxc/htdocs/sds/obsvis_trial/
+
+%outurl=live http://cxc.harvard.edu/obsvis/
+%outurl=test http://cxc-test.harvard.edu/obsvis/
+%outurl=trial http://icxc.harvard.edu/sds/obsvis_trial/
+
+%storage=live /data/da/Docs/obsvisweb/published/obsvis/live/
+%storage=test /data/da/Docs/obsvisweb/published/obsvis/test/
+%storage=trial /data/da/Docs/obsvisweb/published/obsvis/trial/
+
+# where does the ahelp 'index' file live
+# use CIAO versions
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao41/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
+
+%storage=live /data/da/Docs/ciaoweb/published/ciao41/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao41/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao41/trial/
+
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao41.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao41.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao41.trial.xml
+
+-version
+
+@stylesheets=page
+@stylesheets=navbar
+@stylesheets=redirect
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=myhtml
+
+-site  # end of obsvis
+
 
 +site icxc
 
