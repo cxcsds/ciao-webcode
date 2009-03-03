@@ -480,9 +480,9 @@ imglinkiconheight=16
 %storageloc=test /data/da/Docs/ciaoweb/storage.40beta.test.xml
 %storageloc=trial /data/da/Docs/ciaoweb/storage.40beta.trial.xml
 
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/40beta/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/40beta/test/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao41/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
 
 -version
 
