@@ -130,22 +130,23 @@
 
 	      </xsl:if>
 
-	      <xsl:if test="//fixlist">
+	      <xsl:if test="//fixlist">		
+		<xsl:for-each select="//fixlist">
 		  <p>
 		    A list of 
 		      <a>
 		        <xsl:attribute name="href">
 			  <xsl:text>#</xsl:text>
-			  <xsl:value-of select="concat('ciao',//fixlist/@ver)"/>
+			  <xsl:value-of select="concat('ciao',./@ver)"/>
 			</xsl:attribute>
 
 			<xsl:text>bugs fixed in CIAO </xsl:text>
-			  <xsl:value-of select="//fixlist/@vername"/>
+			  <xsl:value-of select="./@vername"/>
 		      </a>
 
 		    is available.
 		  </p>
-		  
+		  </xsl:for-each>
 	      </xsl:if>
 
 	      <xsl:if test="//scriptlist">
@@ -243,26 +244,28 @@
 	          <hr/>
 		</xsl:if>
 
+		<xsl:for-each select="//fixlist">
 		<h2>
 		  <a>
 		    <xsl:attribute name="name">
-		      <xsl:value-of select="concat('ciao',//fixlist/@ver)"/>
+		      <xsl:value-of select="concat('ciao',./@ver)"/>
 		    </xsl:attribute>
 		    
 		    <xsl:text>Bugs fixed in CIAO </xsl:text>
-		      <xsl:value-of select="//fixlist/@vername"/>
+		      <xsl:value-of select="./@vername"/>
 		  </a>
 		</h2>
 
 		<p>
 		  The following is a list of bugs that were fixed
-		  in the CIAO <xsl:value-of select="//fixlist/@vername"/>
+		  in the CIAO <xsl:value-of select="./@vername"/>
 		  software release.
 		</p>
 
 		<ol>
-		  <xsl:apply-templates select="//fixlist/entry" mode="main"/>
+		  <xsl:apply-templates select="./entry" mode="main"/>
 		</ol>
+		</xsl:for-each>
 	      </xsl:if>
 	      <!--// end "fixed in CIAO x.x" section //-->
 
