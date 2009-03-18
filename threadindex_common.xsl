@@ -341,7 +341,7 @@
       <td align="center">
 	<!--* loop over the threads *-->
 	<xsl:for-each select="thread">
-	  <xsl:if test="position()>1">, </xsl:if>
+	  <xsl:if test="position()>1"><br/></xsl:if>
 	  <xsl:apply-templates select="."/>
 	</xsl:for-each>
       </td>
