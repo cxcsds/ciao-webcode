@@ -311,11 +311,9 @@
   <xsl:template match="datasets">
 
     <!--* set up the header for this section *-->
+
     <tr>
-      <th colspan="4" align="center">Sorted by OBSID</th>
-    </tr>
-    <tr>
-      <th align="center">OBSID</th>
+      <th align="center">ObsID</th>
       <th align="center">Object</th>
       <th align="center">Instrument</th> 
       <th align="center">Threads</th>
@@ -350,10 +348,11 @@
     </tr> 
 
     <!--* add a separator *-->
+    <xsl:if test="position() != last()">
     <tr>
       <th colspan="4"><hr/></th>
     </tr>
-
+    </xsl:if>
   </xsl:template> <!--* match=dataset *-->
 
   <!--*
