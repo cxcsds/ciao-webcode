@@ -728,7 +728,7 @@
 	  </th>
 	</tr>
 	<tr>
-	  <td>Script</td>
+	  <td>Name</td>
 	  <td>Associated thread(s)</td>
 	  <td>Language</td>
 	  <td>Last update</td>
