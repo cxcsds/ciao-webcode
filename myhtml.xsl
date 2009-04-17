@@ -710,7 +710,7 @@
       *-->
   <xsl:template match="scriptlist">
 
-    <h2><a name="scripts">Scripts included in the Package (by category)</a></h2>
+    <h2><a name="scripts">Scripts and Modules (by category)</a></h2>
     
     <ul>
       <xsl:for-each select="category">
@@ -723,7 +723,7 @@
     <table border="0" cellpadding="5" width="100%">
       <xsl:for-each select="category">
 	<tr>
-	  <th align="left" colspan="5">
+	  <th align="left" colspan="4">
 	    <a name="{translate(@name,' ','')}"><xsl:value-of select="@name"/></a>
 	  </th>
 	</tr>
@@ -731,7 +731,6 @@
 	  <td>Script</td>
 	  <td>Associated thread(s)</td>
 	  <td>Language</td>
-	  <td>Version</td>
 	  <td>Last update</td>
 	</tr>
         <xsl:for-each select="script">
@@ -743,7 +742,6 @@
 	      <xsl:apply-templates select="thread" mode="scripts"/>
 	    </td>
 	    <td align="center"><xsl:value-of select="@lang"/></td>
-	    <td align="center"><xsl:value-of select="@ver"/></td>
 	    <td align="center">
 	      <xsl:value-of select="@day"/>-<xsl:call-template name="get-month"><xsl:with-param name="month" select="@month"/></xsl:call-template>-<xsl:value-of select="@year"/>
 	      <xsl:if test="@updated = 'yes'">
@@ -763,12 +761,12 @@
 	    </td>
           </tr>
           <tr bgcolor="#cccccc">
-	    <td align="left" colspan="4">
+	    <td align="left" colspan="3">
 	      <xsl:apply-templates select="desc" mode="scripts"/>
 	    </td>
 	  </tr>
 	  <tr>
-	    <td colspan="5"/>
+	    <td colspan="4"/>
 	  </tr>
         </xsl:for-each> <!-- select="script" -->
       </xsl:for-each> <!-- select="category" -->
