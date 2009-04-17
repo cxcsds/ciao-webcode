@@ -664,6 +664,7 @@
 
 	<xsl:text> (</xsl:text>
 	<a>
+	  <xsl:attribute name="class">helplink</xsl:attribute>
 	  <xsl:if test="$slmatch/summary!=''">
 	    <xsl:attribute name="title">Ahelp (<xsl:value-of select="$slmatch/context"/>): <xsl:value-of select="$slmatch/summary"/></xsl:attribute>
 	  </xsl:if>
@@ -679,6 +680,7 @@
 	</a>
 	<xsl:text> or </xsl:text>
 	<a>
+	  <xsl:attribute name="class">helplink</xsl:attribute>
 	  <xsl:if test="$pymatch/summary!=''">
 	    <xsl:attribute name="title">Ahelp (<xsl:value-of select="$pymatch/context"/>): <xsl:value-of select="$pymatch/summary"/></xsl:attribute>
 	  </xsl:if>
