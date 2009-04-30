@@ -1995,7 +1995,7 @@ sub process_xml ($$) {
 	    xml2html_register $opts;
 	} elsif ( $root eq "faq" ) {
 	    die_if_icxc $root;
-	    xml2html_multiple $opts, "faq", [ "ciao", "sherpa", "chips" ];
+	    xml2html_multiple $opts, "faq", [ "ciao", "sherpa", "chips", "csc" ];
 	} elsif ( $root eq "dictionary" ) {
 	    die_if_icxc $root;
 	    xml2html_multiple $opts, "dictionary", [ "ciao" ];
