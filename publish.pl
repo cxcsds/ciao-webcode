@@ -1851,7 +1851,7 @@ EOX
       $thread_title_short = $thread_title_long  if $thread_title_short eq "";
 
       my $thread_page_string;
-      if ($site eq "pog") {
+      if ($site eq "pog" or $site eq "chart") {
         $thread_page_string = "or return to <cxclink href=\"../\">the Threads Page<\/cxclink>";
       } else {
 	$thread_page_string = "or return to the Threads Page: <cxclink href=\"../\">Top<\/cxclink> | <cxclink href=\"../all.html\">All<\/cxclink>";
