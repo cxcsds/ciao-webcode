@@ -989,11 +989,25 @@ Programming error: add-ssi-include called with an empty file parameter
         *-->
     <div class="noprint" align="center">
       <font size="+1">
+
+      <!--// split so that title text is accurate for Sherpa //-->
+      <xsl:if test="$site = 'ciao' or $site = 'chips'">
 	<a title="What's new for CIAO &amp; users of CIAO" href="{$newsfileurl}">WHAT'S NEW</a>
 	<xsl:if test="$watchouturl != ''">
 	  <xsl:text> | </xsl:text>
 	  <a title="Items to be aware of when using CIAO" href="{$watchouturl}">WATCH OUT</a>
 	</xsl:if>
+      </xsl:if>
+
+
+      <xsl:if test="$site = 'sherpa'">
+	<a title="What's new for Sherpa &amp; users of Sherpa" href="{$newsfileurl}">WHAT'S NEW</a>
+	<xsl:if test="$watchouturl != ''">
+	  <xsl:text> | </xsl:text>
+	  <a title="Items to be aware of when using Sherpa" href="{$watchouturl}">WATCH OUT</a>
+	</xsl:if>
+      </xsl:if>
+
       </font>
       <br/>
     </div>

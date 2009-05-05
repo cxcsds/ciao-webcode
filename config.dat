@@ -531,18 +531,18 @@ version_string=4.1
 %cssprint=trial /sds/ciao4.1_trial/ciao.print.css
 
 # location of the news file for the "What's new" link
-%newsfile=live /proj/web-cxc/htdocs/ciao4.1/news.html
-%newsfile=test /proj/web-cxc-test/htdocs/ciao4.1/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/ciao4.1_trial/news.html
+%newsfile=live /proj/web-cxc/htdocs/sherpa4.1/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/sherpa4.1/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/sherpa4.1_trial/news.html
 
-%newsurl=live /ciao4.1/news.html
-%newsurl=test /ciao4.1/news.html
-%newsurl=trial /sds/ciao4.1_trial/news.html
+%newsurl=live /sherpa4.1/news.html
+%newsurl=test /sherpa4.1/news.html
+%newsurl=trial /sds/sherpa4.1_trial/news.html
 
 # location of the "watch out" page
-%watchouturl=live /ciao4.1/watchout.html
-%watchouturl=test /ciao4.1/watchout.html
-%watchouturl=trial /sds/ciao4.1_trial/watchout.html
+%watchouturl=live /sherpa4.1/watchout.html
+%watchouturl=test /sherpa4.1/watchout.html
+%watchouturl=trial /sds/sherpa4.1_trial/watchout.html
 
 logoimage=imgs/sherpa_logo_navbar.gif
 logotext=Sherpa Logo
