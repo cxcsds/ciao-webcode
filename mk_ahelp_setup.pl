@@ -792,7 +792,6 @@ sub print_site_list_to_index ($$$$) {
     my $site = shift;
     my $list = shift;
 
-    dbg( "echo $name" );
     $fh->print( "<${name} site='$site'>\n" );
 
     # we want '_' to come at the end, hence the 'amusing' sort function
