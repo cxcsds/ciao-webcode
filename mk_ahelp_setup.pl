@@ -81,7 +81,7 @@ sub protect_xml_chars_for_printf ($);
 
 sub parse_groups ($$$\%);
 sub print_seealso_list ($$$\%);
-sub create_index_files ($\%\%\%);
+sub create_index_files ($\%\%\%\%\%);
 sub create_seealso_files ($\%);
 
 sub check_htmlname ($);
@@ -236,6 +236,8 @@ my %multi_key;
 my %seealso;
 my %list_context;
 my %list_alphabet;
+my %list_python;
+my %list_slang;
 ##my %list_dirs;
 
 # Some, but not all, lists are organized by site
@@ -243,15 +245,17 @@ my %list_alphabet;
 foreach my $site ( list_ahelp_sites ) {
   $list_alphabet{$site} = {};
   $list_context{$site} = {};
+  $list_python{$site} = {};
+  $list_slang{$site} = {};
   ##$list_dirs{$site} = {};
 }
 
 foreach my $path ( map { "${ahelpfiles}$_"; } qw( /doc/xml/ /contrib/doc/xml/ ) ) {
-    dbg( "parsing xml files in $path for key/context/URL info" );
+     dbg( "parsing xml files in $path for key/context/URL info" );
 
     foreach my $xmlfile ( glob("${path}*.xml") ) { # $path ends in a /
 
-	dbg( "+++ Processing file: $xmlfile" );
+ 	dbg( "+++ Processing file: $xmlfile" );
 
 	my ( $id, $obj ) = inspect_xmlfile( $xmlfile, $stylesheets );
 	next unless defined $id;
@@ -300,6 +304,15 @@ foreach my $path ( map { "${ahelpfiles}$_"; } qw( /doc/xml/ /contrib/doc/xml/ ) 
 	$$la{$fchar} = {} unless exists $$la{$fchar};
 	${ $$la{$fchar} }{$id} = $obj;
 
+	my $lapy = $list_python{$site};
+	$$lapy{$fchar} = {} unless exists $$lapy{$fchar};
+	${ $$lapy{$fchar} }{$id} = $obj;
+
+	my $lasl = $list_slang{$site};
+	$$lasl{$fchar} = {} unless exists $$lasl{$fchar};
+	${ $$lasl{$fchar} }{$id} = $obj;
+
+
 	# it's useful to know what directories we are going to be storing the files in
 	#
 #	my $dname = $htmlname;
@@ -327,7 +340,7 @@ create_seealso_files $storage, %out;
 # write out the files which list all the ahelp files
 # and useful information about them (summary, parameter lists, ...)
 #
-create_index_files $storage, %out, %list_alphabet, %list_context;
+create_index_files $storage, %out, %list_alphabet, %list_context, %list_python, %list_slang;
 
 # End of script
 #
@@ -463,8 +476,8 @@ sub expand_seealso ($\%) {
     # for the seealso groups for a given keyword (global variable)
     #
     my $keys = join( " ", keys %{ $href } );
-    dbg( "parsing ahelp DB file to find seealsogroup members:" );
-    dbg( "  $keys\n" );
+     dbg( "parsing ahelp DB file to find seealsogroup members:" );
+     dbg( "  $keys\n" );
     my $fh = IO::File->new( "$listseealso $keys |" )
       or die "Error: Unable to run $listseealso\n";
     while ( <$fh> ) {
@@ -630,7 +643,7 @@ sub parse_groups ($$$\%) {
     my %list;
     my $flag = 0;
     foreach my $grp ( @$grplist ) {
-	dbg( "  -- group = $grp" );
+	 dbg( "  -- group = $grp" );
 	while ( my ( $ctxt, $aref ) = each %{ $$seealso{$grp} } ) {
 
 	    # remove the current file from the seealso list
@@ -779,6 +792,7 @@ sub print_site_list_to_index ($$$$) {
     my $site = shift;
     my $list = shift;
 
+    dbg( "echo $name" );
     $fh->print( "<${name} site='$site'>\n" );
 
     # we want '_' to come at the end, hence the 'amusing' sort function
@@ -788,16 +802,38 @@ sub print_site_list_to_index ($$$$) {
     #
     my @words = sort my_alphabetical_sort keys %$list;
     foreach my $word ( @words ) {
+
 	my $href = $$list{$word};
 	$fh->printf( "<term><name>%s</name><itemlist>\n", $word );
+
 	# since id has context in it we just use the default sort for now
-        my $ctr = 1;
+    my $ctr = 1;
 	my @ids = sort my_alphabetical_sort keys %$href;
+
+	if ($name eq "python") {
+	foreach my $id ( @ids ) {
+	  if ( $id !~ /sl\./) {
+	    # just print the id value (used to index into the main list)
+	    print $fh "<item number='$ctr' id='$id'/>\n";
+	    $ctr++;
+		} 
+	  }
+	} elsif ($name eq "slang") {
+	foreach my $id ( @ids ) {
+	  if ( $id !~ /py\./) {
+	    # just print the id value (used to index into the main list)
+	    print $fh "<item number='$ctr' id='$id'/>\n";
+	    $ctr++;
+		} 
+	  }	  
+	} else {	
 	foreach my $id ( @ids ) {
 	    # just print the id value (used to index into the main list)
 	    print $fh "<item number='$ctr' id='$id'/>\n";
 	    $ctr++;
+		}
 	}
+	
 	$fh->print( "</itemlist></term>\n" );
     }
     $fh->print( "</${name}>\n" );
@@ -877,7 +913,7 @@ sub create_seealso_files ($\%) {
     
     my $seealso_head = "seealso.$context.$key.xml";
     my $ofile = "${storage}$seealso_head";
-    dbg( " -- about to create $ofile" );
+     dbg( " -- about to create $ofile" );
     myrm( $ofile );
     my $fh = IO::File->new( "> $ofile" )
       or die "Error: Unable to create $ofile\n";
@@ -934,11 +970,13 @@ sub create_seealso_files ($\%) {
 #   attribute, since here depth is the actual path fragment to use (eg
 #   '../') and not a numeric value. This is just a reminder to self.
 #
-sub create_index_files ($\%\%\%) {
+sub create_index_files ($\%\%\%\%\%) {
     my $dirname = shift;
     my $objlist = shift;
     my $list_a  = shift;
     my $list_c  = shift;
+    my $list_py  = shift;
+    my $list_sl  = shift;
 
     my $xmlfile = "${dirname}/ahelpindex.xml";
     my $datfile = "${dirname}/ahelpindex.dat";
@@ -969,6 +1007,8 @@ sub create_index_files ($\%\%\%) {
     #
     print_list_to_index $xmlfh, "alphabet",   $list_a;
     print_list_to_index $xmlfh, "context",    $list_c;
+    print_list_to_index $xmlfh, "python",    $list_py;
+    print_list_to_index $xmlfh, "slang",    $list_sl;
     ##print_list_to_index $xmlfh, "directory", $list_d;
 
     $xmlfh->print( "</ahelpindex>\n" );

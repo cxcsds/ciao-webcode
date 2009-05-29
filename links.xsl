@@ -247,13 +247,23 @@
     </xsl:if>
 
     <!--* ohh for a DTD *-->
-    <xsl:if test="boolean(@type) and @type!='main' and @type!='alphabet' and @type!='context'">
+    <xsl:if test="boolean(@type) and $site = 'ciao' and @type!='main' and @type!='alphabet' and @type!='context'">
       <xsl:message terminate="yes">
 
  ERROR:
-   type attribute of ahelppage tag must be one of:
+   In CIAO site, the type attribute of ahelppage tag must be one of:
        main alphabet context
-   and not <xsl:value-of select="@type"/>)
+   You have a type of "<xsl:value-of select="@type"/>"
+
+      </xsl:message>
+    </xsl:if>
+    <xsl:if test="boolean(@type) and ($site = 'chips' or $site = 'sherpa') and @type!='main' and @type!='python' and @type!='slang' and @type!='context'">
+      <xsl:message terminate="yes">
+
+ ERROR:
+   In <xsl:value-of select="$site"/> site, the type attribute of ahelppage tag must be one of:
+       main python slang context
+   You have a type of "<xsl:value-of select="@type"/>"
 
       </xsl:message>
     </xsl:if>
@@ -282,6 +292,9 @@
       <xsl:with-param name="contents">
 	<a>
 
+	  <xsl:attribute name="class">
+	    <xsl:text>helplink</xsl:text></xsl:attribute>
+
 	  <xsl:attribute name="title">
 	    <xsl:text>Ahelp index (</xsl:text>
 	    <xsl:call-template name="process-site-name-for-text"/>
@@ -292,6 +305,8 @@
 
 	  <xsl:choose>
 	      <xsl:when test="@type = 'alphabet'">index_alphabet.html</xsl:when>
+	      <xsl:when test="@type = 'python'">index_python.html</xsl:when>
+	      <xsl:when test="@type = 'slang'">index_slang.html</xsl:when>
 	      <xsl:when test="@type = 'context'">index_context.html</xsl:when>
 	    </xsl:choose><xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if></xsl:attribute>
 

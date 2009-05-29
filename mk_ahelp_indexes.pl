@@ -259,8 +259,17 @@ push @extra, ( logotext  => $logotext )
 # we 'hardcode' the output of the transformation
 # and ensure that any old files have been deleted
 #
-my @s = qw( navbar_ahelp_index.incl index_alphabet.html index_context.html );
-my @h = qw( index_alphabet index_context );
+
+my @s;
+my @h;
+
+if ($site eq "ciao") {
+    @s = qw( navbar_ahelp_index.incl index_alphabet.html index_context.html );
+    @h = qw( index_alphabet index_context );
+} else {
+    @s = qw( navbar_ahelp_index.incl navbar_ahelp_python.incl navbar_ahelp_slang.incl index_python.html index_slang.html index_context.html );
+    @h = qw( index_python index_slang index_context );
+}
 
 my @soft = map { "${outdir}${_}"; } @s;
 
@@ -277,7 +286,11 @@ my %paramlist = (
 		 @extra
 		);
 
-translate_file "${stylesheets}ahelp_index.xsl", $ahelpindex, \%paramlist;
+if ($site eq "ciao") {
+    translate_file "${stylesheets}ahelp_index.xsl", $ahelpindex, \%paramlist;
+} else {
+    translate_file "${stylesheets}ahelp_index_lang.xsl", $ahelpindex, \%paramlist;
+}
 
 # success or failure?
 foreach my $page ( @soft ) {

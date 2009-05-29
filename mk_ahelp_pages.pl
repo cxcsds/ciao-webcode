@@ -96,7 +96,7 @@ Usage:
 
 The default is --type=test, which publishes to the test web site.
 The live option publishes to the live (ie cxc.harvard.edu) site.
-Don't use the trial option unless you know what it does.
+Don\'t use the trial option unless you know what it does.
 
 The --config option gives the path to the configuration file; this
 defaults to config.dat in the same directory as the script.

@@ -218,7 +218,19 @@
 
     <td class="navbar" valign="top">
       <!--* add the navbar *-->
-      <xsl:comment>#include virtual="navbar_<xsl:value-of select="$navbar"/>.incl"</xsl:comment>
+
+      <xsl:choose>
+	<xsl:when test="starts-with(//ENTRY/@context,'sl.')">
+	  <xsl:comment>#include virtual="navbar_ahelp_slang.incl"</xsl:comment>
+	</xsl:when>
+	<xsl:when test="starts-with(//ENTRY/@context,'py.')">
+	  <xsl:comment>#include virtual="navbar_ahelp_python.incl"</xsl:comment>
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:comment>#include virtual="navbar_<xsl:value-of select="$navbar"/>.incl"</xsl:comment>
+	</xsl:otherwise>
+      </xsl:choose>
+
       <xsl:call-template name="newline"/>
     </td>
     

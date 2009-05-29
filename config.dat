@@ -171,7 +171,7 @@ logotext=CIAO Logo
 #
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao41/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/trial/ahelp/
 
 # what navbar to use for the ahelp index pages
 ahelpindexnavbar=analysis
@@ -577,7 +577,7 @@ logotext=Sherpa Logo
 
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao41/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/trial/ahelp/
 
 ahelpindexnavbar=ahelp
 
@@ -746,7 +746,7 @@ logotext=ChIPS Logo
 
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao41/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/trial/ahelp/
 
 ahelpindexnavbar=ahelp
 
