@@ -565,7 +565,7 @@
       *-->
   <xsl:template name="process-overview-section">
     <xsl:param name="title" select="''"/>
-    <xsl:param name="section" seelct="''"/>
+    <xsl:param name="section" select="''"/>
 
     <!--* is this check robust enough and correct? *-->
     <xsl:if test="$section != '' and count($section) != 0">
