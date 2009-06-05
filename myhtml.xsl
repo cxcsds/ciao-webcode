@@ -730,9 +730,9 @@
 	</tr>
 
 	<xsl:if test="boolean(intro)">
-          <tr class="scriptrow">
+          <tr>
 	    <td colspan="4">
-	      <xsl:apply-templates/>
+	      <xsl:apply-templates select="intro/."/>
 	    </td>
 	  </tr>
 	</xsl:if>
