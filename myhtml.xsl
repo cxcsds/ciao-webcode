@@ -720,13 +720,24 @@
       </xsl:for-each> <!-- select="category" -->
     </ul>
 
-    <table border="0" cellpadding="5" width="100%">
+    <table class="scripts" border="0" cellpadding="5" width="100%">
       <xsl:for-each select="category">
+
 	<tr>
 	  <th align="left" colspan="4">
 	    <a name="{translate(@name,' ','')}"><xsl:value-of select="@name"/></a>
 	  </th>
 	</tr>
+
+	<xsl:if test="boolean(intro)">
+          <tr class="scriptrow">
+	    <td colspan="4">
+	      <xsl:apply-templates/>
+	    </td>
+	  </tr>
+	</xsl:if>
+
+	<xsl:if test="boolean(script)">
 	<tr>
 	  <td>Name</td>
 	  <td>Associated thread(s)</td>
@@ -734,7 +745,7 @@
 	  <td>Last update</td>
 	</tr>
         <xsl:for-each select="script">
-          <tr bgcolor="#cccccc">
+          <tr class="scriptrow">
 	    <td align="center" rowspan="2">
 	      <strong><xsl:value-of select="@name"/></strong>
 	    </td>
@@ -760,7 +771,7 @@
 	      </xsl:if>
 	    </td>
           </tr>
-          <tr bgcolor="#cccccc">
+          <tr class="scriptrow">
 	    <td align="left" colspan="3">
 	      <xsl:apply-templates select="desc" mode="scripts"/>
 	    </td>
@@ -769,6 +780,8 @@
 	    <td colspan="4"/>
 	  </tr>
         </xsl:for-each> <!-- select="script" -->
+	</xsl:if>
+
       </xsl:for-each> <!-- select="category" -->
     </table>
   </xsl:template> <!-- match=scriptlist -->
