@@ -105,9 +105,9 @@
 	  * - if CALDB, as CIAO
 	  *-->
 
-      <xsl:if test="boolean(//links) and $site!='csc'">
+      <xsl:if test="boolean(//links)">
 
-        <xsl:if test="$site!='chart'">
+        <xsl:if test="$site!='chart' and $site!='csc'">
 	  <div class="newsbar">
 	    <h2>Analysis Notes</h2>
 	  </div>
