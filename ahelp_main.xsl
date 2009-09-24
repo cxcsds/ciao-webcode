@@ -147,8 +147,8 @@
     <table class="ahelpheader" width="100%">
       <tr>
 	<td align="left" width="30%"><strong>AHELP for <xsl:value-of select="$headtitlepostfix"/></strong></td>
-	<td align="center" width="40%"><font size="+1">
-	    <strong><xsl:value-of select="@key"/></strong></font></td>
+	<td align="center" width="40%"><h1 class="ahelp">
+	    <xsl:value-of select="@key"/></h1></td>
 	<td align="right" width="30%">Context: 
 	  <a title="Jump to context list of Ahelp pages" href="{$depth}index_context.html#{@context}"><xsl:value-of select="@context"/></a></td>
       </tr>
