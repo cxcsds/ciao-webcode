@@ -119,7 +119,7 @@ logotext=CIAO Logo
 # location of the stylesheets
 %stylesheets=live /data/da/Docs/web4/ciao4/
 %stylesheets=test /data/da/Docs/web4/ciao4/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 # what's the location for the output files?
 %outdir=live /proj/web-cxc/htdocs/ciao4.2/

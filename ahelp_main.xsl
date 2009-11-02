@@ -80,9 +80,6 @@
 	    <!--* the main text *-->
 	    <td class="mainbar" valign="top">
 
-	      <!--* anchor for "skip navigation bar" link *-->
-	      <a name="maintext"/>
-
 	      <!--* parse the text *--> 
 	      <xsl:apply-templates select="ENTRY"/>
 	    </td>

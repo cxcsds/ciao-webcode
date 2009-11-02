@@ -121,7 +121,7 @@
 		</xsl:call-template>
 		<td class="mainbar" valign="top">
 		  <!--* the main text *-->
-		  <a name="maintext"/>
+
 		  <xsl:apply-templates select="text"/>
 		</td>
 	      </tr>

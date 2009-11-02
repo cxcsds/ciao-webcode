@@ -114,35 +114,40 @@
 	  <xsl:with-param name="name"  select="'index'"/>
 	</xsl:call-template>
 	
-	<!--* use a table to provide the page layout *-->
-	<table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
-	  <tr>
-	    <!--* add the navbar (we force page to have one) *-->
-	    <xsl:call-template name="add-navbar">
-	      <xsl:with-param name="name" select="info/navbar"/>
-	    </xsl:call-template>
+	  <!--// main div begins page layout //-->
+	    <div id="main">
 
-	    <!--* the main text *-->
-	    <td class="mainbar" valign="top">
+		<!--* the main text *-->
+		<div id="content">
+		  <div class="wrap">
 
-	      <a name="maintext"/>
-	    
 	      <!--* add the intro text *-->
 	      <xsl:apply-templates select="intro"/>
 	  
 	      <!--* create the list of entries *--> 
 	      <xsl:apply-templates select="entries" mode="toc"/>
 
-	    </td>
-	  </tr>
-	</table>
+		  </div>
+		</div> <!--// close id=content //-->
+
+		<div id="navbar">
+		  <div class="wrap">
+		    <a name="navtext"/>
+
+		  <xsl:call-template name="add-navbar">
+		    <xsl:with-param name="name" select="info/navbar"/>
+		  </xsl:call-template>
+		  </div>
+		</div> <!--// close id=navbar //-->
+		
+	    </div> <!--// close id=main  //-->
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
 	  <xsl:with-param name="name"  select="'index'"/>
 	</xsl:call-template>
 
-	<!--* add </body> tag [the <body> is included in a SSI] *-->
+	<!--* add </body> tag [the <body> is added by the add-htmlhead template] *-->
 	<xsl:call-template name="add-end-body"/>
       </html>
 
@@ -196,8 +201,6 @@
 
 	<div class="mainbar">
 
-	  <a name="maintext"/>
-
 	  <!--* page title (and link back to index) *-->
 	  <div align="center"><h2><xsl:apply-templates select="title"/></h2></div>
 	  <hr/>
@@ -219,7 +222,7 @@
 	  <xsl:with-param name="name"  select="@id"/>
 	</xsl:call-template>
 
-	<!--* add </body> tag [the <body> is included in a SSI] *-->
+	<!--* add </body> tag [the <body> is added by the add-htmlhead template] *-->
 	<xsl:call-template name="add-end-body"/>
       </html>
 

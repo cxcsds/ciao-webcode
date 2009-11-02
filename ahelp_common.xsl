@@ -266,12 +266,12 @@
     <!--*
         * this is only going to be picked up by user agents that do not process
         * stylesheets - as long as the stylesheet has a rule
-        *    .hidmem { display: none; }
+        *    .hideme { display: none; }
         * so it's a good way of getting to lynx users
         *-->
     <div class="hideme">
-      <a href="#maintext" accesskey="s"
-	title="Skip past the navigation links to the main part of the page">Skip the navigation links</a>
+      <a href="#navtext" accesskey="s"
+	title="Skip to the navigation links">Skip to the navigation links</a>
     </div>
 
     <div class="topbar">

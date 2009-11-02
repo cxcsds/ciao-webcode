@@ -503,9 +503,6 @@
 	    <!--* the main text *-->
 	    <td class="mainbar" valign="top">
 	      
-	      <!--* let the 'skip nav bar' have somewhere to skip to *-->
-	      <a name="maintext"/>
-
 	      <!--* set up the title block of the page *-->
 	      <xsl:call-template name="add-threadindex-title">
 		<xsl:with-param name="title" select="id/title"/>
@@ -567,9 +564,6 @@
 	    <!--* the main text *-->
 	    <td class="mainbar" valign="top">
         
-	      <!--* let the 'skip nav bar' have somewhere to skip to *-->
-	      <a name="maintext"/>
-
 	      <!-- set up the title block of the page -->
 	      <xsl:call-template name="add-threadindex-title">
 		<xsl:with-param name="title"><xsl:choose>
@@ -631,9 +625,6 @@
 
 	    <!--* the main text *-->
 	    <td class="mainbar" valign="top">
-
-	      <!--* let the 'skip nav bar' have somewhere to skip to *-->
-	      <a name="maintext"/>
 
 	      <!-- set up the title block of the page -->
 	      <xsl:call-template name="add-threadindex-title"/>
@@ -721,9 +712,6 @@
 	    <!--* the main text *-->
 	    <td class="mainbar" valign="top">
 	      
-	      <!--* let the 'skip nav bar' have somewhere to skip to *-->
-	      <a name="maintext"/>
-
 	      <!-- set up the title block of the page -->
 	      <xsl:call-template name="add-threadindex-title"/>
 

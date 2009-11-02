@@ -1630,7 +1630,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	<xsl:with-param name="name"  select="//thread/info/name"/>
       </xsl:call-template>
 
-      <!--* add </body> tag [the <body> is included in a SSI] *-->
+      <!--* add </body> tag [the <body> is added by the add-htmlhead template] *-->
       <xsl:call-template name="add-end-body"/>
       <xsl:call-template name="add-end-html"/>
 
@@ -2128,9 +2128,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
       <div class="mainbar">
 
-	<!--* let the 'skip nav bar' have somewhere to skip to *-->
-	<a name="maintext"/>
-
 	<!--* set up the title block of the page *-->
 	<xsl:call-template name="add-thread-title"/>
 
@@ -2165,7 +2162,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	<xsl:with-param name="name"  select="$hardcopyName"/>
       </xsl:call-template>
 
-      <!--* add </body> tag [the <body> is included in a SSI] *-->
+      <!--* add </body> tag [the <body> is added by the add-htmlhead template] *-->
       <xsl:call-template name="add-end-body"/>
       <xsl:call-template name="add-end-html"/>
 

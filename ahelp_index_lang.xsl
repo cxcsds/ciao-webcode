@@ -822,8 +822,6 @@
 	    <!--* the main text *-->
 	    <td class="mainbar" valign="top">
 
-	      <a name="maintext"/>
-
 	      <!--* process the contents *-->
 	      <xsl:apply-templates select="ahelpindex/python[@site=$site]"/>
 	    
@@ -880,8 +878,6 @@
 
 	    <!--* the main text *-->
 	    <td class="mainbar" valign="top">
-
-	      <a name="maintext"/>
 
 	      <!--* process the contents *-->
 	      <xsl:apply-templates select="ahelpindex/slang[@site=$site]"/>
@@ -1103,8 +1099,6 @@
 
 	    <!--* the main text *-->
 	    <td class="mainbar" valign="top">
-
-	      <a name="maintext"/>
 
 	      <!--* process the contents *-->
 	      <xsl:apply-templates select="ahelpindex/context[@site=$site]"/>

@@ -87,18 +87,13 @@
 	  <xsl:with-param name="name" select="$pagename"/>
 	</xsl:call-template>
 
-        <table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
-	  <tr>
-	    <!--* add the navbar (we force page to have one) *-->
-	    <xsl:call-template name="add-navbar">
-	      <xsl:with-param name="name" select="info/navbar"/>
-	    </xsl:call-template>
+	  <!--// main div begins page layout //-->
+	    <div id="main">
 
-	    <!--* the main text *-->
-	    <td class="mainbar" valign="top">
+		<!--* the main text *-->
+		<div id="content">
+		  <div class="wrap">
 
-	      <a name="maintext"/>
-	    
 	      <!--* add the intro text *-->
 	      <xsl:if test="intro">
 	        <xsl:apply-templates select="intro"/>
@@ -186,16 +181,27 @@
 	 <!--// end database column table //-->
 
 
-	    </td>
-	  </tr>
-	</table>  <!--// end page layout table //-->
+		  </div>
+		</div> <!--// close id=content //-->
+
+		<div id="navbar">
+		  <div class="wrap">
+		    <a name="navtext"/>
+
+		  <xsl:call-template name="add-navbar">
+		    <xsl:with-param name="name" select="info/navbar"/>
+		  </xsl:call-template>
+		  </div>
+		</div> <!--// close id=navbar //-->
+		
+	    </div> <!--// close id=main  //-->
 	    
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
 	  <xsl:with-param name="name"  select="$pagename"/>
 	</xsl:call-template>
 
-	<!--* add </body> tag [the <body> is included in a SSI] *-->
+	<!--* add </body> tag [the <body> is added by the add-htmlhead template] *-->
 	<xsl:call-template name="add-end-body"/>
       </html>
 
@@ -233,18 +239,13 @@
 	  <xsl:with-param name="name" select="$alphapagename"/>
 	</xsl:call-template>
 
-        <table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
-	  <tr>
-	    <!--* add the navbar (we force page to have one) *-->
-	    <xsl:call-template name="add-navbar">
-	      <xsl:with-param name="name" select="info/navbar"/>
-	    </xsl:call-template>
+	  <!--// main div begins page layout //-->
+	    <div id="main">
 
-	    <!--* the main text *-->
-	    <td class="mainbar" valign="top">
+		<!--* the main text *-->
+		<div id="content">
+		  <div class="wrap">
 
-	      <a name="maintext"/>
-	    
 	      <!--* add the intro text *-->
 	      <xsl:if test="intro">
 	        <xsl:apply-templates select="intro"/>
@@ -286,16 +287,27 @@
 	 <!--// end database column table //-->
 
 
-	    </td>
-	  </tr>
-	</table>  <!--// end page layout table //-->
+		  </div>
+		</div> <!--// close id=content //-->
+
+		<div id="navbar">
+		  <div class="wrap">
+		    <a name="navtext"/>
+
+		  <xsl:call-template name="add-navbar">
+		    <xsl:with-param name="name" select="info/navbar"/>
+		  </xsl:call-template>
+		  </div>
+		</div> <!--// close id=navbar //-->
+		
+	    </div> <!--// close id=main  //-->
 	    
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
 	  <xsl:with-param name="name"  select="$alphapagename"/>
 	</xsl:call-template>
 
-	<!--* add </body> tag [the <body> is included in a SSI] *-->
+	<!--* add </body> tag [the <body> is added by the add-htmlhead template] *-->
 	<xsl:call-template name="add-end-body"/>
       </html>
 

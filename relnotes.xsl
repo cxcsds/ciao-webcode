@@ -85,17 +85,12 @@
 	  <xsl:with-param name="name" select="$pagename"/>
 	</xsl:call-template>
 
-	<xsl:choose>
-	  <xsl:when test="boolean(info/navbar)">
-	    <!--* use a table to provide the page layout *-->
-	    <table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
-	      <tr>
-		<xsl:call-template name="add-navbar">
-		  <xsl:with-param name="name" select="info/navbar"/>
-		</xsl:call-template>
-		<td class="mainbar" valign="top">
-		  <!--* the main text *-->
-		  <a name="maintext"/>
+	  <!--// main div begins page layout //-->
+	    <div id="main">
+
+		<!--* the main text *-->
+		<div id="content">
+		  <div class="wrap">
        
               <xsl:variable name="release">
 		<xsl:value-of select="@release"/>
@@ -161,25 +156,27 @@
 	        <hr/>
 	      </xsl:for-each> <!-- select="category" -->
 
-		</td>
-	      </tr>
-	    </table>
-	  </xsl:when>
-	  <xsl:otherwise>
-	    <!--* the main text *-->
-	    <div class="mainbar">
-	      <a name="maintext"/>
-	      <xsl:apply-templates select="text"/>
-	    </div>
-	  </xsl:otherwise>
-	</xsl:choose>
+		  </div>
+		</div> <!--// close id=content //-->
+
+		<div id="navbar">
+		  <div class="wrap">
+		    <a name="navtext"/>
+
+		  <xsl:call-template name="add-navbar">
+		    <xsl:with-param name="name" select="info/navbar"/>
+		  </xsl:call-template>
+		  </div>
+		</div> <!--// close id=navbar //-->
+		
+	    </div> <!--// close id=main  //-->
 	    
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
 	  <xsl:with-param name="name"  select="$pagename"/>
 	</xsl:call-template>
 
-	<!--* add </body> tag [the <body> is included in a SSI] *-->
+	<!--* add </body> tag [the <body> is added by the add-htmlhead template] *-->
 	<xsl:call-template name="add-end-body"/>
       </html>
 

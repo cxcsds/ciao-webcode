@@ -403,6 +403,8 @@
 </style>
       </xsl:if>
     </head>
+    
+    <xsl:call-template name="start-tag"/>body<xsl:call-template name="end-tag"/>  <!--// open html body //-->
   </xsl:template> <!--* add-htmlhead *-->
 
   <!--* metalist/meta are a hacky way of setting meta comments in
@@ -502,20 +504,20 @@
     <!--* site=icxc publishing really should have type=live? *-->
     <xsl:if test='($type="test" and $site!="icxc") or $type="trial"'>
       <!--* add the body tag (start) and test header info *-->
-      <xsl:call-template name="add-start-body-white"/>
-      <xsl:call-template name="add-test-banner"/>
+<!-- TEMP        <xsl:call-template name="add-start-body-white"/>
+    <xsl:call-template name="add-test-banner"/> -->
     </xsl:if>
 
-    <xsl:choose>
+<!-- TEMP    <xsl:choose>
       <xsl:when test='$type="trial"'>
         <xsl:call-template name="add-header-trial"/>
       </xsl:when>
-      <xsl:otherwise>
+      <xsl:otherwise> -->
         <xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/incl/header.html'"/>
+          <xsl:with-param name="file" select="'/incl/greenheader.html'"/>
         </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
+<!-- TEMP       </xsl:otherwise> 
+    </xsl:choose> -->
 
     <!--* we break up into lots of different sections to try and make lynx happier *-->
 
@@ -525,9 +527,11 @@
         *    .hidmem { display: none; }
         * so it's a good way of getting to lynx users
         *-->
+
+    <br clear="all"/> <!-- TEMP -->
     <div class="hideme">
-      <a href="#maintext" accesskey="s"
-	title="Skip past the navigation links to the main part of the page">Skip the navigation links</a>
+      <a href="#navtext" accesskey="s"
+	title="Skip to the navigation links">Skip to the navigation links</a>
     </div>
 
     <!--* we do not have a search bar on the pages for site=icxc *-->
@@ -610,7 +614,7 @@
 	</td>
       </tr>
     </table>
-    <br clear="all"/>
+    <br clear="all"/> 
     <xsl:call-template name="newline"/>
     <br/>
   </xsl:template> <!--* add-header-trial *-->
@@ -640,6 +644,7 @@
     <xsl:variable name="root" select="name(//*)"/>
 
     <!--* add links to PDF files - WHICH WE ARE NOW REMOVING *-->
+    <br clear="all"/>
     <div class="bottombar">
       <xsl:if test="$site != 'icxc' and contains($allowed-pdf,concat(' ',$root,' '))">
 	<div>
@@ -651,19 +656,19 @@
       <div>Last modified: <xsl:value-of select="$lastmod"/></div>
     </div>
 
-    <xsl:choose>
+<!-- TEMP    <xsl:choose>
 
-      <xsl:when test='$type="live" or $type="test"'>
+      <xsl:when test='$type="live" or $type="test"'> -->
 	<xsl:call-template name="add-ssi-include">
-	  <xsl:with-param name="file" select="'/incl/footer.html'"/>
+	  <xsl:with-param name="file" select="'/incl/greenfooter.html'"/>
 	</xsl:call-template>
-      </xsl:when>
+<!-- TEMP      </xsl:when>
 
       <xsl:when test='$type="trial"'>
 	<xsl:call-template name="add-footer-trial"/>
       </xsl:when>
 	
-    </xsl:choose>
+    </xsl:choose> -->
   </xsl:template> <!--* name=add-footer *-->
 
   <!--* manually include the live footer: wil need updating if live footer changes *-->
@@ -719,7 +724,7 @@
 
     <td class="navbar" valign="top">
       <xsl:call-template name="add-ssi-include">
-	<xsl:with-param name="file" select="concat('navbar_',$name,'.incl')"/>
+        <xsl:with-param name="file" select="concat('navbar_',$name,'.incl')"/>
       </xsl:call-template>
     </td>
     <xsl:call-template name="newline"/>
