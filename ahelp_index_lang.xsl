@@ -812,22 +812,30 @@
 	  <xsl:with-param name="lastmod"  select="$lastmod"/>
 	</xsl:call-template>
 
-	<table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
+	  <!--// main div begins page layout //-->
+	    <div id="main">
 
-	  <tr>
-	    <xsl:call-template name="add-navbar">
-	      <xsl:with-param name="navbar" select="$navbarname"/>
-	    </xsl:call-template>
-
-	    <!--* the main text *-->
-	    <td class="mainbar" valign="top">
+		<!--* the main text *-->
+		<div id="content">
+		  <div class="wrap">
 
 	      <!--* process the contents *-->
 	      <xsl:apply-templates select="ahelpindex/python[@site=$site]"/>
 	    
-	    </td>
-	  </tr>
-	</table>
+		  </div>
+		</div> <!--// close id=content //-->
+
+		<div id="navbar">
+		  <div class="wrap">
+		    <a name="navtext"/>
+
+		  <xsl:call-template name="add-navbar">
+                    <xsl:with-param name="navbar" select="$navbarname"/>
+		  </xsl:call-template>
+		  </div>
+		</div> <!--// close id=navbar //-->
+		
+	    </div> <!--// close id=main  //-->
 	
 	<!--* add the banner *-->
 	<xsl:call-template name="add-standard-banner-footer">
@@ -869,22 +877,30 @@
 	  <xsl:with-param name="lastmod"  select="$lastmod"/>
 	</xsl:call-template>
 
-	<table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
+	  <!--// main div begins page layout //-->
+	    <div id="main">
 
-	  <tr>
-	    <xsl:call-template name="add-navbar">
-	      <xsl:with-param name="navbar" select="$navbarname"/>
-	    </xsl:call-template>
-
-	    <!--* the main text *-->
-	    <td class="mainbar" valign="top">
+		<!--* the main text *-->
+		<div id="content">
+		  <div class="wrap">
 
 	      <!--* process the contents *-->
 	      <xsl:apply-templates select="ahelpindex/slang[@site=$site]"/>
 	    
-	    </td>
-	  </tr>
-	</table>
+		  </div>
+		</div> <!--// close id=content //-->
+
+		<div id="navbar">
+		  <div class="wrap">
+		    <a name="navtext"/>
+
+		  <xsl:call-template name="add-navbar">
+                    <xsl:with-param name="navbar" select="$navbarname"/>
+		  </xsl:call-template>
+		  </div>
+		</div> <!--// close id=navbar //-->
+		
+	    </div> <!--// close id=main  //-->
 	
 	<!--* add the banner *-->
 	<xsl:call-template name="add-standard-banner-footer">
@@ -1090,22 +1106,31 @@
 	  <xsl:with-param name="lastmod"  select="$lastmod"/>
 	</xsl:call-template>
 
-	<table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
+	  <!--// main div begins page layout //-->
+	    <div id="main">
 
-	  <tr>
-	    <xsl:call-template name="add-navbar">
-	      <xsl:with-param name="navbar" select="$navbarname"/>
-	    </xsl:call-template>
-
-	    <!--* the main text *-->
-	    <td class="mainbar" valign="top">
+		<!--* the main text *-->
+		<div id="content">
+		  <div class="wrap">
 
 	      <!--* process the contents *-->
 	      <xsl:apply-templates select="ahelpindex/context[@site=$site]"/>
 	      
-	    </td>
-	  </tr>
-	</table>
+		  </div>
+		</div> <!--// close id=content //-->
+
+		<div id="navbar">
+		  <div class="wrap">
+		    <a name="navtext"/>
+
+		  <xsl:call-template name="add-navbar">
+                    <xsl:with-param name="navbar" select="$navbarname"/>
+		  </xsl:call-template>
+		  </div>
+		</div> <!--// close id=navbar //-->
+		
+	    </div> <!--// close id=main  //-->
+
 
 	<!--* add the banner *-->
 	<xsl:call-template name="add-standard-banner-footer">

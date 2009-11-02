@@ -491,18 +491,13 @@
 	  <xsl:with-param name="name" select="id/name"/>
 	</xsl:call-template>
 
-	<!--* use a table to provide the page layout *-->
-	<table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
-      
-	  <tr>
-	    <!--* add the navbar *-->
-	    <xsl:call-template name="add-navbar">
-	      <xsl:with-param name="name" select="//threadindex/navbar"/>
-	    </xsl:call-template>
-	  
-	    <!--* the main text *-->
-	    <td class="mainbar" valign="top">
-	      
+	  <!--// main div begins page layout //-->
+	    <div id="main">
+
+		<!--* the main text *-->
+		<div id="content">
+		  <div class="wrap">
+
 	      <!--* set up the title block of the page *-->
 	      <xsl:call-template name="add-threadindex-title">
 		<xsl:with-param name="title" select="id/title"/>
@@ -514,9 +509,20 @@
 	      <!--* process the section *-->
 	      <xsl:apply-templates select="." mode="section-page"/>
 
-	    </td>
-	  </tr>
-	</table>
+		  </div>
+		</div> <!--// close id=content //-->
+
+		<div id="navbar">
+		  <div class="wrap">
+		    <a name="navtext"/>
+
+		  <xsl:call-template name="add-navbar">
+		    <xsl:with-param name="name" select="//threadindex/navbar"/>
+		  </xsl:call-template>
+		  </div>
+		</div> <!--// close id=navbar //-->
+		
+	    </div> <!--// close id=main  //-->
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
@@ -553,17 +559,13 @@
 	  <xsl:with-param name="name">table</xsl:with-param>
 	</xsl:call-template>
 
-	<table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
+	  <!--// main div begins page layout //-->
+	    <div id="main">
 
-	  <tr>
-	    <!--* add the navbar *-->
-	    <xsl:call-template name="add-navbar">
-	      <xsl:with-param name="name" select="//threadindex/navbar"/>
-	    </xsl:call-template>
-	  
-	    <!--* the main text *-->
-	    <td class="mainbar" valign="top">
-        
+		<!--* the main text *-->
+		<div id="content">
+		  <div class="wrap">
+
 	      <!-- set up the title block of the page -->
 	      <xsl:call-template name="add-threadindex-title">
 		<xsl:with-param name="title"><xsl:choose>
@@ -576,9 +578,20 @@
 	      <!--* add the data table *-->
 	      <xsl:call-template name="make-datatable"/>
 
-	    </td>
-	  </tr>
-	</table>
+		  </div>
+		</div> <!--// close id=content //-->
+
+		<div id="navbar">
+		  <div class="wrap">
+		    <a name="navtext"/>
+
+		  <xsl:call-template name="add-navbar">
+		    <xsl:with-param name="name" select="//threadindex/navbar"/>
+		  </xsl:call-template>
+		  </div>
+		</div> <!--// close id=navbar //-->
+		
+	    </div> <!--// close id=main  //-->
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
@@ -614,17 +627,11 @@
 	  <xsl:with-param name="name">index</xsl:with-param>
 	</xsl:call-template>
 
-	<!--* use a table to provide the page layout *-->
-	<table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
+	    <div id="main">
 
-	  <tr>
-	    <!--* add the navbar *-->
-	    <xsl:call-template name="add-navbar">
-	      <xsl:with-param name="name" select="//threadindex/navbar"/>
-	    </xsl:call-template>
-
-	    <!--* the main text *-->
-	    <td class="mainbar" valign="top">
+		<!--* the main text *-->
+		<div id="content">
+		  <div class="wrap">
 
 	      <!-- set up the title block of the page -->
 	      <xsl:call-template name="add-threadindex-title"/>
@@ -661,9 +668,20 @@
 	      </div>
 	      <br/>
 
-	    </td>
-	  </tr>
-	</table>
+		  </div>
+		</div> <!--// close id=content //-->
+
+		<div id="navbar">
+		  <div class="wrap">
+		    <a name="navtext"/>
+
+		  <xsl:call-template name="add-navbar">
+		    <xsl:with-param name="name" select="//threadindex/navbar"/>
+		  </xsl:call-template>
+		  </div>
+		</div> <!--// close id=navbar //-->
+		
+	    </div> <!--// close id=main  //-->
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
@@ -700,18 +718,13 @@
 	  <xsl:with-param name="name">all</xsl:with-param>
 	</xsl:call-template>
 
-	<!--* use a table to provide the page layout *-->
-	<table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
-	  
-	  <tr>
-	    <!--* add the navbar *-->
-	    <xsl:call-template name="add-navbar">
-	      <xsl:with-param name="name" select="//threadindex/navbar"/>
-	    </xsl:call-template>
-      
-	    <!--* the main text *-->
-	    <td class="mainbar" valign="top">
-	      
+	  <!--// main div begins page layout //-->
+	    <div id="main">
+
+		<!--* the main text *-->
+		<div id="content">
+		  <div class="wrap">
+
 	      <!-- set up the title block of the page -->
 	      <xsl:call-template name="add-threadindex-title"/>
 
@@ -725,9 +738,20 @@
 	      <!--* add the data table *-->
 	      <xsl:call-template name="make-datatable"/>
 	  
-	    </td>
-	  </tr>
-	</table>
+		  </div>
+		</div> <!--// close id=content //-->
+
+		<div id="navbar">
+		  <div class="wrap">
+		    <a name="navtext"/>
+
+		  <xsl:call-template name="add-navbar">
+		    <xsl:with-param name="name" select="//threadindex/navbar"/>
+		  </xsl:call-template>
+		  </div>
+		</div> <!--// close id=navbar //-->
+		
+	    </div> <!--// close id=main  //-->
 
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">

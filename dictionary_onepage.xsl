@@ -232,7 +232,7 @@
 		    <a name="navtext"/>
 
 		  <xsl:call-template name="add-navbar">
-		    <xsl:with-param name="name" select="info/navbar"/>
+		    <xsl:with-param name="name" select="/dictionary_onepage/info/navbar"/>
 		  </xsl:call-template>
 		  </div>
 		</div> <!--// close id=navbar //-->

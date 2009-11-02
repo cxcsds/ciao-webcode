@@ -71,20 +71,29 @@
 	  <xsl:with-param name="lastmod"  select="//LASTMODIFIED"/>
 	</xsl:call-template>
 
-	<table class="maintable" width="100%" border="0" cellspacing="2" cellpadding="2">
-	  <tr>
-	    <xsl:call-template name="add-navbar">
-	      <xsl:with-param name="navbar" select="'ahelp_index'"/>
-	    </xsl:call-template>
+	  <!--// main div begins page layout //-->
+	    <div id="main">
 
-	    <!--* the main text *-->
-	    <td class="mainbar" valign="top">
+		<!--* the main text *-->
+		<div id="content">
+		  <div class="wrap">
 
 	      <!--* parse the text *--> 
 	      <xsl:apply-templates select="ENTRY"/>
-	    </td>
-	  </tr>
-	</table>
+		  </div>
+		</div> <!--// close id=content //-->
+
+		<div id="navbar">
+		  <div class="wrap">
+		    <a name="navtext"/>
+
+		  <xsl:call-template name="add-navbar">
+                    <xsl:with-param name="navbar" select="'ahelp_index'"/>
+		  </xsl:call-template>
+		  </div>
+		</div> <!--// close id=navbar //-->
+		
+	    </div> <!--// close id=main  //-->
 	
 	<!--* add the banner *-->
 	<xsl:call-template name="add-standard-banner-footer">
