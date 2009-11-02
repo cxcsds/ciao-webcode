@@ -722,11 +722,9 @@
   <xsl:template name="add-navbar">
     <xsl:param name='name'/>
 
-    <td class="navbar" valign="top">
       <xsl:call-template name="add-ssi-include">
         <xsl:with-param name="file" select="concat('navbar_',$name,'.incl')"/>
       </xsl:call-template>
-    </td>
     <xsl:call-template name="newline"/>
 
   </xsl:template> <!--* name= add-navbar *-->
