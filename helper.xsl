@@ -883,22 +883,15 @@ Programming error: add-ssi-include called with an empty file parameter
 	<xsl:otherwise><xsl:value-of select="substring(date:time($dt),1,8)"/></xsl:otherwise>
       </xsl:choose></xsl:variable>
 
-    <table width="100%" border="0">
-      <tr>
-	<td align="left">
-	  <font color="red" size="-1">
-	    Last published by: <xsl:value-of select="$updateby"/>
-	  </font>
-	</td>
-	<td align="right">
-	  <font color="red" size="-1">
+    
+      <br clear="all"/>
+      <p>
+        <font color="red" size="-1">
+	  Last published by: <xsl:value-of select="$updateby"/>
 	    at: <xsl:value-of select="$time"/><xsl:text> </xsl:text>
 	    <xsl:value-of select="$date"/>
 	  </font>
-	</td>
-      </tr>
-    </table>
-    <br clear="all"/>
+	</p>
     <xsl:call-template name="newline"/>
     
   </xsl:template> <!--* name=add-test-banner *-->
