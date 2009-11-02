@@ -117,8 +117,9 @@ logoimage=imgs/ciao_logo_navbar.gif
 logotext=CIAO Logo
 
 # location of the stylesheets
-%stylesheets=live /data/da/Docs/web4/ciao4/
-%stylesheets=test /data/da/Docs/web4/ciao4/
+# ciao42 uses a CSS layout
+%stylesheets=live /data/da/Docs/web4/ciao42/
+%stylesheets=test /data/da/Docs/web4/ciao42/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 # what's the location for the output files?
@@ -618,6 +619,82 @@ prefix=/data/da/Docs/sherpaweb
 
 depth_offset=0
 
++version ciao42
+number=4.2
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+headtitlepostfix=Sherpa 4.2
+texttitlepostfix=Sherpa 4.2
+
+version_string=4.2
+
+# main CSS location
+%css=live /ciao4.2/ciao.css
+%css=test /ciao4.2/ciao.css
+%css=trial /sds/ciao4.2_trial/ciao.css
+
+%cssprint=live /ciao4.2/ciao.print.css
+%cssprint=test /ciao4.2/ciao.print.css
+%cssprint=trial /sds/ciao4.2_trial/ciao.print.css
+
+# location of the news file for the "What's new" link
+%newsfile=live /proj/web-cxc/htdocs/sherpa4.2/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/sherpa4.2/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/sherpa4.2_trial/news.html
+
+%newsurl=live /sherpa4.2/news.html
+%newsurl=test /sherpa4.2/news.html
+%newsurl=trial /sds/sherpa4.2_trial/news.html
+
+# location of the "watch out" page
+%watchouturl=live /sherpa4.2/watchout.html
+%watchouturl=test /sherpa4.2/watchout.html
+%watchouturl=trial /sds/sherpa4.2_trial/watchout.html
+
+logoimage=imgs/sherpa_logo_navbar.gif
+logotext=Sherpa Logo
+
+%searchssi=live /sherpa4.2/sherpa_search.ssi
+%searchssi=test /sherpa4.2/sherpa_search.ssi
+%searchssi=trial /sds/sherpa4.2_trial/sherpa_search.ssi
+
+# ciao42 uses a CSS layout
+%stylesheets=live /data/da/Docs/web4/ciao42/
+%stylesheets=test /data/da/Docs/web4/ciao42/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+
+%outdir=live /proj/web-cxc/htdocs/sherpa4.2/
+%outdir=test /proj/web-cxc-test/htdocs/sherpa4.2/
+%outdir=trial /proj/web-icxc/htdocs/sds/sherpa4.2_trial/
+
+%outurl=live http://cxc.harvard.edu/sherpa4.2/
+%outurl=test http://cxc-test.harvard.edu/sherpa4.2/
+%outurl=trial http://icxc.harvard.edu/sds/sherpa4.2_trial/
+
+%storage=live /data/da/Docs/sherpaweb/published/ciao42/live/
+%storage=test /data/da/Docs/sherpaweb/published/ciao42/test/
+%storage=trial /data/da/Docs/sherpaweb/published/ciao42/trial/
+
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao42.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao42.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao42.trial.xml
+
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.2/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.2/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.2/
+
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao42/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao42/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao42/trial/ahelp/
+
+ahelpindexnavbar=ahelp
+
+-version
+
+
 +version ciao41
 number=4.1
 
@@ -789,6 +866,79 @@ group=cxcweb_ciao
 prefix=/data/da/Docs/chipsweb
 
 depth_offset=0
+
++version ciao42
+number=4.2
+
+headtitlepostfix=ChIPS 4.2
+texttitlepostfix=ChIPS 4.2
+
+version_string=4.2
+
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+
+%css=live /ciao4.2/ciao.css
+%css=test /ciao4.2/ciao.css
+%css=trial /sds/ciao4.2_trial/ciao.css
+
+%cssprint=live /ciao4.2/ciao.print.css
+%cssprint=test /ciao4.2/ciao.print.css
+%cssprint=trial /sds/ciao4.2_trial/ciao.print.css
+
+%newsfile=live /proj/web-cxc/htdocs/ciao4.2/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/ciao4.2/news.html
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciao4.2_trial/news.html
+
+%newsurl=live /ciao4.2/news.html
+%newsurl=test /ciao4.2/news.html
+%newsurl=trial /sds/ciao4.2_trial/news.html
+
+%watchouturl=live /ciao4.2/watchout.html
+%watchouturl=test /ciao4.2/watchout.html
+%watchouturl=trial /sds/ciao4.2_trial/watchout.html
+
+logoimage=imgs/chips_logo_navbar.gif
+logotext=ChIPS Logo
+
+%searchssi=live /chips4.2/chips_search.ssi
+%searchssi=test /chips4.2/chips_search.ssi
+%searchssi=trial /sds/chips4.2_trial/chips_search.ssi
+
+# ciao42 uses a CSS layout
+%stylesheets=live /data/da/Docs/web4/ciao42/
+%stylesheets=test /data/da/Docs/web4/ciao42/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+
+%outdir=live /proj/web-cxc/htdocs/chips4.2/
+%outdir=test /proj/web-cxc-test/htdocs/chips4.2/
+%outdir=trial /proj/web-icxc/htdocs/sds/chips4.2_trial/
+
+%outurl=live http://cxc.harvard.edu/chips4.2/
+%outurl=test http://cxc-test.harvard.edu/chips4.2/
+%outurl=trial http://icxc.harvard.edu/sds/chips4.2_trial/
+
+%storage=live /data/da/Docs/chipsweb/published/ciao42/live/
+%storage=test /data/da/Docs/chipsweb/published/ciao42/test/
+%storage=trial /data/da/Docs/chipsweb/published/ciao42/trial/
+
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao42.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao42.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao42.trial.xml
+
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.2/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.2/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.2/
+
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao42/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao42/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao42/trial/ahelp/
+
+ahelpindexnavbar=ahelp
+
+-version
+
 
 +version ciao41
 number=4.1
