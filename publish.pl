@@ -1138,80 +1138,10 @@ sub xml2html_softlink ($) {
 #
 # note: $xslt, $outdir, and $outurl end in a /
 #
-sub xml2html_register ($) {
-    my $opts = shift;
 
-    my $in     = $$opts{xml};
-    my $dom    = $$opts{xml_dom};
-    my $depth  = $$opts{depth};
-    my $outdir = $$opts{outdir};
-    my $outurl = $$opts{outurl};
+  ## This subroutine was removed in
+  ## web4/ciao42 version of publish.pl
 
-    my $lastmod = $$opts{lastmod};
-
-    print "Parsing [register]: $in";
-
-    # we 'hardcode' the output of the transformation
-    # (as of CIAO 3.1 it is rather simple)
-    #
-    my @pages = map { "${outdir}${in}$_"; } qw( _src.html );
-
-    # check for math blocks (can't be bothered to handle in register blocks)
-    #
-    my @math = find_math_pages $dom;
-    die "Error: currently math blocks are not allowed in register pages (hassle Doug)\n"
-      unless $#math == -1;
-
-    # do we need to recreate
-    return if should_we_skip $in, @pages;
-    print "\n";
-
-    # create dirs/remove files
-    foreach my $page ( @pages ) {
-	my $dir = $page;
-	$dir =~ s/\/[^\/]+.html$//;
-	mymkdir $dir;
-	myrm $page;
-    }
-
-    my %params =
-      (
-       type => $$opts{type},
-       site => $$opts{site},
-       lastmod => $lastmod,
-       install => $outdir,
-       pagename => $in,
-       url => "${outurl}${in}.html",
-       sourcedir => cwd() . "/",
-       updateby => $$opts{updateby},
-       depth => $depth,
-       siteversion => $site_version,
-       # ahelpindex added in CIAO 3.0
-       ahelpindex => $ahelpindex,
-       cssfile => $css,
-       cssprintfile => $cssprint,
-       newsfile => $newsfile,
-       newsfileurl => $newsfileurl,
-       watchouturl => $watchouturl,
-       searchssi => $searchssi,
-       headtitlepostfix => $headtitlepostfix,
-       texttitlepostfix => $texttitlepostfix,
-
-       storageloc => $$opts{storageloc},
-      );
-
-    # we used to have register.xsl and register_live.xsl but
-    # we no longer need to create so-many different versions
-    # as of CIAO 3.1
-    #
-    translate_file "$$opts{xslt}register_live.xsl", $dom, \%params;
-
-    # success or failure?
-    check_for_page( @pages );
-
-    print "\nThe pages can be viewed on:\n  ${outurl}${in}_src.html\n\n";
-
-} # sub: xml2html_register
 
 # xml2html_relnotes - called by xml2html
 #
@@ -1991,8 +1921,7 @@ sub process_xml ($$) {
 	    die_if_icxc $root;
 	    xml2html_thread $opts;
 	} elsif ( $root eq "register" ) {
-	    die_if_icxc $root;
-	    xml2html_register $opts;
+	    die "Sorry, cannot process 'register' pages with this version of publish.pl.\nUse /data/da/Docs/web4/ciao4/publish.pl\n"
 	} elsif ( $root eq "faq" ) {
 	    die_if_icxc $root;
 	    xml2html_multiple $opts, "faq", [ "ciao", "sherpa", "chips", "csc" ];
