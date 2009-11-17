@@ -487,6 +487,10 @@
   <!--*
       * An ahelp link to a single file (ie not to both sl.* and py.*
       * versions of the same ahelp file).
+      *
+      * For development versions we do not require that the ahelp file is present
+      * (a screen message will be displayed if it is not), but for the live
+      * version the ahelp file must have already been published.
       *-->
   <xsl:template name="add-ahelp-single-context">
     <xsl:param name="name"/>
@@ -516,115 +520,138 @@
 	</xsl:otherwise>
       </xsl:choose></xsl:variable>
     
-    <!--* should only have 0 or 1 matches here *-->
+    <!--*
+	* should only have 0 or 1 matches here; the code has become somewhat
+	* unwieldly as we now support publishing to the test/devel sites
+	* when the ahelp file is not present. This code should be
+	* refactored
+	*-->
     <xsl:variable name="matches" select="$namematches[context=$context]"/>
-    <xsl:if test="count($matches)!=1">
-      <xsl:message terminate="yes">
-
- ERROR: unable to find a ahelp match for
+    <xsl:choose>
+      <xsl:when test="count($matches)!=1">
+	<xsl:choose>
+	  <xsl:when test="$type='live'">
+	    <xsl:message terminate="yes">
+ ERROR: unable to find an ahelp match for
    name=<xsl:value-of select="$name"/> context=<xsl:value-of select="$context"/>
 
-      </xsl:message>
-    </xsl:if>
+	    </xsl:message>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:message terminate="no">
+ WARNING: unable to find a ahelp match for
+   name=<xsl:value-of select="$name"/> context=<xsl:value-of select="$context"/>
+   This ahelp file must be published before this page will display on the live site!
 
-    <!--* what site is the ahelp page on? *-->
-    <xsl:variable name="ahelpsite" select="$matches/site"/>
+	    </xsl:message>
+	    <xsl:apply-templates/>
+	    <xsl:value-of select="concat('{*** ahelp link to key=',$name,' context=',$context,' ***}')"/>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:when>
 
-    <!--*
-        * if this is a parameter link then check we know about this parameter
-        *-->
-    <xsl:variable name="paramname" select="@param"/>
-    <xsl:variable name="parammatch" select="$matches/parameters/parameter[name=$paramname]"/>
+      <xsl:otherwise>
 
-    <xsl:if test="boolean(@param)">
-      <xsl:if test="count($parammatch)!=1">
-      <xsl:message terminate="yes">
-
+	<!--* what site is the ahelp page on? *-->
+	<xsl:variable name="ahelpsite" select="$matches/site"/>
+	
+	<!--*
+	    * if this is a parameter link then check we know about this parameter
+	    *-->
+	<xsl:variable name="paramname" select="@param"/>
+	<xsl:variable name="parammatch" select="$matches/parameters/parameter[name=$paramname]"/>
+	
+	<xsl:if test="boolean(@param)">
+	  <xsl:if test="count($parammatch)!=1">
+	    <xsl:message terminate="yes">
+	      
  ERROR: ahelp unable to find parameter=<xsl:value-of select="@param"/> for
    name=<xsl:value-of select="$name"/> context=<xsl:value-of select="$context"/>
 
-      </xsl:message>
-      </xsl:if>
-    </xsl:if>
+	    </xsl:message>
+	  </xsl:if>
+	</xsl:if>
 
-    <!--*
-        * The ahelp page is either in this site or another one
-        *-->
-    <xsl:variable name="hrefstart"><xsl:choose>
-      <xsl:when test="$site != $ahelpsite">
+	<!--*
+	    * The ahelp page is either in this site or another one
+	    *-->
+	<xsl:variable name="hrefstart"><xsl:choose>
+	  <xsl:when test="$site != $ahelpsite">
 	    <xsl:value-of select="concat('/',$ahelpsite,'/ahelp/')"/>
-      </xsl:when>
+	  </xsl:when>
+	  
+	  <xsl:otherwise><xsl:call-template name="add-start-of-href">
+	    <xsl:with-param name="extlink" select="0"/>
+	    <xsl:with-param name="dirname" select="'ahelp/'"/>
+	  </xsl:call-template></xsl:otherwise>
+	</xsl:choose></xsl:variable>
+	
+	<!--* process the contents, surrounded by styles *-->
+	<xsl:call-template name="add-text-styles">
+	  <xsl:with-param name="contents">
+	    <a>
+	      <xsl:attribute name="class">helplink</xsl:attribute>
+	      
+	      <!--*
+		  * Add the summary as a title attribute. There should be
+		  * a summary tag for all ahelp pages, but use an if
+		  * statement in case one is missing.
+		  * 
+		  * If we are linking to a parameter, use that synopsis
+		  * instead 
+		  *
+		  * NOTE: add the context if including summary 
+		  *-->
+	      
+	      <xsl:choose>
+		<xsl:when test="count($parammatch)=1">
+		  <xsl:attribute name="title">Parameter (<xsl:value-of select="$paramname"/>): <xsl:value-of select="$parammatch/synopsis"/></xsl:attribute>
+		</xsl:when>
+		<xsl:when test="$matches/summary!=''">
+		  <xsl:attribute name="title">Ahelp (<xsl:value-of select="$context"/>): <xsl:value-of select="$matches/summary"/></xsl:attribute>
+		</xsl:when>
+	      </xsl:choose>
+	      
+	      <xsl:attribute name="href">
+		<xsl:value-of select="$hrefstart"/>
+		<xsl:value-of select="$matches/page"/>
+		<xsl:text>.html</xsl:text>
+		<xsl:choose>
+		  <xsl:when test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:when>
+		  <xsl:when test="boolean(@param)">#plist.<xsl:value-of select="@param"/></xsl:when>
+		</xsl:choose>
+	      </xsl:attribute> <!--* end of href *-->
+	      
+	      <!--* and now the text contents
+		  * if the contents are empty, the we have to use either @name or @param
+		  * (which we may have to turn into uppercase).
+		  *-->
+	      <xsl:choose>
+		<!--* use the supplied text *-->
+		<xsl:when test=".!=''"><xsl:apply-templates/></xsl:when>
+		
+		<!--* we have to use either the @param or @name attribute *-->
+		<xsl:when test="boolean(@param)">
+		  <xsl:call-template name="handle-uc">
+		    <xsl:with-param name="uc"   select="boolean(@uc) and @uc=1"/>
+		    <xsl:with-param name="text" select="@param"/>
+		  </xsl:call-template>
+		</xsl:when>
+		
+		<xsl:otherwise>
+		  <xsl:call-template name="handle-uc">
+		    <xsl:with-param name="uc"   select="boolean(@uc) and @uc=1"/>
+		    <xsl:with-param name="text" select="@name"/>
+		  </xsl:call-template>
+		</xsl:otherwise>
+	      </xsl:choose>
+	      
+	    </a>
+	  </xsl:with-param>
+	</xsl:call-template> <!--* add-text-styles *-->
+      </xsl:otherwise>
+    </xsl:choose>
 
-      <xsl:otherwise><xsl:call-template name="add-start-of-href">
-	<xsl:with-param name="extlink" select="0"/>
-	<xsl:with-param name="dirname" select="'ahelp/'"/>
-      </xsl:call-template></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
-    <!--* process the contents, surrounded by styles *-->
-    <xsl:call-template name="add-text-styles">
-      <xsl:with-param name="contents">
-	<a>
-	  <xsl:attribute name="class">helplink</xsl:attribute>
-
-	  <!--*
-              * Add the summary as a title attribute. There should be
-	      * a summary tag for all ahelp pages, but use an if
-	      * statement in case one is missing.
-	      * 
-              * If we are linking to a parameter, use that synopsis
-	      * instead 
-	      *
-	      * NOTE: add the context if including summary 
-              *-->
-
-	  <xsl:choose>
-	    <xsl:when test="count($parammatch)=1">
-	      <xsl:attribute name="title">Parameter (<xsl:value-of select="$paramname"/>): <xsl:value-of select="$parammatch/synopsis"/></xsl:attribute>
-	    </xsl:when>
-	    <xsl:when test="$matches/summary!=''">
-	      <xsl:attribute name="title">Ahelp (<xsl:value-of select="$context"/>): <xsl:value-of select="$matches/summary"/></xsl:attribute>
-	    </xsl:when>
-	  </xsl:choose>
-
-	  <xsl:attribute name="href">
-	    <xsl:value-of select="$hrefstart"/>
-	    <xsl:value-of select="$matches/page"/>
-	    <xsl:text>.html</xsl:text>
-	    <xsl:choose>
-	      <xsl:when test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:when>
-	      <xsl:when test="boolean(@param)">#plist.<xsl:value-of select="@param"/></xsl:when>
-	    </xsl:choose>
-	  </xsl:attribute> <!--* end of href *-->
-
-	  <!--* and now the text contents
-              * if the contents are empty, the we have to use either @name or @param
-	      * (which we may have to turn into uppercase).
-	      *-->
-	  <xsl:choose>
-	    <!--* use the supplied text *-->
-	    <xsl:when test=".!=''"><xsl:apply-templates/></xsl:when>
-
-	    <!--* we have to use either the @param or @name attribute *-->
-	    <xsl:when test="boolean(@param)">
-	      <xsl:call-template name="handle-uc">
-		<xsl:with-param name="uc"   select="boolean(@uc) and @uc=1"/>
-		<xsl:with-param name="text" select="@param"/>
-	      </xsl:call-template>
-	    </xsl:when>
-
-	    <xsl:otherwise>
-	      <xsl:call-template name="handle-uc">
-		<xsl:with-param name="uc"   select="boolean(@uc) and @uc=1"/>
-		<xsl:with-param name="text" select="@name"/>
-	      </xsl:call-template>
-	    </xsl:otherwise>
-	  </xsl:choose>
-
-	</a>
-      </xsl:with-param>
-    </xsl:call-template> <!--* add-text-styles *-->
-    
   </xsl:template> <!--* name=add-ahelp-single-context *-->
 
   <!--*
