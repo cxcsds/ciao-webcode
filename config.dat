@@ -521,7 +521,6 @@ ahelpindexnavbar=analysis
 @stylesheets=bugs
 @stylesheets=faq
 @stylesheets=dictionary
-@stylesheets=register_live
 @stylesheets=ahelp
 @stylesheets=ahelp_index
 @stylesheets=ahelp_common
