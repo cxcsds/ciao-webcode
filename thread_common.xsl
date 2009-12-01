@@ -443,14 +443,18 @@
           *-->
       <xsl:when test="boolean(text/overview)">
 	<br/>
-	<table width="100%" border="0" bgcolor="#eeeeee">
-	  <tr>
-	    <td>
-	      <h2><a name="overview"><font color="red">Overview</font></a></h2>
-	      <xsl:apply-templates select="text/overview"/>
-	    </td>
-	  </tr>
-	</table>
+	<div id="overview">
+
+	  <h2 id="overview"><a name="overview">Overview</a></h2>
+	  
+	  <p>
+	    <strong>The threads are in the process of being reviewed
+	    for CIAO 4.2. This message will be removed after the
+	    thread has been updated.</strong>
+	  </p>
+
+	  <xsl:apply-templates select="text/overview"/>
+	</div>
 	<br/><xsl:call-template name="add-hr-strong"/><br/>
       </xsl:when> <!--* text/overview *-->
 
@@ -1485,7 +1489,7 @@ or do we, as this case is already caught in add-parameters?
       <xsl:text> </xsl:text>
     </a>
 
-    <table border="0" width="100%"><tr><td><pre class="paramlist">
+    <div><pre class="paramlist">
 
 Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
@@ -1494,7 +1498,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 		  select="document(concat($sourcedir,@file,'.xml'))" mode="include"/><br/></xsl:when>
 	      <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
 </xsl:choose>
-</pre></td></tr></table>
+</pre></div>
 
     <xsl:call-template name="add-hr-strong"/>
 
