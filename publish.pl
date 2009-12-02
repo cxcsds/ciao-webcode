@@ -271,6 +271,7 @@ my $outurl      = get_config_type $version_config, "outurl", $type;
 
 my $css         = get_config_type $version_config, "css", $type;
 my $cssprint    = get_config_type $version_config, "cssprint", $type;
+my $favicon     = get_config_type $version_config, "favicon", $type;
 
 # get the site version
 my $site_version = "";
@@ -875,6 +876,7 @@ sub xml2html_page ($) {
        ahelpindex => $ahelpindex,
        cssfile => $css,
        cssprintfile => $cssprint,
+       favicon => $favicon,
        newsfile => $newsfile,
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
@@ -958,6 +960,7 @@ sub xml2html_cscdb ($) {
        ahelpindex => $ahelpindex,
        cssfile => $css,
        cssprintfile => $cssprint,
+       favicon => $favicon,
        newsfile => $newsfile,
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
@@ -1041,6 +1044,7 @@ sub xml2html_bugs ($) {
        ahelpindex => $ahelpindex,
        cssfile => $css,
        cssprintfile => $cssprint,
+       favicon => $favicon,
        newsfile => $newsfile,
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
@@ -1202,6 +1206,7 @@ sub xml2html_relnotes ($) {
        ahelpindex => $ahelpindex,
        cssfile => $css,
        cssprintfile => $cssprint,
+       favicon => $favicon,
        newsfile => $newsfile,
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
@@ -1323,6 +1328,7 @@ sub xml2html_multiple ($$$) {
        ahelpindex => $ahelpindex,
        cssfile => $css,
        cssprintfile => $cssprint,
+       favicon => $favicon,
        newsfile => $newsfile,
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
@@ -1413,6 +1419,7 @@ sub xml2html_threadindex ($) {
        ahelpindex => $ahelpindex,
        cssfile => $css,
        cssprintfile => $cssprint,
+       favicon => $favicon,
        newsfile => $newsfile,
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
@@ -1665,6 +1672,7 @@ sub xml2html_thread ($) {
        ahelpindex => $ahelpindex,
        cssfile => $css,
        cssprintfile => $cssprint,
+       favicon => $favicon,
        newsfile => $newsfile,
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,

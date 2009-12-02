@@ -93,6 +93,11 @@ version_string=4.2
 %cssprint=test /ciao4.2/ciao.print.css
 %cssprint=trial /sds/ciao4.2_trial/ciao.print.css
 
+# favicon location
+%favicon=live /ciao4.2/favicon.ico
+%favicon=test /ciao4.2/favicon.ico
+%favicon=trial /sds/ciao4.2_trial/favicon.ico
+
 # location of the news file for the "What's new" link
 %newsfile=live /proj/web-cxc/htdocs/ciao4.2/news.html
 %newsfile=test /proj/web-cxc-test/htdocs/ciao4.2/news.html
@@ -639,6 +644,11 @@ version_string=4.2
 %cssprint=test /ciao4.2/ciao.print.css
 %cssprint=trial /sds/ciao4.2_trial/ciao.print.css
 
+# favicon location
+%favicon=live /ciao4.2/favicon.ico
+%favicon=test /ciao4.2/favicon.ico
+%favicon=trial /sds/ciao4.2_trial/favicon.ico
+
 # location of the news file for the "What's new" link
 %newsfile=live /proj/web-cxc/htdocs/sherpa4.2/news.html
 %newsfile=test /proj/web-cxc-test/htdocs/sherpa4.2/news.html
@@ -885,6 +895,11 @@ imglinkiconheight=16
 %cssprint=live /ciao4.2/ciao.print.css
 %cssprint=test /ciao4.2/ciao.print.css
 %cssprint=trial /sds/ciao4.2_trial/ciao.print.css
+
+# favicon location
+%favicon=live /ciao4.2/favicon.ico
+%favicon=test /ciao4.2/favicon.ico
+%favicon=trial /sds/ciao4.2_trial/favicon.ico
 
 %newsfile=live /proj/web-cxc/htdocs/ciao4.2/news.html
 %newsfile=test /proj/web-cxc-test/htdocs/ciao4.2/news.html

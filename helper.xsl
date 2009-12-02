@@ -370,6 +370,10 @@
 	<script type="text/javascript" language="JavaScript" src="/csc/cscview.js"/>
       </xsl:if>
       
+      <!--* add the favicon *-->
+      <link rel="icon" href="{$favicon}"/>
+
+
       <!--* add main stylesheets *-->
       <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" href="{$cssfile}"/>
       <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" media="print" href="{$cssprintfile}"/>
