@@ -269,7 +269,7 @@
         *    .hideme { display: none; }
         * so it's a good way of getting to lynx users
         *-->
-    <div class="hideme">
+    <br clear="all"/><div class="hideme">
       <a href="#navtext" accesskey="s"
 	title="Skip to the navigation links">Skip to the navigation links</a>
     </div>
@@ -314,7 +314,7 @@
       <xsl:with-param name="template" select="'add-standard-banner-footer'"/>
     </xsl:call-template>
 
-    <div class="bottombar">
+    <br clear="all"/><div class="bottombar">
       <div>Last modified: <xsl:value-of select="$lastmod"/></div>
     </div>
 
@@ -332,8 +332,8 @@
 
   <xsl:template name="add-cxc-header">
 
+<!--// TEMP
     <xsl:if test='$type!="live"'>
-      <!--* add the body tag (start) and test header info *-->
       <xsl:call-template name="add-start-body-white"/>
       <xsl:call-template name="add-cxc-test-banner"/>
     </xsl:if>
@@ -346,14 +346,17 @@
 	<xsl:call-template name="add-cxc-header-live"/>
       </xsl:otherwise>
     </xsl:choose>
-    
+//-->
+
+      <xsl:call-template name="add-cxc-header-live"/>
+
   </xsl:template> <!--* add-cxc-header *-->
 
   <!--*
       * add the standard header files
       *-->
   <xsl:template name="add-cxc-header-live">
-    <xsl:comment>#include virtual="/incl/header.html"</xsl:comment>
+    <xsl:comment>#include virtual="/incl/greenheader.html"</xsl:comment>
     <xsl:call-template name="newline"/>
 
   </xsl:template>
@@ -470,9 +473,7 @@
       * output the page "footer"
       *-->
   <xsl:template name="add-cxc-footer">
-
-    <br/>
-    <xsl:comment>#include virtual="/incl/footer.html"</xsl:comment>
+    <xsl:comment>#include virtual="/incl/greenfooter.html"</xsl:comment>
     <xsl:call-template name="newline"/>
 
   </xsl:template> <!--* add-cxc-footer *-->
