@@ -447,12 +447,12 @@
 
 	  <h2 id="overview"><a name="overview">Overview</a></h2>
 	  
-	  <p>
+<!--	  <p>
 	    <strong>The threads are in the process of being reviewed
 	    for CIAO 4.2. This message will be removed after the
 	    thread has been updated.</strong>
 	  </p>
-
+-->
 	  <xsl:apply-templates select="text/overview"/>
 	</div>
 	<br/><xsl:call-template name="add-hr-strong"/><br/>
