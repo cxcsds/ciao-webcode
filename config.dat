@@ -571,6 +571,11 @@ number=1.0
 %cssprint=test /ciao/ciao.print.css
 %cssprint=trial /sds/ciao_trial/ciao.print.css
 
+# favicon location
+%favicon=live /ciao4.2/favicon.ico
+%favicon=test /ciao4.2/favicon.ico
+%favicon=trial /sds/ciao4.2_trial/favicon.ico
+
 imglinkicon=imgs/imageicon.gif
 imglinkiconwidth=23
 imglinkiconheight=16
@@ -1222,12 +1227,12 @@ depth_offset=0
 headtitlepostfix=CALDB 4
 ##texttitlepostfix=- CALDB 4
 
-%css=live /ciao/ciao.css
-%css=test /ciao/ciao.css
+%css=live /caldb/caldb.css
+%css=test /caldb/caldb.css
 %css=trial /sds/ciao_trial/ciao.css
 
-%cssprint=live /ciao/ciao.print.css
-%cssprint=test /ciao/ciao.print.css
+%cssprint=live /caldb/caldb.print.css
+%cssprint=test /caldb/caldb.print.css
 %cssprint=trial /sds/ciao_trial/ciao.print.css
 
 %newsfile=live /proj/web-cxc/htdocs/caldb4/news.html
@@ -1475,6 +1480,11 @@ imglinkiconheight=16
 %cssprint=test /ciao/ciao.print.css
 %cssprint=trial /sds/ciao4.1_trial/ciao.print.css
 
+# favicon location
+%favicon=live /ciao4.2/favicon.ico
+%favicon=test /ciao4.2/favicon.ico
+%favicon=trial /sds/ciao4.2_trial/favicon.ico
+
 logoimage=imgs/obsvis_logo_navbar.gif
 logotext=ObsVis logo
 
@@ -1482,8 +1492,8 @@ logotext=ObsVis logo
 %searchssi=test /obsvis/search.ssi
 %searchssi=trial /sds/obsvis_trial/search.ssi
 
-%stylesheets=live /data/da/Docs/web4/ciao4/
-%stylesheets=test /data/da/Docs/web4/ciao4/
+%stylesheets=live /data/da/Docs/web4/ciao42/
+%stylesheets=test /data/da/Docs/web4/ciao42/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 %outdir=live /proj/web-cxc/htdocs/obsvis/
@@ -1543,6 +1553,8 @@ logotext=Science Data Systems
 
 %css=test /sds/ciao.css
 %cssprint=test /sds/ciao.print.css
+
+%favicon=test http://cxc.harvard.edu/ciao/favicon.ico
 
 %stylesheets=test /data/da/Docs/web4/icxc/
 
