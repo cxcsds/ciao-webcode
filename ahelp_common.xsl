@@ -166,7 +166,6 @@
       </xsl:choose></xsl:variable>
 
     <xsl:element name="{$type}">
-      <xsl:attribute name="class">ahelpparatitle</xsl:attribute>
 	<a name="{translate($title,' ','_')}"><xsl:value-of select="$title"/></a>
     </xsl:element>
 
@@ -216,7 +215,6 @@
       <xsl:with-param name="template" select="'add-navbar'"/>
     </xsl:call-template>
 
-    <td class="navbar" valign="top">
       <!--* add the navbar *-->
 
       <xsl:choose>
@@ -232,7 +230,6 @@
       </xsl:choose>
 
       <xsl:call-template name="newline"/>
-    </td>
     
   </xsl:template> <!--* name=add-navbar *-->
 

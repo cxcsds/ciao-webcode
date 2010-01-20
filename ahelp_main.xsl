@@ -175,12 +175,10 @@
       *
       *-->
   <xsl:template match="ENTRY/SYNOPSIS">
-    <div class="ahelpsynopsis">
       <h2><a name="synopsis">Synopsis</a></h2>
       <p>
 	<xsl:apply-templates/>
       </p>
-    </div>
   </xsl:template> <!--* match=ENTRY/SYNOPSIS *-->
 
   <xsl:template match="PARAM/SYNOPSIS" mode="plist">
@@ -530,26 +528,20 @@
       *
       *-->
   <xsl:template match="ENTRY/DESC">
-    <div class="ahelpdesc">
       <h2><a name="description">Description</a></h2>
 
       <xsl:apply-templates/>
-    </div>
   </xsl:template> <!-- match=ENTRY/DESC -->
 
   <xsl:template match="QEXAMPLE/DESC">
-    <div class="ahelpdesc">
       <xsl:apply-templates/>
-    </div>
   </xsl:template>
 
   <!--* don't do anything unless we're in a special mode *-->
   <xsl:template match="PARAM/DESC"/>
 
   <xsl:template match="PARAM/DESC" mode="plist">
-    <div class="ahelpdesc">
-      <xsl:apply-templates/>
-    </div>
+      <xsl:apply-templates/>  
   </xsl:template>
 
   <!--*
@@ -838,7 +830,6 @@
     <!--* we number each example *-->
     <xsl:for-each select="QEXAMPLE">
 
-      <div class="ahelpexample">
 	<!--* add anchor *-->
 	<!--* if the first example, we have to add an "examples" anchor too *-->
 	<xsl:if test="position()=1"><a name="examples"/></xsl:if>
@@ -856,7 +847,6 @@
 	<xsl:apply-templates select="SYNTAX"/>
 	<xsl:apply-templates select="DESC"/>
 
-      </div> <!--* class=ahelpexample *-->
     </xsl:for-each>
 
   </xsl:template> <!--* QEXAMPLELIST *-->
@@ -878,11 +868,12 @@
   <xsl:template match="PARAMLIST">
 
     <!--* if the paramlist is empty then let it be empty *-->
-    <div class="ahelpparameters">
+
       <h2><a name="ptable">Parameters</a></h2>
 
-      <table class="ahelpparamlist" border="1" cellspacing="1" cellpadding="2">
-	<tr class="headerrow">
+      <table class="ciaotable" border="1" cellspacing="1" cellpadding="2">
+	<thead>
+	<tr>
 	  <th>name</th> <th>type</th> 
 	  <xsl:if test="$have-ftype"><th>ftype</th></xsl:if>
 	  <xsl:if test="$have-def"><th>def</th></xsl:if>
@@ -893,7 +884,11 @@
 	  <xsl:if test="$have-stcks"><th>stacks</th></xsl:if>
 	  <xsl:if test="$have-aname"><th>autoname</th></xsl:if>
 	</tr>
+	</thead>
+
+	<tbody>
 	<xsl:apply-templates select="PARAM" mode="ptable"/>
+	</tbody>
       </table>
       <br/>
       
@@ -901,7 +896,6 @@
     
       <xsl:apply-templates select="PARAM" mode="plist"/>
 
-    </div> <!--* class=ahelpparameters *-->
 
   </xsl:template> <!--* PARAMLIST *-->
 
@@ -916,13 +910,6 @@
       *-->
   <xsl:template match="PARAM" mode="ptable">
     <tr>
-
-      <!--* add a class attribute odd/even *-->
-      <xsl:attribute name="class"><xsl:choose>
-	  <xsl:when test="position() mod 2 = 1">oddrow</xsl:when>
-	  <xsl:otherwise>evenrow</xsl:otherwise>
-	</xsl:choose></xsl:attribute>
-
       <!--* name - always included *-->
       <td><a title="Jump to parameter description" href="#plist.{@name}"><xsl:value-of select="@name"/></a></td>
       <!--* type - always included *-->
@@ -968,7 +955,6 @@
   <!--* show the parameters in a list *-->
   <xsl:template match="PARAM" mode="plist">
 
-    <div class="ahelpparam">
       <!--* follow the parameter name with a list of attributes *-->
       <h4><a name="plist.{@name}">Parameter=<xsl:value-of select="@name"/></a>
 	<tt><xsl:text> (</xsl:text><xsl:value-of select="@type"/>
@@ -989,7 +975,6 @@
       <xsl:apply-templates select="SYNOPSIS|DESC" mode="plist"/>
       <!--* <br/> *-->
 
-    </div> <!--* class=ahelpparam *-->
 
   </xsl:template> <!--* PARAM mode=plist *-->
 
@@ -1002,7 +987,6 @@
       *
       *-->
   <xsl:template match="ADESC">
-    <div class="ahelpadesc">
       <xsl:if test="boolean(@title)">
 	<xsl:call-template name="add-title-anchor">
 	  <xsl:with-param name="title" select="@title"/>
@@ -1010,7 +994,6 @@
       </xsl:if>
 
       <xsl:apply-templates/>
-    </div>
   </xsl:template> <!--* match=ADESC *-->
 
   <!--*
@@ -1025,10 +1008,8 @@
       *-->
   <xsl:template match="BUGS">
 
-    <div class="ahelpbugs">
       <h2><a name="bugs">Bugs</a></h2>
       <xsl:apply-templates/>
-    </div>
   </xsl:template> <!--* match=BUGS *-->
 
   <!--*
@@ -1081,7 +1062,6 @@
   <xsl:template name="add-seealso">
     
     <xsl:if test="$have-seealso">
-      <div class="ahelpseealso">
 	<h2><a name="seealso">See Also</a></h2>
 
 <!--*	<xsl:copy-of select="document($seealsofile)/seealso"/> *-->
@@ -1095,7 +1075,6 @@
             * has dl as it's child [at least in the current design]).
             *-->
 	<xsl:copy-of select="$seealso/*"/>
-      </div>
     </xsl:if>
 
   </xsl:template> <!--* name=add-seealso *-->

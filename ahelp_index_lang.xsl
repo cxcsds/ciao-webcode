@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="us-ascii" ?>
-<!DOCTYPE xsl:stylesheet [
-
- <!ENTITY spacer  '<td width="5"></td>'>
-
- <!-- &#37; is the ascii value for the percentage symbol -->
-
-]>
+<!DOCTYPE xsl:stylesheet>
 
 <!-- AHELP XML to HTML convertor using XSL Transformations -->
 
@@ -917,28 +911,28 @@
 
   <!--* add a set of 'jump to' links for the slang alphabetical list *-->
   <xsl:template name="add-slang-jump">
-    <font size="-1">Jump to:
+    <span class="qlinkbar">Jump to:
       <a title="Main Ahelp page" href="index.html">Main AHELP page</a> |
       <a title="Python list by alphabet" href="index_python.html">Python Alphabetical List</a> |
-      <a title="List by context" href="index_context.html">Contextual List</a></font>
+      <a title="List by context" href="index_context.html">Contextual List</a></span>
   </xsl:template>
 
   <!--* add a set of 'jump to' links for the python alphabetical list *-->
   <xsl:template name="add-python-jump">
-    <font size="-1">Jump to:
+    <span class="qlinkbar">Jump to:
       <a title="Main Ahelp page" href="index.html">Main AHELP page</a> |
       <a title="S-Lang list by alphabet" href="index_slang.html">S-Lang Alphabetical List</a> |
-      <a title="List by context" href="index_context.html">Contextual List</a></font>
+      <a title="List by context" href="index_context.html">Contextual List</a></span>
   </xsl:template>
 
   <!--* add a set of 'jump to' links for the contextual list *-->
   <xsl:template name="add-context-jump">
-    <font size="-1">Jump to:
+    <span class="qlinkbar">Jump to:
       <a title="Main Ahelp page" href="index.html">Main AHELP page</a> |
       Alphabetical List: 
       <a title="Python list by alphabet" href="index_python.html">Python</a> or 
       <a title="S-Lang list by alphabet" href="index_slang.html">S-Lang</a>
-    </font>
+    </span>
   </xsl:template>
 
   <!--*
@@ -990,10 +984,11 @@
        <xsl:call-template name="add-python-jump"/>
     </xsl:if>
 
-    <hr/><br/>
+    <hr/>
 
     <!--* create the list of letters/links *-->
     <div align="center">
+      <p>
       <xsl:for-each select="term">
 	<xsl:variable name="letter"
 	  select="translate(name,
@@ -1002,20 +997,20 @@
 	<a title="Jump to the letter {$letter}" href="#{$letter}"><xsl:value-of select="$letter"/></a>
 	<xsl:text> </xsl:text>
       </xsl:for-each>
+      </p>
     </div>
-    <br/>
 
     <!--* begin the table *-->
-    <table align="center">
+    <table class="ahelptable">
 
       <!--* the header *-->
+      <thead>
       <tr>
-	<th><font size="+1"><xsl:call-template name="add-nbsp"/><xsl:call-template name="add-nbsp"/><xsl:call-template name="add-nbsp"/></font></th>
-	&spacer;
-	<th><font size="+1">Topic</font></th>
-	&spacer;
-	<th><font size="+1">Summary</font></th>
+	<th><xsl:call-template name="add-nbsp"/><xsl:call-template name="add-nbsp"/><xsl:call-template name="add-nbsp"/></th>
+	<th>Topic</th>
+	<th>Summary</th>
       </tr>
+      </thead>
 
       <!--* loop through each 'letter' *-->
       <xsl:for-each select="term">
@@ -1030,6 +1025,7 @@
 	    * - unlike navbar, don't need to bother about same
 	    *   key but different contexts, since we give the context
 	    *-->
+	<tbody>
 	<xsl:for-each select="itemlist/item">
 	  <xsl:variable name="thisid"   select="@id"/>
 	  <xsl:variable name="ahelpobj" select="/ahelpindex/ahelplist/ahelp[@id = $thisid]"/>
@@ -1040,18 +1036,14 @@
 
 	    <!--* do we need to add the 'label' *-->
 	    <xsl:if test="position() = 1">
-	      <td valign="top" rowspan="{last()}"><font size="+1">
-		  <strong><a name="{$letter}"><xsl:value-of select="$letter"/></a></strong>
-		</font></td>
+	      <th valign="top" rowspan="{last()}"><a name="{$letter}"><xsl:value-of select="$letter"/></a></th>
 	    </xsl:if>
 	    
 	    <!--* and the actual data *-->
-	    &spacer;
 	    <td valign="top">
 	      <xsl:call-template name="add-table-bg-color"/>
 	      <a href="{$ahelpobj/page}.html"><xsl:value-of select="$thiskey"/></a>
 	    </td>
-	    &spacer;
 	    <td>
 	      <xsl:call-template name="add-table-bg-color"/>
 	      <xsl:value-of select="$ahelpobj/summary"/>
@@ -1059,16 +1051,15 @@
 	  </tr>
 
 	</xsl:for-each> <!--* indexlist/index *-->
-		  
+	
 	<!--* do we add a HR? *-->
 	<xsl:if test="position() != last()">
 	  <tr><td colspan="5"><hr/></td></tr>
 	</xsl:if>
-	
+	</tbody>
       </xsl:for-each> <!--* term *-->
     </table>
     
-    <br/>
     <!--* jump back links *-->
     <xsl:if test="$text = 'S-Lang'">
        <xsl:call-template name="add-slang-jump"/>
@@ -1177,28 +1168,29 @@
 
     <!--* add text/links *-->
     <xsl:call-template name="add-context-jump"/>
-    <hr/><br/>
+    <hr/>
 
     <!--* create the list of concepts/links *-->
     <div align="center">
+      <p>
       <xsl:for-each select="term">
 	<a title="Jump to context '{name}'" href="#{name}"><xsl:value-of select="name"/></a>
 	<xsl:text> </xsl:text>
       </xsl:for-each>
+      </p>
     </div>
-    <br/>
 
     <!--* begin the table *-->
-    <table align="center">
+    <table class="ahelptable">
 
       <!--* the header *-->
+      <thead>
       <tr>
-	<th><font size="+1">Context</font></th>
-	&spacer;
-	<th><font size="+1">Topic</font></th>
-	&spacer;
-	<th><font size="+1">Summary</font></th>
+	<th>Context</th>
+	<th>Topic</th>
+	<th>Summary</th>
       </tr>
+      </thead>
 
       <!--* loop through each 'context' *-->
       <xsl:for-each select="term">
@@ -1210,6 +1202,7 @@
 	    * - unlike navbar, don't need to bother about same
 	    *   key but different contexts since list context explicitly
 	    *-->
+	<tbody>
 	<xsl:for-each select="itemlist/item">
 	  <xsl:variable name="thisid"   select="@id"/>
 	  <xsl:variable name="ahelpobj" select="/ahelpindex/ahelplist/ahelp[@id = $thisid]"/>
@@ -1218,18 +1211,14 @@
 	  <tr>
 	    <!--* do we need to add the 'label' *-->
 	    <xsl:if test="position() = 1">
-	      <td valign="top" rowspan="{last()}"><font size="+1">
-		  <strong><a name="{$context}"><xsl:value-of select="$context"/></a></strong>
-		</font></td>
+	      <th valign="top" rowspan="{last()}"><a name="{$context}"><xsl:value-of select="$context"/></a></th>
 	    </xsl:if>
 	    
 	    <!--* and the actual data *-->
-	    &spacer;
 	    <td valign="top">
 	      <xsl:call-template name="add-table-bg-color"/>
 	      <a href="{$ahelpobj/page}.html"><xsl:value-of select="$thiskey"/></a>
 	    </td>
-	    &spacer;
 	    <td>
 	      <xsl:call-template name="add-table-bg-color"/>
 	      <xsl:value-of select="$ahelpobj/summary"/>
@@ -1242,11 +1231,11 @@
 	<xsl:if test="position() != last()">
 	  <tr><td colspan="5"><hr/></td></tr>
 	</xsl:if>
+	</tbody>
 
       </xsl:for-each> <!--* ahelpindex/context/term *-->
     </table>
     
-    <br/>
     <!--* jump back links *-->
     <xsl:call-template name="add-context-jump"/>
     

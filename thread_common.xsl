@@ -445,7 +445,7 @@
 	<br/>
 	<div id="overview">
 
-	  <h2 id="overview"><a name="overview">Overview</a></h2>
+	  <h2><a name="overview">Overview</a></h2>
 	  
 <!--	  <p>
 	    <strong>The threads are in the process of being reviewed

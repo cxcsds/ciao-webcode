@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="us-ascii" ?>
-<!DOCTYPE xsl:stylesheet [
-
- <!ENTITY spacer  '<td width="5"></td>'>
-
- <!-- &#37; is the ascii value for the percentage symbol -->
-
-]>
+<!DOCTYPE xsl:stylesheet>
 
 <!-- AHELP XML to HTML convertor using XSL Transformations -->
 
@@ -87,19 +81,6 @@
     *    If "CIAO 2.2.1", then version = "2.2.1"
     *    NOTE: don't 'trust' the contents of the version block
     *
-    *  . bgcolor, string, optional (default=cccccc)
-    *    a hex string giving the colour to use for the
-    *    background of the syntax/equation/example text
-    *    do not supply the leading #
-    *
-    *  . bocolor, string, optional (default=000000)
-    *    as for bgcolor; colour of the border around the
-    *    background/highlight colour
-    *
-    *  . btcolor, string, optional (default=dddddd)
-    *    as for bgcolor; colour of thebackground for every-other line in
-    *    the alphabetical/contextual listings
-    *
     * 
     * Notes:
     *  . we make use of EXSLT functions for date/time
@@ -155,30 +136,6 @@
   <xsl:variable name="dt" select="date:date-time()"/>
   <xsl:variable name="lastmod"
     select="concat(date:day-in-month($dt),' ',date:month-name($dt),' ',date:year($dt))"/>
-
-  <!--*
-      * background colours:
-      * perhaps we should just a single value for the background
-      * colour, since that will probably be less confusing to the
-      * reader.
-      * see http://www.brobstsystems.com/colors.htm for a list
-      * of so-called "safe" colours, although how much one can trust
-      * this list I don't know
-      * however, using their recommendation of only 00, 44, 66, 99, CC, and FF
-      * values:
-      *   #FFFFFF white
-      *   #CCCCCC light grey    
-      *   #999999 darker grey
-      *   #000000 black
-      *
-      * but #999999 is too dark, so changed to #CCCCCC, and #CCCCCC to #E0E0E0
-      * and now changed back to a single colour, #CCCCCC
-      *
-      * -->
-  <xsl:param name="bgcolor">cccccc</xsl:param>
-  <xsl:param name="bocolor">000000</xsl:param>
-  <xsl:param name="btcolor">dddddd</xsl:param>
-
 
   <!--*
       * Start processing here: "/"
@@ -662,16 +619,18 @@
 
   <!--* add a set of 'jump to' links for the alphabetical list *-->
   <xsl:template name="add-alphabet-jump">
-    <font size="-1">Jump to:
+    <div class="qlinkbar">Jump to:
       <a title="Main Ahelp page" href="index.html">Main AHELP page</a> |
-      <a title="List by context" href="index_context.html">Contextual List</a></font>
+      <a title="List by context" href="index_context.html">Contextual List</a>
+    </div>
   </xsl:template>
 
   <!--* add a set of 'jump to' links for the contextual list *-->
   <xsl:template name="add-context-jump">
-    <font size="-1">Jump to:
+    <div class="qlinkbar">Jump to:
       <a title="Main Ahelp page" href="index.html">Main AHELP page</a> |
-      <a title="List by alphabet" href="index_alphabet.html">Alphabetical List</a></font>
+      <a title="List by alphabet" href="index_alphabet.html">Alphabetical List</a>
+    </div>
   </xsl:template>
 
   <!--*
@@ -706,10 +665,11 @@
 
     <!--* add text/links *-->
     <xsl:call-template name="add-alphabet-jump"/>
-    <hr/><br/>
+    <hr/>
 
     <!--* create the list of letters/links *-->
     <div align="center">
+      <p>
       <xsl:for-each select="term">
 	<xsl:variable name="letter"
 	  select="translate(name,
@@ -718,23 +678,23 @@
 	<a title="Jump to the letter {$letter}" href="#{$letter}"><xsl:value-of select="$letter"/></a>
 	<xsl:text> </xsl:text>
       </xsl:for-each>
+      </p>
     </div>
-    <br/>
 
     <!--* begin the table *-->
-    <table align="center">
+    <table class="ahelptable">
 
       <!--* the header *-->
+      <thead>
       <tr>
-	<th><font size="+1"><xsl:call-template name="add-nbsp"/><xsl:call-template name="add-nbsp"/><xsl:call-template name="add-nbsp"/></font></th>
-	&spacer;
-	<th><font size="+1">Topic</font></th>
-	&spacer;
-	<th><font size="+1">Context</font></th>
-	&spacer;
-	<th><font size="+1">Summary</font></th>
+	<th><xsl:call-template name="add-nbsp"/><xsl:call-template name="add-nbsp"/><xsl:call-template name="add-nbsp"/></th>
+	<th>Topic</th>
+	<th>Context</th>
+	<th>Summary</th>
       </tr>
+      </thead>
 
+      <tbody>
       <!--* loop through each 'letter' *-->
       <xsl:for-each select="term">
 	
@@ -758,23 +718,20 @@
 
 	    <!--* do we need to add the 'label' *-->
 	    <xsl:if test="position() = 1">
-	      <td valign="top" rowspan="{last()}"><font size="+1">
-		  <strong><a name="{$letter}"><xsl:value-of select="$letter"/></a></strong>
-		</font></td>
+	      <th valign="top" rowspan="{last()}">
+		<a name="{$letter}"><xsl:value-of select="$letter"/></a>
+	      </th>
 	    </xsl:if>
 	    
 	    <!--* and the actual data *-->
-	    &spacer;
 	    <td valign="top">
 	      <xsl:call-template name="add-table-bg-color"/>
 	      <a href="{$ahelpobj/page}.html"><xsl:value-of select="$thiskey"/></a>
 	    </td>
-	    &spacer;
 	    <td valign="top">
 	      <xsl:call-template name="add-table-bg-color"/>
 	      <a href="index_context.html#{$thiscon}"><xsl:value-of select="$thiscon"/></a>
 	    </td>
-	    &spacer;
 	    <td>
 	      <xsl:call-template name="add-table-bg-color"/>
 	      <xsl:value-of select="$ahelpobj/summary"/>
@@ -789,9 +746,10 @@
 	</xsl:if>
 	
       </xsl:for-each> <!--* term *-->
+
+      </tbody>
     </table>
     
-    <br/>
     <!--* jump back links *-->
     <xsl:call-template name="add-alphabet-jump"/>
     
@@ -894,29 +852,31 @@
 
     <!--* add text/links *-->
     <xsl:call-template name="add-context-jump"/>
-    <hr/><br/>
+    <hr/>
 
     <!--* create the list of concepts/links *-->
     <div align="center">
+      <p>
       <xsl:for-each select="term">
 	<a title="Jump to context '{name}'" href="#{name}"><xsl:value-of select="name"/></a>
 	<xsl:text> </xsl:text>
       </xsl:for-each>
+      </p>
     </div>
-    <br/>
 
     <!--* begin the table *-->
-    <table align="center">
+    <table class="ahelptable">
 
       <!--* the header *-->
+      <thead>
       <tr>
-	<th><font size="+1">Context</font></th>
-	&spacer;
-	<th><font size="+1">Topic</font></th>
-	&spacer;
-	<th><font size="+1">Summary</font></th>
+	<th>Context</th>
+	<th>Topic</th>
+	<th>Summary</th>
       </tr>
+      </thead>
 
+      <tbody>
       <!--* loop through each 'context' *-->
       <xsl:for-each select="term">
 
@@ -935,18 +895,15 @@
 	  <tr>
 	    <!--* do we need to add the 'label' *-->
 	    <xsl:if test="position() = 1">
-	      <td valign="top" rowspan="{last()}"><font size="+1">
-		  <strong><a name="{$context}"><xsl:value-of select="$context"/></a></strong>
-		</font></td>
+	      <th valign="top" rowspan="{last()}"><a name="{$context}"><xsl:value-of select="$context"/></a></th>
 	    </xsl:if>
 	    
 	    <!--* and the actual data *-->
-	    &spacer;
 	    <td valign="top">
 	      <xsl:call-template name="add-table-bg-color"/>
 	      <a href="{$ahelpobj/page}.html"><xsl:value-of select="$thiskey"/></a>
 	    </td>
-	    &spacer;
+
 	    <td>
 	      <xsl:call-template name="add-table-bg-color"/>
 	      <xsl:value-of select="$ahelpobj/summary"/>
@@ -961,9 +918,9 @@
 	</xsl:if>
 
       </xsl:for-each> <!--* ahelpindex/context/term *-->
+      </tbody>
     </table>
     
-    <br/>
     <!--* jump back links *-->
     <xsl:call-template name="add-context-jump"/>
     
@@ -1013,13 +970,11 @@
 
   </xsl:template> <!--* name=add-link-to-text *-->
 
-  <!--*
-      * do we make the bgcolor attribute equal to $btcolor?
-      * TODO: use CSS
-      *-->
+
+  <!-- add the altrow class as necessary -->
   <xsl:template name="add-table-bg-color">
     <xsl:if test="@number mod 2 = 0">
-      <xsl:attribute name="bgcolor">#<xsl:value-of select="$btcolor"/></xsl:attribute>
+      <xsl:attribute name="class">altrow</xsl:attribute>
     </xsl:if>
   </xsl:template>
 
