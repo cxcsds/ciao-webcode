@@ -197,7 +197,7 @@
 	  <!--* add the explanation *-->
 	  <xsl:apply-templates select="text"/>
 	  
-	  <br/><hr/>
+	  <hr/>
 	</div>
 
 	<div class="bottombar">
