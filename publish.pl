@@ -310,6 +310,13 @@ my $searchssi = "/incl/search.html";
 $searchssi = get_config_type( $version_config, "searchssi", $type )
   if check_config_exists( $version_config, "searchssi" );
 
+# google analytics include
+#
+my $googlessi = "";
+$googlessi = get_config_version( $version_config, "googlessi" )
+  if check_config_exists( $version_config, "googlessi" );
+
+
 # storage/published is optional [sort of, depends on the site]
 # Moving towards using storageloc but have not completed the move
 #
@@ -718,6 +725,7 @@ sub xml2html_navbar ($) {
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
        searchssi => $searchssi,
+       googlessi => $googlessi,
 
        storageloc => $$opts{storageloc},
       );
@@ -881,6 +889,7 @@ sub xml2html_page ($) {
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
        searchssi => $searchssi,
+       googlessi => $googlessi,
        headtitlepostfix => $headtitlepostfix,
        texttitlepostfix => $texttitlepostfix,
 
@@ -965,6 +974,7 @@ sub xml2html_cscdb ($) {
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
        searchssi => $searchssi,
+       googlessi => $googlessi,
        headtitlepostfix => $headtitlepostfix,
        texttitlepostfix => $texttitlepostfix,
 
@@ -1049,6 +1059,7 @@ sub xml2html_bugs ($) {
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
        searchssi => $searchssi,
+       googlessi => $googlessi,
        headtitlepostfix => $headtitlepostfix,
        texttitlepostfix => $texttitlepostfix,
 
@@ -1211,6 +1222,7 @@ sub xml2html_relnotes ($) {
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
        searchssi => $searchssi,
+       googlessi => $googlessi,
        headtitlepostfix => $headtitlepostfix,
        texttitlepostfix => $texttitlepostfix,
 
@@ -1333,6 +1345,7 @@ sub xml2html_multiple ($$$) {
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
        searchssi => $searchssi,
+       googlessi => $googlessi,
        headtitlepostfix => $headtitlepostfix,
        texttitlepostfix => $texttitlepostfix,
 
@@ -1424,6 +1437,7 @@ sub xml2html_threadindex ($) {
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
        searchssi => $searchssi,
+       googlessi => $googlessi,
        headtitlepostfix => $headtitlepostfix,
        texttitlepostfix => $texttitlepostfix,
 
@@ -1677,6 +1691,7 @@ sub xml2html_thread ($) {
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
        searchssi => $searchssi,
+       googlessi => $googlessi,
        headtitlepostfix => $headtitlepostfix,
        texttitlepostfix => $texttitlepostfix,
        # currently imglinkicon/... are always set [since we define

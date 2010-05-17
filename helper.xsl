@@ -636,7 +636,7 @@
       *-->
   <xsl:template name="add-footer">
     <xsl:param name="name"  select="''"/>
-
+    
     <!--* TODO: invert the logic of this check once we remove the PDF support in threads *-->
     <xsl:if test="$name = ''">
       <xsl:message terminate="yes">
@@ -659,6 +659,12 @@
       </xsl:if>
       <div>Last modified: <xsl:value-of select="$lastmod"/></div>
     </div>
+
+    <xsl:if test="$site = 'ciao' and $type = 'live'">
+      <xsl:call-template name="add-ssi-include">
+        <xsl:with-param name="file" select="$googlessi"/>
+      </xsl:call-template>
+    </xsl:if>
 
 <!-- TEMP    <xsl:choose>
 

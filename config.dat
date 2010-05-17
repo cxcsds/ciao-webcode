@@ -117,6 +117,11 @@ version_string=4.2
 %searchssi=test /ciao4.2/ciao_search.ssi
 %searchssi=trial /sds/ciao4.2_trial/ciao_search.ssi
 
+# location of the google analytics ssi
+# only added for the live site in helper.xsl
+googlessi=/ciao4.2/ciao_analytics.ssi
+
+
 # logo/text to use for navbar
 logoimage=imgs/ciao_logo_navbar.gif
 logotext=CIAO Logo
@@ -1227,13 +1232,18 @@ depth_offset=0
 headtitlepostfix=CALDB 4
 ##texttitlepostfix=- CALDB 4
 
-%css=live /caldb/caldb.css
-%css=test /caldb/caldb.css
-%css=trial /sds/ciao_trial/ciao.css
+%css=live /ciao4.2/ciao.css
+%css=test /ciao4.2/ciao.css
+%css=trial /sds/ciao4.2_trial/ciao.css
 
-%cssprint=live /caldb/caldb.print.css
-%cssprint=test /caldb/caldb.print.css
-%cssprint=trial /sds/ciao_trial/ciao.print.css
+%cssprint=live /ciao4.2/ciao.print.css
+%cssprint=test /ciao4.2/ciao.print.css
+%cssprint=trial /sds/ciao4.2_trial/ciao.print.css
+
+# favicon location
+%favicon=live /ciao4.2/favicon.ico
+%favicon=test /ciao4.2/favicon.ico
+%favicon=trial /sds/ciao4.2_trial/favicon.ico
 
 %newsfile=live /proj/web-cxc/htdocs/caldb4/news.html
 %newsfile=test /proj/web-cxc-test/htdocs/caldb4/news.html
@@ -1268,13 +1278,13 @@ headtitlepostfix=CALDB 4
 %storage=trial /data/da/Docs/caldbweb/published/caldb4/trial/
 
 # point to the CIAO ahelp file indexes
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao41.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao41.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao41.trial.xml
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao42.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao42.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao42.trial.xml
 
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao41/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao42/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao42/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao42/test/ahelp/
 
 -version
 
