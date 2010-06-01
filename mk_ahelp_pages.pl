@@ -290,6 +290,7 @@ my @extra = (
 my $cssfile      = get_config_type $version_config, "css", $type;
 my $cssprintfile = get_config_type $version_config, "cssprint", $type;
 my $searchssi    = get_config_type $version_config, "searchssi", $type;
+my $googlessi    = get_config_version( $version_config, "googlessi" );
 my $urlbase      = get_config_type $version_config, "outurl", $type;
 
 # optional "postfix" text for page headers
@@ -305,7 +306,7 @@ dbg "  urlbase=$urlbase";
 dbg "  searchssi=$searchssi";
 dbg "  cssfile=$cssfile";
 dbg "  cssprintfile=$cssprintfile";
-dbg "  searchssi=$searchssi";
+dbg "  googlessi=$googlessi";
 dbg "  headtitlepostfix=$headtitlepostfix";
 dbg "  texttitlepostfix=$texttitlepostfix";
 dbg "*** CONFIG DATA (end) ***";
@@ -317,6 +318,7 @@ dbg "*** CONFIG DATA (end) ***";
    cssfile      => $cssfile,
    cssprintfile => $cssprintfile,
    searchssi    => $searchssi,
+   googlessi    => $googlessi,
    urlbase      => $urlbase,
    headtitlepostfix => $headtitlepostfix,
    texttitlepostfix => $texttitlepostfix,
