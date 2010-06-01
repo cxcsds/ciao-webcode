@@ -155,9 +155,10 @@ my @dirs;
 
 # sort out exclude dirs
 #
-my @excludedirs;
+
+my %excludedirs;
 if ( $excludedirs ne "" ) { 
-    @excludedirs = split( /,/, $excludedirs );
+    my %excludedirs = map { ($_,1); } split( /,/, $excludedirs );
 }
 
 # find all the files
