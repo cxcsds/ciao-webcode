@@ -155,9 +155,10 @@ my @dirs;
 
 # sort out exclude dirs
 #
-if ( $excludedirs eq "" ) { $excludedirs = "cookbook_test"; }
-else { $excludedirs .= ",cookbook_test"; }
-my %excludedirs = map { ($_,1); } split( /,/, $excludedirs );
+my @excludedirs;
+if ( $excludedirs ne "" ) { 
+    @excludedirs = split( /,/, $excludedirs );
+}
 
 # find all the files
 # - exclude SCCS and RCS directories
