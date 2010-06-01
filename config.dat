@@ -591,7 +591,7 @@ imglinkiconheight=16
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
-googlessi=/ciao4.2/analytics.ssi
+googlessi=/chart/analytics.ssi
 
 %stylesheets=live /data/da/Docs/web4/chart/
 %stylesheets=test /data/da/Docs/web4/chart/
@@ -691,7 +691,7 @@ logotext=Sherpa Logo
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
-googlessi=/ciao4.2/analytics.ssi
+googlessi=/sherpa4.2/analytics.ssi
 
 # ciao42 uses a CSS layout
 %stylesheets=live /data/da/Docs/web4/ciao42/
@@ -950,7 +950,7 @@ logotext=ChIPS Logo
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
-googlessi=/ciao4.2/analytics.ssi
+googlessi=/chips4.2/analytics.ssi
 
 # ciao42 uses a CSS layout
 %stylesheets=live /data/da/Docs/web4/ciao42/
@@ -1516,7 +1516,7 @@ logotext=ObsVis logo
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
-googlessi=/ciao4.2/analytics.ssi
+googlessi=/obsvis/analytics.ssi
 
 %stylesheets=live /data/da/Docs/web4/ciao42/
 %stylesheets=test /data/da/Docs/web4/ciao42/

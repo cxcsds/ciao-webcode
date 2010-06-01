@@ -322,6 +322,10 @@
     <xsl:call-template name="newline"/>
   </xsl:template> <!--* name=add-cxc-search-ssi *-->
 
+  <xsl:template name="add-google-analytics-ssi">
+    <xsl:comment>#include virtual="<xsl:value-of select="$googlessi"/>"</xsl:comment>
+  </xsl:template> <!--* name=add-google-analytics-ssi *-->
+
   <!--*
       * add the CXC header
       * - depends on the type (live, test, trial) of the transform
@@ -467,8 +471,13 @@
   </xsl:template> <!--* name=add-cxc-test-banner *-->
 
   <!--*
-      * output the page "footer"
+      * include google analytics; output the page "footer" 
       *-->
+
+    <xsl:if test="$type = 'live'">
+      <xsl:call-template name="add-google-analytics-ssi"/>
+    </xsl:if>
+
   <xsl:template name="add-cxc-footer">
     <xsl:comment>#include virtual="/incl/greenfooter.html"</xsl:comment>
     <xsl:call-template name="newline"/>
