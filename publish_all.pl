@@ -157,9 +157,14 @@ my @dirs;
 #
 
 my %excludedirs;
-if ( $excludedirs ne "" ) { 
+if ( $excludedirs ne "" ) {
+
+    # need at least one comma for the split
+    $excludedirs .= ",null";  
     my %excludedirs = map { ($_,1); } split( /,/, $excludedirs );
+
 }
+
 
 # find all the files
 # - exclude SCCS and RCS directories
