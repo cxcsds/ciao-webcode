@@ -660,7 +660,7 @@
       <div>Last modified: <xsl:value-of select="$lastmod"/></div>
     </div>
 
-    <xsl:if test="$site = 'ciao' and $type = 'live'">
+    <xsl:if test="($site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'chart' or $site = 'obsvis') and $type = 'live'">
       <xsl:call-template name="add-ssi-include">
         <xsl:with-param name="file" select="$googlessi"/>
       </xsl:call-template>

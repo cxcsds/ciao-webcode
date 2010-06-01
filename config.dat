@@ -119,7 +119,7 @@ version_string=4.2
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
-googlessi=/ciao4.2/ciao_analytics.ssi
+googlessi=/ciao4.2/analytics.ssi
 
 
 # logo/text to use for navbar
@@ -589,6 +589,10 @@ imglinkiconheight=16
 %searchssi=test /chart/chart_search.ssi
 %searchssi=trial /sds/chart_trial/chart_search.ssi
 
+# location of the google analytics ssi
+# only added for the live site in helper.xsl
+googlessi=/ciao4.2/analytics.ssi
+
 %stylesheets=live /data/da/Docs/web4/chart/
 %stylesheets=test /data/da/Docs/web4/chart/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
@@ -684,6 +688,10 @@ logotext=Sherpa Logo
 %searchssi=live /sherpa4.2/sherpa_search.ssi
 %searchssi=test /sherpa4.2/sherpa_search.ssi
 %searchssi=trial /sds/sherpa4.2_trial/sherpa_search.ssi
+
+# location of the google analytics ssi
+# only added for the live site in helper.xsl
+googlessi=/ciao4.2/analytics.ssi
 
 # ciao42 uses a CSS layout
 %stylesheets=live /data/da/Docs/web4/ciao42/
@@ -939,6 +947,10 @@ logotext=ChIPS Logo
 %searchssi=live /chips4.2/chips_search.ssi
 %searchssi=test /chips4.2/chips_search.ssi
 %searchssi=trial /sds/chips4.2_trial/chips_search.ssi
+
+# location of the google analytics ssi
+# only added for the live site in helper.xsl
+googlessi=/ciao4.2/analytics.ssi
 
 # ciao42 uses a CSS layout
 %stylesheets=live /data/da/Docs/web4/ciao42/
@@ -1501,6 +1513,10 @@ logotext=ObsVis logo
 %searchssi=live /obsvis/search.ssi
 %searchssi=test /obsvis/search.ssi
 %searchssi=trial /sds/obsvis_trial/search.ssi
+
+# location of the google analytics ssi
+# only added for the live site in helper.xsl
+googlessi=/ciao4.2/analytics.ssi
 
 %stylesheets=live /data/da/Docs/web4/ciao42/
 %stylesheets=test /data/da/Docs/web4/ciao42/
