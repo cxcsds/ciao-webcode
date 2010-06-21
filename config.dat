@@ -167,9 +167,9 @@ logotext=CIAO Logo
 # significant amount of work, so we are leaving this for a future
 # date.
 #
-%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.2/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.2/
-%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.2/
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.2.1/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.2.1/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.2.1/
 
 # where does the ahelp 'index' file live
 # - ie the directory that contains
@@ -714,9 +714,9 @@ googlessi=/sherpa4.2.1/analytics.ssi
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao42.test.xml
 %storageloc=trial /data/da/Docs/ciaoweb/storage.ciao42.trial.xml
 
-%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.2/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.2/
-%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.2/
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.2.1/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.2.1/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.2.1/
 
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao42/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao42/test/ahelp/
@@ -1058,9 +1058,9 @@ googlessi=/chips4.2/analytics.ssi
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao42.test.xml
 %storageloc=trial /data/da/Docs/ciaoweb/storage.ciao42.trial.xml
 
-%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.2/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.2/
-%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.2/
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.2.1/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.2.1/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.2.1/
 
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao42/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao42/test/ahelp/
