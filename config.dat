@@ -128,8 +128,8 @@ logotext=CIAO Logo
 
 # location of the stylesheets
 # ciao42 uses a CSS layout
-%stylesheets=live /data/da/Docs/web4/ciao42/
-%stylesheets=test /data/da/Docs/web4/ciao42/
+%stylesheets=live /data/da/Docs/web4/ciao421/
+%stylesheets=test /data/da/Docs/web4/ciao421/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 # what's the location for the output files?
@@ -694,8 +694,8 @@ logotext=Sherpa Logo
 googlessi=/sherpa4.2.1/analytics.ssi
 
 # ciao42 uses a CSS layout
-%stylesheets=live /data/da/Docs/web4/ciao42/
-%stylesheets=test /data/da/Docs/web4/ciao42/
+%stylesheets=live /data/da/Docs/web4/ciao421/
+%stylesheets=test /data/da/Docs/web4/ciao421/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 %outdir=live /proj/web-cxc/htdocs/sherpa4.2.1/
@@ -727,241 +727,8 @@ ahelpindexnavbar=ahelp
 -version
 
 
-+version ciao42
-number=4.2
-
-imglinkicon=imgs/imageicon.gif
-imglinkiconwidth=23
-imglinkiconheight=16
-
-headtitlepostfix=Sherpa 4.2
-texttitlepostfix=Sherpa 4.2
-
-version_string=4.2
-
-# main CSS location
-%css=live /ciao4.2/ciao.css
-%css=test /ciao4.2/ciao.css
-%css=trial /sds/ciao4.2_trial/ciao.css
-
-%cssprint=live /ciao4.2/ciao.print.css
-%cssprint=test /ciao4.2/ciao.print.css
-%cssprint=trial /sds/ciao4.2_trial/ciao.print.css
-
-# favicon location
-%favicon=live /ciao4.2/favicon.ico
-%favicon=test /ciao4.2/favicon.ico
-%favicon=trial /sds/ciao4.2_trial/favicon.ico
-
-# location of the news file for the "What's new" link
-%newsfile=live /proj/web-cxc/htdocs/sherpa4.2/news.html
-%newsfile=test /proj/web-cxc-test/htdocs/sherpa4.2/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/sherpa4.2_trial/news.html
-
-%newsurl=live /sherpa4.2/news.html
-%newsurl=test /sherpa4.2/news.html
-%newsurl=trial /sds/sherpa4.2_trial/news.html
-
-# location of the "watch out" page
-%watchouturl=live /sherpa4.2/watchout.html
-%watchouturl=test /sherpa4.2/watchout.html
-%watchouturl=trial /sds/sherpa4.2_trial/watchout.html
-
-logoimage=imgs/sherpa_logo_navbar.gif
-logotext=Sherpa Logo
-
-%searchssi=live /sherpa4.2/sherpa_search.ssi
-%searchssi=test /sherpa4.2/sherpa_search.ssi
-%searchssi=trial /sds/sherpa4.2_trial/sherpa_search.ssi
-
-# location of the google analytics ssi
-# only added for the live site in helper.xsl
-googlessi=/sherpa4.2/analytics.ssi
-
-# ciao42 uses a CSS layout
-%stylesheets=live /data/da/Docs/web4/ciao42/
-%stylesheets=test /data/da/Docs/web4/ciao42/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
-
-%outdir=live /proj/web-cxc/htdocs/sherpa4.2/
-%outdir=test /proj/web-cxc-test/htdocs/sherpa4.2/
-%outdir=trial /proj/web-icxc/htdocs/sds/sherpa4.2_trial/
-
-%outurl=live http://cxc.harvard.edu/sherpa4.2/
-%outurl=test http://cxc-test.harvard.edu/sherpa4.2/
-%outurl=trial http://icxc.harvard.edu/sds/sherpa4.2_trial/
-
-%storage=live /data/da/Docs/sherpaweb/published/ciao42/live/
-%storage=test /data/da/Docs/sherpaweb/published/ciao42/test/
-%storage=trial /data/da/Docs/sherpaweb/published/ciao42/trial/
-
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao42.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao42.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao42.trial.xml
-
-%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.2/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.2/
-%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.2/
-
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao42/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao42/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao42/trial/ahelp/
-
-ahelpindexnavbar=ahelp
-
--version
-
-
-+version ciao41
-number=4.1
-
-imglinkicon=imgs/imageicon.gif
-imglinkiconwidth=23
-imglinkiconheight=16
-
-headtitlepostfix=Sherpa 4.1
-texttitlepostfix=Sherpa 4.1
-
-version_string=4.1
-
-# main CSS location
-%css=live /ciao4.1/ciao.css
-%css=test /ciao4.1/ciao.css
-%css=trial /sds/ciao4.1_trial/ciao.css
-
-%cssprint=live /ciao4.1/ciao.print.css
-%cssprint=test /ciao4.1/ciao.print.css
-%cssprint=trial /sds/ciao4.1_trial/ciao.print.css
-
-# favicon location
-%favicon=live /ciao4.1/favicon.ico
-%favicon=test /ciao4.1/favicon.ico
-%favicon=trial /sds/ciao4.1_trial/favicon.ico
-
-# location of the news file for the "What's new" link
-%newsfile=live /proj/web-cxc/htdocs/sherpa4.1/news.html
-%newsfile=test /proj/web-cxc-test/htdocs/sherpa4.1/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/sherpa4.1_trial/news.html
-
-%newsurl=live /sherpa4.1/news.html
-%newsurl=test /sherpa4.1/news.html
-%newsurl=trial /sds/sherpa4.1_trial/news.html
-
-# location of the "watch out" page
-%watchouturl=live /sherpa4.1/watchout.html
-%watchouturl=test /sherpa4.1/watchout.html
-%watchouturl=trial /sds/sherpa4.1_trial/watchout.html
-
-logoimage=imgs/sherpa_logo_navbar.gif
-logotext=Sherpa Logo
-
-%searchssi=live /sherpa4.1/sherpa_search.ssi
-%searchssi=test /sherpa4.1/sherpa_search.ssi
-%searchssi=trial /sds/sherpa4.1_trial/sherpa_search.ssi
-
-%stylesheets=live /data/da/Docs/web4/ciao4/
-%stylesheets=test /data/da/Docs/web4/ciao4/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
-
-%outdir=live /proj/web-cxc/htdocs/sherpa4.1/
-%outdir=test /proj/web-cxc-test/htdocs/sherpa4.1/
-%outdir=trial /proj/web-icxc/htdocs/sds/sherpa4.1_trial/
-
-%outurl=live http://cxc.harvard.edu/sherpa4.1/
-%outurl=test http://cxc-test.harvard.edu/sherpa4.1/
-%outurl=trial http://icxc.harvard.edu/sds/sherpa4.1_trial/
-
-%storage=live /data/da/Docs/sherpaweb/published/ciao41/live/
-%storage=test /data/da/Docs/sherpaweb/published/ciao41/test/
-%storage=trial /data/da/Docs/sherpaweb/published/ciao41/trial/
-
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao41.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao41.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao41.trial.xml
-
-%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.1/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.1/
-%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.1/
-
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao41/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/trial/ahelp/
-
-ahelpindexnavbar=ahelp
-
--version
-
-
-+version 40beta
-number=4.0 Beta
-
-imglinkicon=imgs/imageicon.gif
-imglinkiconwidth=23
-imglinkiconheight=16
-
-headtitlepostfix=Sherpa 4.0 Beta
-texttitlepostfix=Sherpa 4.0 Beta
-
-version_string=4.0 Beta
-
-%css=live /ciao/ciao.css
-%css=test /ciao/ciao.css
-%css=trial /sds/ciao_beta_trial/ciao.css
-
-%cssprint=live /ciao/ciao.print.css
-%cssprint=test /ciao/ciao.print.css
-%cssprint=trial /sds/ciao4.0_trial/ciao.print.css
-
-%newsfile=live /proj/web-cxc/htdocs/ciao/news.html
-%newsfile=test /proj/web-cxc-test/htdocs/ciao/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/ciao4.0_trial/news.html
-
-%newsurl=live /ciao/news.html
-%newsurl=test /ciao/news.html
-%newsurl=trial /sds/ciao4.0_trial/news.html
-
-%watchouturl=live /ciao/watchout.html
-%watchouturl=test /ciao/watchout.html
-%watchouturl=trial /sds/ciao4.0_trial/watchout.html
-
-logoimage=imgs/sherpa_logo_navbar.gif
-logotext=Sherpa Logo
-
-%searchssi=live /sherpabeta/sherpa_search.ssi
-%searchssi=test /sherpabeta/sherpa_search.ssi
-%searchssi=trial /sds/sherpa_beta_trial/sherpa_search.ssi
-
-%stylesheets=live /data/da/Docs/web4/ciao4/
-%stylesheets=test /data/da/Docs/web4/ciao4/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
-
-%outdir=live /proj/web-cxc/htdocs/sherpabeta/
-%outdir=test /proj/web-cxc-test/htdocs/sherpabeta/
-%outdir=trial /proj/web-icxc/htdocs/sds/sherpa_beta_trial/
-
-%outurl=live http://cxc.harvard.edu/sherpabeta/
-%outurl=test http://cxc-test.harvard.edu/sherpabeta/
-%outurl=trial http://icxc.harvard.edu/sds/sherpa_beta_trial/
-
-%storage=live /data/da/Docs/sherpaweb/published/40beta/live/
-%storage=test /data/da/Docs/sherpaweb/published/40beta/test/
-%storage=trial /data/da/Docs/sherpaweb/published/40beta/trial/
-
-%storageloc=live /data/da/Docs/ciaoweb/storage.40beta.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.40beta.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.40beta.trial.xml
-
-%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.0/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.0/
-%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.0/
-
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao40/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao40/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao40/test/ahelp/
-
-ahelpindexnavbar=ahelp
-
--version
+# you cannot publish Sherpa versions prior to 4.2.1 
+# with this version of the code
 
 @stylesheets=page
 @stylesheets=navbar
@@ -1038,8 +805,8 @@ logotext=ChIPS Logo
 googlessi=/chips4.2/analytics.ssi
 
 # ciao42 uses a CSS layout
-%stylesheets=live /data/da/Docs/web4/ciao42/
-%stylesheets=test /data/da/Docs/web4/ciao42/
+%stylesheets=live /data/da/Docs/web4/ciao421/
+%stylesheets=test /data/da/Docs/web4/ciao421/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 %outdir=live /proj/web-cxc/htdocs/chips4.2/

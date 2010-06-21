@@ -265,7 +265,7 @@ push @extra, ( logotext  => $logotext )
 my @s;
 my @h;
 
-if ($site eq "ciao") {
+if ($site ne "chips") {
     @s = qw( navbar_ahelp_index.incl index_alphabet.html index_context.html );
     @h = qw( index_alphabet index_context );
 } else {

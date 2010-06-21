@@ -247,7 +247,7 @@
     </xsl:if>
 
     <!--* ohh for a DTD *-->
-    <xsl:if test="boolean(@type) and $site = 'ciao' and @type!='main' and @type!='alphabet' and @type!='context'">
+    <xsl:if test="boolean(@type) and  ($site = 'ciao' or $site = 'sherpa') and @type!='main' and @type!='alphabet' and @type!='context'">
       <xsl:message terminate="yes">
 
  ERROR:
@@ -257,7 +257,7 @@
 
       </xsl:message>
     </xsl:if>
-    <xsl:if test="boolean(@type) and ($site = 'chips' or $site = 'sherpa') and @type!='main' and @type!='python' and @type!='slang' and @type!='context'">
+    <xsl:if test="boolean(@type) and $site = 'chips' and @type!='main' and @type!='python' and @type!='slang' and @type!='context'">
       <xsl:message terminate="yes">
 
  ERROR:
