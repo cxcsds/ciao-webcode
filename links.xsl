@@ -251,7 +251,7 @@
       <xsl:message terminate="yes">
 
  ERROR:
-   In CIAO site, the type attribute of ahelppage tag must be one of:
+   In the <xsl:value-of select="$site"/> site, the type attribute of ahelppage tag must be one of:
        main alphabet context
    You have a type of "<xsl:value-of select="@type"/>"
 
