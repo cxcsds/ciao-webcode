@@ -288,7 +288,7 @@ my %paramlist = (
 		 @extra
 		);
 
-if ($site eq "ciao") {
+if ($site ne "chips") {
     translate_file "${stylesheets}ahelp_index.xsl", $ahelpindex, \%paramlist;
 } else {
     translate_file "${stylesheets}ahelp_index_lang.xsl", $ahelpindex, \%paramlist;
