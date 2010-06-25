@@ -706,9 +706,9 @@ googlessi=/sherpa4.2.1/analytics.ssi
 %outurl=test http://cxc-test.harvard.edu/sherpa4.2.1/
 %outurl=trial http://icxc.harvard.edu/sds/sherpa4.2.1_trial/
 
-%storage=live /data/da/Docs/sherpaweb/published/ciao42/live/
-%storage=test /data/da/Docs/sherpaweb/published/ciao42/test/
-%storage=trial /data/da/Docs/sherpaweb/published/ciao42/trial/
+%storage=live /data/da/Docs/sherpaweb/published/ciao421/live/
+%storage=test /data/da/Docs/sherpaweb/published/ciao421/test/
+%storage=trial /data/da/Docs/sherpaweb/published/ciao421/trial/
 
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao42.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao42.test.xml
