@@ -974,7 +974,7 @@
     <xsl:param name='text'/>
 
     <!--* title *-->
-    <h2 align="center"><xsl:value-of select="$text"/> ahelp files for <xsl:value-of select="$headtitlepostfix"/><br/>Alphabetical List</h2>
+    <h2 align="center"><xsl:value-of select="$text"/> Ahelp Files<br/>Alphabetical List</h2>
 
     <!--* add text/links *-->
     <xsl:if test="$text = 'S-Lang'">
