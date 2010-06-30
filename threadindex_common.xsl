@@ -570,7 +570,6 @@
 	      <xsl:call-template name="add-threadindex-title">
 		<xsl:with-param name="title"><xsl:choose>
 		    <xsl:when test="$site='ciao'">Data for CIAO <xsl:value-of select="$siteversion"/> Threads</xsl:when>
-		    <xsl:when test="$site='sherpa'">Data for Sherpa Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
 		    <xsl:otherwise>Data for Threads</xsl:otherwise>
 		  </xsl:choose></xsl:with-param>
 	      </xsl:call-template>

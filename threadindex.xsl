@@ -25,7 +25,7 @@
   <xsl:include href="globalparams_thread.xsl"/>
 
   <!--* used to create the HTML header *-->
-  <xsl:variable name="ciaothreadver" select="concat('Threads for CIAO ',$siteversion)"/>
+  <xsl:variable name="ciaothreadver" select="'Threads'"/>
 
   <!--* include the stylesheets *-->
   <xsl:include href="helper.xsl"/>

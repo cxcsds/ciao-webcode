@@ -1829,8 +1829,8 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
       <h3><xsl:choose>
 	<xsl:when test="$site = 'ciao'">CIAO <xsl:value-of select="$siteversion"/> Science Threads</xsl:when>
-	<xsl:when test="$site = 'chips'">ChIPS Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
-	<xsl:when test="$site = 'sherpa'">Sherpa Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
+	<xsl:when test="$site = 'chips'">ChIPS Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
+	<xsl:when test="$site = 'sherpa'">Sherpa Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
 	<xsl:when test="$site = 'csc'">CSC Threads</xsl:when>
 	<xsl:when test="$site = 'pog'">POG Threads (<xsl:value-of select="$siteversion"/>)</xsl:when>
       </xsl:choose></h3>
@@ -1867,7 +1867,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
 	<xsl:otherwise>
 	  <xsl:call-template name="add-htmlhead">
-            <xsl:with-param name="title" select="concat($start,' - ',djb:get-sitename-string(),' ',$siteversion,$endstr)"/>
+            <xsl:with-param name="title" select="concat($start,' - ',$headtitlepostfix,$endstr)"/>
 	  </xsl:call-template>
 	</xsl:otherwise>
       </xsl:choose>
@@ -1886,8 +1886,8 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
       <h2><xsl:choose>
 	<xsl:when test="$site = 'ciao'">CIAO <xsl:value-of select="$siteversion"/> Science Threads</xsl:when>
-	<xsl:when test="$site = 'chips'">ChIPS Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
-	<xsl:when test="$site = 'sherpa'">Sherpa Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
+	<xsl:when test="$site = 'chips'">ChIPS Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
+	<xsl:when test="$site = 'sherpa'">Sherpa Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
 	<xsl:when test="$site = 'chart'">ChaRT Threads</xsl:when>
 	<xsl:when test="$site = 'csc'">CSC Threads</xsl:when>
 	<xsl:when test="$site = 'pog'">Proposal Threads for <xsl:value-of select="$siteversion"/></xsl:when>
@@ -1921,8 +1921,8 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
       <h2><xsl:choose>
 	<xsl:when test="$site = 'ciao'">CIAO <xsl:value-of select="$siteversion"/> Science Threads</xsl:when>
-	<xsl:when test="$site = 'chips'">ChIPS Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
-	<xsl:when test="$site = 'sherpa'">Sherpa Threads (CIAO <xsl:value-of select="$siteversion"/>)</xsl:when>
+	<xsl:when test="$site = 'chips'">ChIPS Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
+	<xsl:when test="$site = 'sherpa'">Sherpa Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
 	<xsl:when test="$site = 'chart'">ChaRT Threads</xsl:when>
 	<xsl:when test="$site = 'csc'">CSC Threads</xsl:when>
 	<xsl:when test="$site = 'pog'">Proposal Threads for <xsl:value-of select="$siteversion"/></xsl:when>
