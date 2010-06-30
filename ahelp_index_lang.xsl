@@ -1164,7 +1164,7 @@
   <xsl:template name="handle-context">
 
     <!--* title *-->
-    <h2 align="center">Contextual list of ahelp files for <xsl:value-of select="$headtitlepostfix"/></h2>
+    <h2 align="center">Contextual List of Ahelp Files</h2>
 
     <!--* add text/links *-->
     <xsl:call-template name="add-context-jump"/>

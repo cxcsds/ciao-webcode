@@ -661,7 +661,7 @@
   <xsl:template name="handle-alphabet">
 
     <!--* title *-->
-    <h2 align="center">Alphabetical list of Ahelp files for <xsl:value-of select="$headtitlepostfix"/></h2>
+    <h2 align="center">Alphabetical List of Ahelp Files</h2>
 
     <!--* add text/links *-->
     <xsl:call-template name="add-alphabet-jump"/>
@@ -848,7 +848,7 @@
   <xsl:template name="handle-context">
 
     <!--* title *-->
-    <h2 align="center">Contextual list of Ahelp files for <xsl:value-of select="$headtitlepostfix"/></h2>
+    <h2 align="center">Contextual List of Ahelp Files</h2>
 
     <!--* add text/links *-->
     <xsl:call-template name="add-context-jump"/>
