@@ -474,11 +474,11 @@
       * include google analytics; output the page "footer" 
       *-->
 
+  <xsl:template name="add-cxc-footer">
     <xsl:if test="$type = 'live'">
       <xsl:call-template name="add-google-analytics-ssi"/>
     </xsl:if>
 
-  <xsl:template name="add-cxc-footer">
     <xsl:comment>#include virtual="/incl/greenfooter.html"</xsl:comment>
     <xsl:call-template name="newline"/>
 
