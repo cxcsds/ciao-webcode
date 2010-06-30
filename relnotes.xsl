@@ -100,6 +100,10 @@
 	        <h1>
 		  CIAO <xsl:value-of select="$release"/> Release Notes
 		</h1>
+
+		<xsl:if test="@package">
+		  <h2><xsl:value-of select="@package"/> Release</h2>
+		</xsl:if>
 	      </div>
 
               <div class="qlinkbar"><a href="history.html">Version History</a></div>
