@@ -1147,9 +1147,11 @@ sub list_ahelp_sites () {
 sub find_ahelp_site ($$) {
   my $key = shift;
   my $con = shift;
-  if ($con =~ /chips$/) {
+  if ($con =~ /chips/) {
     return "chips";
-  } elsif ($con =~ /sherpa$/) {
+  } elsif ($con =~ /sherpa_tools/) {
+    return "ciao";
+  } elsif ($con =~ /sherpa/) {
     return "sherpa";
   } else {
     return "ciao";
