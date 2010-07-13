@@ -714,11 +714,7 @@ sub protect_xml_chars_for_printf ($) {
 # 'empty' context groups: every context included in $listref
 # will have a non-empty see also lising.
 #
-# XXX TODO XXX
-#   the logic needs to be updated here to allow for multiple sites
-#   ie if there are pages that link to off-site ahelp pages;
-#   it is not clear if there are any that do this yet
-#
+
 sub print_seealso_list ($$$\%) {
     my $fh      = shift;
     my $obj     = shift;
@@ -758,9 +754,14 @@ sub print_seealso_list ($$$\%) {
 				 my $sout = $$objlist{ mangle($skey,$scontext) };
 				 my ( $summary, $filename ) = get_ahelp_items( $sout, 'summary', 'htmlname' );
 
-				 $summary = protect_xml_chars_for_printf $summary;
+				 my $ahelp_site = find_ahelp_site $skey, $scontext;
 
-				 "<a href='" . $depth . $filename . ".html' title=\"Ahelp: " .
+				 $summary = protect_xml_chars_for_printf $summary;
+				 
+				 # ecg: I don't know if this will break should depth actually be defined
+				 #      Have never run into a non-empty depth variable [13 July 2010]
+
+				 "<a href='/" . $ahelp_site . "/ahelp/" . $depth . $filename . ".html' title=\"Ahelp: " .
 				   $summary . '">' . $skey . "</a>";
 
 			     } else {
