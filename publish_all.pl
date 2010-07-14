@@ -242,8 +242,13 @@ while ( <$pipe> ) {
 	    or
 	  ($dname eq "data" and $fname =~ /\.gz$/)
             or
-	  $fname eq "thread.xml";
+	  $fname eq "thread.xml"
 
+	    # need to publish redirect files during s-lang removal
+            or	    
+	  $fname eq "index.sl.xml"
+            or
+	  $fname eq "index.py.xml";
     }
 
     # for the moment we reject the README in the workshop talk dirs
