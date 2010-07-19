@@ -108,8 +108,8 @@ version_string=4.2
 %newsurl=trial /sds/ciao4.2_trial/news.html
 
 # location of the "watch out" page
-%watchouturl=live /ciao4.2/watchout.html
-%watchouturl=test /ciao4.2/watchout.html
+%watchouturl=live /ciao/watchout.html
+%watchouturl=test /ciao/watchout.html
 %watchouturl=trial /sds/ciao4.2_trial/watchout.html
 
 # location of the search ssi
@@ -678,8 +678,8 @@ version_string=4.2
 %newsurl=trial /sds/sherpa4.2.2_trial/news.html
 
 # location of the "watch out" page
-%watchouturl=live /sherpa4.2.2/watchout.html
-%watchouturl=test /sherpa4.2.2/watchout.html
+%watchouturl=live /sherpa/watchout.html
+%watchouturl=test /sherpa/watchout.html
 %watchouturl=trial /sds/sherpa4.2.2_trial/watchout.html
 
 logoimage=imgs/sherpa_logo_navbar.gif
@@ -789,8 +789,8 @@ imglinkiconheight=16
 %newsurl=test /ciao/news.html
 %newsurl=trial /sds/ciao4.2_trial/news.html
 
-%watchouturl=live /ciao4.2/watchout.html
-%watchouturl=test /ciao4.2/watchout.html
+%watchouturl=live /ciao/watchout.html
+%watchouturl=test /ciao/watchout.html
 %watchouturl=trial /sds/ciao4.2_trial/watchout.html
 
 logoimage=imgs/chips_logo_navbar.gif
@@ -1267,8 +1267,8 @@ imglinkiconheight=16
 %newsurl=test /csc/news.html
 %newsurl=trial /sds/csc_trial/news.html
 
-%watchouturl=live /csc1/watchout.html
-%watchouturl=test /csc1/watchout.html
+%watchouturl=live /csc/watchout.html
+%watchouturl=test /csc/watchout.html
 %watchouturl=trial /sds/csc_trial/watchout.html
 
 logoimage=imgs/csc_logo_navbar.gif
