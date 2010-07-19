@@ -2272,11 +2272,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     <xsl:choose>
       <xsl:when test="$hardcopy = 0">
 	<div class="figure">
-	  <div class="caption">
-	    <h3><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
-	    <xsl:apply-templates select="caption" mode="figure"/>
-	  </div>
-
 	  <div>
 	    <!--* do we need this class attribute, as it is only meaningful for screen media? *-->
 	    <xsl:attribute name="class"><xsl:choose>
@@ -2375,6 +2370,10 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
 	  </div>
 
+	  <div class="caption">
+	    <h3><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
+	    <xsl:apply-templates select="caption" mode="figure"/>
+	  </div>
 	</div> <!--* class=figure *-->
 
 	<!--* I want to remove the float behavior, so I add in an ugly empty div *-->
