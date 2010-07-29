@@ -1123,7 +1123,7 @@ headtitlepostfix=CALDB 4
 
 %stylesheets=live /data/da/Docs/web4/caldb/
 %stylesheets=test /data/da/Docs/web4/caldb/
-%stylesheets=trial /data/da/Docs/web4/devel/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 # we have a versioned directory name for the live site
 # but not the test one (since I only realised I needed a
