@@ -1915,7 +1915,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	<xsl:attribute name="src"><xsl:choose>
 	  <xsl:when test="$site = 'pog'">../cxc-logo.gif</xsl:when>
 	  <xsl:when test="$site = 'ciao'">../../imgs/cxc-logo.gif</xsl:when>
-	  <xsl:otherwise>/ciao/imgs/cxc-logo.gif</xsl:otherwise>
+	  <xsl:otherwise>/proj/web-cxc/htdocs/ciao/imgs/cxc-logo.gif</xsl:otherwise>
 	</xsl:choose></xsl:attribute>
       </img>
 
@@ -2272,9 +2272,8 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     <xsl:choose>
       <xsl:when test="$hardcopy = 0">
 	<div class="figure">
-	  <div class="caption">
+	  <div class="caption screenmedia">
 	    <h3><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
-	    <xsl:apply-templates select="caption" mode="figure"/>
 	  </div>
 
 	  <div>
@@ -2375,6 +2374,11 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
 	  </div>
 
+	  <!--// Figure title placement depends on mediatype //-->
+	  <div class="caption">
+	    <h3 class="printmedia"><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
+	    <xsl:apply-templates select="caption" mode="figure"/>
+	  </div>
 	</div> <!--* class=figure *-->
 
 	<!--* I want to remove the float behavior, so I add in an ugly empty div *-->
