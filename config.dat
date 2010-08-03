@@ -1370,8 +1370,8 @@ logotext=ObsVis logo
 # only added for the live site in helper.xsl
 googlessi=/obsvis/analytics.ssi
 
-%stylesheets=live /data/da/Docs/web4/ciao42/
-%stylesheets=test /data/da/Docs/web4/ciao42/
+%stylesheets=live /data/da/Docs/web4/ciao421/
+%stylesheets=test /data/da/Docs/web4/ciao421/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 %outdir=live /proj/web-cxc/htdocs/obsvis/
@@ -1388,17 +1388,17 @@ googlessi=/obsvis/analytics.ssi
 
 # where does the ahelp 'index' file live
 # use CIAO versions
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao41/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao41/test/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao42/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao42/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao42/test/ahelp/
 
-%storage=live /data/da/Docs/ciaoweb/published/ciao41/live/
-%storage=test /data/da/Docs/ciaoweb/published/ciao41/test/
-%storage=trial /data/da/Docs/ciaoweb/published/ciao41/trial/
+%storage=live /data/da/Docs/ciaoweb/published/ciao42/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao42/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao42/trial/
 
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao41.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao41.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao41.trial.xml
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao42.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao42.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao42.trial.xml
 
 -version
 
