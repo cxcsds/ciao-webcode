@@ -518,7 +518,7 @@
       </xsl:when>
       <xsl:otherwise> -->
         <xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/incl/greenheader.html'"/>
+          <xsl:with-param name="file" select="'/incl/ciaoheader.html'"/>
         </xsl:call-template>
 <!-- TEMP       </xsl:otherwise> 
     </xsl:choose> -->
@@ -670,7 +670,7 @@
 
       <xsl:when test='$type="live" or $type="test"'> -->
 	<xsl:call-template name="add-ssi-include">
-	  <xsl:with-param name="file" select="'/incl/greenfooter.html'"/>
+	  <xsl:with-param name="file" select="'/incl/ciaofooter.html'"/>
 	</xsl:call-template>
 <!-- TEMP      </xsl:when>
 
