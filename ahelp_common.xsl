@@ -357,7 +357,7 @@
       * add the standard header files
       *-->
   <xsl:template name="add-cxc-header-live">
-    <xsl:comment>#include virtual="/incl/greenheader.html"</xsl:comment>
+    <xsl:comment>#include virtual="/incl/ciaoheader.html"</xsl:comment>
     <xsl:call-template name="newline"/>
 
   </xsl:template>
@@ -479,7 +479,7 @@
       <xsl:call-template name="add-google-analytics-ssi"/>
     </xsl:if>
 
-    <xsl:comment>#include virtual="/incl/greenfooter.html"</xsl:comment>
+    <xsl:comment>#include virtual="/incl/ciaofooter.html"</xsl:comment>
     <xsl:call-template name="newline"/>
 
   </xsl:template> <!--* add-cxc-footer *-->
