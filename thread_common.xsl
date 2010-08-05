@@ -2375,10 +2375,13 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	  </div>
 
 	  <!--// Figure title placement depends on mediatype //-->
+	  <h3 class="caption printmedia"><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
+
+	  <xsl:if test="caption">
 	  <div class="caption">
-	    <h3 class="printmedia"><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
 	    <xsl:apply-templates select="caption" mode="figure"/>
 	  </div>
+	  </xsl:if>
 	</div> <!--* class=figure *-->
 
 	<!--* I want to remove the float behavior, so I add in an ugly empty div *-->
