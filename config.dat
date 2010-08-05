@@ -1259,6 +1259,11 @@ imglinkiconheight=16
 %cssprint=test /csc1/csc.print.css
 %cssprint=trial /sds/csc_trial/csc.print.css
 
+# favicon location
+%favicon=live /csc/favicon.ico
+%favicon=test /csc/favicon.ico
+%favicon=trial /sds/csc_trial/favicon.ico
+
 %newsfile=live /proj/web-cxc/htdocs/csc1/news.html
 %newsfile=test /proj/web-cxc-test/htdocs/csc1/news.html
 %newsfile=trial /proj/web-icxc/htdocs/sds/csc_trial/news.html
@@ -1278,9 +1283,9 @@ logotext=Chandra Source Catalog logo
 %searchssi=test /csc1/csc_search.ssi
 %searchssi=trial /sds/csc_trial/csc_search.ssi
 
-%stylesheets=live /data/da/Docs/web4/ciao4/
-%stylesheets=test /data/da/Docs/web4/ciao4/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
+%stylesheets=live /data/da/Docs/web4/ciao421/
+%stylesheets=test /data/da/Docs/web4/ciao421/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 %outdir=live /proj/web-cxc/htdocs/csc1/
 %outdir=test /proj/web-cxc-test/htdocs/csc1/
