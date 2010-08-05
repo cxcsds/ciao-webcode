@@ -1301,6 +1301,10 @@ logotext=Chandra Source Catalog logo
 
 # where does the ahelp 'index' file live
 # use CIAO versions
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao42/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao42/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao42/trial/ahelp/
+
 %ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.2.1/
 %ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.2.1/
 %ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.2.1/
