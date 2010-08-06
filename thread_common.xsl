@@ -1192,12 +1192,25 @@ or do we, as this case is already caught in add-parameters?
 
     <xsl:if test="boolean(@who)=false()">
       <xsl:message terminate="yes">
-	Please add who attribute to &lt;entry&gt; tag
-	<xsl:number value="@day" format="01"/>/<xsl:value-of select="@month"/>/<xsl:number value="@year" format="01"/>
+	Please add who attribute to &lt;entry&gt; tag for <xsl:number value="@day" format="01"/>-<xsl:value-of select="@month"/>-<xsl:number value="@year" format="01"/>
 	<xsl:call-template name="newline"/>
       </xsl:message>
     </xsl:if>
-    
+
+    <xsl:if test="not(number(@day))">
+      <xsl:message terminate="yes">
+	Value of @day must be numerical: @year="<xsl:value-of select="@day"/>"
+	<xsl:call-template name="newline"/>
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:if test="not(number(@year))">
+      <xsl:message terminate="yes">
+	Value of @year must be numerical: @day="<xsl:value-of select="@year"/>"
+	<xsl:call-template name="newline"/>
+      </xsl:message>
+    </xsl:if>
+
     <xsl:choose>
       <xsl:when test="$hardcopy = 1">
 	<!--// ugly for htmldoc //-->    
