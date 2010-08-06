@@ -304,17 +304,7 @@
 
   <xsl:template name="add-logo-section">
     <xsl:choose>
-      <xsl:when test="$logoimage != '' and $logotext != '' and $site = 'csc'">
-	<p align="center">
-	  <xsl:call-template name="add-image">
-	    <xsl:with-param name="alt"   select="$logotext"/>
-	    <xsl:with-param name="src"   select="$logoimage"/>
-	    <xsl:with-param name="width"   select="'100%'"/>
-	  </xsl:call-template>
-	</p>
-      </xsl:when>
-
-      <xsl:when test="$logoimage != '' and $logotext != '' and $site != 'csc'">
+      <xsl:when test="$logoimage != '' and $logotext != ''">
 	<p align="center">
 	  <xsl:call-template name="add-image">
 	    <xsl:with-param name="alt"   select="$logotext"/>
