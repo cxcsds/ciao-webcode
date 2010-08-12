@@ -1275,13 +1275,6 @@ number=1.0
 headtitlepostfix=CSC
 texttitlepostfix=CSC
 
-# only used for ahelp files
-# version_string=4.0
-
-imglinkicon=imgs/imageicon.gif
-imglinkiconwidth=23
-imglinkiconheight=16
-
 %css=live /csc1/csc.css
 %css=test /csc1/csc.css
 %css=trial /sds/csc_trial/csc.css
@@ -1307,7 +1300,7 @@ imglinkiconheight=16
 %watchouturl=test /csc/watchout.html
 %watchouturl=trial /sds/csc_trial/watchout.html
 
-logoimage=imgs/csc_logo_navbar.gif
+logoimage=imgs/csc_logo_navbar.jpg
 logotext=Chandra Source Catalog logo
 
 %searchssi=live /csc1/csc_search.ssi
