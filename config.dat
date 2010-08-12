@@ -756,6 +756,37 @@ prefix=/data/da/Docs/chipsweb
 
 depth_offset=0
 
+## !! stripped-down version to test make_manual script
++version ciao43
+number=4.3
+headtitlepostfix=CIAO 4.3 ChIPS v1
+texttitlepostfix=CIAO 4.3 ChIPS v1
+version_string=4.3
+imglinkicon=imgs/imageicon.gif
+imglinkiconwidth=23
+imglinkiconheight=16
+%css=test /ciao4.2/ciao.css
+%cssprint=test /ciao4.2/ciao.print.css
+%favicon=test /ciao4.2/favicon.ico
+%newsfile=test /proj/web-cxc-test/htdocs/ciao4.2/news.html
+%newsurl=test /ciao/news.html
+%watchouturl=test /ciao/watchout.html
+logoimage=imgs/chips_logo_navbar.gif
+logotext=ChIPS Logo
+%searchssi=test /chips4.2/chips_search.ssi
+googlessi=/chips4.2/analytics.ssi
+%stylesheets=test /data/da/Docs/web4/ciao421/
+%outdir=test /proj/web-cxc-test/htdocs/chips4.3/
+%outurl=test http://cxc-test.harvard.edu/chips4.3/
+%storage=test /data/da/Docs/chipsweb/published/ciao42/test/
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao42.test.xml
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.2.1/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao42/test/ahelp/
+ahelpindexnavbar=ahelp
+
+-version
+
+
 +version ciao42
 number=4.2
 
