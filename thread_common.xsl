@@ -2228,12 +2228,12 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     </xsl:if>
     <xsl:if test="boolean(description)=false()">
       <xsl:message terminate="yes">
- ERROR: figure block does not contain a description tag
+ ERROR: figure (id=<xsl:value-of select="@id"/>) does not contain a description tag
       </xsl:message>
     </xsl:if>
-    <xsl:if test="boolean(bitmap)=false()">
+    <xsl:if test="boolean(title)=false()">
       <xsl:message terminate="yes">
- ERROR: figure block does not contain a bitmap tag
+ ERROR: figure (id=<xsl:value-of select="@id"/>) does not contain a title tag
       </xsl:message>
     </xsl:if>
 
