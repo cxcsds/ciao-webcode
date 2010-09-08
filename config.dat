@@ -100,7 +100,7 @@ version_string=4.2
 
 # location of the news file for the "What's new" link
 %newsfile=live /proj/web-cxc/htdocs/ciao4.2/news.html
-%newsfile=test /proj/web-cxc-test/htdocs/ciao4.2/news.html
+%newsfile=test /proj/web-cxc-newtest/htdocs/ciao4.2/news.html
 %newsfile=trial /proj/web-icxc/htdocs/sds/ciao4.2_trial/news.html
 
 %newsurl=live /ciao/news.html
@@ -134,11 +134,11 @@ logotext=CIAO Logo
 
 # what's the location for the output files?
 %outdir=live /proj/web-cxc/htdocs/ciao4.2/
-%outdir=test /proj/web-cxc-test/htdocs/ciao4.2/
+%outdir=test /proj/web-cxc-newtest/htdocs/ciao4.2/
 %outdir=trial /proj/web-icxc/htdocs/sds/ciao4.2_trial/
 
 %outurl=live http://cxc.harvard.edu/ciao4.2/
-%outurl=test http://cxc-test.harvard.edu/ciao4.2/
+%outurl=test http://cxc-newtest.cfa.harvard.edu/ciao4.2/
 %outurl=trial http://icxc.harvard.edu/sds/ciao4.2_trial/
 
 # location of the "storage" space
@@ -598,11 +598,11 @@ googlessi=/chart/analytics.ssi
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 %outdir=live /proj/web-cxc/htdocs/chart/
-%outdir=test /proj/web-cxc-test/htdocs/chart/
+%outdir=test /proj/web-cxc-newtest/htdocs/chart/
 %outdir=trial /proj/web-icxc/htdocs/sds/chart_trial/
 
 %outurl=live http://cxc.harvard.edu/chart/
-%outurl=test http://cxc-test.harvard.edu/chart/
+%outurl=test http://cxc-newtest.cfa.harvard.edu/chart/
 %outurl=trial http://icxc.harvard.edu/sds/chart_trial/
 
 %storage=live /data/da/Docs/chartweb/published/internal/live/
@@ -670,7 +670,7 @@ version_string=4.2
 
 # location of the news file for the "What's new" link
 %newsfile=live /proj/web-cxc/htdocs/sherpa4.2.2/news.html
-%newsfile=test /proj/web-cxc-test/htdocs/sherpa4.2.2/news.html
+%newsfile=test /proj/web-cxc-newtest/htdocs/sherpa4.2.2/news.html
 %newsfile=trial /proj/web-icxc/htdocs/sds/sherpa4.2.2_trial/news.html
 
 %newsurl=live /sherpa/news.html
@@ -699,11 +699,11 @@ googlessi=/sherpa4.2.2/analytics.ssi
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 %outdir=live /proj/web-cxc/htdocs/sherpa4.2.2/
-%outdir=test /proj/web-cxc-test/htdocs/sherpa4.2.2/
+%outdir=test /proj/web-cxc-newtest/htdocs/sherpa4.2.2/
 %outdir=trial /proj/web-icxc/htdocs/sds/sherpa4.2.2_trial/
 
 %outurl=live http://cxc.harvard.edu/sherpa4.2.2/
-%outurl=test http://cxc-test.harvard.edu/sherpa4.2.2/
+%outurl=test http://cxc-newtest.cfa.harvard.edu/sherpa4.2.2/
 %outurl=trial http://icxc.harvard.edu/sds/sherpa4.2.2_trial/
 
 %storage=live /data/da/Docs/sherpaweb/published/ciao421/live/
@@ -768,7 +768,7 @@ imglinkiconheight=16
 %css=test /ciao4.2/ciao.css
 %cssprint=test /ciao4.2/ciao.print.css
 %favicon=test /ciao4.2/favicon.ico
-%newsfile=test /proj/web-cxc-test/htdocs/ciao4.2/news.html
+%newsfile=test /proj/web-cxc-newtest/htdocs/ciao4.2/news.html
 %newsurl=test /ciao/news.html
 %watchouturl=test /ciao/watchout.html
 logoimage=imgs/chips_logo_navbar.gif
@@ -776,8 +776,8 @@ logotext=ChIPS Logo
 %searchssi=test /chips4.2/chips_search.ssi
 googlessi=/chips4.2/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/ciao421/
-%outdir=test /proj/web-cxc-test/htdocs/chips4.3/
-%outurl=test http://cxc-test.harvard.edu/chips4.3/
+%outdir=test /proj/web-cxc-newtest/htdocs/chips4.3/
+%outurl=test http://cxc-newtest.cfa.harvard.edu/chips4.3/
 %storage=test /data/da/Docs/chipsweb/published/ciao42/test/
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao42.test.xml
 %ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.2.1/
@@ -813,7 +813,7 @@ imglinkiconheight=16
 %favicon=trial /sds/ciao4.2_trial/favicon.ico
 
 %newsfile=live /proj/web-cxc/htdocs/ciao4.2/news.html
-%newsfile=test /proj/web-cxc-test/htdocs/ciao4.2/news.html
+%newsfile=test /proj/web-cxc-newtest/htdocs/ciao4.2/news.html
 %newsfile=trial /proj/web-icxc/htdocs/sds/ciao4.2_trial/news.html
 
 %newsurl=live /ciao/news.html
@@ -841,11 +841,11 @@ googlessi=/chips4.2/analytics.ssi
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 %outdir=live /proj/web-cxc/htdocs/chips4.2/
-%outdir=test /proj/web-cxc-test/htdocs/chips4.2/
+%outdir=test /proj/web-cxc-newtest/htdocs/chips4.2/
 %outdir=trial /proj/web-icxc/htdocs/sds/chips4.2_trial/
 
 %outurl=live http://cxc.harvard.edu/chips4.2/
-%outurl=test http://cxc-test.harvard.edu/chips4.2/
+%outurl=test http://cxc-newtest.cfa.harvard.edu/chips4.2/
 %outurl=trial http://icxc.harvard.edu/sds/chips4.2_trial/
 
 %storage=live /data/da/Docs/chipsweb/published/ciao42/live/
@@ -1404,11 +1404,11 @@ googlessi=/obsvis/analytics.ssi
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 %outdir=live /proj/web-cxc/htdocs/obsvis/
-%outdir=test /proj/web-cxc-test/htdocs/obsvis/
+%outdir=test /proj/web-cxc-newtest/htdocs/obsvis/
 %outdir=trial /proj/web-icxc/htdocs/sds/obsvis_trial/
 
 %outurl=live http://cxc.harvard.edu/obsvis/
-%outurl=test http://cxc-test.harvard.edu/obsvis/
+%outurl=test http://cxc-newtest.cfa.harvard.edu/obsvis/
 %outurl=trial http://icxc.harvard.edu/sds/obsvis_trial/
 
 %storage=live /data/da/Docs/obsvisweb/published/obsvis/live/
@@ -1524,7 +1524,7 @@ imglinkiconheight=16
 %stylesheets=test /data/da/Docs/web4/ciao4/
 
 %outdir=live /proj/web-cxc/htdocs/proposer/threads/
-##%outdir=test /proj/web-cxc-test/htdocs/proposer/threads/
+##%outdir=test /proj/web-cxc-newtest/htdocs/proposer/threads/
 %outdir=test /proj/web-cxc-prev/htdocs/proposer/threads/
 
 # what is the test URL?
