@@ -1141,7 +1141,7 @@ headtitlepostfix=CALDB 4
 %favicon=trial /sds/ciao4.2_trial/favicon.ico
 
 %newsfile=live /proj/web-cxc/htdocs/caldb4/news.html
-%newsfile=test /proj/web-cxc-test/htdocs/caldb4/news.html
+%newsfile=test /proj/web-cxc-newtest/htdocs/caldb4/news.html
 %newsfile=trial /proj/web-icxc/htdocs/sds/caldb4/news.html
 
 %newsurl=live /caldb/news.html
@@ -1161,11 +1161,11 @@ headtitlepostfix=CALDB 4
 # 'versioned' name here after testing had begun)
 #
 %outdir=live /proj/web-cxc/htdocs/caldb4/
-%outdir=test /proj/web-cxc-test/htdocs/caldb4/
+%outdir=test /proj/web-cxc-newtest/htdocs/caldb4/
 %outdir=trial /proj/web-icxc/htdocs/sds/caldb4_trial/
 
 %outurl=live http://cxc.harvard.edu/caldb4/
-%outurl=test http://cxc-test.harvard.edu/caldb4/
+%outurl=test http://cxc-newtest.cfa.harvard.edu/caldb4/
 %outurl=trial http://icxc.harvard.edu/sds/caldb4_trial/
 
 %storage=live /data/da/Docs/caldbweb/published/caldb4/live/
@@ -1289,7 +1289,7 @@ texttitlepostfix=CSC
 %favicon=trial /sds/csc_trial/favicon.ico
 
 %newsfile=live /proj/web-cxc/htdocs/csc1/news.html
-%newsfile=test /proj/web-cxc-test/htdocs/csc1/news.html
+%newsfile=test /proj/web-cxc-newtest/htdocs/csc1/news.html
 %newsfile=trial /proj/web-icxc/htdocs/sds/csc_trial/news.html
 
 %newsurl=live /csc/news.html
@@ -1312,11 +1312,11 @@ logotext=Chandra Source Catalog logo
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 %outdir=live /proj/web-cxc/htdocs/csc1/
-%outdir=test /proj/web-cxc-test/htdocs/csc1/
+%outdir=test /proj/web-cxc-newtest/htdocs/csc1/
 %outdir=trial /proj/web-icxc/htdocs/sds/csc_trial/
 
 %outurl=live http://cxc.harvard.edu/csc1/
-%outurl=test http://cxc-test.harvard.edu/csc1/
+%outurl=test http://cxc-newtest.cfa.harvard.edu/csc1/
 %outurl=trial http://icxc.harvard.edu/sds/csc_trial/
 
 %storage=live /data/da/Docs/cscweb/published/csc1/live/
