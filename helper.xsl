@@ -505,23 +505,16 @@
 
     <xsl:variable name="root" select="name(//*)"/>
 
-    <!--* site=icxc publishing really should have type=live? *-->
-    <xsl:if test='($type="test" and $site!="icxc") or $type="trial"'>
-      <!--* add the body tag (start) and test header info *-->
-<!-- TEMP        <xsl:call-template name="add-start-body-white"/>
-    <xsl:call-template name="add-test-banner"/> -->
-    </xsl:if>
-
-<!-- TEMP    <xsl:choose>
-      <xsl:when test='$type="trial"'>
+    <xsl:choose>
+      <xsl:when test="$site='icxc'">
         <xsl:call-template name="add-header-trial"/>
       </xsl:when>
-      <xsl:otherwise> -->
+      <xsl:otherwise>
         <xsl:call-template name="add-ssi-include">
           <xsl:with-param name="file" select="'/incl/ciaoheader.html'"/>
         </xsl:call-template>
-<!-- TEMP       </xsl:otherwise> 
-    </xsl:choose> -->
+      </xsl:otherwise> 
+    </xsl:choose>
 
     <!--* we break up into lots of different sections to try and make lynx happier *-->
 
@@ -666,19 +659,17 @@
       </xsl:call-template>
     </xsl:if>
 
-<!-- TEMP    <xsl:choose>
-
-      <xsl:when test='$type="live" or $type="test"'> -->
+    <xsl:choose>
+      <xsl:when test="$site='icxc'">
+        <xsl:call-template name="add-footer-trial"/>
+      </xsl:when>
+      <xsl:otherwise>
 	<xsl:call-template name="add-ssi-include">
 	  <xsl:with-param name="file" select="'/incl/ciaofooter.html'"/>
 	</xsl:call-template>
-<!-- TEMP      </xsl:when>
+      </xsl:otherwise>
+    </xsl:choose>
 
-      <xsl:when test='$type="trial"'>
-	<xsl:call-template name="add-footer-trial"/>
-      </xsl:when>
-	
-    </xsl:choose> -->
   </xsl:template> <!--* name=add-footer *-->
 
   <!--* manually include the live footer: wil need updating if live footer changes *-->
