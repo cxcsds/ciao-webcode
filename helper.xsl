@@ -507,7 +507,9 @@
 
     <xsl:choose>
       <xsl:when test="$site='icxc'">
-        <xsl:call-template name="add-header-trial"/>
+        <xsl:call-template name="add-ssi-include">
+          <xsl:with-param name="file" select="'/incl/header.html'"/>
+        </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="add-ssi-include">
@@ -661,7 +663,9 @@
 
     <xsl:choose>
       <xsl:when test="$site='icxc'">
-        <xsl:call-template name="add-footer-trial"/>
+	<xsl:call-template name="add-ssi-include">
+          <xsl:with-param name="file" select="'/incl/footer.html'"/>
+	</xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
 	<xsl:call-template name="add-ssi-include">
