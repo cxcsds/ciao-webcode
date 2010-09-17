@@ -685,7 +685,7 @@
     </xsl:if>
 
     <xsl:apply-templates select="CAPTION"/>
-    <table border="1" frame="void">
+    <table class="ciaotable">
       <xsl:apply-templates select="ROW">
 	<xsl:with-param name="colflags" select="exsl:node-set($colflags)"/>
       </xsl:apply-templates>
@@ -871,7 +871,7 @@
 
       <h2><a name="ptable">Parameters</a></h2>
 
-      <table class="ciaotable" border="1" cellspacing="1" cellpadding="2">
+      <table class="ciaotable">
 	<thead>
 	<tr>
 	  <th>name</th> <th>type</th> 
@@ -1091,9 +1091,7 @@
     <!--* do we warrant a "quick links" bar? *-->
     <xsl:if test="$have-desc or $have-example or $have-param or $have-seealso or $have-bugs">
       <div class="noprint">
-      <table border="0" width="100%">
-	<tr>
-	  <td align="left">
+      <div>
 	    <strong>Jump to:</strong>
 	    <xsl:if test="$have-desc"><xsl:text> </xsl:text><a title="Jump to the description" href="#description">Description</a></xsl:if>
 	    <xsl:if test="$have-example"><xsl:text> </xsl:text><a title="Jump to the Example section" href="#examples">Example<xsl:if test="$nexample!=1">s</xsl:if></a></xsl:if>
@@ -1109,9 +1107,7 @@
 	    </xsl:for-each>
 	    <xsl:if test="$have-bugs"><xsl:text> </xsl:text><a title="Jump to the Bugs section" href="#bugs">Bugs</a></xsl:if>
 	    <xsl:if test="$have-seealso"><xsl:text> </xsl:text><a title="Jump to the 'See Also' section" href="#seealso">See Also</a></xsl:if>
-	  </td>
-	</tr>
-      </table>
+	  </div>
       <hr/><br/>
       </div> <!--* class=noprint *-->
     </xsl:if>
