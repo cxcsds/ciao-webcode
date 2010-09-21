@@ -100,6 +100,20 @@
 
 	      <div class="topbar">
 	        <div class="qlinkbar">
+
+		<xsl:if test="not(/bugs/info/noahelp)">
+		  <a>
+		    <xsl:attribute name="href">
+		      <xsl:text>../ahelp/</xsl:text>
+			  <xsl:value-of select="concat($pagename,'.html')"/>
+			</xsl:attribute>
+
+			  <xsl:value-of select="$pagename"/>
+			<xsl:text> ahelp file</xsl:text>
+		      </a>
+		  <br/>
+		 </xsl:if>
+
 		  Return to: <a href=".">Bug List Index</a>
 
 		  <xsl:if test="intro/altlink">
