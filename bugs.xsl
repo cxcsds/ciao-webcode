@@ -101,7 +101,7 @@
 	      <div class="topbar">
 	        <div class="qlinkbar">
 
-		<xsl:if test="not(/bugs/info/noahelp)">
+		<xsl:if test="$site='ciao' and not(/bugs/info/noahelp)">
 		  <a>
 		    <xsl:attribute name="href">
 		      <xsl:text>../ahelp/</xsl:text>
