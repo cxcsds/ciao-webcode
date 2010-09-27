@@ -50,15 +50,16 @@
     </xsl:call-template>
 
     <!--* what do we create *-->
-    <xsl:apply-templates select="bugs"/>
+    <xsl:apply-templates select="bugs" mode="page"/>
+    <xsl:apply-templates select="bugs" mode="include"/>
 
   </xsl:template> <!--* match=/ *-->
 
   <!--* 
-      * create: <bugs>.html
+      * create bugs page: <bugs>.html
       *-->
 
-  <xsl:template match="bugs">
+  <xsl:template match="bugs" mode="page">
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$pagename"/>.html</xsl:variable>
 
@@ -342,6 +343,56 @@
 
     </xsl:document>
   </xsl:template> <!--* match=bugs *-->
+
+
+  <!--* 
+      * create include page: <bugs>.incl.html
+      * for use as ahelp include
+      *-->
+
+  <xsl:template match="bugs" mode="include">
+
+    <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$pagename"/>.incl.html</xsl:variable>
+
+    <!--* output filename to stdout *-->
+    <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
+
+    <xsl:document href="{$filename}" method="html" media-type="text/html"
+      version="4.0" encoding="us-ascii">
+
+	<!--* add disclaimer about editing this HTML file *-->
+	<xsl:call-template name="add-disclaimer"/>
+
+        <xsl:if test="not(//buglist)">
+	  <!--// there are no known bugs -->
+	</xsl:if>
+	      <xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
+	      <xsl:choose>
+	        <xsl:when test="//buglist/subbuglist">
+		  <xsl:apply-templates select="//buglist/subbuglist" mode="main"/>
+	        </xsl:when>
+
+		<xsl:otherwise>
+		  <ul>
+		    <xsl:apply-templates select="//buglist/entry[not(@cav)]" mode="main"/>
+		  </ul>
+		</xsl:otherwise>
+	      </xsl:choose>
+	      </xsl:if>
+	      
+	      <xsl:if test="//buglist/entry[@cav]">
+
+	        <p><strong>Tool Caveats</strong></p>
+
+		<ul>
+		  <xsl:apply-templates select="//buglist/entry[@cav]" mode="main"/>
+		</ul>
+	      </xsl:if>
+
+
+    </xsl:document>
+  </xsl:template> <!--* match=bugs mode=include *-->
+
 
   <!--* note: we process the text so we can handle our `helper' tags *-->
   <xsl:template match="text">
