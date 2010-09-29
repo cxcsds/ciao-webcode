@@ -236,7 +236,7 @@
 
     <!--* should be in DTD *-->
     <xsl:if test="boolean(ancestor::p)">
-      <xsl:message>
+      <xsl:message terminate="yes">
  ERROR: this document contains a list element within a p block,
         which is not allowed
       </xsl:message>
@@ -244,10 +244,10 @@
 
     <xsl:if test="name(//*) != 'threadindex' and
             (count(child::*[name()!='li']) != 0 or count(text()[normalize-space(.)!='']) != 0)">
-      <xsl:message>
-
- WARNING: this document contains a list element that contains tags other than li
-          (or text other than whitespace)
+      <xsl:message terminate="yes">
+ ERROR: this document contains a list element that contains tags other than li
+        (or text other than whitespace),
+        which is not allowed
 
       </xsl:message>
     </xsl:if>

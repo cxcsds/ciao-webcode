@@ -60,7 +60,7 @@
   <xsl:param name="imglinkiconwidth" select='0'/>
   <xsl:param name="imglinkiconheight" select='0'/>
 
-  <xsl:include href="thread_common.xsl"/>
+  <xsl:include href="pog_thread_common.xsl"/>
   <xsl:include href="helper.xsl"/>
   <xsl:include href="links.xsl"/>
   <xsl:include href="myhtml.xsl"/>

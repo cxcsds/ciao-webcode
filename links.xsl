@@ -2605,6 +2605,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</xsl:if>
 	<func:result select="$adoc//thread/info"/>
       </xsl:when>
+
       <xsl:when test="boolean(@name)">
 	<xsl:variable name="bdoc" select="document(djb:get-thread-filename(@name))"/>
 	<xsl:if test="count($bdoc) = 0">

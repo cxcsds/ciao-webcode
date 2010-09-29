@@ -324,12 +324,9 @@ my $published = "";
 $published = get_config_type( $version_config, "storage", $type )
   if check_config_exists( $version_config, "storage" );
 
-
 my $storageloc = "";
-if ( ! ($site =~ /pog/)) {
 $storageloc = get_config_type( $version_config, "storageloc", $type )
   if check_config_exists( $version_config, "storageloc" );
-}
 
 # set up the ahelp index file based on the storeage location
 #
