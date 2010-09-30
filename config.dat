@@ -1525,14 +1525,14 @@ number=Cycle 13
 %stylesheets=live /data/da/Docs/web4/ciao421/
 %stylesheets=test /data/da/Docs/web4/ciao421/
 
-%outdir=live /proj/web-cxc/htdocs/proposer/threads/
-#DEV %outdir=test /proj/web-cxc-prev/htdocs/proposer/threads/
-%outdir=test /proj/web-cxc-prev/htdocs/proposer_dev/threads/
+%outdir=live /proj/web-cxc/htdocs/proposer/
+#DEV %outdir=test /proj/web-cxc-prev/htdocs/proposer/
+%outdir=test /proj/web-cxc-prev/htdocs/proposer_dev/
 
 # what is the test URL?
-%outurl=live http://cxc.harvard.edu/proposer/threads/
-#DEV %outurl=test http://cxc-prev.cfa.harvard.edu/proposer/threads/
-%outurl=test http://cxc-prev.cfa.harvard.edu/proposer_dev/threads/
+%outurl=live http://cxc.harvard.edu/proposer/
+#DEV %outurl=test http://cxc-prev.cfa.harvard.edu/proposer/
+%outurl=test http://cxc-prev.cfa.harvard.edu/proposer_dev/
 
 # both need to be defined
 %storage=live /data/da/Docs/proposal_dev/published/cyc13/live/
