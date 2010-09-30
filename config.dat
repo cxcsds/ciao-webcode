@@ -1534,7 +1534,9 @@ number=Cycle 13
 #DEV %outurl=test http://cxc-prev.cfa.harvard.edu/proposer/threads/
 %outurl=test http://cxc-prev.cfa.harvard.edu/proposer_dev/threads/
 
-#
+# both need to be defined
+%storage=live /data/da/Docs/ciaoweb/published/cyc13/live/
+%storage=test /data/da/Docs/ciaoweb/published/cyc13/test/
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao42.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao42.test.xml
 
