@@ -1507,42 +1507,48 @@ number=Cycle 13
 
 # main CSS location
 %css=live /proposer/threads/proposer.css
-#DEV %css=test /proposer/threads/proposer.css
-%css=test /proposer_dev/threads/proposer.css
+%css=test /proposer/threads/proposer.css
+%css=trial /proposer_dev/threads/proposer.css
 
 %cssprint=live /proposer/threads/proposer.print.css
-#DEV %cssprint=test /proposer/threads/proposer.print.css
-%cssprint=test /proposer_dev/threads/proposer.print.css
+%cssprint=test /proposer/threads/proposer.print.css
+%cssprint=trial /proposer_dev/threads/proposer.print.css
 
 # favicon location
 %favicon=live /ciao/favicon.ico
 %favicon=test /ciao/favicon.ico
+%favicon=trial /ciao/favicon.ico
 
 ## location of the search ssi
 %searchssi=live /incl/search.html
 %searchssi=test /incl/search.html
+%searchssi=trial /incl/search.html
 
 %stylesheets=live /data/da/Docs/web4/ciao421/
 %stylesheets=test /data/da/Docs/web4/ciao421/
+%stylesheets=trial /data/da/Docs/web4/ciao421/
 
 %outdir=live /proj/web-cxc/htdocs/proposer/
-#DEV %outdir=test /proj/web-cxc-prev/htdocs/proposer/
-%outdir=test /proj/web-cxc-prev/htdocs/proposer_dev/
+%outdir=test /proj/web-cxc-prev/htdocs/proposer/
+%outdir=trial /proj/web-cxc-prev/htdocs/proposer_dev/
 
 # what is the test URL?
 %outurl=live http://cxc.harvard.edu/proposer/
-#DEV %outurl=test http://cxc-prev.cfa.harvard.edu/proposer/
-%outurl=test http://cxc-prev.cfa.harvard.edu/proposer_dev/
+%outurl=test http://cxc-prev.cfa.harvard.edu/proposer/
+%outurl=trial http://cxc-prev.cfa.harvard.edu/proposer_dev/
 
 # both need to be defined
-%storage=live /data/da/Docs/proposal_dev/published/cyc13/live/
-%storage=test /data/da/Docs/proposal_dev/published/cyc13/test/
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+%storage=trial /data/da/Docs/proposal_dev/published/cyc13/trial/
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao42.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao42.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao42.trial.xml
 
 # access ahelp files
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao42/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao42/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao42/trial/ahelp/
 
 -version
 
