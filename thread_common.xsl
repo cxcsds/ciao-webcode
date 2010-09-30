@@ -767,9 +767,11 @@
 	    <xsl:with-param name="pageName" select="$pageName"/>
 	  </xsl:apply-templates>
 	</xsl:if>
-	      
+
+    <xsl:if test="$site != 'pog'">	      
 	<!--* History *-->
 	<li><strong><a href="{$pageName}#history">History</a></strong></li>
+ 	</xsl:if>
 
 	<!--* safety check to make sure we do not mix up old and new figure styles (really needed?) *-->
 	<xsl:if test="boolean(images) and boolean(//figure)">
@@ -780,7 +782,11 @@
 	
 	<!--* Images (if any) *-->
 	<xsl:if test="boolean(images)">
-	  <xsl:apply-templates select="images" mode="toc"/>
+	  <xsl:message terminate="yes">
+ ERROR: thread contains an images block, which has been deprecated.  
+        Please update to use a figure block instead.
+	  </xsl:message>	 
+<!--	  <xsl:apply-templates select="images" mode="toc"/>-->
 	</xsl:if>
 	<xsl:if test="boolean(//figure)">
 	  <li>
@@ -810,8 +816,10 @@
 	<xsl:apply-templates select="parameters"/>
       </xsl:when>
       <xsl:otherwise>
-	<!--* to separate out the text from the history *-->
-	<xsl:call-template name="add-hr-strong"/>
+	<xsl:if test="$site != 'pog'">
+	  <!--* to separate out the text from the history *-->
+	  <xsl:call-template name="add-hr-strong"/>
+	</xsl:if>
       </xsl:otherwise>
     </xsl:choose>
 
@@ -2063,7 +2071,9 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	  <xsl:call-template name="add-parameters"/>
 
 	  <!-- History -->
+	  <xsl:if test="$site != 'pog'">
 	  <xsl:apply-templates select="info/history"/>
+	  </xsl:if>
 
 	  <!--* add the footer text *-->
 	  <br/>
@@ -2164,7 +2174,9 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	<xsl:call-template name="add-parameters"/>
 
 	<!-- History -->
+	<xsl:if test="$site != 'pog'">
 	<xsl:apply-templates select="info/history"/>
+	</xsl:if>
 
 	<!--* set up the trailing links to threads/harcdopy *-->
 	<xsl:call-template name="add-hr-strong"/>
