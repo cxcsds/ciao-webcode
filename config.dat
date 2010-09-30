@@ -1484,11 +1484,11 @@ logotext=Science Data Systems
 
 +site pog
 
-#DEV group=cxcweb_cdo
-group=cxcweb_ciao
+group=cxcweb_cdo
+# TRIAL group=cxcweb_ciao
 
-#DEV prefix=/data/cdo1/threads
-prefix=/data/da/Docs/proposal_dev
+prefix=/data/cdo1/threads
+# TRIAL prefix=/data/da/Docs/proposal_dev
 
 @types=live
 @types=test
