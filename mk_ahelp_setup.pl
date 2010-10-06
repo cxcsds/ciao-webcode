@@ -41,13 +41,6 @@
 #  17 Oct 07 DJB Removed support for xsltproc tool
 #  19 Oct 07 DJB Removed use of ahelp_list_info stylesheet
 #
-# Notes:
-#  - for CIAO 4 we assume that any multi-language files (eg chips,
-#    sherpa, crates) have been pre-processed so that there are *.sl.xml
-#    and *.py.xml versions in the directory (the actual file names do
-#    not matter, just that there are separate ones). We need to think
-#    about how to improve this in the long term.
-#
 # Future?:
 #  - include parameter names + synopsis for each ahelp file in the
 #    index. This will be used by the web code to add title attribute to
@@ -81,7 +74,7 @@ sub protect_xml_chars_for_printf ($);
 
 sub parse_groups ($$$\%);
 sub print_seealso_list ($$$\%);
-sub create_index_files ($\%\%\%\%\%);
+sub create_index_files ($\%\%\%);
 sub create_seealso_files ($\%);
 
 sub check_htmlname ($);
@@ -236,8 +229,6 @@ my %multi_key;
 my %seealso;
 my %list_context;
 my %list_alphabet;
-my %list_python;
-my %list_slang;
 ##my %list_dirs;
 
 # Some, but not all, lists are organized by site
@@ -245,8 +236,6 @@ my %list_slang;
 foreach my $site ( list_ahelp_sites ) {
   $list_alphabet{$site} = {};
   $list_context{$site} = {};
-  $list_python{$site} = {};
-  $list_slang{$site} = {};
   ##$list_dirs{$site} = {};
 }
 
@@ -304,15 +293,6 @@ foreach my $path ( map { "${ahelpfiles}$_"; } qw( /doc/xml/ /contrib/doc/xml/ ) 
 	$$la{$fchar} = {} unless exists $$la{$fchar};
 	${ $$la{$fchar} }{$id} = $obj;
 
-	my $lapy = $list_python{$site};
-	$$lapy{$fchar} = {} unless exists $$lapy{$fchar};
-	${ $$lapy{$fchar} }{$id} = $obj;
-
-	my $lasl = $list_slang{$site};
-	$$lasl{$fchar} = {} unless exists $$lasl{$fchar};
-	${ $$lasl{$fchar} }{$id} = $obj;
-
-
 	# it's useful to know what directories we are going to be storing the files in
 	#
 #	my $dname = $htmlname;
@@ -340,7 +320,7 @@ create_seealso_files $storage, %out;
 # write out the files which list all the ahelp files
 # and useful information about them (summary, parameter lists, ...)
 #
-create_index_files $storage, %out, %list_alphabet, %list_context, %list_python, %list_slang;
+create_index_files $storage, %out, %list_alphabet, %list_context;
 
 # End of script
 #
@@ -810,29 +790,11 @@ sub print_site_list_to_index ($$$$) {
     my $ctr = 1;
 	my @ids = sort my_alphabetical_sort keys %$href;
 
-	if ($name eq "python") {
-	foreach my $id ( @ids ) {
-	  if ( $id !~ /sl\./) {
-	    # just print the id value (used to index into the main list)
-	    print $fh "<item number='$ctr' id='$id'/>\n";
-	    $ctr++;
-		} 
-	  }
-	} elsif ($name eq "slang") {
-	foreach my $id ( @ids ) {
-	  if ( $id !~ /py\./) {
-	    # just print the id value (used to index into the main list)
-	    print $fh "<item number='$ctr' id='$id'/>\n";
-	    $ctr++;
-		} 
-	  }	  
-	} else {	
 	foreach my $id ( @ids ) {
 	    # just print the id value (used to index into the main list)
 	    print $fh "<item number='$ctr' id='$id'/>\n";
 	    $ctr++;
 		}
-	}
 	
 	$fh->print( "</itemlist></term>\n" );
     }
@@ -970,13 +932,11 @@ sub create_seealso_files ($\%) {
 #   attribute, since here depth is the actual path fragment to use (eg
 #   '../') and not a numeric value. This is just a reminder to self.
 #
-sub create_index_files ($\%\%\%\%\%) {
+sub create_index_files ($\%\%\%) {
     my $dirname = shift;
     my $objlist = shift;
     my $list_a  = shift;
     my $list_c  = shift;
-    my $list_py  = shift;
-    my $list_sl  = shift;
 
     my $xmlfile = "${dirname}/ahelpindex.xml";
     my $datfile = "${dirname}/ahelpindex.dat";
@@ -1007,8 +967,6 @@ sub create_index_files ($\%\%\%\%\%) {
     #
     print_list_to_index $xmlfh, "alphabet",   $list_a;
     print_list_to_index $xmlfh, "context",    $list_c;
-    print_list_to_index $xmlfh, "python",    $list_py;
-    print_list_to_index $xmlfh, "slang",    $list_sl;
     ##print_list_to_index $xmlfh, "directory", $list_d;
 
     $xmlfh->print( "</ahelpindex>\n" );

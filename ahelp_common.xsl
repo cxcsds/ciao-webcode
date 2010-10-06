@@ -216,18 +216,7 @@
     </xsl:call-template>
 
       <!--* add the navbar *-->
-
-      <xsl:choose>
-	<xsl:when test="starts-with(//ENTRY/@context,'sl.') and $site!='ciao'">
-	  <xsl:comment>#include virtual="navbar_ahelp_slang.incl"</xsl:comment>
-	</xsl:when>
-	<xsl:when test="starts-with(//ENTRY/@context,'py.') and $site!='ciao'">
-	  <xsl:comment>#include virtual="navbar_ahelp_python.incl"</xsl:comment>
-	</xsl:when>
-	<xsl:otherwise>
-	  <xsl:comment>#include virtual="navbar_<xsl:value-of select="$navbar"/>.incl"</xsl:comment>
-	</xsl:otherwise>
-      </xsl:choose>
+      <xsl:comment>#include virtual="navbar_<xsl:value-of select="$navbar"/>.incl"</xsl:comment>
 
       <xsl:call-template name="newline"/>
     
