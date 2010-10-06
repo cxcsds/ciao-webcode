@@ -605,8 +605,13 @@
 	      
 	      <xsl:choose>
 		<xsl:when test="count($parammatch)=1">
-		  <xsl:attribute name="title">Parameter (<xsl:value-of select="$paramname"/>): <xsl:value-of select="$parammatch/synopsis"/></xsl:attribute>
+		  <xsl:attribute name="title">Ahelp (<xsl:value-of select="@name"/><xsl:text> </xsl:text><xsl:value-of select="$paramname"/><xsl:text> parameter)</xsl:text>
+		<xsl:if test="$parammatch/synopsis != ''">
+		  <xsl:text>: </xsl:text><xsl:value-of select="$parammatch/synopsis"/>
+		</xsl:if>
+		  </xsl:attribute>
 		</xsl:when>
+
 		<xsl:when test="$matches/summary!=''">
 		  <xsl:attribute name="title">Ahelp (<xsl:value-of select="$context"/>): <xsl:value-of select="$matches/summary"/></xsl:attribute>
 		</xsl:when>
