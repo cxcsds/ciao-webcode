@@ -251,8 +251,9 @@ foreach my $path ( map { "${ahelpfiles}$_"; } qw( /doc/xml/ /contrib/doc/xml/ ) 
 
 	my ( $key, $context, $groups, $htmlname ) =
 	  get_ahelp_items( $obj, "key", "context", "seealsogroups", "htmlname" );
+	my $pkg= get_ahelp_item_if_exists( $obj, "pkg");
 
-	my $site = find_ahelp_site $key, $context;
+	my $site = find_ahelp_site $key, $pkg;
 
 	# NOTE:
 	#   rather than die on a multiple, we just ignore the

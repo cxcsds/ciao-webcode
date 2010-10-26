@@ -1133,7 +1133,7 @@ sub list_ahelp_sites () {
   return qw( ciao chips sherpa );
 }
 
-# $site = find_ahelp_site $key, $context;
+# $site = find_ahelp_site $key, $pkg;
 #
 # returns the site in which the ahelp file is published,
 # where the ahelp file is referred to by key and context
@@ -1146,12 +1146,10 @@ sub list_ahelp_sites () {
 #
 sub find_ahelp_site ($$) {
   my $key = shift;
-  my $con = shift;
-  if ($con =~ /chips/) {
+  my $pkg = shift;
+  if ($pkg =~ /chips/) {
     return "chips";
-  } elsif ($con =~ /sherpa_tools/) {
-    return "ciao";
-  } elsif ($con =~ /sherpa/) {
+  } elsif ($pkg =~ /sherpa/) {
     return "sherpa";
   } else {
     return "ciao";
