@@ -249,9 +249,8 @@ foreach my $path ( map { "${ahelpfiles}$_"; } qw( /doc/xml/ /contrib/doc/xml/ ) 
 	my ( $id, $obj ) = inspect_xmlfile( $xmlfile, $stylesheets );
 	next unless defined $id;
 
-	my ( $key, $context, $groups, $htmlname ) =
-	  get_ahelp_items( $obj, "key", "context", "seealsogroups", "htmlname" );
-	my $pkg= get_ahelp_item_if_exists( $obj, "pkg");
+	my ( $key, $context, $pkg, $groups, $htmlname ) =
+	  get_ahelp_items( $obj, "key", "context", "pkg", "seealsogroups", "htmlname" );
 
 	my $site = find_ahelp_site $key, $pkg;
 
@@ -530,6 +529,13 @@ sub inspect_xmlfile ($$) {
   my $key     = $entry->findvalue('normalize-space(@key)');
   my $context = lc $entry->findvalue('normalize-space(@context)');
 
+  # set a default value for pkg
+  my $pkg = "ciao";
+  my $pkgtemp     = lc $entry->findvalue('normalize-space(@pkg)');
+  if (defined $pkgtemp) {
+      $pkg = $pkgtemp;
+  }
+
   # create single id
   my $id = mangle( $key, $context );
 
@@ -589,7 +595,7 @@ sub inspect_xmlfile ($$) {
   # we set the htmlname individually so that the depth field gets updated correctly
   my $out =
     {
-     key => $key, context => $context, id => $id,
+     key => $key, context => $context, pkg => $pkg, id => $id,
      filename => $xmlfile, filehead => $filehead, htmlname => undef,
      seealsogroups => \@seealsogroups,
      summary => $summary,

@@ -1147,12 +1147,13 @@ sub list_ahelp_sites () {
 sub find_ahelp_site ($$) {
   my $key = shift;
   my $pkg = shift;
-  if ($pkg =~ /chips/) {
-    return "chips";
-  } elsif ($pkg =~ /sherpa/) {
-    return "sherpa";
+
+  if ($pkg eq "chips") {
+      return "chips"; 
+  } elsif ($pkg eq "sherpa") {
+      return "sherpa";
   } else {
-    return "ciao";
+      return "ciao";
   }
 } # sub: find_ahelp_site()
 
