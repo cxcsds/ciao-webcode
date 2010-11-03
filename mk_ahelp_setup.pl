@@ -73,7 +73,7 @@ sub inspect_xmlfile ($$);
 sub protect_xml_chars_for_printf ($);
 
 sub parse_groups ($$$\%);
-sub print_seealso_list ($$$\%);
+sub print_seealso_list ($$$$\%);
 sub create_index_files ($\%\%\%);
 sub create_seealso_files ($\%);
 
@@ -229,6 +229,7 @@ my %multi_key;
 my %seealso;
 my %list_context;
 my %list_alphabet;
+
 ##my %list_dirs;
 
 # Some, but not all, lists are organized by site
@@ -629,6 +630,7 @@ sub parse_groups ($$$\%) {
 
     my %list;
     my $flag = 0;
+
     foreach my $grp ( @$grplist ) {
 	 dbg( "  -- group = $grp" );
 	while ( my ( $ctxt, $aref ) = each %{ $$seealso{$grp} } ) {
@@ -685,7 +687,7 @@ sub protect_xml_chars_for_printf ($) {
 
 } # sub: protect_xml_chars_for_printf()
 
-# print_seealso_list $fh, $obj, $listref, \%out
+# print_seealso_list $fh, $obj, $pkg, $listref, \%out
 #
 # We have the case that the see also list could contain files
 # for which we are not creating an HTML version - mainly because
@@ -702,9 +704,10 @@ sub protect_xml_chars_for_printf ($) {
 # will have a non-empty see also lising.
 #
 
-sub print_seealso_list ($$$\%) {
+sub print_seealso_list ($$$$\%) {
     my $fh      = shift;
     my $obj     = shift;
+    my $pkg     = shift;
     my $listref = shift;
     my $objlist = shift;
 
@@ -715,7 +718,7 @@ sub print_seealso_list ($$$\%) {
     #   links in the seealso section, not the depth of the actual seealso file
     #
     my $depth = '../' x (get_ahelp_items($obj,'depth')-1);
-
+    
     foreach my $scontext ( sort keys %$listref ) {
 
 	$fh->print( "<dt><em>$scontext</em></dt>\n<dd>\n" );
@@ -734,14 +737,15 @@ sub print_seealso_list ($$$\%) {
 			 map
 			 {
 			     my $skey = $_;
-
+			     
 			     # are we creating a HTML file for this object?
 			     #
 			     if ( exists $$objlist{ mangle($skey,$scontext) } ) {
-				 my $sout = $$objlist{ mangle($skey,$scontext) };
+
+				 my $sout = $$objlist{ mangle($skey,$scontext) }; 
 				 my ( $summary, $filename ) = get_ahelp_items( $sout, 'summary', 'htmlname' );
 
-				 my $ahelp_site = find_ahelp_site $skey, $scontext;
+				 my $ahelp_site = find_ahelp_site $skey, $pkg;
 
 				 $summary = protect_xml_chars_for_printf $summary;
 				 
@@ -869,7 +873,7 @@ sub create_seealso_files ($\%) {
   my $objlist = shift;
 
   foreach my $obj ( values %$objlist ) {
-    my ( $key, $context, $grplist ) = get_ahelp_items( $obj, "key", "context", "seealsogroups" );
+    my ( $key, $context, $pkg, $grplist ) = get_ahelp_items( $obj, "key", "context", "pkg", "seealsogroups" );
     dbg( "Creating seealso info for $key/$context" );
 
     # record how many matches this key has
@@ -878,8 +882,11 @@ sub create_seealso_files ($\%) {
     # get the key/context values of all the files in the See Also
     # section (excluding this file)
     #
+
+
     my ( $listref, $flag ) = parse_groups $key, $context, $grplist, %seealso;
-    
+
+
     my $seealso_head = "seealso.$context.$key.xml";
     my $ofile = "${storage}$seealso_head";
      dbg( " -- about to create $ofile" );
@@ -890,7 +897,7 @@ sub create_seealso_files ($\%) {
     $fh->print( '<?xml version="1.0" encoding="us-ascii" ?>' . "\n" .
 		"<!DOCTYPE seealso>\n" );
     
-    if ( $flag ) { print_seealso_list $fh, $obj, $listref, %$objlist; }
+    if ( $flag ) { print_seealso_list $fh, $obj, $pkg, $listref, %$objlist; }
     else         { $fh->print( "<seealso/>\n" ); }
     
     $fh->close();
@@ -1003,9 +1010,9 @@ sub print_ahelplist_to_txtindex ($$) {
     or die "Error: unable to open $datfile for writing\n";
   foreach my $out ( values %$objlist ) {
 
-    my ( $key, $context, $id, $h, $d, $xmlname, $seealso ) =
+    my ( $key, $context, $pkg, $id, $h, $d, $xmlname, $seealso ) =
       get_ahelp_items( $out,
-		       "key", "context", "id", "htmlname",
+		       "key", "context", "pkg", "id", "htmlname",
 		       "depth",
 		       "filename", "seealsofile"
 		     );
@@ -1041,16 +1048,16 @@ sub print_ahelplist_to_xmlindex ($$) {
   $xmlfh->print( "<ahelplist>\n" );
   foreach my $out ( values %$objlist ) {
 
-    my ( $key, $context, $id, $h, $d, $summary, $mkey, $paramlist, $fname ) =
+    my ( $key, $context, $pkg, $id, $h, $d, $summary, $mkey, $paramlist, $fname ) =
       get_ahelp_items( $out,
-		       "key", "context", "id", "htmlname",
+		       "key", "context", "pkg", "id", "htmlname",
 		       "depth", "summary", "matchkey",
 		       "paramlist", "filename"
 		     );
 
     # what site are we: ciao, chips, or sherpa
     #
-    my $ahelp_site = find_ahelp_site $key, $context;
+    my $ahelp_site = find_ahelp_site $key, $pkg;
 
     # normalise the space in the summary - including within the string (not really necessary)
     $summary =~ s/\s+/ /g;
