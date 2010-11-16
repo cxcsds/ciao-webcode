@@ -859,7 +859,10 @@
       <p>
       <xsl:for-each select="term">
 	<a title="Jump to context '{name}'" href="#{name}"><xsl:value-of select="name"/></a>
-	<xsl:text> </xsl:text>
+
+	<xsl:if test="position() != last()">
+	  <xsl:text> | </xsl:text>
+	</xsl:if>
       </xsl:for-each>
       </p>
     </div>
