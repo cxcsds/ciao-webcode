@@ -29,8 +29,9 @@
   <!--* parameters to be set by stylesheet processor *-->
   <xsl:param name="headtitlepostfix"  select='""'/>
   <xsl:param name="texttitlepostfix"  select='""'/>
-
-  <!--* 
+  <xsl:param name="dname"/>
+ 
+ <!--* 
       * create: $outname.html
       * We now no-longer need to use the xsl:document trick
       * as we only create a single file now, but leave that
@@ -1007,9 +1008,33 @@
       *
       *-->
   <xsl:template match="BUGS">
+    <xsl:variable name="bugincl"><xsl:text>../bugs/</xsl:text><xsl:value-of select="$outname"/>.incl.html</xsl:variable>
 
       <h2><a name="bugs">Bugs</a></h2>
-      <xsl:apply-templates/>
+			   
+      <xsl:choose>
+	<xsl:when test="$site='ciao'">
+
+	  <xsl:choose>
+	    <!-- CIAO site includes the bug page text -->
+	    <xsl:when test="boolean(document(string(concat($dname,'/../bugs/',$outname,'.xml'))))">
+              <xsl:call-template name="add-ssi-include">
+		<xsl:with-param name="file" select="$bugincl"/>
+              </xsl:call-template>
+	    </xsl:when>
+
+	    <xsl:otherwise>
+	      <p>
+		Refer to the <a href="/ciao/bugs/">CIAO bug pages</a> for an up-to-date listing of known issues.
+	      </p>
+	    </xsl:otherwise>
+	  </xsl:choose>
+	</xsl:when>
+
+	<xsl:otherwise>
+	  <xsl:apply-templates/>
+	</xsl:otherwise>
+      </xsl:choose>
   </xsl:template> <!--* match=BUGS *-->
 
   <!--*
@@ -1119,5 +1144,23 @@
 <xsl:text>
 </xsl:text>
   </xsl:template>
+
+  <!--* taken from helper.xsl *-->
+  <xsl:template name="add-ssi-include">
+    <xsl:param name='file'/>
+    <xsl:if test="$file = ''">
+      <xsl:message terminate="yes">
+
+Programming error: add-ssi-include called with an empty file parameter
+
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:call-template name="newline"/>
+    <xsl:comment>#include virtual="<xsl:value-of select="$file"/>"</xsl:comment>
+    <xsl:call-template name="newline"/>
+
+  </xsl:template> <!--* name=add-ssi *-->
+
 
 </xsl:stylesheet> <!--* FIN *-->

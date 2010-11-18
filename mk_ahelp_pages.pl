@@ -352,6 +352,7 @@ foreach my $in ( @names ) {
     $paramlist{outname} = $outname;
     $paramlist{seealsofile} = "${ahelpstore}$seealso_name";
     $paramlist{depth} = '../' x ($depth-1);
+	$paramlist{dname} = $dname;
 
     my $flag = translate_file "${stylesheets}ahelp.xsl",
       "${in}.xml", \%paramlist;

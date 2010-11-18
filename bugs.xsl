@@ -364,29 +364,29 @@
 	<xsl:call-template name="add-disclaimer"/>
 
         <xsl:if test="not(//buglist)">
-	  <!--// there are no known bugs -->
+ 	  <p>There are no known bugs for this tool.</p>
 	</xsl:if>
 	      <xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
 	      <xsl:choose>
 	        <xsl:when test="//buglist/subbuglist">
-		  <xsl:apply-templates select="//buglist/subbuglist" mode="main"/>
+		  <xsl:apply-templates select="//buglist/subbuglist" mode="ahelp"/>
 	        </xsl:when>
 
 		<xsl:otherwise>
-		  <ul>
-		    <xsl:apply-templates select="//buglist/entry[not(@cav)]" mode="main"/>
-		  </ul>
+		  <dl>
+		    <xsl:apply-templates select="//buglist/entry[not(@cav)]" mode="ahelp"/>
+		  </dl>
 		</xsl:otherwise>
 	      </xsl:choose>
 	      </xsl:if>
 	      
 	      <xsl:if test="//buglist/entry[@cav]">
 
-	        <p><strong>Tool Caveats</strong></p>
+	        <h2><a name="caveats">Caveats</a></h2>
 
-		<ul>
-		  <xsl:apply-templates select="//buglist/entry[@cav]" mode="main"/>
-		</ul>
+		<dl>
+		  <xsl:apply-templates select="//buglist/entry[@cav]" mode="ahelp"/>
+		</dl>
 	      </xsl:if>
 
 
@@ -593,6 +593,101 @@
     </xsl:for-each>
   </xsl:template> 
   <!-- end main bug content template -->
+
+
+
+  <!-- subbuglist ahelp content template -->
+  <xsl:template match="subbuglist" mode="ahelp">
+    
+    <xsl:for-each select=".">
+
+    <h3><xsl:value-of select="@title"/></h3>
+
+      <xsl:apply-templates select="entry" mode="ahelp"/>
+
+    </xsl:for-each>
+  </xsl:template> 
+  <!-- end subbuglist ahelp content template -->
+
+
+  <!-- ahelp bug content template -->
+  <xsl:template match="entry" mode="ahelp">
+
+    <xsl:for-each select=".">
+
+    <!-- create summary and id -->
+    <dt class="ahelp">
+	<xsl:apply-templates select="summary/*|summary/text()"/>
+	
+	 <!--// add new/updated icon if the entry has a type attribute //-->
+	 <xsl:if test="@type">
+	   <xsl:choose>
+	     <xsl:when test="@type = 'new'">
+	       <xsl:call-template name="add-image">
+		 <xsl:with-param name="src"   select="'imgs/new.gif'"/>
+		 <xsl:with-param name="alt"   select="'New'"/>
+	       </xsl:call-template>
+	     </xsl:when>
+
+	     <xsl:when test="@type = 'updated'">
+	       <xsl:call-template name="add-image">
+		 <xsl:with-param name="src"   select="'imgs/updated.gif'"/>
+		 <xsl:with-param name="alt"   select="'Updated'"/>
+	       </xsl:call-template>
+	     </xsl:when>
+
+	     <xsl:otherwise>
+	       <xsl:message terminate="yes">
+ ERROR: item tag found with unrecognised type attribute
+   of type=<xsl:value-of select="@type"/>
+	       </xsl:message>
+	     </xsl:otherwise>
+	   </xsl:choose>	  
+	 </xsl:if>
+
+	 <xsl:if test="./date">
+	   <xsl:apply-templates select="./date"/>
+	 </xsl:if>
+
+        <xsl:if test="./platform">
+	  <br/>
+          <xsl:text>(</xsl:text>
+            <xsl:apply-templates select="platform/text()"/>
+          <xsl:text>) </xsl:text>  
+        </xsl:if>
+	</dt>
+    <!-- done with summary and id -->
+
+      <xsl:if test="./desc">
+		<dd>
+        <xsl:apply-templates select="desc/*"/>
+		</dd>
+      </xsl:if> 
+
+      <xsl:if test="./work">
+		<dd>
+        <xsl:if test="count(work) > 1">
+          <h4>Workarounds:</h4>
+
+	  <ol>
+	    <xsl:for-each select="work">	
+	    <li>
+	      <xsl:apply-templates select="./*"/>
+	    </li>
+	    </xsl:for-each>
+	  </ol>
+	</xsl:if> 
+	        
+        <xsl:if test="count(work) = 1">
+          <h4>Workaround:</h4>
+
+	  <xsl:apply-templates select="work/*"/>
+	</xsl:if> 
+	</dd>
+	</xsl:if> 
+    </xsl:for-each>
+  </xsl:template> 
+  <!-- end ahelp bug content template -->
 
 
   <!--* altlinks template *-->
