@@ -91,8 +91,8 @@ version_string=4.3
 %favicon=trial /sds/ciao4.3_trial/favicon.ico
 
 # location of the news file for the "What's new" link
-%newsfile=live /proj/web-cxc/htdocs/ciao4.3/news.html
-%newsfile=test /proj/web-cxc-newtest/htdocs/ciao4.3/news.html
+%newsfile=live /proj/web-cxc-dmz/htdocs/ciao4.3/news.html
+%newsfile=test /proj/web-cxc-dmz/htdocs/ciao4.3/news.html
 %newsfile=trial /proj/web-icxc/htdocs/sds/ciao4.3_trial/news.html
 
 %newsurl=live /ciao/news.html
@@ -125,8 +125,8 @@ logotext=CIAO Logo
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 # what's the location for the output files?
-%outdir=live /proj/web-cxc/htdocs/ciao4.3/
-%outdir=test /proj/web-cxc-newtest/htdocs/ciao4.3/
+%outdir=live /proj/web-cxc-dmz/htdocs/ciao4.3/
+%outdir=test /proj/web-cxc-dmz/htdocs/ciao4.3/
 %outdir=trial /proj/web-icxc/htdocs/sds/ciao4.3_trial/
 
 %outurl=live http://cxc.harvard.edu/ciao4.3/
@@ -238,12 +238,12 @@ imglinkiconheight=16
 # only added for the live site in helper.xsl
 googlessi=/chart/analytics.ssi
 
-%stylesheets=live /data/da/Docs/web4/chart/
+%stylesheets=live /data/da/Docs/web4/c hart/
 %stylesheets=test /data/da/Docs/web4/chart/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
 %outdir=live /proj/web-cxc/htdocs/chart/
-%outdir=test /proj/web-cxc-newtest/htdocs/chart/
+%outdir=test /proj/web-cxc-dmz/htdocs/chart/
 %outdir=trial /proj/web-icxc/htdocs/sds/chart_trial/
 
 %outurl=live http://cxc.harvard.edu/chart/
@@ -422,8 +422,8 @@ imglinkiconheight=16
 %favicon=test /ciao4.3/favicon.ico
 %favicon=trial /sds/ciao4.3_trial/favicon.ico
 
-%newsfile=live /proj/web-cxc/htdocs/ciao4.3/news.html
-%newsfile=test /proj/web-cxc-newtest/htdocs/ciao4.3/news.html
+%newsfile=live /proj/web-cxc-dmz/htdocs/ciao4.3/news.html
+%newsfile=test /proj/web-cxc-dmz/htdocs/ciao4.3/news.html
 %newsfile=trial /proj/web-icxc/htdocs/sds/ciao4.3_trial/news.html
 
 %newsurl=live /ciao/news.html
@@ -450,8 +450,8 @@ googlessi=/chips4.3/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/ciao43/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
-%outdir=live /proj/web-cxc/htdocs/chips4.3/
-%outdir=test /proj/web-cxc-newtest/htdocs/chips4.3/
+%outdir=live /proj/web-cxc-dmz/htdocs/chips4.3/
+%outdir=test /proj/web-cxc-dmz/htdocs/chips4.3/
 %outdir=trial /proj/web-icxc/htdocs/sds/chips4.3_trial/
 
 %outurl=live http://cxc.harvard.edu/chips4.3/
@@ -530,8 +530,8 @@ headtitlepostfix=CALDB 4
 %favicon=test /ciao4.3/favicon.ico
 %favicon=trial /sds/ciao4.3_trial/favicon.ico
 
-%newsfile=live /proj/web-cxc/htdocs/caldb4/news.html
-%newsfile=test /proj/web-cxc-newtest/htdocs/caldb4/news.html
+%newsfile=live /proj/web-cxc-dmz/htdocs/caldb4/news.html
+%newsfile=test /proj/web-cxc-test/htdocs/caldb4/news.html
 %newsfile=trial /proj/web-icxc/htdocs/sds/caldb4/news.html
 
 %newsurl=live /caldb/news.html
@@ -550,12 +550,12 @@ headtitlepostfix=CALDB 4
 # but not the test one (since I only realised I needed a
 # 'versioned' name here after testing had begun)
 #
-%outdir=live /proj/web-cxc/htdocs/caldb4/
-%outdir=test /proj/web-cxc-newtest/htdocs/caldb4/
+%outdir=live /proj/web-cxc-dmz/htdocs/caldb4/
+%outdir=test /proj/web-cxc-test/htdocs/caldb4/
 %outdir=trial /proj/web-icxc/htdocs/sds/caldb4_trial/
 
 %outurl=live http://cxc.harvard.edu/caldb4/
-%outurl=test http://cxc-newtest.cfa.harvard.edu/caldb4/
+%outurl=test http://cxc-test.cfa.harvard.edu/caldb4/
 %outurl=trial http://icxc.harvard.edu/sds/caldb4_trial/
 
 %storage=live /data/da/Docs/caldbweb/published/caldb4/live/
@@ -617,7 +617,7 @@ texttitlepostfix=CSC
 %favicon=trial /sds/csc_trial/favicon.ico
 
 %newsfile=live /proj/web-cxc/htdocs/csc1/news.html
-%newsfile=test /proj/web-cxc-newtest/htdocs/csc1/news.html
+%newsfile=test /proj/web-cxc-dmz/htdocs/csc1/news.html
 %newsfile=trial /proj/web-icxc/htdocs/sds/csc_trial/news.html
 
 %newsurl=live /csc/news.html
@@ -640,7 +640,7 @@ logotext=Chandra Source Catalog logo
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 %outdir=live /proj/web-cxc/htdocs/csc1/
-%outdir=test /proj/web-cxc-newtest/htdocs/csc1/
+%outdir=test /proj/web-cxc-dmz/htdocs/csc1/
 %outdir=trial /proj/web-icxc/htdocs/sds/csc_trial/
 
 %outurl=live http://cxc.harvard.edu/csc1/
@@ -731,8 +731,8 @@ googlessi=/obsvis/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/ciao43/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
-%outdir=live /proj/web-cxc/htdocs/obsvis/
-%outdir=test /proj/web-cxc-newtest/htdocs/obsvis/
+%outdir=live /proj/web-cxc-dmz/htdocs/obsvis/
+%outdir=test /proj/web-cxc-dmz/htdocs/obsvis/
 %outdir=trial /proj/web-icxc/htdocs/sds/obsvis_trial/
 
 %outurl=live http://cxc.harvard.edu/obsvis/
