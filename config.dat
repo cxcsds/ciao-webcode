@@ -242,7 +242,7 @@ googlessi=/chart/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/chart/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
-%outdir=live /proj/web-cxc/htdocs/chart/
+%outdir=live /proj/web-cxc-dmz/htdocs/chart/
 %outdir=test /proj/web-cxc-dmz/htdocs/chart/
 %outdir=trial /proj/web-icxc/htdocs/sds/chart_trial/
 
