@@ -22,7 +22,7 @@
     *          to do this in the calling template (ie in links.xsl)
     *  v1.25 - major revamp of adding 'styles' to links: remove start/end-styles
     *          and just have a add-text-styles template
-    *  v1.24 - pre/@header now uses add-highlight template (ie CSS if hardcopy!=1)
+    *  v1.24 - pre/@header now uses add-highlight template
     *  v1.23 - updated to account for scripts all now in one package (i.e.
     *          not available separately)
     *  v1.22 - new/updated dates now in bold/normal size if in a thread index
@@ -423,29 +423,12 @@
       * which means load the text from @file.xml,
       * or use their content
       *
-      * As of CIAO 3.1 we use CSS to define the 'look' of the
-      * blocks (apart from the hardcopy version)
-      *
       *-->
   <xsl:template name="add-highlight">
     <xsl:param name="contents" select="''"/>
 
-    <!--* ugh! *-->
-    <xsl:param name="bgcolor">cccccc</xsl:param>
-    <xsl:param name="bocolor">000000</xsl:param>
-
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 1">
-	<!--* hack for htmldoc *-->
-	<table border="0" cellspacing="0" bgcolor="#{$bocolor}"><tr><td><table border="0" cellspacing="0" bgcolor="#{$bgcolor}"><tr><td>
-<pre><xsl:copy-of select="$contents"/></pre>
-</td></tr></table></td></tr></table>
-      </xsl:when>
-      <xsl:otherwise>
-	<!--* yay CSS (although highlight is a poor class name) *-->
+    <!--* yay CSS (although highlight is a poor class name) *-->
 <pre class="highlight"><xsl:copy-of select="$contents"/></pre>
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template> <!--* name=add-highlight *-->
 
   <xsl:template match="screen">
@@ -489,9 +472,6 @@
       * add highlighting around the contents of the
       * contents parameter (which can be a node-list)
       *
-      * As of CIAO 3.1 we use CSS to define the 'look' of the
-      * blocks (apart from the hardcopy version)
-      *
       * need to think about what we want highlighting
       * - ie how we handle the non-pre-block cases
       * - at the moment should be able to place in a
@@ -504,45 +484,17 @@
   <xsl:template name="add-highlight-pre">
     <xsl:param name="contents" select="''"/>
 
-    <!--* ugh! *-->
-    <xsl:param name="bgcolor">cccccc</xsl:param>
-    <xsl:param name="bocolor">000000</xsl:param>
-
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 1">
-	<!--* hack for htmldoc *-->
-	<table border="0" cellspacing="0" bgcolor="#{$bocolor}"><tr><td><table border="0" cellspacing="0" bgcolor="#{$bgcolor}"><tr><td>
-<pre><xsl:copy-of select="$contents"/></pre>
-</td></tr></table></td></tr></table>
-      </xsl:when>
-      <xsl:otherwise>
-	<!--* yay CSS (although highlight is a poor class name) *-->
+    <!--* yay CSS (although highlight is a poor class name) *-->
 <pre class="highlight"><xsl:copy-of select="$contents"/></pre>
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template> <!--* name=add-highlight-pre *-->
 
   <xsl:template name="add-highlight-block">
     <xsl:param name="contents" select="''"/>
 
-    <!--* ugh! *-->
-    <xsl:param name="bgcolor">cccccc</xsl:param>
-    <xsl:param name="bocolor">000000</xsl:param>
-
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 1">
-	<!--* hack for htmldoc *-->
-	<table border="0" cellspacing="0" bgcolor="#{$bocolor}"><tr><td><table border="0" cellspacing="0" bgcolor="#{$bgcolor}"><tr><td>
-<xsl:copy-of select="$contents"/>
-</td></tr></table></td></tr></table>
-      </xsl:when>
-      <xsl:otherwise>
-	<!--* yay CSS (although highlighttext is a poor class name) *-->
+    <!--* yay CSS (although highlighttext is a poor class name) *-->
 <div class="highlighttext">
 <xsl:copy-of select="$contents"/>
 </div>
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template> <!--* name=add-highlight-block *-->
 
   <!--*

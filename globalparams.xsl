@@ -8,7 +8,6 @@
     *   2007 Oct 31 DJB Added storageloc parameters, not sure about storage
     *   2007 Oct 26 DJB Added proglang and storage parameters
     *
-    *   v1.7 - added hardcopy parameter
     *   v1.6 - added cssprintfile parameter
     *   v1.5 - added headtitlepostfix and texttitlepostfix parameters
     *   v1.4 - comment change to indicate expeced value of ahelpindex
@@ -66,11 +65,6 @@
     *      HTML title = page title + " " + titlepostfix
     *    if titlepostfix != ''
     *
-    *  . hardcopy - integer, optional, default=0
-    *    if 0 then create the "softcopy" version, if 1 then the "hardcopy"
-    *    version. Setting to 1 with site=icxc is not valid but we do not
-    *    check for this
-    *
     *    THIS PARAMETER IS BEING PHASED OUT AND IS CURRENTLY ONLY SUPPORTED
     *    FOR THREADS
     *
@@ -125,9 +119,6 @@
 
   <xsl:param name="headtitlepostfix" select='""'/>
   <xsl:param name="texttitlepostfix" select='""'/>
-
-  <!--* ONLY USED BY THREADS; WILL BE REMOVED SOON *-->
-  <xsl:param name="hardcopy"     select="0"/>
 
   <!--* load in the ahelp index file *-->
   <xsl:param name="ahelpindex"  select='""'/>

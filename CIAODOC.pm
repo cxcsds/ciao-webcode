@@ -68,7 +68,7 @@ my @funcs_xslt =
   qw(
      translate_file translate_file_hardcopy
      translate_file_hardcopy_langs
-     create_hardcopy read_xml_file read_xml_string
+     read_xml_file read_xml_string
      find_math_pages
      preload_stylesheet
     );
@@ -111,7 +111,6 @@ sub translate_file ($$;$);
 sub translate_file_lang ($$$;$);
 sub translate_file_hardcopy ($$$;$);
 sub translate_file_hardcopy_langs ($$$$;$);
-sub create_hardcopy ($$;$);
 
 sub parse_config ($);
 sub find_site ($$);
@@ -607,81 +606,6 @@ sub find_math_pages ($) {
   return @out;
 
 } # find_math_pages
-
-## create the hardcopy versions of the files
-#
-# create_hardcopy $dir, $head
-# create_hardcopy $dir, $hthml_head, $out_head
-#
-# creates $dir/$head.[letter|a4].pdf
-# and deletes the hardcopy version of the file once it's finished with
-#
-# uses the global variables $main::htmldoc and $main::verbose
-#
-# NOTE: there is now almost no screen output unless verbose is set
-#
-sub create_hardcopy ($$;$) {
-    my $indir = shift;
-    my $html_head = shift;
-    my $out_head  = shift || $html_head;
-
-    # Check input in case user accidently sent in a XML::LibXML::Document
-    # object.
-    #
-    die "Error: second argument to create_hardcopy should be a string, not " .
-      ref $html_head . "\n" unless ref $html_head eq "";
-
-    my $in = "${indir}${html_head}.hard.html";
-
-    dbg "Creating hardcopy formats:";
-    foreach my $size ( qw( letter a4 ) ) {
-	foreach my $type ( qw( pdf ) ) {
-
-	    my $out = "${indir}${out_head}.${size}.${type}";
-
-	    # check/clean up
-	    # - note: consider file not existing an error but do not die
-	    #die "Error: unable to find $in\n"
-	    #  unless -e $in;
-	    unless ( -e $in ) {
-		print "Error: trying to create hardcopy of $in [$type,$size] but it doesn't exist.\n";
-		next;
-	    }
-	    myrm $out;
-
-	    dbg "Start htmldoc call";
-	    dbg "  $main::htmldoc --webpage --duplex --size $size -f $out $in";
-	    `$main::htmldoc --webpage --duplex --size $size -f $out $in 2>&1 >/dev/null`;
-	    dbg "End htmldoc call";
-
-	    # If we use htmldoc >= v1.8.25, the default option is to use --no-overflow,
-	    # a new option, which removes these messages, so we could check on the exit status
-	    # (I think). I have not checked this out to see whether we can re-instate
-	    # the check below.
-	    #
-	    # now get errors if text is too wide for page (which we have plenty
-	    # of), so don't bother checking -- other than whether the output was created
-	    #print "\nWARNING: problems using htmldoc\n\n" unless $? == 0;
-
-	    #die "Error: $out not created by htmldoc\n"
-	    #  unless -e $out;
-	    unless ( -e $out ) {
-		print "Error: unable to create hardcopy of $in [$type,$size]\n";
-		next;
-	    }
-	    mysetmods $out;
-
-	    dbg "  created: ${out_head}.${size}.${type}";
-
-	} # foreach: $type
-    } # foreach: $size
-
-    # clean up the hardcopy file now we've finished with it
-    myrm $in;
-
-    return;
-
-} # sub: create_hardcopy
 
 #---------------------------------------------------------------------
 #

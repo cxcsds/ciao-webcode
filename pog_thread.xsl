@@ -79,16 +79,8 @@
     </xsl:call-template>
     <xsl:call-template name="is-proglang-valid"/>
 
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 1">
-        <xsl:apply-templates select="thread" mode="html-hardcopy-standard"/>
-      </xsl:when>
- 
-      <xsl:otherwise>
-        <xsl:apply-templates select="thread" mode="html-viewable-standard"/>
-        <xsl:apply-templates select="thread/images/image" mode="list"/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:apply-templates select="thread" mode="html-viewable-standard"/>
+    <xsl:apply-templates select="thread/images/image" mode="list"/>
  
   </xsl:template> <!-- match="/" *-->
 

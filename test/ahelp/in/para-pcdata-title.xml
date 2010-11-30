@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='us-ascii' ?>
-<!DOCTYPE cxchelptopics>
-<cxchelptopics>
-<ENTRY key="foofoo" context="baabaa" refkeywords="foo bar mary poppins"
-seealsogroups="foogroup">
-<PARA title="A boring TITLE">A boring paragraph.</PARA>
-</ENTRY></cxchelptopics>

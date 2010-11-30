@@ -830,7 +830,6 @@ depth_offset=1
 
 +version cyc13
 
-# this number appears in the hardcopy title (and the HTML head block)
 number=Cycle 13
 
 # main CSS location

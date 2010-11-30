@@ -69,7 +69,7 @@
 #  04 Aug 02 DJB If given a non XML file (well, one not ending in .XML), copy
 #                it over to the web site. Added support for redirect pages
 #  05 Aug 02 DJB Begin support for threads
-#  11 Aug 02 DJB Added support for ChaRT threads. Added hardcopy support for
+#  11 Aug 02 DJB Added support for ChaRT threads. Added PDF support for
 #                doctype=page. Cleaned up some code.
 #  15 Aug 02 DJB temp allow live publishing to the ciao2.3 directory (for testing)
 #                Added support for site=pog (messay as a different directory
@@ -80,7 +80,7 @@
 #  28 Aug 02 DJB Begin support for ahelp and almost-immediately moved it
 #                into a separate script.
 #                Post processs the navbar's (using ed) to delete DOCTYPE
-#  30 Aug 02 DJB Now processes non-XML files first (may be needed to generate hardcopy)
+#  30 Aug 02 DJB Now processes non-XML files first
 #  03 Sep 02 DJB Only process if HTML files don't exist/are older than XML file
 #                (or use the --force option)
 #  04 Sep 02 DJB Adding support for the math tag
@@ -1467,8 +1467,6 @@ sub xml2html_threadindex ($) {
 # files we copy or include - e.g. as indicated by the screen tag -
 # which could need changing.
 #
-# TODO
-#    remove hardcopy code when appropriate
 #
 sub xml2html_thread ($) {
     my $opts = shift;
@@ -1533,12 +1531,10 @@ sub xml2html_thread ($) {
 
     if ($#lang == -1) {
       push @html, "index.html";
-      push @html, "index.hard.html";
       push @html, map { "img$_.html"; } ( 1 .. $rnode->findnodes('images/image')->size );
     } else {
       foreach my $lang ( @lang ) {
 	push @html, "index.${lang}.html";
-	push @html, "index.${lang}.hard.html";
 	push @html, map { "img${_}.${lang}.html"; } ( 1 .. $rnode->findnodes('images/image')->size );
       }
     }
@@ -1729,17 +1725,6 @@ sub xml2html_thread ($) {
 
     # math?
     process_math( $outdir, @math );
-
-    # create the hardcopy files
-    # [perhaps should return an array of files that are processed by xml2html?]
-    #
-    # XXX TODO XXX
-    #    check support for multi-language?
-    if ($#lang == -1) {
-	create_hardcopy $outdir, "index", $threadname;
-    } else {
-	map { create_hardcopy $outdir, "index.$_", "${threadname}.$_"; } @lang;
-    }
 
     # delete the converted screen files
     #

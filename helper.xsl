@@ -58,7 +58,6 @@
       * the spaces around each root name are important for the simple checking we do
       * - should these be node sets rather than strings?
       *-->
-  <xsl:variable name="allowed-pdf" select="' thread '"/>
   <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc obsvis '"/>
   <xsl:variable name="allowed-download-types" select="' solaris solaris10 fc4 fc8 osx_ppc osx_intel caldb atomdb '"/>
 
@@ -218,88 +217,6 @@
     <xsl:call-template name="newline"/>
   </xsl:template> <!--* name= add-disclaimer *-->
 
-  <!--*
-      * banner for hardcopy versions of the page
-      *
-      * Parameters: url
-      * Variables:  lastmod
-      *
-      *-->
-  <xsl:template name="add-hardcopy-banner-top">
-    <xsl:param name="url" select="''"/>
-
-    <xsl:if test="$url = ''">
-      <xsl:message terminate="yes">
-  Error: add-hardcopy-banner-top called with no url
-      </xsl:message>
-    </xsl:if>
-
-    <table border="0" width="100%">
-      <tr>
-	<td align="left" valign="top">
-	  <!--* using just [/sds]/incl/header_left.gif seemed to cause htmldoc pain so add full URL *-->
-	  <img alt="[Chandra Science]" src="http://cxc.harvard.edu/incl/header_left.gif"/>
-	</td>
-	<td align="right" valign="center">
-	  <font size="-1">
-	    URL: <a href="{$url}"><xsl:value-of select="$url"/></a>
-	    <br/>
-	    Last modified: <xsl:value-of select="$lastmod"/>
-	  </font>
-	</td>
-      </tr>
-    </table>
-    <xsl:call-template name="add-hr-strong"/>
-    <br/>
-    
-  </xsl:template> <!--* name=add-hardcopy-banner-top *-->
-
-
-  <!--*
-      * banner for hardcopy versions of the page
-      *
-      * Parameters: url
-      * Variables:  lastmod
-      *
-      *-->
-  <xsl:template name="add-hardcopy-banner-bottom">
-    <xsl:param name="url" select="''"/>
-
-    <xsl:if test="$url = ''">
-      <xsl:message terminate="yes">
-  Error: add-hardcopy-banner-bottom called with no url
-      </xsl:message>
-    </xsl:if>
-
-    <br/>
-    <xsl:call-template name="add-hr-strong"/>
-    <br/>
-    <table border="0" width="100%">
-      <tr>
-	<td align="left" valign="top">
-	  <font size="-1">
-	    The Chandra X-Ray Center (CXC) is operated for NASA by the Smithsonian Astrophysical Observatory.
-	    <br/>
-	    60 Garden Street, Cambridge, MA 02138 USA.
-	    <br/>
-	    Smithsonian Institution, Copyright 
-	    <xsl:text disable-output-escaping="yes">&amp;copy;</xsl:text>
-	    1998-2008. All rights reserved. 
-	  </font>
-	</td>
-	<td align="right" valign="center">
-	  <font size="-1">
-	    URL: <a href="{$url}"><xsl:value-of select="$url"/></a>
-	    <br/>
-	    Last modified: <xsl:value-of select="$lastmod"/>
-	  </font>
-	</td>
-      </tr>
-    </table>
-
-  </xsl:template> <!--* name=add-hardcopy-banner-bottom *-->
-
-
   <!--* 
       * Create the "standard" HTML header
       * see add-htmlhead for extra customisation
@@ -451,33 +368,6 @@
   </xsl:template> <!--* match=htmlscript *-->
 
   <!--*
-      * Add the links to the PDF versions of the web page: factored out as
-      * used in two places, the leading "internal-" in the template name
-      * indicates that it's only meant to be used deep within other templates
-      *
-      * Can be removed once we clean up the threads.
-      *-->
-  <xsl:template name="internal-add-hardcopy-links">
-<!--
-    <xsl:message terminate="yes">
- ERROR: internal-add-hardcopy-links has been called
-    </xsl:message>
--->
-    <xsl:param name="name"  select="''"/>
-
-    <xsl:if test="$name = ''">
-      <xsl:message terminate="yes">
-  Internal error: internal-add-hardcopy-links called with no name parameter
-      </xsl:message>
-    </xsl:if>
-
-    Hardcopy (PDF):
-    <a title="PDF (A4 format) version of the page" href="{$name}.a4.pdf">A4</a> |
-    <a title="PDF (US Letter format) version of the page" href="{$name}.letter.pdf">Letter</a>
-
-  </xsl:template> <!--* name=internal-add-hardcopy-links *-->
-
-  <!--*
       * add the header
       *
       * Parameters:
@@ -494,15 +384,6 @@
       *
       *-->
   <xsl:template name="add-header">
-    <xsl:param name="name"  select="''"/>
-
-    <!--* TODO: invert the logic of this check once we remove the PDF support in threads *-->
-    <xsl:if test="$name = ''">
-      <xsl:message terminate="yes">
-  Internal Error: add-header called with no name attribute
-      </xsl:message>
-    </xsl:if>
-
     <xsl:variable name="root" select="name(//*)"/>
 
     <xsl:choose>
@@ -553,24 +434,10 @@
 	<div class="urlbar">URL: <xsl:value-of select="$url"/></div>
       </xsl:if>
     </div>
-
-    <!--* add links to PDF files - WHICH WE ARE REMOVING *-->
-    <xsl:if test="$site != 'icxc' and contains($allowed-pdf,concat(' ',$root,' '))">
-      <div class="topbar">
-	<div class="pdfbar">
-	  <xsl:call-template name="internal-add-hardcopy-links">
-	    <xsl:with-param name="name" select="$name"/>
-	  </xsl:call-template>
-	</div>
-      </div>
-    </xsl:if>
-
   </xsl:template> <!--* name=add-header *-->
 
   <!--*
       * add the necessary SSI to get the search bar
-      * - as of CIAO 3.0 we now use the searchssi parameter
-      *   trather than hard-code the location
       *-->
   <xsl:template name="add-search-ssi">
 
@@ -635,28 +502,11 @@
       *
       *-->
   <xsl:template name="add-footer">
-    <xsl:param name="name"  select="''"/>
-    
-    <!--* TODO: invert the logic of this check once we remove the PDF support in threads *-->
-    <xsl:if test="$name = ''">
-      <xsl:message terminate="yes">
-  Internal Error: add-footer called with no name attribute
-      </xsl:message>
-    </xsl:if>
-
     <!--* add the "standard" banner *-->
     <xsl:variable name="root" select="name(//*)"/>
 
-    <!--* add links to PDF files - WHICH WE ARE NOW REMOVING *-->
     <br clear="all"/>
     <div class="bottombar">
-      <xsl:if test="$site != 'icxc' and contains($allowed-pdf,concat(' ',$root,' '))">
-	<div>
-	  <xsl:call-template name="internal-add-hardcopy-links">
-	    <xsl:with-param name="name" select="$name"/>
-	  </xsl:call-template>
-	</div>
-      </xsl:if>
       <div>Last modified: <xsl:value-of select="$lastmod"/></div>
     </div>
 
@@ -800,43 +650,6 @@
   </xsl:template>
 
   <!--*
-      * add a line containing URL (on left) and
-      * last modified date (on right)
-      *
-      * Parameters:
-      *   urlfrag, string, required
-      *     URL for page = http://cxc.harvard.edu/$site/$urlfrag
-      *   lastmod, string, required
-      *     last modified date
-      *
-      * Now that we have the $url 'global' parameter, do we
-      * need urlfrag? I guess we do but need to look over the
-      * templates to understand what is going on
-      *
-      * AHA: it appears that the url 'global' parameter in threads 
-      *  is empty (presumably because there's a one-2-many mapping
-      *  in the thread code, ie it makes multiple pages)
-      *-->
-  <xsl:template name="add-id-hardcopy">
-    <xsl:param name="urlfrag" select="''"/>
-    <xsl:param name="lastmod" select="''"/>
-
-    <xsl:variable name="urlval" select="concat('http://cxc.harvard.edu/',$site,'/',$urlfrag)"/>
-
-    <table border="0" width="100%">
-      <tr>
-        <td align="left">
-          URL: <a href="{$urlval}"><xsl:value-of select="$urlval"/></a>
-        </td>
-        <td align="right">
-          Last modified: <xsl:value-of select="$lastmod"/>
-        </td>
-      </tr>
-    </table>
-
-  </xsl:template> <!--* name=add-id-hardcopy *-->
-
-  <!--*
       * add a ssi include statement to the output, surrounded by new lines
       * (because we are having issues with the register CGI stuff
       *  and I'm hoping that the carriage returns will improve
@@ -961,12 +774,9 @@ Programming error: add-ssi-include called with an empty file parameter
       *        contain ../ which means we can not use it to access
       *        the news page. Which is a pain
       *
-      * WE ONLY CREATE ANY OUTPUT IF HARDCOPY != 1
       *-->
   <xsl:template match="whatsnew">
-    <xsl:if test="$hardcopy != 1">
-      <xsl:call-template name="add-whatsnew-link"/>
-    </xsl:if>
+    <xsl:call-template name="add-whatsnew-link"/>
   </xsl:template>
 
   <xsl:template name="add-whatsnew-link">

@@ -5,6 +5,7 @@
     * Useful templates for creating the CIAO threads
     *
     * Recent changes:
+    * 2010 Nov 30 ECG Removed PDF/hardcopy generation
     * 2008 Sep 16 ECG
     *    don't include siteversion in header of CSC threads
     * 2008 May 14 DJB
@@ -46,8 +47,7 @@
 
   <!--*
       * set up the "top level" links for the HTML page
-      * [links to processing/names threads, thread index,
-      *  and hardcopy versions]
+      * [links to processing/names threads, thread index]
       *
       * Parameters:
       *
@@ -92,8 +92,7 @@
 
   <!--*
       * set up the "top level" links for the HTML page (ChaRT)
-      * [links to processing/names threads, thread index,
-      *  and hardcopy versions]
+      * [links to processing/names threads, thread index]
       *
       * Parameters:
       *
@@ -123,8 +122,7 @@
 
   <!--*
       * set up the "top level" links for the HTML page (Sherpa)
-      * [links to processing/names threads, thread index,
-      *  and hardcopy versions]
+      * [links to processing/names threads, thread index]
       *
       * Parameters:
       *
@@ -149,8 +147,7 @@
 
   <!--*
       * set up the "top level" links for the HTML page (ChIPS)
-      * [links to processing/names threads, thread index,
-      *  and hardcopy versions]
+      * [links to processing/names threads, thread index]
       *
       * Parameters:
       *
@@ -175,8 +172,7 @@
 
   <!--*
       * set up the "top level" links for the HTML page (CSC)
-      * [links to processing/names threads, thread index,
-      *  and hardcopy versions]
+      * [links to processing/names threads, thread index]
       *
       * Parameters:
       *
@@ -201,8 +197,7 @@
 
   <!--*
       * set up the "top level" links for the HTML page (POG)
-      * [links to processing/names threads, thread index,
-      *  and hardcopy versions]
+      * [links to processing/names threads, thread index]
       *
       * Parameters:
       *
@@ -232,7 +227,7 @@
 
   <!--*
       * set up the "trailing" links for the HTML page
-      * [links to thread indexes and hardcopy versions]
+      * [links to thread indexes]
       *
       * Parameters:
       *
@@ -273,7 +268,7 @@
 
   <!--*
       * set up the "trailing" links for the HTML page (ChaRT)
-      * [links to thread indexes and hardcopy versions]
+      * [links to thread indexes]
       *
       * Parameters:
       *
@@ -302,7 +297,7 @@
 
   <!--*
       * set up the "trailing" links for the HTML page (Sherpa)
-      * [links to thread indexes and hardcopy versions]
+      * [links to thread indexes]
       *
       * Parameters:
       *
@@ -326,7 +321,7 @@
 
   <!--*
       * set up the "trailing" links for the HTML page (ChIPS)
-      * [links to thread indexes and hardcopy versions]
+      * [links to thread indexes]
       *
       * Parameters:
       *
@@ -350,7 +345,7 @@
 
   <!--*
       * set up the "trailing" links for the HTML page (CSC)
-      * [links to thread indexes and hardcopy versions]
+      * [links to thread indexes]
       *
       * Parameters:
       *
@@ -374,7 +369,7 @@
 
   <!--*
       * set up the "trailing" links for the HTML page (POG)
-      * [links to thread indexes and hardcopy versions]
+      * [links to thread indexes]
       *
       * Parameters:
       *
@@ -437,9 +432,6 @@
           * width (since we can't use CSS for it due to the
           * use of htmldoc).
 	  *
-	  * DJB woders why he didn't use CSS for the HTML
-	  * version and fall back to the table for the HTMLDOC/hardcopy
-	  * version - e.g. the add-highlight-block template in myhtml.xsl
           *-->
       <xsl:when test="boolean(text/overview)">
 	<br/>
@@ -524,16 +516,6 @@
 	</xsl:for-each>
       </ul>
     </xsl:if> <!--* if: seealso *-->
-
-    <div class="noprint">
-      <p><strong>
-	  Proceed to the <a href="{djb:get-index-page-name()}#start-thread">HTML</a> or
-	  hardcopy (PDF:
-	  <a title="PDF (A4 format) version of the page" href="{djb:get-pdf-head()}.a4.pdf">A4</a>
-	  <xsl:text> | </xsl:text>
-	  <a title="PDF (US Letter format) version of the page" href="{djb:get-pdf-head()}.letter.pdf">letter</a>)
-	  version of the thread.
-	</strong></p></div>
 
   </xsl:template> <!--* match=overview *-->
 
@@ -744,11 +726,7 @@
       <!--* should this be sent in to the stylesheet ? *-->
       <xsl:variable name="pageName" select="djb:get-index-page-name()"/>
 
-      <!--* sort out the header: depends on hardcopy *-->
-      <xsl:choose>
-	<xsl:when test="$hardcopy = 0"><h2><a name="toc">Contents</a></h2></xsl:when>
-	<xsl:when test="$hardcopy = 1"><h1><a name="toc">Table of Contents</a></h1></xsl:when>
-      </xsl:choose>
+      <h2><a name="toc">Contents</a></h2>
 
       <ul>
 	<!--* Sections & Subsections *-->
@@ -798,9 +776,6 @@
 	</xsl:if>
 	
       </ul>
-
-      <!--* do not want a hr if in hardcopy mode *-->
-      <xsl:if test="$hardcopy = 0"><hr/></xsl:if>
 
     </xsl:if>
     
@@ -855,7 +830,6 @@
     <xsl:variable name="titlestring"><xsl:call-template name="find-section-label"/></xsl:variable>
 
     <li>
-      <!--* could use CSS here - do we really need this TOC in hardcopy version? *-->
       <strong>
 	<xsl:choose>
 	  <xsl:when test="boolean(@threadlink)">
@@ -1166,21 +1140,9 @@ or do we, as this case is already caught in add-parameters?
 
     <h2><a name="history">History</a></h2>
 
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 1">
-	<!--// ugly for htmldoc //-->    
-	<table cellpadding="3" cellspacing="1">
-	  <xsl:apply-templates/>
-	</table>
-      </xsl:when>
-
-      <xsl:otherwise>
-        <!--// CSS-alicious //-->
-	  <table class="history">
-	    <xsl:apply-templates/>
-	  </table>
-      </xsl:otherwise>
-    </xsl:choose>
+    <table class="history">
+      <xsl:apply-templates/>
+    </table>
   </xsl:template> <!--* match=history *-->
   
   <!--*
@@ -1189,10 +1151,6 @@ or do we, as this case is already caught in add-parameters?
       * note: 
       *   we enforce the presence of the who attribute, even
       *   if we don't actually use it.
-      *
-      *  Liz's note:  I don't feel like so much of the code should
-      *	 have to be repeated within the hardcopy or not "xsl:choose",
-      *	 but I can't make it work any other way right now.
       *
       *-->
 
@@ -1219,11 +1177,8 @@ or do we, as this case is already caught in add-parameters?
       </xsl:message>
     </xsl:if>
 
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 1">
-	<!--// ugly for htmldoc //-->    
-	<tr valign="top">
-	  <td align="right">
+    <tr>
+      <td class="historydate">
 
     <xsl:number value="@day" format="01"/>
     <xsl:text>&#160;</xsl:text>
@@ -1239,29 +1194,6 @@ or do we, as this case is already caught in add-parameters?
     <xsl:apply-templates/>
       </td>
     </tr>
-      </xsl:when>
-
-      <xsl:otherwise>
-        <!--// CSS-alicious //-->
-	<tr>
-	  <td class="historydate">
-
-    <xsl:number value="@day" format="01"/>
-    <xsl:text>&#160;</xsl:text>
-    <xsl:value-of select="substring(@month,1,3)"/>
-    <xsl:text>&#160;</xsl:text>
-    <xsl:choose>
-      <xsl:when test="@year >= 2000"><xsl:number value="@year"/></xsl:when>
-      <xsl:otherwise><xsl:number value="@year+2000"/></xsl:otherwise>
-    </xsl:choose>
-      </td>
-
-      <td>
-    <xsl:apply-templates/>
-      </td>
-    </tr>
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template> <!--* match=entry *-->
 
   <!--* used to create overview section *-->
@@ -1394,10 +1326,8 @@ or do we, as this case is already caught in add-parameters?
 
     <li>
       <a>
-	<xsl:attribute name="href"><xsl:choose>
-	    <xsl:when test="$hardcopy = 1">#img-<xsl:value-of select="$id"/></xsl:when>
-	    <xsl:otherwise><xsl:value-of select="concat('img',$thispos,$langid,'.html')"/></xsl:otherwise>
-	  </xsl:choose></xsl:attribute>
+	<xsl:attribute name="href">
+	  <xsl:value-of select="concat('img',$thispos,$langid,'.html')"/></xsl:attribute>
 	<xsl:value-of select='title'/>
       </a>
     </li>
@@ -1606,9 +1536,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       <xsl:call-template name="add-disclaimer"/>
       
       <!--* make the header *-->
-      <xsl:call-template name="add-header">
-	<xsl:with-param name="name"  select="djb:get-pdf-head()"/>
-      </xsl:call-template>
+      <xsl:call-template name="add-header"/>
 
       <!--* link back to thread *-->
       <div class="topbar">
@@ -1747,9 +1675,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       * the same structure as the thread, and so we have to
       * explicitly process the thread.xml document...
       *
-      * We may decide that the 'separate page per image' approach
-      * for the "non hardcopy" cases is OTT [I certainly am leaning this way].
-      *
       * We now take the location/width/height of the icon to use
       * from the imglinkicon[width/height] parameters which are
       * set by the calling process [user-defined in the config file]
@@ -1781,10 +1706,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     </xsl:choose></xsl:variable>
 
     <xsl:variable name="href">
-      <xsl:choose>
-	<xsl:when test="$hardcopy = 1">#img-<xsl:value-of select="@id"/></xsl:when>
-	<xsl:otherwise><xsl:value-of select="concat('img',$pos,$langid,'.html')"/></xsl:otherwise>
-      </xsl:choose>
+      <xsl:value-of select="concat('img',$pos,$langid,'.html')"/>
     </xsl:variable>
 
     <!--* need an anchor so that we can link back to the text *-->
@@ -1806,16 +1728,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     </a>
 
   </xsl:template> <!--* match=imglink *-->
-
-  <!--*
-      * add a "new page" comment to be read by HTMLDOC
-      * - only needed/used when $hardcopy=1
-      *
-      *-->
-  <xsl:template name="add-new-page">
-    <xsl:comment> NEW PAGE </xsl:comment><xsl:text>
-</xsl:text>
-  </xsl:template> <!--* name=add-new-page *-->
 
   <!--*
       * Intended for use after displaying the thread title
@@ -1896,64 +1808,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
   </xsl:template> <!--* name=add-htmlhead-site-thread *-->
 
   <!--*
-      * Adds the thread title, along with the site name and optional
-      * language support, to the start of the hardcopy documentation
-      * (the main text, not the front page).
-      *-->
-  <xsl:template name="add-threadtitle-main-hard">
-
-    <div align="center">
-      <h1><xsl:value-of select="$threadInfo/title/long"/></h1>
-
-      <h2><xsl:choose>
-	<xsl:when test="$site = 'ciao'">CIAO <xsl:value-of select="$siteversion"/> Science Threads</xsl:when>
-	<xsl:when test="$site = 'chips'">ChIPS Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
-	<xsl:when test="$site = 'sherpa'">Sherpa Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
-	<xsl:when test="$site = 'chart'">ChaRT Threads</xsl:when>
-	<xsl:when test="$site = 'csc'">CSC Threads</xsl:when>
-	<xsl:when test="$site = 'pog'">Proposal Threads for <xsl:value-of select="$siteversion"/></xsl:when>
-      </xsl:choose></h2>
-
-      <xsl:call-template name="add-proglang-sub-header"/>
-    </div>
-
-  </xsl:template> <!--* name=add-threadtitle-main-hard *-->
-
-
-  <!--* contents of the thread frontpage, hardcopy mode *-->
-
-  <xsl:template name="add-thread-title-frontpage-hardcopy">
-    <div align="center">
-      <h1><xsl:value-of select="$threadInfo/title/long"/></h1>
-
-      <!--*
-	  * just add the logo directly
-	  * don't use any templates, since this is a bit of a fudge
-	  * It doesn't seem to work for ChIPS threads and can not be bothered
-	  * to work out why
-	  *-->
-      <img alt="[CXC Logo]">
-	<xsl:attribute name="src"><xsl:choose>
-	  <xsl:when test="$site = 'pog'">../cxc-logo.gif</xsl:when>
-	  <xsl:when test="$site = 'ciao'">../../imgs/cxc-logo.gif</xsl:when>
-	  <xsl:otherwise>/proj/web-cxc/htdocs/ciao/imgs/cxc-logo.gif</xsl:otherwise>
-	</xsl:choose></xsl:attribute>
-      </img>
-
-      <h2><xsl:choose>
-	<xsl:when test="$site = 'ciao'">CIAO <xsl:value-of select="$siteversion"/> Science Threads</xsl:when>
-	<xsl:when test="$site = 'chips'">ChIPS Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
-	<xsl:when test="$site = 'sherpa'">Sherpa Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
-	<xsl:when test="$site = 'chart'">ChaRT Threads</xsl:when>
-	<xsl:when test="$site = 'csc'">CSC Threads</xsl:when>
-	<xsl:when test="$site = 'pog'">Proposal Threads for <xsl:value-of select="$siteversion"/></xsl:when>
-      </xsl:choose></h2>
-      <xsl:call-template name="add-proglang-sub-header"/>
-
-    </div>
-  </xsl:template>
-
-  <!--*
       * returns a human-readable version of the site name
       *-->
   <func:function name="djb:get-sitename-string">
@@ -1973,151 +1827,17 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
   </func:function>
 
   <!--*
-      * Returns the name of the page - index.html, index.sl.html, or index.py.html
-      * Only expected to be used when hardcopy=0
+      * Returns the name of the page - index.html, index.sl.html, or
+      * index.py.html 
       *-->
   <func:function name="djb:get-index-page-name">
     <func:result>index<xsl:if test="$proglang != ''">.<xsl:value-of select="$proglang"/></xsl:if>.html</func:result>
   </func:function>
 
   <!--*
-      * Returns the head of the PDF version of the page, ie up to
-      * but excluding the paper size,
-      * Only expected to be used when hardcopy=0
-      *-->
-  <func:function name="djb:get-pdf-head">
-    <func:result><xsl:value-of select="/thread/info/name"/><xsl:if test="$proglang != ''">.<xsl:value-of select="$proglang"/></xsl:if></func:result>
-  </func:function>
-
-  <!--*
       * For those threads that want a common look and feel, use
       * these templates.
       *-->
-
-  <!--*
-      * create:
-      *    $install/index.hard.html
-      * or
-      *    $install/index.hard.<proglang>.html
-      *-->
-  <xsl:template match="thread" mode="html-hardcopy-standard">
-
-    <xsl:variable name="langid"><xsl:choose>
-      <xsl:when test="$proglang=''"/>
-      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
-    <xsl:variable name="filename"
-		  select="concat($install,'index',$langid,'.hard.html')"/>
-
-    <xsl:variable name="urlfrag">
-      <xsl:value-of select="concat('threads/',$threadName,'/')"/>
-      <xsl:if test="$proglang != ''">
-	<xsl:value-of select="concat('index',$langid,'.html')"/>
-      </xsl:if>
-    </xsl:variable>
-
-    <!--* create document *-->
-    <xsl:document href="{$filename}" method="html" media-type="text/html" 
-      version="4.0" encoding="us-ascii">
-
-      <!--* get the start of the document over with *-->
-      <html lang="en">
-
-	<!--* make the HTML head node *-->
-	<xsl:call-template name="add-htmlhead-site-thread"/>
-
-	<!--* and now the main part of the text *-->
-	<body>
-
-	  <!--* set up the title page *-->
-	  <xsl:call-template name="add-thread-title-frontpage-hardcopy"/>
-	  <xsl:call-template name="add-new-page"/>
-
-	  <!--* table of contents page *-->
-	  <xsl:call-template name="add-toc">
-	    <xsl:with-param name="hardcopy" select="1"/>
-	  </xsl:call-template>
-
-	  <xsl:call-template name="add-new-page"/>
-
-	  <!--* start the thread *-->
-
-	  <!--* Make the header. *-->
-	  <xsl:call-template name="add-id-hardcopy">
-	    <xsl:with-param name="urlfrag" select="$urlfrag"/>
-	    <xsl:with-param name="lastmod" select="$lastmodified"/>
-	  </xsl:call-template>
-	  <xsl:call-template name="add-hr-strong"/>
-	  <br/>
-
-	  <!--* set up the title block of the page *-->
-	  <xsl:call-template name="add-threadtitle-main-hard"/>
-
-	  <!--* Introductory text *-->
-	  <xsl:call-template name="add-introduction">
-	    <xsl:with-param name="hardcopy" select="1"/>
-	  </xsl:call-template>
-
-	  <!--* Main thread *-->
-	  <xsl:apply-templates select="text/sectionlist"/>
-	
-	  <!--* Summary text *-->
-	  <xsl:call-template name="add-summary">
-	    <xsl:with-param name="hardcopy" select="1"/>
-	  </xsl:call-template>
-	
-	  <!--* Parameter files *-->
-	  <xsl:call-template name="add-parameters"/>
-
-	  <!-- History -->
-	  <xsl:if test="$site != 'pog'">
-	  <xsl:apply-templates select="info/history"/>
-	  </xsl:if>
-
-	  <!--* add the footer text *-->
-	  <br/>
-	  <xsl:call-template name="add-hr-strong"/>
-	  <xsl:call-template name="add-id-hardcopy">
-	    <xsl:with-param name="urlfrag" select="$urlfrag"/>
-	    <xsl:with-param name="lastmod" select="$lastmodified"/>
-	  </xsl:call-template>
-
-	  <!--* add the images *-->
-	  <xsl:for-each select="images/image">
-
-	    <!--* based on template match="image" mode="list" *-->
-	    <xsl:variable name="pos" select="position()"/>
-	    <xsl:variable name="imgname" select='concat("Image ",$pos)'/>
-
-	    <!--* add a new page *-->
-	    <xsl:call-template name="add-new-page"/>
-	    <h3><a name="img-{@id}"><xsl:value-of select="$imgname"/>: <xsl:value-of select="title"/></a></h3>
-
-	    <!--* "pre-image" text *-->
-	    <xsl:if test="boolean(before)">
-	      <xsl:apply-templates select="before"/>
-	    </xsl:if>
-
-	    <!--* image:
-                *   would like to use the PS version if available
-                *   BUT htmldoc doesn't support this
-                *-->
-	    <img alt="[{$imgname}]" src="{@src}"/>
-		
-	    <!--* "post-image" text *-->
-	    <xsl:if test="boolean(after)">
-	      <xsl:apply-templates select="after"/>
-	    </xsl:if>
-
-	  </xsl:for-each>
-	  
-	</body>
-      </html>
-
-    </xsl:document>
-
-  </xsl:template> <!--* match=thread mode=html-hardcopy-standard *-->
 
   <!--*
       * create:
@@ -2129,8 +1849,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     
     <xsl:variable name="filename"
 		  select="concat($install,djb:get-index-page-name())"/>
-
-    <xsl:variable name="hardcopyName" select="djb:get-pdf-head()"/>
 
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html" 
@@ -2146,9 +1864,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       <xsl:call-template name="add-disclaimer"/>
       
       <!--* make the header *-->
-      <xsl:call-template name="add-header">
-	<xsl:with-param name="name"  select="$hardcopyName"/>
-      </xsl:call-template>
+      <xsl:call-template name="add-header"/>
 
       <!--* set up the standard links before the page starts *-->
       <xsl:call-template name="add-top-links-site-html"/>
@@ -2187,9 +1903,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       <xsl:call-template name="add-bottom-links-site-html"/>
 
       <!--* add the footer text *-->
-      <xsl:call-template name="add-footer">
-	<xsl:with-param name="name"  select="$hardcopyName"/>
-      </xsl:call-template>
+      <xsl:call-template name="add-footer"/>
 
       <!--* add </body> tag [the <body> is added by the add-htmlhead template] *-->
       <xsl:call-template name="add-end-body"/>
@@ -2292,10 +2006,9 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     <xsl:variable name="title" select="djb:make-figure-title($pos)"/>
 
     <!--*
-        * How do we display the HTML figure caption?
+        * Display the HTML figure caption?
 	*-->
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 0">
+
 	<div class="figure">
 	  <div class="caption screenmedia">
 	    <h3><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
@@ -2413,30 +2126,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	<xsl:if test="$has-bmap-thumb">
 	  <div class="clearfloat"/>
 	</xsl:if>
-
-      </xsl:when>
-      <xsl:otherwise>
-	<br/>
-        <center>
-	  <div>
-	    <img align="center" alt="{concat('[',normalize-space(description),']')}">
-	      <xsl:attribute name="src"><xsl:choose>
-		<xsl:when test="$has-bmap-hard"><xsl:value-of select="$bmap-hard"/></xsl:when>
-		<xsl:otherwise><xsl:value-of select="$bmap-simple"/></xsl:otherwise>
-	      </xsl:choose></xsl:attribute>
-	    </img>
-	    <!-- QUS: does htmldoc honor the @size attribute? It does not appear to -->
-	    <font size="-1">
-	      <table border="0" cellspacing="0" bgcolor="#eeeeee"><tr><td>
-		<h3 align="center"><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
-		<xsl:apply-templates select="caption" mode="figure"/>
-	      </td></tr></table>
-	    </font>
-	  </div>
-	</center>
-	<br/>
-      </xsl:otherwise>
-    </xsl:choose>
 
   </xsl:template> <!--* match=figure *-->
 

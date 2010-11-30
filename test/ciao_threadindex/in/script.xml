@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='us-ascii' ?>
-<!DOCTYPE threadindex>
-<threadindex>
-<info><files>
-<script>foo</script>
-<script slang="1">foo</script>
-<script>foo</script>
-</files></info>
-</threadindex>

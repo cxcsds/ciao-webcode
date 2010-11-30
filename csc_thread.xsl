@@ -42,14 +42,12 @@
   <!--* 
       * top level
       * if proglang == '' then create
-      *   index.html                - hardcopy != 1
-      *   img<n>.html               - hardcopy != 1
-      *   $install/index.hard.html  - hardcopy = 1
+      *   index.html 
+      *   img<n>.html
       * else create
-      *   index.<proglang>.html                - hardcopy != 1
-      *   img<n>.<proglang>.html               - hardcopy != 1
-      *   $install/index.hard.<proglang>.html  - hardcopy = 1
-      *   in this case no index.html case is created (heardcopy != 1)
+      *   index.<proglang>.html
+      *   img<n>.<proglang>.html
+      *   in this case no index.html case is created
       *
       *-->
 
@@ -63,16 +61,8 @@
     </xsl:call-template>
     <xsl:call-template name="is-proglang-valid"/>
 
-    <xsl:choose>
-      <xsl:when test="$hardcopy = 1">
-	<xsl:apply-templates select="thread" mode="html-hardcopy-standard"/>
-      </xsl:when>
-
-      <xsl:otherwise>
-	<xsl:apply-templates select="thread" mode="html-viewable-standard"/>
-	<xsl:apply-templates select="thread/images/image" mode="list"/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:apply-templates select="thread" mode="html-viewable-standard"/>
+    <xsl:apply-templates select="thread/images/image" mode="list"/>
 
   </xsl:template> <!-- match="/" *-->
 
