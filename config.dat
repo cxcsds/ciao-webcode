@@ -238,7 +238,7 @@ imglinkiconheight=16
 # only added for the live site in helper.xsl
 googlessi=/chart/analytics.ssi
 
-%stylesheets=live /data/da/Docs/web4/c hart/
+%stylesheets=live /data/da/Docs/web4/chart/
 %stylesheets=test /data/da/Docs/web4/chart/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
 
