@@ -856,7 +856,7 @@ number=Cycle 13
 %stylesheets=test /data/da/Docs/web4/ciao43/
 %stylesheets=trial /data/da/Docs/web4/ciao43/
 
-%outdir=live /proj/web-cxc/htdocs/proposer/
+%outdir=live /proj/web-cxc-dmz/htdocs/proposer/
 %outdir=test /proj/web-cxc-prev/htdocs/proposer/
 %outdir=trial /proj/web-cxc-prev/htdocs/proposer_dev/
 
