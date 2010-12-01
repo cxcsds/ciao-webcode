@@ -193,15 +193,6 @@
       </xsl:otherwise>
     </xsl:choose>
 
-    <!--*
-        * handle any script items
-        *-->
-    <xsl:if test="count($thisThreadInfo/files/script) > 0">
-      <br/>Uses:
-      <xsl:for-each select="$thisThreadInfo/files/script">
-	<xsl:apply-templates select="." mode="threadindex"/>
-      </xsl:for-each>
-    </xsl:if>
 
     <!--* Is this thread new or recently updated ? *-->
     <xsl:if test="boolean($thisThreadInfo/history/@new)">
