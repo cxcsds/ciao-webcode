@@ -66,8 +66,7 @@ my @funcs_util =
     );
 my @funcs_xslt =
   qw(
-     translate_file translate_file_hardcopy
-     translate_file_hardcopy_langs
+     translate_file
      read_xml_file read_xml_string
      find_math_pages
      preload_stylesheet
@@ -109,8 +108,6 @@ sub read_xml_file ($);
 sub read_xml_string ($);
 sub translate_file ($$;$);
 sub translate_file_lang ($$$;$);
-sub translate_file_hardcopy ($$$;$);
-sub translate_file_hardcopy_langs ($$$$;$);
 
 sub parse_config ($);
 sub find_site ($$);
@@ -471,47 +468,6 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
 
   } # sub: translate_file()
 
-  # This is a common enough pattern that it is worth abstracting out
-  # Note that the params assoc array will be changed by this routine.
-  #
-  # xml_arg can be a string, in which case it is assumed to be the
-  # file name (a trailing ".xml" is added if ncessary) or
-  # a XML::LibXML::Document object.
-  #
-  sub translate_file_hardcopy ($$$;$) {
-    my $stylesheet = shift;
-    my $xml_arg    = shift;
-    my $params     = shift;
-    my $hcopy      = shift || [0,1];
-
-    my $hstr = join ",", @$hcopy;
-    dbg "*** start XSLT processing (hardcopy=$hstr)";
-
-    # Should do this properly (allow for sub-classes etc) but go
-    # for the simple route
-    #
-    my $xml;
-    if (ref $xml_arg eq "") {
-      dbg "  reading XML from $xml_arg";
-      $xml = read_xml_file $xml_arg;
-
-    } elsif (ref $xml_arg eq "XML::LibXML::Document") {
-      dbg "  XML is from a DOM";
-      $xml = $xml_arg;
-
-    } else {
-      die "Expected xml_file argument to translate_file to be a string or XML::LibXML::Document, found " .
-	ref $xml_arg . " instead!\n";
-    }
-
-    foreach my $hflag ( @$hcopy ) {
-      $$params{hardcopy} = $hflag;
-      translate_file $stylesheet, $xml, $params;
-    }
-    dbg "*** end XSLT processing (hardcopy=$hstr)";
-
-  } # sub: translate_file_hardcopy()
-
   # Return a DOM that is specialized to the given language, which
   # should be "sl" or "py".
   # 
@@ -534,53 +490,6 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     return $newdom;
 
   } # sub: specialize_lang()
-
-  # Process the input file/DOM so that it is specialized to the
-  # input languages - if any are supplied - and then run
-  # translate_file_hardcopy on it.
-  # $langs can be [], ["sl","py"], ["py"], or ["sl"]. If [] then
-  # we do not do any
-  #
-  # XXX TODO XXX
-  #   do we need to be clever and manipulate the output file name
-  #   in this case?
-  #
-  sub translate_file_hardcopy_langs ($$$$;$) {
-    my $stylesheet = shift;
-    my $xml_arg    = shift;
-    my $langs      = shift;
-    my $params     = shift;
-    my $hcopy      = shift || [0,1];
-
-    my $xml;
-    if (ref $xml_arg eq "") {
-      dbg "  reading XML from $xml_arg";
-      $xml = read_xml_file $xml_arg;
-
-    } elsif (ref $xml_arg eq "XML::LibXML::Document") {
-      dbg "  XML is from a DOM";
-      $xml = $xml_arg;
-
-    } else {
-      die "Expected xml_file argument to translate_file to be a string or XML::LibXML::Document, found " .
-	ref $xml_arg . " instead!\n";
-    }
-
-    if ($#$langs == -1) {
-        dbg "*** No need to specialize for language";
-	translate_file_hardcopy $stylesheet, $xml, $params, $hcopy;
-	return;
-    }
-
-    dbg "*** Specializing for languages=" . join(",",@$langs) . " ***";
-    foreach my $lang (@$langs) {
-	dbg "---> lang=$lang";
-	my $nxml = specialize_lang $xml, $lang;
-	$$params{proglang} = $lang;
-	translate_file_hardcopy $stylesheet, $nxml, $params, $hcopy;
-    }
-
-  } # sub: translate_file_hardcopy_langs()
 
 }
 

@@ -1711,7 +1711,7 @@ sub xml2html_thread ($) {
     # (not a very good idea)
     #
     preload_stylesheet "$$opts{xslt}strip_proglang.xsl", "strip_proglang.xsl";
-    translate_file_hardcopy_langs "$$opts{xslt}${site}_thread.xsl", $dom, \@lang, \%params;
+    translate_file "$$opts{xslt}${site}_thread.xsl", $dom, \%params;
 
     # set the correct owner/permissions for the HTML files
     #
