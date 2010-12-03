@@ -15,16 +15,14 @@
 #   config file]
 #
 
-# How to call the htmldoc and list_seealso executables.
-# As of CIAO 4 beta 3 we no longer use the xsltproc
-# executable, and we now support running on different
+# How to call the list_seealso executable.
+# We now support running on different
 # systems, so we make the values OS dependent.
 #
 # %perl is currently only used by publish_all.pl
 #
 # OS type values can be sun, lin, or osx
 #
-%htmldoc=sun /usr/bin/env LD_LIBRARY_PATH=/data/da/Docs/local/lib/ /data/da/Docs/local/bin/htmldoc
 %listseealso=sun /data/da/Docs/web4/utilities/list_seealso.ciao4.sun
 %perl=sun /data/da/Docs/local/perl/bin/perl
 
@@ -32,13 +30,11 @@
 # building on a 32-bit Linux machine but it didn't seem to run
 # on rory, so go back to the 64-bit versions
 #
-%htmldoc=lin /data/da/Docs/local/linux_x86_64/bin/htmldoc
 %listseealso=lin ciaorun /data/da/Docs/web4/utilities/binexe/list_seealso.ciao43.lin64
 %perl=lin /usr/bin/env PERL5LIB=/data/da/Docs/local/linux_x86_64/lib64/perl5/site_perl:/data/da/Docs/local/linux_x86_64/lib64/perl5:/data/da/Docs/local/linux_x86_64/lib/perl5/site_perl perl
 
 # OS-X: specific to Doug's laptop, should be changed to more general values
 #
-%htmldoc=osx /usr/bin/env DYLD_LIBRARY_PATH= /Users/doug/local/bin/htmldoc
 %listseealso=osx /Users/doug/doc/ahelp/list_seealso
 %perl=osx perl
 

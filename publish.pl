@@ -166,11 +166,10 @@ sub process_xml   ($$);
 sub process_files ($$);
 
 ## set up variables that are also used in CIAODOC
-use vars qw( $configfile $verbose $group $htmldoc $site );
+use vars qw( $configfile $verbose $group $site );
 $configfile = "$FindBin::Bin/config.dat";
 $verbose = 0;
 $group = "";
-$htmldoc = "";
 $site = "";
 
 ## Variables
@@ -226,13 +225,6 @@ my $ostype = get_ostype;
 die "Error: the config option can not be blank\n"
   if $configfile eq "";
 my $config = parse_config( $configfile );
-
-# Get the names of executable/library locations
-#
-$htmldoc = get_config_main_type( $config, "htmldoc", $ostype );
-
-check_executable_runs "htmldoc", $htmldoc, "--version";
-dbg "Found executable/library paths";
 
 # most of the config stuff is parsed below, but we need these two here
 my $site_config;

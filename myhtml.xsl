@@ -48,8 +48,7 @@
     *
     * Note there's some pretty ugly use of XSLT here.
     * Some of this can be removed once we use CSS (since handling
-    * the style info can be done by that) but that requires
-    * CSS support in htmldoc (currently not available)
+    * the style info can be done by that)
     *
     *-->
 

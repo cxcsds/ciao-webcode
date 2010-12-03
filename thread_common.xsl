@@ -426,13 +426,6 @@
 	<br/><hr/><br/>
       </xsl:when> <!--* text/introduction *-->
 
-      <!--*
-          * try and make the overview stand out
-          * We use a table to get the background colour and
-          * width (since we can't use CSS for it due to the
-          * use of htmldoc).
-	  *
-          *-->
       <xsl:when test="boolean(text/overview)">
 	<br/>
 	<div id="overview">
@@ -1938,10 +1931,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       *    a[@b]
       * but I think I have seen issues with this in libxslt (ie changes in
       * behavior) so trying to be more explicit.
-      *
-      * Notes:
-      *    htmldoc does not support ps/pdf images, so they are only useful
-      *    for the HTML version.
       *
       *-->
   <xsl:template match="figure">
