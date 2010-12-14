@@ -432,9 +432,10 @@
 
 	  <h2><a name="overview">Overview</a></h2>
 	  
-<!--	  <p>
-	    <strong>The threads are in the process of being reviewed
-	    for CIAO 4.2. This message will be removed after the
+<!--
+	  <p>
+	    <strong>&#187; The threads are in the process of being reviewed
+	    for CIAO 4.3. This message will be removed after the
 	    thread has been updated.</strong>
 	  </p>
 -->
@@ -769,6 +770,8 @@
 	</xsl:if>
 	
       </ul>
+
+      <hr/>
 
     </xsl:if>
     
