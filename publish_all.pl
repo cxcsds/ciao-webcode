@@ -30,9 +30,6 @@
 # Notes:
 #  - files that are checked out for editing are skipped;
 #    not 100% convinced got it right for RCS files
-#  - ahelp files are ignored. These should be processed *before* any
-#    others, otherwise the code will be unable to calculate the ahelp
-#    links
 #  - the thread index is published last so that it can pick up all the
 #    details of the threads; it probably also needs publishing before
 #    the threads too so that the threads can find out what groups
@@ -74,33 +71,11 @@ $configfile = "$FindBin::Bin/config.dat";
 # can not end in / because of regexp check below
 my @prefixes =
   (
-#   "/data/da/Docs/ciaoweb/ciao221",
-#   "/data/da/Docs/ciaoweb/ciao23",
-#   "/data/da/Docs/ciaoweb/ciao3",
-#   "/data/da/Docs/sherpaweb/ciao3",
-   "/data/da/Docs/ciaoweb/ciao31",
-   "/data/da/Docs/sherpaweb/ciao31",
-   "/data/da/Docs/chartweb/internal",
-   "/data/da/Docs/caldbweb/caldb3",
-   "/data/da/Docs/ciaoweb/ciao32",
-   "/data/da/Docs/sherpaweb/ciao32",
-   "/data/da/Docs/ciaoweb/ciao33",
-   "/data/da/Docs/sherpaweb/ciao33",
-   "/data/da/Docs/ciaoweb/ciao34",
-   "/data/da/Docs/sherpaweb/ciao34",
-   "/data/da/Docs/ciaoweb/40beta",
-   "/data/da/Docs/sherpaweb/40beta",
-   "/data/da/Docs/chipsweb/40beta",
-   "/data/da/Docs/ciaoweb/ciao40",
-   "/data/da/Docs/chipsweb/ciao40",
-   "/data/da/Docs/ciaoweb/ciao41",
-   "/data/da/Docs/sherpaweb/ciao41",
-   "/data/da/Docs/chipsweb/ciao41",
    "/data/da/Docs/cscweb/csc1",
    "/data/da/Docs/caldbweb/caldb4",
-   "/data/da/Docs/ciaoweb/ciao42",
-   "/data/da/Docs/sherpaweb/ciao42",
-   "/data/da/Docs/chipsweb/ciao42",
+   "/data/da/Docs/ciaoweb/ciao43",
+   "/data/da/Docs/sherpaweb/ciao43",
+   "/data/da/Docs/chipsweb/ciao43",
 
    "/Users/doug/doc/ahelp/", # Doug's testing
   );
@@ -197,7 +172,6 @@ $pipe->reader( qw( find . \( -name RCS -o -name SCCS \) -prune -o -print ) );
 my %files;
 my %images;
 my $threadindex;
-my $have_ahelp = 0;
 my $nrej = 0;
 my $nuserrej = 0;
 my $ndir = 0;
@@ -255,12 +229,6 @@ while ( <$pipe> ) {
     #
     $nrej++, next if $fname eq "README" and $dname eq "talks" and $dirs[-3] eq "workshop";
 
-    # if ahelp directory then we set the flag but
-    # reject the actual entry
-    # (this test won't pick up the ahelp directory, but that's
-    #  already been rejected as a directory)
-    $have_ahelp = $path, $nrej++, next if $dname eq "ahelp";
-
     # we reject a set of files from xxx_html_manual/ directories
     #
     # TMP dirs are empty so we don't really need to worry about them but we do
@@ -305,7 +273,6 @@ while ( <$pipe> ) {
     # - note CIAO thread index is a special case since
     #   we want to process that AFTER all the threads
     #   have been updated, so we just do it last
-    #   (well, just before the ahelp files)
     #
     if ( $dname eq "imgs" ) {
 	$images{$path} = [] unless exists $images{$path};
@@ -330,7 +297,6 @@ print "Num of files            = $nfil\n";
 print "Num of dirs             = $ndir\n";
 print "Num of rej. files       = $nrej\n";
 print "Num of user rej. files = $nuserrej\n";
-##print "ahelp dir?          $have_ahelp\n";
 
 # now loop through everything and publish it
 #
