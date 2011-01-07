@@ -30,6 +30,7 @@
   <xsl:param name="headtitlepostfix"  select='""'/>
   <xsl:param name="texttitlepostfix"  select='""'/>
   <xsl:param name="dname"/>
+  <xsl:param name="urlbase"/>
  
  <!--* 
       * create: $outname.html
@@ -42,6 +43,9 @@
 
     <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$outname"/>.html</xsl:variable>
 
+    <!--// needed for canonical link //-->
+    <xsl:variable name="url" select="concat('http://cxc.harvard.edu/',$site,'/ahelp/',$outname,'.html')"/>
+
     <!--* output filename to stdout *-->
     <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
 
@@ -53,10 +57,11 @@
 	<head>
 	  <title>Ahelp: <xsl:value-of select="ENTRY/@key"/> - <xsl:value-of select="$headtitlepostfix"/></title>
 
+	  <link rel="canonical" href="{$url}"/> 
+
 	  <!--* use CSS for the navbar *-->
 	  <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" href="{$cssfile}"/>
 	  <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" media="print" href="{$cssprintfile}"/>
-
 <style type="text/css">
 /* highlight only the link to this page in the navbar */
 .navbar a[href='<xsl:value-of select="$outname"/>.html'] {
