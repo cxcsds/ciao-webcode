@@ -717,14 +717,14 @@
   <!--* date template *-->
   <xsl:template match="date">
 
-  <font size="-1">(<xsl:number value="@day" format="01"/>
+  <span class="date">(<xsl:number value="@day" format="01"/>
     <xsl:text>&#160;</xsl:text>
     <xsl:value-of select="substring(@month,1,3)"/>
     <xsl:text>&#160;</xsl:text>
     <xsl:choose>
       <xsl:when test="@year >= 2000"><xsl:number value="@year"/></xsl:when>
       <xsl:otherwise><xsl:number value="@year+2000"/></xsl:otherwise>
-    </xsl:choose>)</font>
+    </xsl:choose>)</span>
   </xsl:template> 
   <!--* end date template *-->
 

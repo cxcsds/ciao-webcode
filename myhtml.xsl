@@ -371,7 +371,7 @@
     <xsl:text> </xsl:text>
     <xsl:choose>
       <xsl:when test="name(//*)='threadindex'">(<strong><xsl:value-of select="$text"/></strong>)</xsl:when>
-      <xsl:otherwise><font size="-1">(<xsl:value-of select="$text"/>)</font></xsl:otherwise>
+      <xsl:otherwise><span class="date">(<xsl:value-of select="$text"/>)</span></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
@@ -391,8 +391,8 @@
     <p>
       <xsl:if test="boolean(@align)"><xsl:attribute name="align"><xsl:value-of select="@align"/></xsl:attribute></xsl:if>
       <xsl:choose>
-	<xsl:when test="@text='header'"><font size="+1"><xsl:copy-of select="$contents"/></font></xsl:when>
-	<xsl:when test="@text='note'"><font size="-1"><xsl:copy-of select="$contents"/></font></xsl:when>
+	<xsl:when test="@text='header'"><span class="pheader"><xsl:copy-of select="$contents"/></span></xsl:when>
+	<xsl:when test="@text='note'"><span class="qlinkbar"><xsl:copy-of select="$contents"/></span></xsl:when>
 	<xsl:otherwise><xsl:copy-of select="$contents"/></xsl:otherwise>
       </xsl:choose>
     </p>

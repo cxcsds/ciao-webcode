@@ -557,7 +557,7 @@
       <tr>
 	<td align="left" valign="middle"><img src="/sds/imgs/cxc-logo_sm45.jpg" border="0" alt="CXC Logo"/></td>
 	<td align="left" valign="top">
-	  <font face="Arial,Helvetica,sans-serif" size="-1">
+	  <font face="Arial,Helvetica,sans-serif">
 	    <em>The Chandra X-Ray
 	      Center (CXC) is operated for NASA by the Smithsonian Astrophysical Observatory.</em>
 	    <br/>
@@ -714,11 +714,9 @@ Programming error: add-ssi-include called with an empty file parameter
     
       <br clear="all"/>
       <p>
-        <font color="red" size="-1">
 	  Last published by: <xsl:value-of select="$updateby"/>
 	    at: <xsl:value-of select="$time"/><xsl:text> </xsl:text>
 	    <xsl:value-of select="$date"/>
-	  </font>
 	</p>
     <xsl:call-template name="newline"/>
     
@@ -809,7 +807,7 @@ Programming error: add-ssi-include called with an empty file parameter
         * to use too much vertical whitespace
         *-->
     <div class="noprint" align="center">
-      <font size="+1">
+      <span class="pheader">
 
       <!--// split so that title text is accurate for Sherpa //-->
       <xsl:if test="$site = 'ciao' or $site = 'chips'">
@@ -829,7 +827,7 @@ Programming error: add-ssi-include called with an empty file parameter
 	</xsl:if>
       </xsl:if>
 
-      </font>
+      </span>
       <br/>
     </div>
 

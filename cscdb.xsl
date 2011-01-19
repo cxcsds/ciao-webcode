@@ -99,14 +99,14 @@
 	        <xsl:apply-templates select="intro"/>
 		
 		<!--// add links //-->
-		<font size="-1">Go to:
+		<span class="qlinkbar">Go to:
 		  <a href="index.html">Catalog Columns Index</a> |
 		  <a>
 		    <xsl:attribute name="href">
 		    <xsl:value-of select="concat($pagename,'_alpha.html')"/>
 		  </xsl:attribute>
 		  Alphabetical List</a>
-		</font>
+		</span>
 		<hr/>
 	      </xsl:if>
 
@@ -251,14 +251,14 @@
 	        <xsl:apply-templates select="intro"/>
 
 		<!--// add links //-->
-		<font size="-1">Go to:
+		<span class="qlinkbar">Go to:
 		  <a href="index.html">Catalog Columns Index</a> |
 		  <a>
 		    <xsl:attribute name="href">
 		    <xsl:value-of select="concat($pagename,'.html')"/>
 		  </xsl:attribute>
 		  Context List</a>
-		</font>
+		</span>
 		<hr/>
 	      </xsl:if>
 

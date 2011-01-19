@@ -413,7 +413,7 @@
       *
       *-->
   <xsl:template name="add-threadindex-quicklink">
-    <div class="qlinkbar" align="center"><font size="-1">
+    <div class="qlinkbar" align="center">
 	<a href="index.html">Top</a> |
 	<a href="all.html">All</a> |
 	<!--* 
@@ -452,7 +452,7 @@
 	    <xsl:text> |</xsl:text>
 	  </xsl:otherwise>
 	</xsl:choose>
-      </font></div>
+      </div>
     <hr/>
   </xsl:template> <!--* name=add-threadindex-quicklink *-->
 

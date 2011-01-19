@@ -442,15 +442,11 @@
     <table width="100%" border="0">
       <tr>
 	<td align="left">
-	  <font color="red" size="-1">
             Last published by: <xsl:value-of select="$updateby"/>
-	  </font>
 	</td>
 	<td align="right">
-	  <font color="red" size="-1">
             at: <xsl:value-of select="$time"/><xsl:text> </xsl:text>
             <xsl:value-of select="$date"/>
-	  </font>
 	</td>
       </tr>
     </table>
@@ -528,12 +524,13 @@
     <xsl:call-template name="add-start-tag"/>/body<xsl:call-template name="add-end-tag"/>
   </xsl:template>
 
-  <xsl:template name="add-font-m1">
+<!--  <xsl:template name="add-font-m1">
     <xsl:call-template name="add-start-tag"/>font size=&quot;-1&quot;<xsl:call-template name="add-end-tag"/>
   </xsl:template>
   <xsl:template name="add-end-font">
     <xsl:call-template name="add-start-tag"/>/font<xsl:call-template name="add-end-tag"/>
   </xsl:template>
+-->
 
   <!--* make this bar stand out *-->
   <xsl:template name="add-hr-strong">
