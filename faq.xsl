@@ -240,9 +240,7 @@
 
       <!--* if not the first topic then add a hr *-->
       <xsl:if test="position() != 1">
-	<br/>
-	<hr width="80%" align="center"/>
-	<br/>
+	<hr class="midsep"/>
       </xsl:if>
 
       <!--* the header *-->

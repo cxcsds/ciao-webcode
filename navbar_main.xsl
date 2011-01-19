@@ -206,17 +206,6 @@
       <!--* now do the individual items *-->
       <xsl:apply-templates select="item" mode="create"/>
 
-      <!--* and finish with the link to the "old news" section *-->
-<!--*
-      <p align="center">
-	<a>
-	  <xsl:call-template name="add-attribute">
-	    <xsl:with-param name="name"  select="'href'"/>
-	    <xsl:with-param name="value" select="'news.html'"/>
-	  </xsl:call-template>Old News Items</a>
-      </p>
-      *-->
-
     </div>
   </xsl:template> <!--* match=news mode=create *-->
 
@@ -261,8 +250,6 @@
       </p>
       <xsl:apply-templates/>
 
-      <!--* since have a "old news" item at the end we always put in a hr *-->
-      <hr width="80%" align="center"/>
     </div>
   </xsl:template> <!--* match=item mode=create *-->
 

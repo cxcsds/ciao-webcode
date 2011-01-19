@@ -1333,7 +1333,7 @@ or do we, as this case is already caught in add-parameters?
       * add a separator between "sections"
       *-->
   <xsl:template name="add-mid-sep">
-    <hr width="80%" align="center"/>
+    <hr class="midsep"/>
   </xsl:template>
 
   <!--*
