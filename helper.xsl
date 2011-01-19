@@ -540,7 +540,6 @@
   <xsl:template name="add-footer-trial">
 
     <br clear="all"/>
-    <div align="center">
       <font face="Arial,Helvetica,sans-serif">
 	<a href="http://cxc.harvard.edu/">Chandra Science</a>
 	<xsl:call-template name="add-nbsp"/>|<xsl:call-template name="add-nbsp"/>
@@ -551,7 +550,7 @@
 	<a href="http://icxc.harvard.edu/">iCXC (CXC only)</a>
 	<xsl:call-template name="add-nbsp"/>|<xsl:call-template name="add-nbsp"/>
 	<a href="http://cxc.harvard.edu/AT-CXCquery.html">Search</a>
-      </font></div>
+      </font>
     <br clear="all"/><br/>
     <table align="left" cellpadding="3" cellspacing="3">
       <tr>

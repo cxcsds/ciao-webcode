@@ -1743,7 +1743,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       * media output, and explicitly excluded from screen media versions.
       *-->
   <xsl:template name="add-thread-title">
-    <div align="center">
+    <div class="pagetitle">
       <h1><xsl:value-of select="$threadInfo/title/long"/></h1>
 
       <div class="printmedia">

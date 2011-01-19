@@ -561,7 +561,10 @@
       * - should we include a warning?
       *-->
   <xsl:template match="center">
-    <div align="center"><xsl:apply-templates/></div>
+    <xsl:message terminate="yes">
+      Please convert all &lt;center&gt; tags to use CSS.
+      <xsl:call-template name="newline"/>
+    </xsl:message>
   </xsl:template> <!--* match=center *-->
 
   <!--*

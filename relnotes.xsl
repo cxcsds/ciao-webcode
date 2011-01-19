@@ -96,15 +96,13 @@
 		<xsl:value-of select="@release"/>
 	      </xsl:variable>
 
-	      <div align="center">
-	        <h1>
+	        <h1 class="pagetitle">
 		  CIAO <xsl:value-of select="$release"/> Release Notes
 		</h1>
 
 		<xsl:if test="@package">
-		  <h2><xsl:value-of select="@package"/> Release</h2>
+		  <h2 class="pagetitle"><xsl:value-of select="@package"/> Release</h2>
 		</xsl:if>
-	      </div>
 
               <div class="qlinkbar"><a href="history.html">Version History</a></div>
 

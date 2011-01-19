@@ -204,7 +204,7 @@
 		  <div class="wrap">
 
 
-	      <div align="center"><h1>CSC Dictionary Entries</h1></div>
+	      <h1 class="pagetitle">CSC Dictionary Entries</h1>
 	      
 	      <hr/>
 	  
@@ -327,7 +327,7 @@
 
     <!--* create the list of topics *-->
     <hr/>
-    <div align="center">
+    <div class="navlinkbar">
       <xsl:if test="$nea != 0"><a href="#a">A</a><xsl:text> </xsl:text></xsl:if>
       <xsl:if test="$neb != 0"><a href="#b">B</a><xsl:text> </xsl:text></xsl:if>
       <xsl:if test="$nec != 0"><a href="#c">C</a><xsl:text> </xsl:text></xsl:if>

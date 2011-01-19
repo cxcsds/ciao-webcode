@@ -292,7 +292,7 @@
   <xsl:template name="add-logo-section">
     <xsl:choose>
       <xsl:when test="$logoimage != '' and $logotext != ''">
-	<p align="center">
+	<p class="navimage">
 	  <xsl:call-template name="add-image">
 	    <xsl:with-param name="alt"   select="$logotext"/>
 	    <xsl:with-param name="src"   select="$logoimage"/>
@@ -301,7 +301,7 @@
       </xsl:when>
 	      
       <xsl:when test="$logotext != ''">
-	<p align="center"><xsl:value-of select="$logotext"/></p>
+	<p class="navimage"><xsl:value-of select="$logotext"/></p>
       </xsl:when>
 
       <!--*

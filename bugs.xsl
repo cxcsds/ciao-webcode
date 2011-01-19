@@ -93,11 +93,9 @@
 		<div id="content">
 		  <div class="wrap">
 
-	      <div align="center">
-	        <h1>
+	        <h1 class="pagetitle">
 		  <xsl:value-of select="/bugs/info/title/short"/>
 		</h1>
-	      </div>
 
 	      <div class="topbar">
 	        <div class="qlinkbar">

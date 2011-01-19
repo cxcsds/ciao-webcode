@@ -258,7 +258,7 @@
 
       <!--* add the logo/link if required *-->
       <xsl:if test="$logotext != ''">
-	<xsl:text disable-output-escaping="yes">&lt;p align="center"&gt;</xsl:text>
+	<xsl:text disable-output-escaping="yes">&lt;p class="navimage"&gt;</xsl:text>
 
 	<!--* logo or text? *-->
 	<xsl:choose>
@@ -661,14 +661,14 @@
   <xsl:template name="handle-alphabet">
 
     <!--* title *-->
-    <h2 align="center">Alphabetical List of Ahelp Files</h2>
+    <h2 class="pagetitle">Alphabetical List of Ahelp Files</h2>
 
     <!--* add text/links *-->
     <xsl:call-template name="add-alphabet-jump"/>
     <hr/>
 
     <!--* create the list of letters/links *-->
-    <div align="center">
+    <div class="navlinkbar">
       <p>
       <xsl:for-each select="term">
 	<xsl:variable name="letter"
@@ -848,14 +848,14 @@
   <xsl:template name="handle-context">
 
     <!--* title *-->
-    <h2 align="center">Contextual List of Ahelp Files</h2>
+    <h2 class="pagetitle">Contextual List of Ahelp Files</h2>
 
     <!--* add text/links *-->
     <xsl:call-template name="add-context-jump"/>
     <hr/>
 
     <!--* create the list of concepts/links *-->
-    <div align="center">
+    <div class="navlinkbar">
       <p>
       <xsl:for-each select="term">
 	<a title="Jump to context '{name}'" href="#{name}"><xsl:value-of select="name"/></a>

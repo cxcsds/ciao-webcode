@@ -268,7 +268,7 @@
 <!--//BOB//-->
     <xsl:if test="boolean(//threadindex/datatable)">
 
-    <table id="threaddatatable" align="center" width="90%" cellspacing="0" cellpadding="2"> 
+    <table id="threaddatatable" width="90%" cellspacing="0" cellpadding="2"> 
       <tr>    
         <td id="threaddatatableheader" colspan="4">
 	    <h3>Data Used in Threads</h3>
@@ -304,10 +304,10 @@
     <!--* set up the header for this section *-->
 
     <tr>
-      <th align="center">ObsID</th>
-      <th align="center">Object</th>
-      <th align="center">Instrument</th> 
-      <th align="center">Threads</th>
+      <th>ObsID</th>
+      <th>Object</th>
+      <th>Instrument</th> 
+      <th>Threads</th>
     </tr>  
     
     <!--* process the individual datasets *-->
@@ -320,16 +320,16 @@
       *-->
   <xsl:template match="dataset">
     <tr>
-      <td align="center">
+      <td>
 	  <xsl:value-of select="@obsid"/>
       </td>
-      <td align="center">
+      <td>
 	<xsl:apply-templates select="object"/>
       </td>
-      <td align="center">
+      <td>
 	<xsl:apply-templates select="instrument"/>
       </td>
-      <td align="center">
+      <td>
 	<!--* loop over the threads *-->
 	<xsl:for-each select="thread">
 	  <xsl:if test="position()>1"><br/></xsl:if>
@@ -363,11 +363,11 @@
 
     <!--* set up the header for this section *-->
     <tr>
-      <th colspan="4" align="center">Sorted by Thread</th>
+      <th colspan="4">Sorted by Thread</th>
     </tr>
     <tr>
-      <th colspan="3" align="center">File</th>
-      <th align="center">Thread</th>
+      <th colspan="3">File</th>
+      <th>Thread</th>
     </tr>  
 
     <!--* process the individual packages *--> 
@@ -385,12 +385,12 @@
   <xsl:template match="package">
 
     <tr>
-      <td colspan="3" align="center">
+      <td colspan="3">
 	<tt>
 	  <a href="data/{file}"><xsl:value-of select="file"/></a>
 	</tt>
       </td>
-      <td align="center">
+      <td>
 	<xsl:choose>
 	  <xsl:when test="count(descendant::p)=0">
 	    <p>
@@ -413,7 +413,7 @@
       *
       *-->
   <xsl:template name="add-threadindex-quicklink">
-    <div class="qlinkbar" align="center">
+    <div class="navlinkbar qlinkbar">
 	<a href="index.html">Top</a> |
 	<a href="all.html">All</a> |
 	<!--* 
@@ -969,7 +969,7 @@
   <xsl:template name="add-threadindex-title">
     <xsl:param name="title" select="''"/>
 
-    <h1 align="center"><xsl:choose>
+    <h1 class="pagetitle"><xsl:choose>
 	<xsl:when test="$title = ''">
 	  <xsl:choose>
 	    <xsl:when test="$site = 'ciao'">Science</xsl:when>

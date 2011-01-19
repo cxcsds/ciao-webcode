@@ -202,7 +202,7 @@
 	<div class="mainbar">
 
 	  <!--* page title (and link back to index) *-->
-	  <div align="center"><h2><xsl:apply-templates select="title"/></h2></div>
+	  <div class="pagetitle"><h2><xsl:apply-templates select="title"/></h2></div>
 	  <hr/>
 
 	  <!--* add the explanation *-->
@@ -305,7 +305,7 @@
 
     <!--* create the list of topics *-->
     <hr/>
-    <div align="center">
+    <div class="navlinkbar">
       <xsl:if test="$nea != 0"><a href="#a">A</a><xsl:text> </xsl:text></xsl:if>
       <xsl:if test="$neb != 0"><a href="#b">B</a><xsl:text> </xsl:text></xsl:if>
       <xsl:if test="$nec != 0"><a href="#c">C</a><xsl:text> </xsl:text></xsl:if>

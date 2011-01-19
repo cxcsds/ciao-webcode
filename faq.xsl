@@ -189,7 +189,7 @@
 
 	  <!--* page title *-->
 	  <div>
-	    <h2 align="center"><xsl:apply-templates select="title"/><xsl:call-template name="add-new-or-updated-info"/></h2>
+	    <h2 class="pagetitle"><xsl:apply-templates select="title"/><xsl:call-template name="add-new-or-updated-info"/></h2>
 	    <xsl:apply-templates select="errmsg"/>
 	  </div>
 	  <hr/>
@@ -226,7 +226,7 @@
   <xsl:template match="faqlist" mode="toc">
 
     <!--* create the list of topics *-->
-    <div align="center" class="qlinkbar">
+    <div class="navlinkbar qlinkbar">
     <xsl:for-each select="faqtopic">
        <xsl:if test="position() != 1"> | </xsl:if>
       <a href="#{@id}"><xsl:value-of select="name"/></a>
