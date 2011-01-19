@@ -59,16 +59,6 @@
     *    the name of the XML file (including the full path) that contains
     *    the "See Also" block. If not supplied we don't create a see also block
     *
-    *  . bgcolor, string, optional (default=cccccc)
-    *    a hex string giving the colour to use for the
-    *    background of the syntax/equation/example text
-    *    do not supply the leading #
-    *
-    *  . bocolor, string, optional (default=000000)
-    *    as for bgcolor; colour of the border around the
-    *    background/highlight colour
-    *
-    *
     * Notes:
     *  . we make use of EXSLT functions for date/time
     *    (see http://www.exslt.org/). 
@@ -134,28 +124,6 @@
       * - 'ahelp mkinstmap' suggests 72 but 'ahelp mkexpmap' suggests 71
       *-->
   <xsl:variable name="maxlen" select="72"/>
-
-  <!--*
-      * background colours:
-      * perhaps we should just a single value for the background
-      * colour, since that will probably be less confusing to the
-      * reader.
-      * see http://www.brobstsystems.com/colors.htm for a list
-      * of so-called "safe" colours, although how much one can trust
-      * this list I don't know
-      * however, using their recommendation of only 00, 44, 66, 99, CC, and FF
-      * values:
-      *   #FFFFFF white
-      *   #CCCCCC light grey    
-      *   #999999 darker grey
-      *   #000000 black
-      *
-      * but #999999 is too dark, so changed to #CCCCCC, and #CCCCCC to #E0E0E0
-      * and now changed back to a single colour, #CCCCCC
-      *
-      * -->
-  <xsl:param name="bgcolor">cccccc</xsl:param>
-  <xsl:param name="bocolor">000000</xsl:param>
 
   <!--*
       * set up a few variables used to determine whether we need certain columns
