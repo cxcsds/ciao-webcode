@@ -678,7 +678,7 @@
       <xsl:for-each select="category">
 
 	<tr>
-	  <th align="left" colspan="4">
+	  <th colspan="4">
 	    <a name="{translate(@name,' ','')}"><xsl:value-of select="@name"/></a>
 	  </th>
 	</tr>
@@ -700,14 +700,14 @@
 	</tr>
         <xsl:for-each select="script">
           <tr class="scriptrow">
-	    <td align="center" rowspan="2">
+	    <td class="scriptcell" rowspan="2">
 	      <strong><xsl:value-of select="@name"/></strong>
 	    </td>
 	    <td>
 	      <xsl:apply-templates select="thread" mode="scripts"/>
 	    </td>
-	    <td align="center"><xsl:value-of select="@lang"/></td>
-	    <td align="center">
+	    <td class="scriptrow"><xsl:value-of select="@lang"/></td>
+	    <td class="scriptrow">
 	      <xsl:value-of select="@day"/>-<xsl:call-template name="get-month"><xsl:with-param name="month" select="@month"/></xsl:call-template>-<xsl:value-of select="@year"/>
 	      <xsl:if test="@updated = 'yes'">
 	        <br/>
@@ -726,7 +726,7 @@
 	    </td>
           </tr>
           <tr class="scriptrow">
-	    <td align="left" colspan="3">
+	    <td colspan="3">
 	      <xsl:apply-templates select="desc" mode="scripts"/>
 	    </td>
 	  </tr>

@@ -805,7 +805,7 @@ Programming error: add-ssi-include called with an empty file parameter
         * We do not use h2 here for the what's new link in order not
         * to use too much vertical whitespace
         *-->
-    <div class="noprint" align="center">
+    <div class="noprint" style="text-align: center">
       <span class="pheader">
 
       <!--// split so that title text is accurate for Sherpa //-->

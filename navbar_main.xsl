@@ -223,7 +223,7 @@
   <xsl:template match="item" mode="create">
 
     <div>
-      <p align="left">
+      <p>
 	<strong><xsl:call-template name="calculate-date-from-attributes"/></strong>
 	<xsl:text> </xsl:text> <!--* only really necessary if we follow with an image *-->
 	<xsl:choose>
