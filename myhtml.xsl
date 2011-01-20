@@ -390,6 +390,8 @@
 
     <p>
       <xsl:if test="boolean(@align)"><xsl:attribute name="align"><xsl:value-of select="@align"/></xsl:attribute></xsl:if>
+      <xsl:if test="boolean(@class)"><xsl:attribute name="class"><xsl:value-of select="@class"/></xsl:attribute></xsl:if>
+      <xsl:if test="boolean(@id)"><xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute></xsl:if>
       <xsl:choose>
 	<xsl:when test="@text='header'"><span class="pheader"><xsl:copy-of select="$contents"/></span></xsl:when>
 	<xsl:when test="@text='note'"><span class="qlinkbar"><xsl:copy-of select="$contents"/></span></xsl:when>
