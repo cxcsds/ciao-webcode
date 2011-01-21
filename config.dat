@@ -125,7 +125,8 @@ logotext=CIAO Logo
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/ciao4.3/
 %outdir=trial /proj/web-icxc/htdocs/sds/ciao4.3_trial/
 
-%outurl=live http://cxc.harvard.edu/ciao4.3/
+# live outurl is unversioned for use in canonical header link
+%outurl=live http://cxc.harvard.edu/ciao/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/ciao4.3/
 %outurl=trial http://icxc.harvard.edu/sds/ciao4.3_trial/
 
@@ -342,7 +343,8 @@ googlessi=/sherpa4.3/analytics.ssi
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.3/
 %outdir=trial /proj/web-icxc/htdocs/sds/sherpa4.3_trial/
 
-%outurl=live http://cxc.harvard.edu/sherpa4.3/
+# live outurl is unversioned for use in canonical header link
+%outurl=live http://cxc.harvard.edu/sherpa/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/sherpa4.3/
 %outurl=trial http://icxc.harvard.edu/sds/sherpa4.3_trial/
 
@@ -450,7 +452,8 @@ googlessi=/chips4.3/analytics.ssi
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chips4.3/
 %outdir=trial /proj/web-icxc/htdocs/sds/chips4.3_trial/
 
-%outurl=live http://cxc.harvard.edu/chips4.3/
+# live outurl is unversioned for use in canonical header link
+%outurl=live http://cxc.harvard.edu/chips/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/chips4.3/
 %outurl=trial http://icxc.harvard.edu/sds/chips4.3_trial/
 
@@ -550,7 +553,8 @@ headtitlepostfix=CALDB 4
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/caldb4/
 %outdir=trial /proj/web-icxc/htdocs/sds/caldb4_trial/
 
-%outurl=live http://cxc.harvard.edu/caldb4/
+# live outurl is unversioned for use in canonical header link
+%outurl=live http://cxc.harvard.edu/caldb/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/caldb4/
 %outurl=trial http://icxc.harvard.edu/sds/caldb4_trial/
 
@@ -639,7 +643,8 @@ logotext=Chandra Source Catalog logo
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/csc1/
 %outdir=trial /proj/web-icxc/htdocs/sds/csc_trial/
 
-%outurl=live http://cxc.harvard.edu/csc1/
+# live outurl is unversioned for use in canonical header link
+%outurl=live http://cxc.harvard.edu/csc/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/csc1/
 %outurl=trial http://icxc.harvard.edu/sds/csc_trial/
 
