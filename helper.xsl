@@ -290,11 +290,15 @@
       <!--* add the favicon *-->
       <link rel="icon" href="{$favicon}"/>
 
-
       <!--* add main stylesheets *-->
       <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" href="{$cssfile}"/>
       <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" media="print" href="{$cssprintfile}"/>
 
+	  <!-- canonical link for search results -->
+      <xsl:if test="$type = 'live'">
+	    <link rel="canonical" href="{$url}"/>
+	  </xsl:if>
+	  
       <!--*
           * This is an okay idea - although it requires some discipline when
           * creating the navbar and the navbarlink parameter added to 
