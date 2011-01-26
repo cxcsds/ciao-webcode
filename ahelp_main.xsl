@@ -1124,19 +1124,19 @@
       <div>
 	    <strong>Jump to:</strong>
 	    <xsl:if test="$have-desc"><xsl:text> </xsl:text><a title="Jump to the description" href="#description">Description</a></xsl:if>
-	    <xsl:if test="$have-example"><xsl:text> </xsl:text><a title="Jump to the Example section" href="#examples">Example<xsl:if test="$nexample!=1">s</xsl:if></a></xsl:if>
-	    <xsl:if test="$have-param"><xsl:text> </xsl:text><a title="Jump to the parameter description" href="#ptable">Parameters</a></xsl:if>
+	    <xsl:if test="$have-example"><xsl:text> &#183; </xsl:text><a title="Jump to the Example section" href="#examples">Example<xsl:if test="$nexample!=1">s</xsl:if></a></xsl:if>
+	    <xsl:if test="$have-param"><xsl:text> &#183; </xsl:text><a title="Jump to the parameter description" href="#ptable">Parameters</a></xsl:if>
 	    <!--* see how linking to the ADESC blocks looks *-->
 	    <xsl:for-each select="//ENTRY/ADESC">
 	      <!--* could put in XPath expression above but can't be bothered *-->
 	      <xsl:if test="boolean(@title)">
-		<xsl:text> </xsl:text><a>
+		<xsl:text> &#183; </xsl:text><a>
 		  <xsl:attribute name="href"><xsl:value-of select="concat('#',translate(@title,' ','_'))"/></xsl:attribute>
 		  <xsl:value-of select="@title"/></a>
 	      </xsl:if>
 	    </xsl:for-each>
-	    <xsl:if test="$have-bugs"><xsl:text> </xsl:text><a title="Jump to the Bugs section" href="#bugs">Bugs</a></xsl:if>
-	    <xsl:if test="$have-seealso"><xsl:text> </xsl:text><a title="Jump to the 'See Also' section" href="#seealso">See Also</a></xsl:if>
+	    <xsl:if test="$have-bugs"><xsl:text> &#183; </xsl:text><a title="Jump to the Bugs section" href="#bugs">Bugs</a></xsl:if>
+	    <xsl:if test="$have-seealso"><xsl:text> &#183; </xsl:text><a title="Jump to the 'See Also' section" href="#seealso">See Also</a></xsl:if>
 	  </div>
       <hr/><br/>
       </div> <!--* class=noprint *-->
