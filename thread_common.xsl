@@ -959,8 +959,16 @@
 	  </p>
 
 	</xsl:when>
+
+
 	<xsl:otherwise>
 	  
+	  <xsl:if test="@id = ''">
+	    <xsl:message terminate="yes">
+ERROR: section tag has an empty id attribute.
+	    </xsl:message>
+	  </xsl:if>
+         
 	  <h2><a name="{@id}"><xsl:value-of select="$titlestring"/></a></h2>
 	  <xsl:apply-templates/>
 	  
