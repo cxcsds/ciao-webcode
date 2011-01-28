@@ -295,8 +295,10 @@
       <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" media="print" href="{$cssprintfile}"/>
 
 	  <!-- canonical link for search results -->
-      <xsl:if test="$type = 'live'">
-	    <link rel="canonical" href="{$url}"/>
+	  <xsl:if test="$type = 'live'">
+	    <xsl:if test="$url != ''">
+	      <link rel="canonical" href="{$url}"/>
+	    </xsl:if>
 	  </xsl:if>
 	  
       <!--*
