@@ -1796,7 +1796,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
       <xsl:choose>
 	<!--// don't put siteversion in head of CSC threads //-->
-	<xsl:when test="$site = 'csc'">
+	<xsl:when test="$site = 'csc' or $site = 'chart'">
 	  <xsl:call-template name="add-htmlhead">
             <xsl:with-param name="title" select="concat($start,' - ',djb:get-sitename-string(),' ',$endstr)"/>
 	  </xsl:call-template>
