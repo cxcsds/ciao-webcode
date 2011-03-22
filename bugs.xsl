@@ -715,7 +715,7 @@
   <!--* date template *-->
   <xsl:template match="date">
 
-  <span class="date">(<xsl:number value="@day" format="01"/>
+  <span class="date">&#160;(<xsl:number value="@day" format="01"/>
     <xsl:text>&#160;</xsl:text>
     <xsl:value-of select="substring(@month,1,3)"/>
     <xsl:text>&#160;</xsl:text>
