@@ -108,6 +108,7 @@
 		      <xsl:apply-templates select="intro/altlink"/>
 		  </xsl:if>		  
 
+
 		<xsl:if test="$site='ciao' and not(/bugs/info/noahelp)">
 		  <p>
 
@@ -121,100 +122,192 @@
 			<xsl:text>the </xsl:text>
 			<xsl:value-of select="$pagename"/>
 			<xsl:text> ahelp file</xsl:text>
-		   </a>
-		   </p>
+		   </a>.  
+
+		  <xsl:if test="$site='ciao' and (/bugs/info/contrib)">
+		    <br/>
+		    This script is part of
+		    the <a href="../download/scripts">contributed science tarfile</a>.
+		  </xsl:if> 
+		  </p>
 		 </xsl:if>
 		</div>
 	      </div>
 
-	      <hr/>
 
-	      <!--* add any intro text (often used for scripts) *-->
+	      <!--* add any intro text  *-->
 	      <xsl:if test="intro/note">
 	        <xsl:apply-templates select="intro/note"/>
 	      </xsl:if>
 
-	      <xsl:if test="not(//buglist)">
+	      <xsl:variable name="ctbuglist" select="count(//buglist/entry[not(@cav)])"/>
+	      <xsl:variable name="ctcavlist" select="count(//buglist/entry[@cav])"/>
 
-		<p>
-		  There are currently no known bugs.
-		</p>
+	      <xsl:variable name="isbuglist">
+		<xsl:choose>
+		  <xsl:when test="$ctbuglist > 0">1</xsl:when>
+		  <xsl:otherwise>0</xsl:otherwise>
+		</xsl:choose>
+	      </xsl:variable>
 
-	      </xsl:if>
+	      <xsl:variable name="iscavlist">
+		<xsl:choose>
+		  <xsl:when test="$ctcavlist > 0">1</xsl:when>
+		  <xsl:otherwise>0</xsl:otherwise>
+		</xsl:choose>
+	      </xsl:variable>
 
-	      <xsl:if test="//fixlist">		
-		<xsl:for-each select="//fixlist">
-		  <p>
-		    A list of 
+	      <xsl:variable name="isfixlist" select="count(//fixlist)"/>
+	      <xsl:variable name="isscriptlist" select="count(//scriptlist)"/>
+	      <xsl:variable name="istotal" select="$isbuglist + $iscavlist + $isfixlist + $isscriptlist"/>
+
+	      <xsl:if test="($istotal > 1) or (//buglist/subbuglist)">
+
+		<ul class="bugnavbar">
+
+		  <xsl:if test="//buglist/entry[@cav]">
+		    <li>
 		      <a>
-		        <xsl:attribute name="href">
-			  <xsl:text>#</xsl:text>
-			  <xsl:value-of select="concat('ciao',./@ver)"/>
+			<xsl:attribute name="href">
+			  <xsl:text>#caveats</xsl:text>
 			</xsl:attribute>
-
-			<xsl:text>bugs fixed in CIAO </xsl:text>
-			  <xsl:value-of select="./@vername"/>
+			
+			<xsl:text>Caveats</xsl:text>
 		      </a>
+		    </li>		     
+		  </xsl:if>
 
-		    is available.
-		  </p>
-		  </xsl:for-each>
-	      </xsl:if>
+		  <xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
 
-	      <xsl:if test="//scriptlist">
-		  <p>
-		    A list of 
+		    <xsl:choose>
+		      <xsl:when test="(//buglist/subbuglist)">
+			  <xsl:for-each select="//buglist/subbuglist">
+			    <xsl:choose>
+			      <xsl:when test="position()=1">
+				
+				<li>
+				  <xsl:text>Bugs: </xsl:text>
+				  <a>
+				    <xsl:attribute name="href">
+				      <xsl:text>#</xsl:text>
+				      <xsl:value-of select="@ref"/>
+				    </xsl:attribute>
+				
+				    <xsl:value-of select="@title"/>
+				  </a>
+				</li>
+			      </xsl:when>
+				
+			      <xsl:otherwise>
+				<li>
+				  <a>
+				    <xsl:attribute name="href">
+				      <xsl:text>#</xsl:text>
+				      <xsl:value-of select="@ref"/>
+				    </xsl:attribute>
+				
+				    <xsl:value-of select="@title"/>
+				  </a>
+				</li>
+			      </xsl:otherwise>
+			    </xsl:choose>
+			  </xsl:for-each>
+		      </xsl:when>
+
+		      <xsl:otherwise>
+			<li>
+			  <a>
+			    <xsl:attribute name="href">
+			      <xsl:text>#bugs</xsl:text>
+			    </xsl:attribute>
+			
+			    <xsl:text>Bugs</xsl:text>
+			  </a>
+			</li>		     
+		      </xsl:otherwise>
+		    </xsl:choose>
+		  </xsl:if>
+
+		  <xsl:if test="//fixlist">		
+		    <xsl:for-each select="//fixlist">
+		      <li>
+			<a>
+			  <xsl:attribute name="href">
+			    <xsl:text>#</xsl:text>
+			    <xsl:value-of select="concat('ciao',./@ver)"/>
+			  </xsl:attribute>
+			
+			  <xsl:text>Bugs fixed in CIAO </xsl:text>
+			  <xsl:value-of select="./@vername"/>
+			</a>
+		      </li>
+		    </xsl:for-each>
+		  </xsl:if>
+
+		  <xsl:if test="//scriptlist">
+		    <li>
 		      <a>
 		        <xsl:attribute name="href">
 			  <xsl:text>#</xsl:text>
 			  <xsl:value-of select="concat('ciao',//scriptlist/@ver)"/>
 			</xsl:attribute>
 
-			<xsl:text>bugs fixed in version </xsl:text>
+			<xsl:text>Bugs fixed in version </xsl:text>
 			  <xsl:value-of select="//scriptlist/@ver"/>
 			<xsl:text> of this script</xsl:text>
 		      </a>
+		    </li>		  
+		  </xsl:if>
 
-		    is available.
-		  </p>
-		  
+		</ul> <!-- end bugnavbar -->
 	      </xsl:if>
 
-              <xsl:if test="(intro/note) or (//fixlist) or (//scriptlist) or not(//buglist)">
-                <hr/>
-              </xsl:if>
+		<xsl:if test="(//buglist/entry) or (//buglist/subbuglist)">
+		  <hr/>
+		</xsl:if>
 	      <!--// end front materials //-->
 
 
-	      <!--// create TOC //-->
-	      <xsl:if test="//buglist/entry[@cav]">
-	        <h2>Caveats</h2>
+	      <!--// any known bugs? -->
+	      <xsl:if test="not(//buglist)">
 
-		<ol>
+	      <hr/>
+		<p>
+		  There are currently no known bugs.
+		</p>
+	      <hr/>
+
+	      </xsl:if>
+
+
+	      <!--// create TOC //-->
+	      <xsl:if test="(//buglist/entry or //buglist/subbuglist)">
+		<h2 class="bugtoc">Table of Contents</h2>
+
+	      <xsl:if test="//buglist/entry[@cav]">
+	        <h3 id="caveats">Caveats</h3>
+
+		<ul>
 		  <xsl:apply-templates select="//buglist/entry[@cav]" mode="toc"/>
-		</ol>
+		</ul>
 	      </xsl:if>
 
 	      <xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
-	        <h2>Bugs</h2>
 
-	      <!--// 
-		     allows for subsections of the bug list
-		     (mainly used for the Data Model page)
-	      //-->
+		<xsl:choose>
+	          <xsl:when test="//buglist/subbuglist">
+		    <xsl:apply-templates select="//buglist/subbuglist" mode="toc"/>
+	          </xsl:when>
 
-	      <xsl:choose>
-	        <xsl:when test="//buglist/subbuglist">
-		  <xsl:apply-templates select="//buglist/subbuglist" mode="toc"/>
-	        </xsl:when>
+		  <xsl:otherwise>
+	            <h3 id="bugs">Bugs</h3>
 
-		<xsl:otherwise>
-		  <ol>
-		    <xsl:apply-templates select="//buglist/entry[not(@cav)]" mode="toc"/>
-		  </ol>
-		</xsl:otherwise>
-	      </xsl:choose>
-	      
+		    <ul>
+		      <xsl:apply-templates select="//buglist/entry[not(@cav)]" mode="toc"/>
+		    </ul>
+		  </xsl:otherwise>
+		</xsl:choose>	      
+	      </xsl:if>
 	      </xsl:if>
 	      <!--// end TOC //-->
 
@@ -226,9 +319,7 @@
 
 	        <h2>Caveats</h2>
 
-		<ol>
-		  <xsl:apply-templates select="//buglist/entry[@cav]" mode="main"/>
-		</ol>
+		<xsl:apply-templates select="//buglist/entry[@cav]" mode="main"/>
 	      </xsl:if>
 
 	      <xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
@@ -242,9 +333,7 @@
 	        </xsl:when>
 
 		<xsl:otherwise>
-		  <ol>
-		    <xsl:apply-templates select="//buglist/entry[not(@cav)]" mode="main"/>
-		  </ol>
+		  <xsl:apply-templates select="//buglist/entry[not(@cav)]" mode="main"/>
 		</xsl:otherwise>
 	      </xsl:choose>
 	      </xsl:if>
@@ -258,14 +347,12 @@
 
 		<xsl:for-each select="//fixlist">
 		<h2>
-		  <a>
-		    <xsl:attribute name="name">
+		    <xsl:attribute name="id">
 		      <xsl:value-of select="concat('ciao',./@ver)"/>
 		    </xsl:attribute>
 		    
 		    <xsl:text>Bugs fixed in CIAO </xsl:text>
 		      <xsl:value-of select="./@vername"/>
-		  </a>
 		</h2>
 
 		<p>
@@ -274,9 +361,7 @@
 		  software release.
 		</p>
 
-		<ol>
-		  <xsl:apply-templates select="./entry" mode="main"/>
-		</ol>
+		<xsl:apply-templates select="./entry" mode="main"/>
 		</xsl:for-each>
 	      </xsl:if>
 	      <!--// end "fixed in CIAO x.x" section //-->
@@ -308,9 +393,7 @@
 		  of this script.
 		</p>
 
-		<ol>
 		  <xsl:apply-templates select="//scriptlist/entry" mode="main"/>
-		</ol>
 	      </xsl:if>
 	      <!--// end "fixed in version x.x" section //-->
 	      <!--// end body //-->
@@ -409,13 +492,13 @@
 	   <xsl:value-of select="@ref"/>
 	 </xsl:attribute>
 
-	 <strong><xsl:value-of select="@title"/></strong>
+	 <xsl:value-of select="@title"/>
        </a>
     </h3>
 
-      <ol>
+      <ul>
 	<xsl:apply-templates select="./entry" mode="toc"/>
-      </ol>
+      </ul>
 
     </xsl:for-each>
   </xsl:template> 
@@ -493,7 +576,7 @@
         <xsl:value-of select="@ref"/>
       </xsl:attribute>
 
-      <strong><xsl:value-of select="@title"/></strong>
+      <xsl:value-of select="@title"/>
       </a>
     </h3>
 
@@ -511,7 +594,8 @@
     <xsl:for-each select=".">
 
     <!-- create summary and id -->
-    <li>
+    <div class="bugitem">
+    <div class="bugsummary">
       <p>
       <a>
       <xsl:attribute name="name">
@@ -562,12 +646,16 @@
       </a>
       </p>
     <!-- done with summary and id -->
+    </div>
 
       <xsl:if test="./desc">
-        <xsl:apply-templates select="desc/*"/>
+	<div class="buganswer">
+          <xsl:apply-templates select="desc/*"/>
+	</div>
       </xsl:if> 
 
       <xsl:if test="./work">
+	<div class="buganswer">
         <xsl:if test="count(work) > 1">
           <h4>Workarounds:</h4>
 
@@ -585,9 +673,9 @@
 
 	  <xsl:apply-templates select="work/*"/>
 	</xsl:if> 
-
-	</xsl:if> 
-    </li>
+	</div>
+	</xsl:if>       
+    </div>
     </xsl:for-each>
   </xsl:template> 
   <!-- end main bug content template -->
