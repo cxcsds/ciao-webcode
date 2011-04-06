@@ -190,7 +190,7 @@
 				  <a>
 				    <xsl:attribute name="href">
 				      <xsl:text>#</xsl:text>
-				      <xsl:value-of select="@ref"/>
+					<xsl:value-of select="@ref"/>
 				    </xsl:attribute>
 				
 				    <xsl:value-of select="@title"/>
@@ -203,7 +203,7 @@
 				  <a>
 				    <xsl:attribute name="href">
 				      <xsl:text>#</xsl:text>
-				      <xsl:value-of select="@ref"/>
+					<xsl:value-of select="@ref"/>
 				    </xsl:attribute>
 				
 				    <xsl:value-of select="@title"/>
@@ -262,7 +262,7 @@
 		</ul> <!-- end bugnavbar -->
 	      </xsl:if>
 
-		<xsl:if test="(//buglist/entry) or (//buglist/subbuglist)">
+		<xsl:if test="(//buglist/entry and count(//buglist/entry)>1) or (//buglist/subbuglist)">
 		  <hr/>
 		</xsl:if>
 	      <!--// end front materials //-->
@@ -280,8 +280,8 @@
 	      </xsl:if>
 
 
-	      <!--// create TOC //-->
-	      <xsl:if test="(//buglist/entry or //buglist/subbuglist)">
+	      <!--// create TOC if there is more than one bug entry //-->
+	      <xsl:if test="//buglist/subbuglist or (//buglist/entry and count(//buglist/entry)>1)">
 		<h2 class="bugtoc">Table of Contents</h2>
 
 	      <xsl:if test="//buglist/entry[@cav]">
@@ -514,8 +514,18 @@
         <p>
        <a>
          <xsl:attribute name="href">
-	   <xsl:text>#</xsl:text>
-	   <xsl:value-of select="@ref"/>
+	   
+	   <xsl:choose>
+	     <xsl:when test="@ref"><xsl:text>#</xsl:text><xsl:value-of select="@ref"/></xsl:when>
+	     <xsl:when test="@bugnum"><xsl:text>#bug-</xsl:text><xsl:value-of select="@bugnum"/></xsl:when>
+	     <xsl:otherwise>
+      <xsl:message terminate="yes">
+
+ ERROR: you must have either a ref or a bugnum attribute on the entry
+
+      </xsl:message>
+	     </xsl:otherwise>
+	   </xsl:choose>
 	 </xsl:attribute>
 
 	 <xsl:apply-templates select="summary/*|summary/text()"/>
@@ -596,13 +606,22 @@
     <!-- create summary and id -->
     <div class="bugitem">
     <div class="bugsummary">
-      <p>
-      <a>
-      <xsl:attribute name="name">
-        <xsl:value-of select="@ref"/>
+      <xsl:attribute name="id">
+
+	   <xsl:choose>
+	     <xsl:when test="@ref"><xsl:text>#</xsl:text><xsl:value-of select="@ref"/></xsl:when>
+	     <xsl:when test="@bugnum"><xsl:text>#bug-</xsl:text><xsl:value-of select="@bugnum"/></xsl:when>
+	     <xsl:otherwise>
+      <xsl:message terminate="yes">
+
+ ERROR: you must have either a ref or a bugnum attribute on the entry
+
+      </xsl:message>
+	     </xsl:otherwise>
+	   </xsl:choose>
       </xsl:attribute>
 
-        <strong>
+      <p>
 	<xsl:apply-templates select="summary/*|summary/text()"/>
 
 	 <!--// add new/updated icon if the entry has a type attribute //-->
@@ -641,9 +660,6 @@
             <xsl:apply-templates select="platform/text()"/>
           <xsl:text>) </xsl:text>  
         </xsl:if>
-
-	</strong>
-      </a>
       </p>
     <!-- done with summary and id -->
     </div>
