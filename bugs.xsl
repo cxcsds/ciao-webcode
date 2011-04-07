@@ -609,8 +609,8 @@
       <xsl:attribute name="id">
 
 	   <xsl:choose>
-	     <xsl:when test="@ref"><xsl:text>#</xsl:text><xsl:value-of select="@ref"/></xsl:when>
-	     <xsl:when test="@bugnum"><xsl:text>#bug-</xsl:text><xsl:value-of select="@bugnum"/></xsl:when>
+	     <xsl:when test="@ref"><xsl:value-of select="@ref"/></xsl:when>
+	     <xsl:when test="@bugnum"><xsl:text>bug-</xsl:text><xsl:value-of select="@bugnum"/></xsl:when>
 	     <xsl:otherwise>
       <xsl:message terminate="yes">
 
