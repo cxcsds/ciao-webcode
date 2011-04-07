@@ -163,7 +163,7 @@
 
 	      <xsl:if test="($istotal > 1) or (//buglist/subbuglist)">
 
-		<ul class="bugnavbar">
+		<ul class="inlinenav">
 
 		  <xsl:if test="//buglist/entry[@cav]">
 		    <li>
@@ -259,7 +259,7 @@
 		    </li>		  
 		  </xsl:if>
 
-		</ul> <!-- end bugnavbar -->
+		</ul> <!-- end inlinenav -->
 	      </xsl:if>
 
 		<xsl:if test="(//buglist/entry and count(//buglist/entry)>1) or (//buglist/subbuglist)">
@@ -282,7 +282,7 @@
 
 	      <!--// create TOC if there is more than one bug entry //-->
 	      <xsl:if test="//buglist/subbuglist or (//buglist/entry and count(//buglist/entry)>1)">
-		<h2 class="bugtoc">Table of Contents</h2>
+		<h2 class="toc">Table of Contents</h2>
 
 	      <xsl:if test="//buglist/entry[@cav]">
 	        <h3 id="caveats">Caveats</h3>
