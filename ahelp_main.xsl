@@ -795,7 +795,7 @@
     <ul>
       <xsl:apply-templates select="ITEM"/> 
     </ul>
-    <br/> <!--* TODO need to be clever with this br *-->
+
   </xsl:template>
 
   <!--*
