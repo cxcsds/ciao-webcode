@@ -1029,6 +1029,8 @@
 	    </xsl:when>
 
 	    <xsl:otherwise>
+	      <xsl:apply-templates/>
+
 	      <p>
 		Refer to the <a href="/ciao/bugs/">CIAO bug pages</a> for an up-to-date listing of known issues.
 	      </p>
