@@ -168,6 +168,80 @@ ahelpindexnavbar=analysis
 
 -version
 
++version dev
+number=DEVELOPMENT
+
+headtitlepostfix=CIAO dev
+texttitlepostfix=CIAO dev
+
+version_string=dev
+
+# main CSS location
+%css=trial /sds/ciaositedev/ciao.css
+%cssprint=trial /sds/ciaositedev/ciao.print.css
+
+# favicon location
+%favicon=trial /sds/ciaositedev/favicon.ico
+
+# location of the news file for the "What's new" link
+%newsfile=trial /proj/web-icxc/htdocs/sds/ciaositedev/news.html
+
+%newsurl=trial /sds/ciaositedev/news.html
+
+# location of the "watch out" page
+%watchouturl=trial /sds/ciaositedev/watchout.html
+
+# location of the search ssi
+%searchssi=trial /sds/ciaositedev/ciao_search.ssi
+
+# location of the google analytics ssi
+# only added for the live site in helper.xsl
+googlessi=/ciao4.3/analytics.ssi
+
+
+# logo/text to use for navbar
+logoimage=imgs/ciao_logo_navbar.gif
+logotext=CIAO Logo
+
+# location of the stylesheets
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+
+# what's the location for the output files?
+%outdir=trial /proj/web-icxc/htdocs/sds/ciaositedev/
+
+# live outurl is unversioned for use in canonical header link
+%outurl=trial http://icxc.harvard.edu/sds/ciaositedev/
+
+# location of the "storage" space
+%storage=trial /data/da/Docs/ciaoweb/published/ciaositedev/trial/
+
+# We are moving away from the use of %storage and towards
+# %storageloc, which gives the location of an XML file,
+# format
+#   <storage><dir site="ciao">/data/da/Docs/ciaoweb/published/ciao40/live/</dir>...</storage>
+# but we have not converted everything yet
+#
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao43.trial.xml
+
+## ahelp section
+#
+# where do the ahelp files (ie the XML files) live
+#
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.3/
+
+# where does the ahelp 'index' file live
+# - ie the directory that contains
+#     ahelpindex.xml
+#     ahelpindex.lis
+#
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao43/trial/ahelp/
+
+# what navbar to use for the ahelp index pages
+ahelpindexnavbar=analysis
+
+-version
+
+
 # stylesheets needed for the conversion
 # ummm - really this should be version-specific
 #
