@@ -169,7 +169,7 @@ ahelpindexnavbar=analysis
 -version
 
 +version dev
-number=DEVELOPMENT
+number=0.0
 
 headtitlepostfix=CIAO dev
 texttitlepostfix=CIAO dev
