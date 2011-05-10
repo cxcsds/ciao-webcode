@@ -1070,6 +1070,84 @@ sub xml2html_bugs ($) {
 
 } # sub: xml2html_bugs
 
+
+# xml2html_news - called by xml2html
+#
+# note: $xslt, $outdir, and $outurl end in a /
+#
+sub xml2html_news ($) {
+    my $opts = shift;
+
+    my $in     = $$opts{xml};
+    my $dom    = $$opts{xml_dom};
+    my $depth  = $$opts{depth};
+    my $outdir = $$opts{outdir};
+    my $outurl = $$opts{outurl};
+
+    my $lastmod = $$opts{lastmod};
+
+    print "Parsing [news]: $in";
+
+    # we 'hardcode' the output of the transformation
+    my @pages = ( "${outdir}${in}.html" );
+
+    # how about math pages?
+    #
+    my @math = find_math_pages $dom;
+
+    # do we need to recreate (include the equations created by any math blocks)
+    return if should_we_skip $in, @pages, map( { "${outdir}${_}.gif"; } @math );
+    print "\n";
+
+    # remove files [already ensured the dir exists]
+    foreach my $page ( @pages ) { myrm $page; }
+    clean_up_math( $outdir, @math );
+
+    # used to set up the list of parameters sent to the
+    # stylesheet
+    #
+    my %params =
+      (
+       type => $$opts{type},
+       site => $$opts{site},
+       lastmod => $lastmod,
+       install => $outdir,
+       pagename => $in,
+       #	  navbarlink => $nlink,
+       url => "${outurl}${in}.html",
+       sourcedir => cwd() . "/",
+       updateby => $$opts{updateby},
+       depth => $depth,
+       siteversion => $site_version,
+       # ahelpindex added in CIAO 3.0
+       ahelpindex => $ahelpindex,
+       cssfile => $css,
+       cssprintfile => $cssprint,
+       favicon => $favicon,
+       newsfile => $newsfile,
+       newsfileurl => $newsfileurl,
+       watchouturl => $watchouturl,
+       searchssi => $searchssi,
+       googlessi => $googlessi,
+       headtitlepostfix => $headtitlepostfix,
+       texttitlepostfix => $texttitlepostfix,
+
+       storageloc => $$opts{storageloc},
+      );
+
+    translate_file "$$opts{xslt}news.xsl", $dom, \%params;
+
+    # success or failure?
+    check_for_page( @pages );
+
+    # math?
+    process_math( $outdir, @math );
+
+    print "\nThe page can be viewed on:\n  ${outurl}$in.html\n\n";
+
+} # sub: xml2html_news
+
+
 # xml2html_redirect - called by xml2html
 #
 # note: $xslt, $outdir, and $outurl end in a /
@@ -1910,6 +1988,8 @@ sub process_xml ($$) {
 	    xml2html_page $opts;
 	} elsif ( $root eq "bugs" ) {
 	    xml2html_bugs $opts;
+	} elsif ( $root eq "news" ) {
+	    xml2html_news $opts;
 	} elsif ( $root eq "redirect" ) {
 	    ##die_if_icxc $root;
 	    xml2html_redirect $opts;
