@@ -107,6 +107,7 @@
   <xsl:param name="pagename"     select='""'/>
   <xsl:param name="navbarlink"   select='""'/>
   <xsl:param name="url"          select='""'/>
+  <xsl:param name="outurl"       select='""'/>
   <xsl:param name="sourcedir"    select='""'/>
   <xsl:param name="updateby"     select='""'/>
   <xsl:param name="siteversion"  select='""'/>
