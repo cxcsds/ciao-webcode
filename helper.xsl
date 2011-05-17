@@ -294,12 +294,17 @@
       <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" href="{$cssfile}"/>
       <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" media="print" href="{$cssprintfile}"/>
 
-	  <!-- canonical link for search results -->
-	  <xsl:if test="$type = 'live'">
-	    <xsl:if test="$url != ''">
-	      <link rel="canonical" href="{$url}"/>
-	    </xsl:if>
-	  </xsl:if>
+      <!--// add an RSS link for the news page //-->
+      <xsl:if test="$pagename='news'">
+	<link rel="alternate" type="application/rss+xml" title="CIAO News RSS Feed" href="{$outurl}feed" />
+      </xsl:if>
+
+      <!-- canonical link for search results -->
+      <xsl:if test="$type = 'live'">
+	<xsl:if test="$url != ''">
+	  <link rel="canonical" href="{$url}"/>
+	</xsl:if>
+      </xsl:if>
 	  
       <!--*
           * This is an okay idea - although it requires some discipline when
