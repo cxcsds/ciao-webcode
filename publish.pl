@@ -1114,6 +1114,7 @@ sub xml2html_news ($) {
        install => $outdir,
        pagename => $in,
        #	  navbarlink => $nlink,
+       outurl => $outurl,
        url => "${outurl}${in}.html",
        sourcedir => cwd() . "/",
        updateby => $$opts{updateby},
@@ -1143,8 +1144,9 @@ sub xml2html_news ($) {
     # math?
     process_math( $outdir, @math );
 
-    print "\nThe page can be viewed on:\n  ${outurl}$in.html\n\n";
-
+    print "\nThe page can be viewed on:\n  ${outurl}$in.html\n";
+    print "An updated feed was created:\n ${outurl}feed\n\n";
+    
 } # sub: xml2html_news
 
 
