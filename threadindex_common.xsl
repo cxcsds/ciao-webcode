@@ -196,12 +196,12 @@
 
     <!--* Is this thread new or recently updated ? *-->
     <xsl:if test="boolean($thisThreadInfo/history/@new)">
-      <br/>
+      <xsl:text> </xsl:text>
       <xsl:call-template name="add-new-image"/>
       <xsl:apply-templates select="$thisThreadInfo/history" mode="date"/>
     </xsl:if>
     <xsl:if test="boolean($thisThreadInfo/history/@updated)">
-      <br/>
+      <xsl:text> </xsl:text>
       <xsl:call-template name="add-updated-image"/>
       <xsl:apply-templates select="$thisThreadInfo/history" mode="date"/>
     </xsl:if>
@@ -215,8 +215,7 @@
 	<xsl:when test="$entry/@year > 1999"><xsl:value-of select="$entry/@year"/></xsl:when>
 	<xsl:otherwise><xsl:value-of select="2000+$entry/@year"/></xsl:otherwise>
       </xsl:choose></xsl:variable>
-    (<strong><xsl:value-of select="concat($entry/@day,' ',substring($entry/@month,1,3),
-	' ',$year)"/></strong>)
+    (<xsl:value-of select="concat($entry/@day,' ',substring($entry/@month,1,3),' ',$year)"/>)
   </xsl:template> <!--* /thread mode=date *-->
 
   <!--* 
