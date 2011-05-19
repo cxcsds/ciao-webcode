@@ -180,6 +180,7 @@
 	<pubDate><xsl:call-template name="calculate-pubdate-feed"/></pubDate>	
 	
 	<link><xsl:value-of select="$outurl"/><xsl:text>news.html#item-</xsl:text><xsl:value-of select="pubdate"/></link>
+	<guid><xsl:value-of select="$outurl"/><xsl:text>news.html#item-</xsl:text><xsl:value-of select="pubdate"/></guid>
 
 	<description>
           <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
