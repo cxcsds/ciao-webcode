@@ -1145,7 +1145,7 @@ sub xml2html_news ($) {
     process_math( $outdir, @math );
 
     print "\nThe page can be viewed on:\n  ${outurl}$in.html\n";
-    print "An updated feed was created:\n ${outurl}feed\n\n";
+    print "An updated feed was created:\n  ${outurl}feed.xml\n\n";
     
 } # sub: xml2html_news
 
