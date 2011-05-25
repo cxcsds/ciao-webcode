@@ -121,7 +121,7 @@
 
   <xsl:template match="news" mode="feed">
 
-    <xsl:variable name="filename"><xsl:value-of select="$install"/>feed</xsl:variable>
+    <xsl:variable name="filename"><xsl:value-of select="$install"/>feed.xml</xsl:variable>
 
     <!--* create document *-->
     <xsl:document href="{$filename}">

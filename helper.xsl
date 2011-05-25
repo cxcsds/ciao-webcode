@@ -296,7 +296,7 @@
 
       <!--// add an RSS link for the news page //-->
       <xsl:if test="$pagename='news'">
-	<link rel="alternate" type="application/rss+xml" title="CIAO News RSS Feed" href="{$outurl}feed" />
+	<link rel="alternate" type="application/rss+xml" title="CIAO News RSS Feed" href="{$outurl}feed.xml" />
       </xsl:if>
 
       <!-- canonical link for search results -->
