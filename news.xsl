@@ -197,6 +197,12 @@
     <xsl:variable name="daynum"  select="date:day-in-month(pubdate)"/>
     <xsl:variable name="month" select="substring(date:month-name(pubdate),1,3)"/>
     <xsl:variable name="year"  select="date:year(pubdate)"/>
+      <xsl:if test="number($year)&lt;2010">
+      <xsl:message terminate="yes">
+  Error: year is set to '<xsl:value-of select="$year"/>'; 
+         must be 2010 or later
+      </xsl:message>
+    </xsl:if>
 
     <xsl:value-of select="concat($daynum,' ',$month,' ',$year)"/>
   </xsl:template>
