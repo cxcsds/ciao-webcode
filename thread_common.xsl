@@ -471,9 +471,6 @@
       </xsl:message>
     </xsl:if>
 
-    <xsl:apply-templates
-      select="/thread/info/history/entry[position()=count(/thread/info/history/entry)]" mode="most-recent"/>
-
     <!--*
         * br/ at end of div block this is needed for konqueror but apparently
         * not other browsers; must be a better way of doing it - CSS?
@@ -510,6 +507,9 @@
 	</xsl:for-each>
       </ul>
     </xsl:if> <!--* if: seealso *-->
+
+    <xsl:apply-templates
+      select="/thread/info/history/entry[position()=count(/thread/info/history/entry)]" mode="most-recent"/>
 
   </xsl:template> <!--* match=overview *-->
 
@@ -550,7 +550,7 @@
     <!--* is this check robust enough and correct? *-->
     <xsl:if test="$section != '' and count($section) != 0">
       <!--* should use a header for the 'title' *-->
-      <p><strong><xsl:value-of select="$title"/></strong></p>
+      <h4><xsl:value-of select="$title"/></h4>
       <xsl:copy-of select="$section"/>
     </xsl:if>
   </xsl:template> <!--* name=process-overview-section *-->
@@ -568,7 +568,7 @@
   <!--* process the contents of the calinfo tag *-->
   <xsl:template match="calinfo">
 
-    <p><strong><a name="calnotes">Calibration Updates:</a></strong></p>
+    <h4 id="calnotes">Calibration Updates:</h4>
 
     <xsl:apply-templates select="caltext"/>
       
@@ -1203,8 +1203,8 @@ or do we, as this case is already caught in add-parameters?
   <!--* used to create overview section *-->
   <xsl:template match="entry" mode="most-recent">
 
+    <h4>Last Update:</h4>
     <p>
-      <strong>Last Update:</strong>
       <xsl:value-of select="concat(' ',@day,' ',substring(@month,1,3),' ')"/>
       <xsl:choose>
 	<xsl:when test="@year >= 2000"><xsl:number value="@year"/></xsl:when>
@@ -1212,7 +1212,6 @@ or do we, as this case is already caught in add-parameters?
       </xsl:choose><xsl:text> - </xsl:text>
       <xsl:apply-templates/>
     </p>
-
   </xsl:template> <!--* match=entry mode=most-recent *-->
 
   <!--*
