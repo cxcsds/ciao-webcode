@@ -1738,7 +1738,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
   <xsl:template name="add-proglang-sub-header">
     <xsl:choose>
       <xsl:when test="$proglang = ''"/>
-      <xsl:otherwise><h3>[<xsl:value-of select="djb:get-proglang-string()"/> Syntax]</h3></xsl:otherwise>
+      <xsl:otherwise><p>[<xsl:value-of select="djb:get-proglang-string()"/> Syntax]</p></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
@@ -1763,13 +1763,13 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	</img>
       </div>
 
-      <h3><xsl:choose>
+      <p><xsl:choose>
 	<xsl:when test="$site = 'ciao'">CIAO <xsl:value-of select="$siteversion"/> Science Threads</xsl:when>
 	<xsl:when test="$site = 'chips'">ChIPS Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
 	<xsl:when test="$site = 'sherpa'">Sherpa Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
 	<xsl:when test="$site = 'csc'">CSC Threads</xsl:when>
 	<xsl:when test="$site = 'pog'">POG Threads (<xsl:value-of select="$siteversion"/>)</xsl:when>
-      </xsl:choose></h3>
+      </xsl:choose></p>
 	  
       <xsl:call-template name="add-proglang-sub-header"/>
     </div>
