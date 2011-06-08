@@ -488,7 +488,7 @@
     </xsl:call-template>
 
     <xsl:call-template name="process-overview-section">
-      <xsl:with-param name="title"   select="'Read this thread if:'"/>
+      <xsl:with-param name="title"   select="'Run this thread if:'"/>
       <xsl:with-param name="section"><xsl:apply-templates select="when" mode="overview"/></xsl:with-param>
     </xsl:call-template>
 
