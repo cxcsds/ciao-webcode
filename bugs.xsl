@@ -51,7 +51,10 @@
 
     <!--* what do we create *-->
     <xsl:apply-templates select="bugs" mode="page"/>
-    <xsl:apply-templates select="bugs" mode="include"/>
+
+    <xsl:if test="$site != 'ciao'">
+      <xsl:apply-templates select="bugs" mode="include"/>
+    </xsl:if>
 
   </xsl:template> <!--* match=/ *-->
 
