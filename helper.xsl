@@ -403,14 +403,9 @@
           <xsl:with-param name="file" select="'/incl/header.html'"/>
         </xsl:call-template>
       </xsl:when>
-       <xsl:when test="$site='pog'">
-        <xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/incl/cxcheader.html'"/>
-        </xsl:call-template>
-      </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/incl/ciaoheader.html'"/>
+          <xsl:with-param name="file" select="'/incl/cxcheader.html'"/>
         </xsl:call-template>
       </xsl:otherwise> 
     </xsl:choose>
@@ -533,14 +528,9 @@
           <xsl:with-param name="file" select="'/incl/footer.html'"/>
 	</xsl:call-template>
       </xsl:when>
-      <xsl:when test="$site='pog'">
-	<xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/incl/cxcfooter.html'"/>
-	</xsl:call-template>
-      </xsl:when>
       <xsl:otherwise>
 	<xsl:call-template name="add-ssi-include">
-	  <xsl:with-param name="file" select="'/incl/ciaofooter.html'"/>
+	  <xsl:with-param name="file" select="'/incl/cxcfooter.html'"/>
 	</xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
