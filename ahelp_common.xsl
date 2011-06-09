@@ -255,7 +255,7 @@
         *    .hideme { display: none; }
         * so it's a good way of getting to lynx users
         *-->
-    <br clear="all"/><div class="hideme">
+    <div class="hideme">
       <a href="#navtext" accesskey="s"
 	title="Skip to the navigation links">Skip to the navigation links</a>
     </div>
