@@ -52,7 +52,7 @@
     <!--* what do we create *-->
     <xsl:apply-templates select="bugs" mode="page"/>
 
-    <xsl:if test="$site != 'ciao'">
+    <xsl:if test="$site = 'ciao'">
       <xsl:apply-templates select="bugs" mode="include"/>
     </xsl:if>
 
