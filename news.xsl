@@ -132,7 +132,7 @@
 	  <link>http://cxc.harvard.edu/ciao/news.html</link><xsl:call-template name="newline"/>
 	  <description>What's New in the CIAO Software</description><xsl:call-template name="newline"/> 
 
-	  <atom:link xmlns:atom="http://www.w3.org/2005/Atom"  href="http://cxc.harvard.edu/ciao/feed" rel="self" type="application/rss+xml" />
+	  <atom:link xmlns:atom="http://www.w3.org/2005/Atom"  href="http://cxc.harvard.edu/ciao/feed.xml" rel="self" type="application/rss+xml" />
 
 	  <xsl:apply-templates select="//text/item" mode="feed"/>
 	</channel>	
