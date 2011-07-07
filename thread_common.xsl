@@ -420,14 +420,12 @@
       </xsl:when>
 
       <xsl:when test="boolean(text/introduction)">
-	<br/>
 	<h2><a name="introduction">Introduction</a></h2>
 	<xsl:apply-templates select="text/introduction"/>
-	<br/><hr/><br/>
+	<hr/>
       </xsl:when> <!--* text/introduction *-->
 
       <xsl:when test="boolean(text/overview)">
-	<br/>
 	<div id="overview">
 
 	  <h2><a name="overview">Overview</a></h2>
@@ -441,7 +439,7 @@
 -->
 	  <xsl:apply-templates select="text/overview"/>
 	</div>
-	<br/><xsl:call-template name="add-hr-strong"/><br/>
+	<xsl:call-template name="add-hr-strong"/>
       </xsl:when> <!--* text/overview *-->
 
     </xsl:choose>
@@ -491,6 +489,10 @@
       <xsl:with-param name="title"   select="'Run this thread if:'"/>
       <xsl:with-param name="section"><xsl:apply-templates select="when" mode="overview"/></xsl:with-param>
     </xsl:call-template>
+
+    <xsl:if test="boolean(software)">
+      <xsl:apply-templates select="software"/>
+    </xsl:if>
 
     <xsl:if test="boolean(calinfo)">
       <xsl:apply-templates select="calinfo"/>
@@ -565,13 +567,33 @@
     <xsl:call-template name="add-surrounding-block-if-necessary"/>
   </xsl:template>
 
+
+  <!--* process the contents of the software tag *-->
+  <xsl:template match="software">
+
+    <h4 id="software">Software Updates:</h4>
+    <p>This thread requires the following updates to the <a href="../../download/">standard CIAO 4.3 installation</a></p>
+      <ul>
+	<xsl:for-each select="item">
+	  <li>
+	    <xsl:apply-templates/>
+	  </li>
+	</xsl:for-each>
+      </ul>
+  </xsl:template> <!--* match=calinfo *-->
+
+
   <!--* process the contents of the calinfo tag *-->
   <xsl:template match="calinfo">
 
     <h4 id="calnotes">Calibration Updates:</h4>
 
-    <xsl:apply-templates select="caltext"/>
-      
+    <xsl:if test="boolean(caltext)">
+	  <xsl:message terminate="no">
+ WARNING: the 'caltext' tag has been deprecated and will not be processed!
+	  </xsl:message>
+    </xsl:if>
+
     <xsl:if test="boolean(calupdates)">
       <ul>
 	<xsl:apply-templates select="calupdates/calupdate"/>
@@ -679,11 +701,10 @@
   <xsl:template name="add-summary">
 
     <xsl:if test="boolean(text/summary)">
-      <hr/><br/>
+      <hr/>
       <h2><a name="summary">Summary</a></h2>
 
       <xsl:apply-templates select="text/summary"/>
-      <br/>
     </xsl:if>
 
   </xsl:template> <!--* name-add-summary *-->
@@ -880,8 +901,6 @@
       </xsl:message>
     </xsl:if>
 
-    <br/>
-
     <div class="sectionlist">
       <!--* anchor linked to from the overview section *-->
       <xsl:if test="boolean(/thread/text/overview)"><a name="start-thread"/></xsl:if>
@@ -891,8 +910,6 @@
 	<xsl:with-param name="last-section-id" select="$last"/>
       </xsl:call-template>
     </div>
-
-    <br/>
 
   </xsl:template> <!--* match=sectionlist *-->
 
@@ -979,7 +996,7 @@ ERROR: section tag has an empty id attribute.
       <xsl:choose>
 	<xsl:when test="not(/thread/text/@separator) or /thread/text/@separator = 'bar'">
 	  <xsl:if test="@id != $last-section-id">
-	    <br/><hr/>
+	    <hr/>
 	  </xsl:if>
 	</xsl:when>
 	<xsl:when test="/thread/text/@separator = 'none'"/>
@@ -1117,7 +1134,6 @@ ERROR: section tag has an empty id attribute.
 	  <!--* we only add a hr if we are NOT the last subsection (and hr's are allowed) *-->
 	  <xsl:if test="(not(/thread/text/@separator) or /thread/text/@separator = 'bar')
 	    and (position() != last())">
-	    <!--*	<br/> *-->
 	    <xsl:call-template name="add-mid-sep"/>
 	  </xsl:if>
       
@@ -1203,8 +1219,7 @@ or do we, as this case is already caught in add-parameters?
   <!--* used to create overview section *-->
   <xsl:template match="entry" mode="most-recent">
 
-    <h4>Last Update:</h4>
-    <p>
+    <p><strong>Last Update:</strong>
       <xsl:value-of select="concat(' ',@day,' ',substring(@month,1,3),' ')"/>
       <xsl:choose>
 	<xsl:when test="@year >= 2000"><xsl:number value="@year"/></xsl:when>
@@ -1553,7 +1568,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	<!-- set up the title block of the page -->
 	<h2><xsl:value-of select="concat($imgname,': ',title,$endstr)"/></h2>
 	<hr/>
-	<br/>
 
 	<!--* "pre-image" text *-->
 	<xsl:if test="boolean(before)">
@@ -1563,7 +1577,6 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	<!--* image *-->
 	<img src="{@src}" alt="[{$imgname}: {$imgtitle}]"/>
 	<xsl:if test="boolean(@ps)">
-	  <br/>
 	  <p>
 	    <a href="{@ps}">Postscript version of image</a>
 	  </p>
