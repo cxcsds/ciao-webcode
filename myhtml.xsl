@@ -766,7 +766,7 @@
 	<xsl:message terminate="yes">
 
  ERROR: unable to understand month value of <xsl:value-of select="$month"/>
-        for scriptlist sctipt=<xsl:value-of select="@name"/>
+        for script=<xsl:value-of select="@name"/>
 
 	</xsl:message>
       </xsl:otherwise>
