@@ -709,8 +709,8 @@
 	    <td>
 	      <xsl:apply-templates select="thread" mode="scripts"/>
 	    </td>
-	    <td class="scriptrow"><xsl:value-of select="@lang"/></td>
-	    <td class="scriptrow">
+	    <td class="scriptcell"><xsl:value-of select="@lang"/></td>
+	    <td class="scriptcell">
 	      <xsl:value-of select="@day"/>-<xsl:call-template name="get-month"><xsl:with-param name="month" select="@month"/></xsl:call-template>-<xsl:value-of select="@year"/>
 	      <xsl:if test="@updated = 'yes'">
 	        <br/>
