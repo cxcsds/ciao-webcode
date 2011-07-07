@@ -252,12 +252,12 @@
 		      <a>
 		        <xsl:attribute name="href">
 			  <xsl:text>#</xsl:text>
-			  <xsl:value-of select="concat('ciao',//scriptlist/@ver)"/>
+			  <xsl:value-of select="//scriptlist/@ver"/>
 			</xsl:attribute>
 
-			<xsl:text>Bugs fixed in version </xsl:text>
-			  <xsl:value-of select="//scriptlist/@ver"/>
-			<xsl:text> of this script</xsl:text>
+			<xsl:text>Bugs fixed in the </xsl:text>
+			  <xsl:value-of select="//scriptlist/@vername"/>
+			<xsl:text> version of this script</xsl:text>
 		      </a>
 		    </li>		  
 		  </xsl:if>
@@ -380,19 +380,19 @@
 		<h2>
 		  <a>
 		    <xsl:attribute name="name">
-		      <xsl:value-of select="concat('ciao',//scriptlist/@ver)"/>
+		      <xsl:value-of select="//scriptlist/@ver"/>
 		    </xsl:attribute>
 		    
-		    <xsl:text>Bugs fixed in version </xsl:text>
-		      <xsl:value-of select="//scriptlist/@ver"/>
-		    <xsl:text> of this script</xsl:text>
+		    <xsl:text>Bugs fixed in the </xsl:text>
+		      <xsl:value-of select="//scriptlist/@vername"/>
+		    <xsl:text> version of this script</xsl:text>
 
 		  </a>
 		</h2>
 
 		<p>
 		  The following is a list of bugs that were fixed
-		  in version <xsl:value-of select="//scriptlist/@ver"/>
+		  in version <xsl:value-of select="//scriptlist/@vername"/>
 		  of this script.
 		</p>
 
