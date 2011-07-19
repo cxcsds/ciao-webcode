@@ -1810,6 +1810,69 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     
   </xsl:template> <!--* cxclink *-->                                            
 
+
+<!--*
+    * Link to the release notes page
+    *
+    * parameters:
+    *   depth 
+    *
+    * attributes:
+    * id   - string, optional
+    *   anchor on page to link to (eg as created by id tag)
+    *
+    *   em/tt/strong - boolean, optional
+    *     if true, link text is set to these styles
+    *   uc - boolean, optional
+    *     if true set the link text to upper case [***does not work***]
+    *
+    *-->
+<xsl:template match="relnote">
+
+   <!--* safety check *-->
+   <xsl:if test="boolean(@ver)=false()">
+     <xsl:message terminate="yes">
+
+ERROR: The 'relnote' link must have a 'ver' attribute 
+       to indicate the CIAO version, e.g. ver="4.3".
+
+     </xsl:message>
+   </xsl:if>
+
+  <!--* check page attribute *-->
+  <xsl:call-template name="check-page-for-no-html"/>
+
+  <!--*
+      * complicated mess copied from FAQ section
+      *-->
+  <xsl:variable name="hrefstart"><xsl:choose>
+	<xsl:when test="boolean(@site)"><xsl:value-of select="concat('/',@site,'/releasenotes/')"/></xsl:when>
+	<xsl:when test="$site != 'ciao'">/ciao/releasenotes/</xsl:when>
+	<xsl:otherwise><xsl:call-template name="add-start-of-href">
+	    <xsl:with-param name="extlink" select="0"/>
+	    <xsl:with-param name="dirname" select="'releasenotes/'"/>
+	  </xsl:call-template></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
+  <!--* process the contents, surrounded by styles *-->
+  <xsl:call-template name="add-text-styles">
+    <xsl:with-param name="contents">
+	<!--* link to releasenotes page *-->
+	<a>
+	  <xsl:attribute name="href">
+	    <xsl:value-of select="$hrefstart"/>
+		<xsl:value-of select="concat('ciao_',@ver,'_release.html')"/><xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
+	  </xsl:attribute>
+
+	  <!--* link text *-->
+	  <xsl:apply-templates/>
+	</a>
+    </xsl:with-param>
+  </xsl:call-template>
+
+</xsl:template> <!--* relnote *-->
+
+
   <!--* 
       * for links within icxc.harvard.edu/sds/
       *
