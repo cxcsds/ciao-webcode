@@ -1814,10 +1814,15 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 <!--*
     * Link to the release notes page
     *
+    * You cannot link directly to index.html as it is a redirect.
+    *
     * parameters:
     *   depth 
     *
     * attributes:
+    * ver - string, required
+    *   version of CIAO page to link to (e.g. 4.3 for ciao_4.3_release.html )
+    *
     * id   - string, optional
     *   anchor on page to link to (eg as created by id tag)
     *
@@ -1866,6 +1871,7 @@ ERROR: The 'relnote' link must have a 'ver' attribute
 
 	  <!--* link text *-->
 	  <xsl:apply-templates/>
+
 	</a>
     </xsl:with-param>
   </xsl:call-template>
