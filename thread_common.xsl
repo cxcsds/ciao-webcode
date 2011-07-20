@@ -495,7 +495,10 @@
     </xsl:if>
 
     <xsl:if test="boolean(calinfo)">
-      <xsl:apply-templates select="calinfo"/>
+	  <xsl:message terminate="yes">
+ ERROR: the 'calinfo' tag has been replaced by the 'software' tag.
+        The XML file must be updated to publish this thread.
+	  </xsl:message>
     </xsl:if>
 
     <!--* umm, not sure about this *-->
@@ -571,7 +574,7 @@
   <!--* process the contents of the software tag *-->
   <xsl:template match="software">
 
-    <h4 id="software">Software Updates:</h4>
+    <h4 id="software">Software &amp; Calibration Updates:</h4>
     <p>This thread requires the following updates to the <a href="../../download/">standard CIAO 4.3 installation</a></p>
       <ul>
 	<xsl:for-each select="item">
@@ -580,117 +583,8 @@
 	  </li>
 	</xsl:for-each>
       </ul>
-  </xsl:template> <!--* match=calinfo *-->
+  </xsl:template> <!--* match=software *-->
 
-
-  <!--* process the contents of the calinfo tag *-->
-  <xsl:template match="calinfo">
-
-    <h4 id="calnotes">Calibration Updates:</h4>
-
-    <xsl:if test="boolean(caltext)">
-	  <xsl:message terminate="no">
- WARNING: the 'caltext' tag has been deprecated and will not be processed!
-	  </xsl:message>
-    </xsl:if>
-
-    <xsl:if test="boolean(calupdates)">
-      <ul>
-	<xsl:apply-templates select="calupdates/calupdate"/>
-      </ul>
-    </xsl:if>
-    
-  </xsl:template> <!--* match=calinfo *-->
-  
-  <!--* process the contents of the caltext tag *-->
-  <xsl:template match="caltext">
-    <xsl:call-template name="add-surrounding-block-if-necessary"/>
-  </xsl:template>
-
-  <!--* process the contents of the calupdate tag *-->
-
-  <!--// pre-3.2.2 release notes are are .txt files, then 
-	 Dale switched to HTML.  
-      //-->
-
-   <xsl:variable name="caldb-txt">
-     <value>1.0</value>
-     <value>1.1</value>
-     <value>1.2</value>
-     <value>1.3</value>
-     <value>1.4</value>
-     <value>1.5</value>
-     <value>1.6</value>
-     <value>1.7</value>
-     <value>1.8</value>
-     <value>2.0</value>
-     <value>2.1</value>
-     <value>2.2</value>
-     <value>2.3</value>
-     <value>2.4</value>
-     <value>2.5</value>
-     <value>2.6</value>
-     <value>2.7</value>
-     <value>2.8</value>
-     <value>2.9</value>
-     <value>2.10</value>
-     <value>2.11</value>
-     <value>2.12</value>
-     <value>2.13</value>
-     <value>2.14</value>
-     <value>2.15</value>
-     <value>2.16</value>
-     <value>2.17</value>
-     <value>2.18</value>
-     <value>2.19</value>
-     <value>2.20</value>
-     <value>2.21</value>
-     <value>2.22</value>
-     <value>2.23</value>
-     <value>2.24</value>
-     <value>2.25</value>
-     <value>2.26</value>
-     <value>2.27</value>
-     <value>2.28</value>
-     <value>2.29</value>
-     <value>3.0.0</value>
-     <value>3.0.1</value>
-     <value>3.0.2</value>
-     <value>3.0.3</value>
-     <value>3.0.4</value>
-     <value>3.1.0</value>
-     <value>3.2.0</value>
-     <value>3.2.1</value>
-   </xsl:variable>
-
-  <xsl:template match="calupdate">
-
-    <!--// need this variable because the count function doesn't
-	   appear to "see" the attribute we want it to use
-	//-->
-
-    <xsl:param name="calver" select="@version"/>
-
-    <li>
-      <strong>
-
-      <xsl:choose>
-        <!--// txt files //-->
-       <xsl:when test="count(exsl:node-set($caldb-txt)/value[.=$calver])=1">
-	  <a href="/caldb/downloads/Release_notes/CALDB_v{@version}.txt">CALDB v<xsl:value-of select="@version"/></a>
-        </xsl:when>
-
-        <!--// html files //-->
-	<xsl:otherwise>
-	  <a href="/caldb/downloads/Release_notes/CALDB_v{@version}.html">CALDB v<xsl:value-of select="@version"/></a>
-        </xsl:otherwise>
-      </xsl:choose>
-
-	<xsl:text> </xsl:text>
-	<xsl:call-template name="add-date"/>:</strong>
-      <xsl:apply-templates/>
-    </li>
-  </xsl:template> <!--* match=calupdate *-->
 
   <!--*
       * add the summary text
@@ -1913,7 +1807,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	<!--* set up the trailing links to threads/harcdopy *-->
 	<xsl:call-template name="add-hr-strong"/>
 
-      </div> <!--* calss=mainbar *-->
+      </div> <!--* class=mainbar *-->
 
       <!--* set up the trailing links to threads/harcdopy *-->
       <xsl:call-template name="add-bottom-links-site-html"/>
