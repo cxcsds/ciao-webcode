@@ -1820,8 +1820,11 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     *   depth 
     *
     * attributes:
-    * ver - string, required
+    * ver - string, optional
     *   version of CIAO page to link to (e.g. 4.3 for ciao_4.3_release.html )
+    *
+    * href - string, optional
+    *   specific page to link, e.g. history.html
     *
     * id   - string, optional
     *   anchor on page to link to (eg as created by id tag)
@@ -1833,16 +1836,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     *
     *-->
 <xsl:template match="relnote">
-
-   <!--* safety check *-->
-   <xsl:if test="boolean(@ver)=false()">
-     <xsl:message terminate="yes">
-
-ERROR: The 'relnote' link must have a 'ver' attribute 
-       to indicate the CIAO version, e.g. ver="4.3".
-
-     </xsl:message>
-   </xsl:if>
 
   <!--* check page attribute *-->
   <xsl:call-template name="check-page-for-no-html"/>
@@ -1866,7 +1859,20 @@ ERROR: The 'relnote' link must have a 'ver' attribute
 	<a>
 	  <xsl:attribute name="href">
 	    <xsl:value-of select="$hrefstart"/>
+	    <xsl:choose>
+	      <xsl:when test="boolean(@ver)">
 		<xsl:value-of select="concat('ciao_',@ver,'_release.html')"/><xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
+	      </xsl:when>
+
+	      <!-- bit of a cludge to link to history.html -->
+	      <xsl:when test="boolean(@href)">
+		<xsl:value-of select="@href"/><xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
+	      </xsl:when>
+
+	      <xsl:otherwise>
+		<xsl:text>index.html</xsl:text>
+	      </xsl:otherwise>
+	    </xsl:choose>
 	  </xsl:attribute>
 
 	  <!--* link text *-->
