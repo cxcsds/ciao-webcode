@@ -88,7 +88,8 @@
 	    <div class="wrap">
 
 	      <h1 class="pagetitle">What's New for CIAO <xsl:value-of select="$siteversion"/></h1>
-	       <xsl:call-template name="add-whatsnew-link"/>
+
+	        <div class="feed"><p><a href="http://cxc.harvard.edu/ciao/feed.xml">Subscribe to the RSS feed</a></p></div>
 	       <hr/>
 
 	      <xsl:apply-templates select="//text/item" mode="main"/>
