@@ -1675,6 +1675,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	<xsl:when test="$site = 'chips'">ChIPS Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
 	<xsl:when test="$site = 'sherpa'">Sherpa Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
 	<xsl:when test="$site = 'csc'">CSC Threads</xsl:when>
+	<xsl:when test="$site = 'iris'">Iris Threads</xsl:when>
 	<xsl:when test="$site = 'pog'">POG Threads (<xsl:value-of select="$siteversion"/>)</xsl:when>
       </xsl:choose></p>
 	  

@@ -71,6 +71,7 @@ $configfile = "$FindBin::Bin/config.dat";
 # can not end in / because of regexp check below
 my @prefixes =
   (
+   "/data/da/Docs/irisweb/iris",
    "/data/da/Docs/cscweb/csc1",
    "/data/da/Docs/chartweb/internal",
    "/data/da/Docs/caldbweb/caldb4",

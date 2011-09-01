@@ -58,7 +58,7 @@
       * the spaces around each root name are important for the simple checking we do
       * - should these be node sets rather than strings?
       *-->
-  <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc obsvis '"/>
+  <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc obsvis iris'"/>
   <xsl:variable name="allowed-download-types" select="' solaris solaris10 fc4 fc8 osx_ppc osx_intel caldb atomdb '"/>
 
   <!--* note that '' is also allowed for proglang but this is checked for separately *-->
@@ -282,17 +282,31 @@
       <!--* any scripts ? *-->
       <xsl:apply-templates select="info/htmlscripts"/>
 
-      <!--// all CSC pages get cscview.js //-->
+      <!--// CSC pages get cscview.js //-->
       <xsl:if test="$site = 'csc'">
 	<script type="text/javascript" language="JavaScript" src="/csc/cscview.js"/>
       </xsl:if>
-      
+
+      <!--// Iris pages want site-tracking javascript here //-->
+      <xsl:if test="$site = 'iris">
+	<script type="text/javascript" language="JavaScript" src="/csc/cscview.js"/>
+      </xsl:if>
+
       <!--* add the favicon *-->
       <link rel="icon" href="{$favicon}"/>
 
       <!--* add main stylesheets *-->
-      <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" href="{$cssfile}"/>
-      <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" media="print" href="{$cssprintfile}"/>
+      <xsl:choose>
+	<xsl:when test="$site='iris'">
+	  <link rel="stylesheet" title="Stylesheet for Iris pages" href="{$cssfile}"/>
+	  <link rel="stylesheet" title="Stylesheet for Iris pages" media="print" href="{$cssprintfile}"/>
+	</xsl:when>
+	 
+	<xsl:otherwise>
+	  <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" href="{$cssfile}"/>
+	  <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" media="print" href="{$cssprintfile}"/>
+	</xsl:otherwise>
+      </xsl:choose>
 
       <!--// add an RSS link for the news page //-->
       <xsl:if test="$pagename='news'">
@@ -401,6 +415,11 @@
       <xsl:when test="$site='icxc'">
         <xsl:call-template name="add-ssi-include">
           <xsl:with-param name="file" select="'/incl/header.html'"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="$site='iris">
+        <xsl:call-template name="add-ssi-include">
+          <xsl:with-param name="file" select="'/iris/vaoheader.html'"/>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
@@ -515,7 +534,7 @@
       <div>Last modified: <xsl:value-of select="$lastmod"/></div>
     </div>
 
-    <xsl:if test="($site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'chart' or $site = 'obsvis') and $type = 'live'">
+    <xsl:if test="($site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'chart' or $site = 'obsvis' or $site = 'iris') and $type = 'live'">
       <xsl:call-template name="add-ssi-include">
         <xsl:with-param name="file" select="$googlessi"/>
       </xsl:call-template>
@@ -525,6 +544,11 @@
       <xsl:when test="$site='icxc'">
 	<xsl:call-template name="add-ssi-include">
           <xsl:with-param name="file" select="'/incl/footer.html'"/>
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:when test="$site='iris'">
+	<xsl:call-template name="add-ssi-include">
+          <xsl:with-param name="file" select="'/iris/vaofooter.html'"/>
 	</xsl:call-template>
       </xsl:when>
       <xsl:otherwise>

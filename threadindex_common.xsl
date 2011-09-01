@@ -975,13 +975,14 @@
 	    <xsl:when test="$site = 'sherpa'">Sherpa</xsl:when>
 	    <xsl:when test="$site = 'chips'">ChIPS</xsl:when>
 	    <xsl:when test="$site = 'csc'">CSC</xsl:when>
+	    <xsl:when test="$site = 'iris">Iris</xsl:when>
 	  </xsl:choose>
 
 	  <!--// don't include "Threads for CIAO version" in CSC //-->
-	  <xsl:if test="$site != 'csc'">
+	  <xsl:if test="$site='ciao' or $site='chips' or $site='sherpa'">
 	    <xsl:value-of select="concat(' ',$ciaothreadver)"/>
 	  </xsl:if>
-	  <xsl:if test="$site = 'csc'">
+	  <xsl:if test="$site='csc' or $site='iris'">
 	    <xsl:text> Threads</xsl:text>
 	  </xsl:if>
 	</xsl:when>

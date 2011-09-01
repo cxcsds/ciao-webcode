@@ -751,6 +751,74 @@ logotext=Chandra Source Catalog logo
 
 -site  # end of csc
 
+
++site iris
+
+group=cxcweb_ciao
+
+@types=live
+@types=test
+@types=trial
+
+prefix=/data/da/Docs/irisweb
+
+depth_offset=0
+
++version website
+
+# is this used for anything other than ahelp?
+number=1.0
+
+headtitlepostfix=Iris
+texttitlepostfix=Iris
+
+%css=live /iris/csc.css
+%css=test /iris/csc.css
+%css=trial /sds/site_iris/csc.css
+
+%cssprint=live /iris/csc.print.css
+%cssprint=test /iris/csc.print.css
+%cssprint=trial /sds/site_iris/csc.print.css
+
+# favicon location
+%favicon=live /iris/favicon.ico
+%favicon=test /iris/favicon.ico
+%favicon=trial /sds/site_iris/favicon.ico
+
+logoimage=imgs/iris_logo_small_blue_cropped.jpg
+logotext=Iris logo
+
+%searchssi=live /iris/csc_search.ssi
+%searchssi=test /iris/csc_search.ssi
+%searchssi=trial /sds/site_iris/csc_search.ssi
+
+# location of the google analytics ssi
+# only added for the live site in helper.xsl
+googlessi=/iris/analytics.ssi
+
+%stylesheets=live /data/da/Docs/web4/ciao43/
+%stylesheets=test /data/da/Docs/web4/ciao43/
+%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-devel/
+
+%outdir=live /proj/web-cxc-dmz/htdocs/iris/
+%outdir=test /proj/web-cxc-dmz-prev/htdocs/iris/
+%outdir=trial /proj/web-icxc/htdocs/sds/site_iris/
+
+%outurl=live http://cxc.harvard.edu/iris/
+%outurl=test http://cxc-dmz-prev.cfa.harvard.edu/iris/
+%outurl=trial http://icxc.harvard.edu/sds/site_iris/
+
+%storage=live /data/da/Docs/obsvisweb/published/iris/live/
+%storage=test /data/da/Docs/obsvisweb/published/iris/test/
+%storage=trial /data/da/Docs/obsvisweb/published/iris/trial/
+
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao43.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao43.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao43.trial.xml
+
+-version # end iris
+
+
 +site obsvis
 
 group=cxcweb_ciao
