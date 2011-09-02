@@ -248,18 +248,19 @@
 		  </xsl:if>
 
 		  <xsl:if test="//scriptlist">
+		  <xsl:for-each select="//scriptlist">
 		    <li>
 		      <a>
 		        <xsl:attribute name="href">
 			  <xsl:text>#</xsl:text>
-			  <xsl:value-of select="//scriptlist/@ver"/>
+			  <xsl:value-of select="@ver"/>
 			</xsl:attribute>
 
-			<xsl:text>Bugs fixed in the </xsl:text>
-			  <xsl:value-of select="//scriptlist/@vername"/>
-			<xsl:text> version of this script</xsl:text>
+			  <xsl:value-of select="@vername"/>
+			<xsl:text> Bug Fixes</xsl:text>
 		      </a>
-		    </li>		  
+		    </li>
+		    </xsl:for-each>
 		  </xsl:if>
 
 		</ul> <!-- end inlinenav -->
@@ -377,26 +378,25 @@
 	          <hr/>
 		</xsl:if>
 
+		  <xsl:for-each select="//scriptlist">
 		<h2>
 		  <a>
 		    <xsl:attribute name="name">
-		      <xsl:value-of select="//scriptlist/@ver"/>
+		      <xsl:value-of select="@ver"/>
 		    </xsl:attribute>
 		    
-		    <xsl:text>Bugs fixed in the </xsl:text>
-		      <xsl:value-of select="//scriptlist/@vername"/>
-		    <xsl:text> version of this script</xsl:text>
-
+		      <xsl:value-of select="@vername"/>
+			<xsl:text> Bug Fixes</xsl:text>
 		  </a>
 		</h2>
 
 		<p>
 		  The following is a list of bugs that were fixed
-		  in version <xsl:value-of select="//scriptlist/@vername"/>
-		  of this script.
+		  in version <xsl:value-of select="@vername"/>.
 		</p>
 
-		  <xsl:apply-templates select="//scriptlist/entry" mode="main"/>
+		  <xsl:apply-templates select="entry" mode="main"/>
+		</xsl:for-each>
 	      </xsl:if>
 	      <!--// end "fixed in version x.x" section //-->
 	      <!--// end body //-->

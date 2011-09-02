@@ -58,7 +58,7 @@
       * the spaces around each root name are important for the simple checking we do
       * - should these be node sets rather than strings?
       *-->
-  <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc obsvis iris'"/>
+  <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc obsvis iris '"/>
   <xsl:variable name="allowed-download-types" select="' solaris solaris10 fc4 fc8 osx_ppc osx_intel caldb atomdb '"/>
 
   <!--* note that '' is also allowed for proglang but this is checked for separately *-->
@@ -287,11 +287,6 @@
 	<script type="text/javascript" language="JavaScript" src="/csc/cscview.js"/>
       </xsl:if>
 
-      <!--// Iris pages want site-tracking javascript here //-->
-      <xsl:if test="$site = 'iris">
-	<script type="text/javascript" language="JavaScript" src="/csc/cscview.js"/>
-      </xsl:if>
-
       <!--* add the favicon *-->
       <link rel="icon" href="{$favicon}"/>
 
@@ -417,7 +412,7 @@
           <xsl:with-param name="file" select="'/incl/header.html'"/>
         </xsl:call-template>
       </xsl:when>
-      <xsl:when test="$site='iris">
+      <xsl:when test="$site='iris'">
         <xsl:call-template name="add-ssi-include">
           <xsl:with-param name="file" select="'/iris/vaoheader.html'"/>
         </xsl:call-template>
