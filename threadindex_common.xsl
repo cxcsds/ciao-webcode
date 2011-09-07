@@ -975,7 +975,7 @@
 	    <xsl:when test="$site = 'sherpa'">Sherpa</xsl:when>
 	    <xsl:when test="$site = 'chips'">ChIPS</xsl:when>
 	    <xsl:when test="$site = 'csc'">CSC</xsl:when>
-	    <xsl:when test="$site = 'iris">Iris</xsl:when>
+	    <xsl:when test="$site = 'iris'">Iris</xsl:when>
 	  </xsl:choose>
 
 	  <!--// don't include "Threads for CIAO version" in CSC //-->
@@ -993,7 +993,7 @@
 
     <!--* create the list of section links *-->
 
-    <xsl:if test="$site != 'csc'">
+    <xsl:if test="$site != 'csc' and $site != 'iris'">
       <xsl:call-template name="add-whatsnew-link"/>
     </xsl:if>
 
