@@ -1456,7 +1456,7 @@ sub xml2html_threadindex ($) {
     my $lastmod = $$opts{lastmod};
 
     # temporary
-    site_check( $site, "threadindex", [ "ciao", "sherpa", "chips", "csc" ] );
+    site_check( $site, "threadindex", [ "ciao", "sherpa", "chips", "csc", "iris" ] );
 
     print "Parsing [threadindex]: $in\n";
 
@@ -2008,7 +2008,7 @@ sub process_xml ($$) {
 	    die "Sorry, cannot process 'register' pages with this version of publish.pl.\nUse /data/da/Docs/web4/ciao4/publish.pl\n"
 	} elsif ( $root eq "faq" ) {
 	    die_if_icxc $root;
-	    xml2html_multiple $opts, "faq", [ "ciao", "sherpa", "chips", "csc" ];
+	    xml2html_multiple $opts, "faq", [ "ciao", "sherpa", "chips", "csc", "iris" ];
 	} elsif ( $root eq "dictionary" ) {
 	    die_if_icxc $root;
 	    xml2html_multiple $opts, "dictionary", [ "ciao" ];
