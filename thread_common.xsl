@@ -62,6 +62,7 @@
       <xsl:when test="$site = 'chips'"><xsl:call-template name="add-top-links-chips-html"/></xsl:when>
       <xsl:when test="$site = 'sherpa'"><xsl:call-template name="add-top-links-sherpa-html"/></xsl:when>
       <xsl:when test="$site = 'csc'"><xsl:call-template name="add-top-links-csc-html"/></xsl:when>
+      <xsl:when test="$site = 'iris'"><xsl:call-template name="add-top-links-iris-html"/></xsl:when>
       <xsl:when test="$site = 'pog'"><xsl:call-template name="add-top-links-pog-html"/></xsl:when>
       <xsl:otherwise>
 	<xsl:message terminate="yes">
@@ -196,6 +197,31 @@
   </xsl:template> <!--* name=add-top-links-csc-html *-->
 
   <!--*
+      * set up the "top level" links for the HTML page (iris)
+      * [links to processing/names threads, thread index]
+      *
+      * Parameters:
+      *
+      *-->
+  <xsl:template name="add-top-links-iris-html">
+
+    <!--* safety check *-->
+    <xsl:if test="$site != 'iris'">
+      <xsl:message terminate="yes">
+  Error: template add-top-links-iris-html called but not for an Iris thread
+      </xsl:message>
+    </xsl:if>
+
+    <div class="topbar">
+      <div class="qlinkbar">
+      <!--* create links to threads *-->
+	<xsl:call-template name="add-thread-qlinks"/>
+      </div>
+    </div>
+
+  </xsl:template> <!--* name=add-top-links-iris-html *-->
+
+  <!--*
       * set up the "top level" links for the HTML page (POG)
       * [links to processing/names threads, thread index]
       *
@@ -239,6 +265,7 @@
       <xsl:when test="$site = 'chips'"><xsl:call-template name="add-bottom-links-chips-html"/></xsl:when>
       <xsl:when test="$site = 'sherpa'"><xsl:call-template name="add-bottom-links-sherpa-html"/></xsl:when>
       <xsl:when test="$site = 'csc'"><xsl:call-template name="add-bottom-links-csc-html"/></xsl:when>
+      <xsl:when test="$site = 'iris'"><xsl:call-template name="add-bottom-links-iris-html"/></xsl:when>
       <xsl:when test="$site = 'pog'"><xsl:call-template name="add-bottom-links-pog-html"/></xsl:when>
       <xsl:otherwise>
 	<xsl:message terminate="yes">
@@ -366,6 +393,30 @@
     </div>
 
   </xsl:template> <!--* name=add-bottom-links-csc-html *-->
+
+  <!--*
+      * set up the "trailing" links for the HTML page (iris)
+      * [links to thread indexes]
+      *
+      * Parameters:
+      *
+      *-->
+  <xsl:template name="add-bottom-links-iris-html">
+
+    <!--* safety check *-->
+    <xsl:if test="$site != 'iris'">
+      <xsl:message terminate="yes">
+  Error: template add-bottom-links-iris-html called but not for an Iris thread
+      </xsl:message>
+    </xsl:if>
+
+    <!--* create the trailing links to threads *-->
+    <div class="bottombar">
+      <!--* create links to threads *-->
+      <xsl:call-template name="add-thread-qlinks"/>
+    </div>
+
+  </xsl:template> <!--* name=add-bottom-links-iris-html *-->
 
   <!--*
       * set up the "trailing" links for the HTML page (POG)
