@@ -1089,7 +1089,8 @@ sub xml2html_news ($) {
     print "Parsing [news]: $in";
 
     # we 'hardcode' the output of the transformation
-    my @pages = ( "${outdir}${in}.html" );
+    #my @pages = ( "${outdir}${in}.html" );
+    my @pages = ( "${outdir}${in}.html", "${outdir}feed.xml" );
 
     # how about math pages?
     #
