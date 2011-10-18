@@ -853,7 +853,9 @@
     <xsl:call-template name="check-contents-are-not-empty"/>
     
     <!--* since we don't have a DTD *-->
-    <xsl:call-template name="name-not-allowed"/>
+    <xsl:call-template name="name-not-allowed">
+      <xsl:with-param name="tag" select="'id'"/>
+    </xsl:call-template>
     <xsl:if test="boolean(@item)">
       <xsl:message terminate="yes">
  Error:
