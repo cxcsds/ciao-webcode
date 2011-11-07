@@ -1249,6 +1249,57 @@ prefix=/data/cdo1/threads
 #
 depth_offset=1
 
++version cyc14
+
+number=Cycle 14
+
+# main CSS location
+%css=live /proposer/threads/proposer.css
+%css=test /proposer/threads/proposer.css
+%css=trial /proposer_dev/threads/proposer.css
+
+%cssprint=live /proposer/threads/proposer.print.css
+%cssprint=test /proposer/threads/proposer.print.css
+%cssprint=trial /proposer_dev/threads/proposer.print.css
+
+# favicon location
+%favicon=live /ciao/favicon.ico
+%favicon=test /ciao/favicon.ico
+%favicon=trial /ciao/favicon.ico
+
+## location of the search ssi
+%searchssi=live /incl/search.html
+%searchssi=test /incl/search.html
+%searchssi=trial /incl/search.html
+
+%stylesheets=live /data/da/Docs/web4/ciao44/
+%stylesheets=test /data/da/Docs/web4/ciao44/
+%stylesheets=trial /data/da/Docs/web4/ciao44/
+
+%outdir=live /proj/web-cxc-dmz/htdocs/proposer/
+%outdir=test /proj/web-cxc-dmz-prev/htdocs/proposer/
+%outdir=trial /proj/web-cxc-prev/htdocs/proposer_dev/
+
+# what is the test URL?
+%outurl=live http://cxc.harvard.edu/proposer/
+%outurl=test http://cxc-dmz-prev.cfa.harvard.edu/proposer/
+%outurl=trial http://cxc-dmz-prev.cfa.harvard.edu/proposer_dev/
+
+# both need to be defined
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+%storage=trial /data/da/Docs/proposal_dev/published/cyc14/trial/
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao44.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao44.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao44.trial.xml
+
+# access ahelp files
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao44/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao44/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao44/trial/ahelp/
+
+-version
+
 +version cyc13
 
 number=Cycle 13
