@@ -121,7 +121,7 @@ logotext=CIAO Logo
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 # what's the location for the output files?
-%outdir=live /proj/web-cxc-dmz/htdocs/ciao4.4/
+#HOLD %outdir=live /proj/web-cxc-dmz/htdocs/ciao4.4/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/ciao4.4/
 %outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
 
@@ -514,7 +514,7 @@ googlessi=/sherpa4.4/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/ciao44/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/sherpa4.4/
+#HOLD %outdir=live /proj/web-cxc-dmz/htdocs/sherpa4.4/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.4/
 %outdir=trial /proj/web-icxc/htdocs/sds/sherpa_trial/
 
@@ -708,7 +708,7 @@ googlessi=/chips4.4/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/ciao44/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/chips4.4/
+#HOLD %outdir=live /proj/web-cxc-dmz/htdocs/chips4.4/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chips4.4/
 %outdir=trial /proj/web-icxc/htdocs/sds/chips_trial/
 
@@ -1126,11 +1126,11 @@ imglinkiconheight=16
 
 %css=live /ciao/ciao.css
 %css=test /ciao/ciao.css
-%css=trial /sds/ciao4.2_trial/ciao.css
+%css=trial /sds/ciao_trial/ciao.css
 
 %cssprint=live /ciao/ciao.print.css
 %cssprint=test /ciao/ciao.print.css
-%cssprint=trial /sds/ciao4.2_trial/ciao.print.css
+%cssprint=trial /sds/ciao_trial/ciao.print.css
 
 # favicon location
 %favicon=live /ciao4.3/favicon.ico
