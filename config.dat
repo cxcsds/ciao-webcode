@@ -121,7 +121,7 @@ logotext=CIAO Logo
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 # what's the location for the output files?
-#HOLD %outdir=live /proj/web-cxc-dmz/htdocs/ciao4.4/
+%outdir=live /proj/web-cxc-dmz/htdocs/ciao4.4/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/ciao4.4/
 %outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
 
@@ -514,7 +514,7 @@ googlessi=/sherpa4.4/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/ciao44/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
-#HOLD %outdir=live /proj/web-cxc-dmz/htdocs/sherpa4.4/
+%outdir=live /proj/web-cxc-dmz/htdocs/sherpa4.4/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.4/
 %outdir=trial /proj/web-icxc/htdocs/sds/sherpa_trial/
 
@@ -708,7 +708,7 @@ googlessi=/chips4.4/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/ciao44/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
-#HOLD %outdir=live /proj/web-cxc-dmz/htdocs/chips4.4/
+%outdir=live /proj/web-cxc-dmz/htdocs/chips4.4/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chips4.4/
 %outdir=trial /proj/web-icxc/htdocs/sds/chips_trial/
 
