@@ -1184,7 +1184,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
         *-->
     <xsl:variable name="hrefstart"><xsl:choose>
 	<xsl:when test="boolean(@site)"><xsl:value-of select="concat('/',@site,'/bugs/')"/></xsl:when>
-	<xsl:when test="$site != 'ciao' and $site != 'sherpa'">/ciao/bugs/</xsl:when>
+	<xsl:when test="$site != 'ciao' and $site != 'sherpa' and $site != chips">/ciao/bugs/</xsl:when>
 	<xsl:otherwise><xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="0"/>
 	    <xsl:with-param name="dirname" select="'bugs/'"/>
