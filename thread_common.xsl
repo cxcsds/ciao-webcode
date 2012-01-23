@@ -233,7 +233,7 @@
     <!--* safety check *-->
     <xsl:if test="$site != 'pog'">
       <xsl:message terminate="yes">
-  Error: template add-top-links-pog-html called but not for a POG thread
+  Error: template add-top-links-pog-html called but not for a Proposalthread
       </xsl:message>
     </xsl:if>
 
@@ -432,7 +432,7 @@
     <!--* safety check *-->
     <xsl:if test="$site != 'pog'">
       <xsl:message terminate="yes">
-  Error: template add-bottom-links-pog-html called but not for a POG thread
+  Error: template add-bottom-links-pog-html called but not for a Proposalthread
       </xsl:message>
     </xsl:if>
 
@@ -838,7 +838,6 @@
 
   <xsl:template match="sectionlist">
 
-    <!--* XXX to do: POG threads *-->
     <xsl:if test="boolean(@type)">
       <xsl:message>
  WARNING: sectionlist has type attribute set to <xsl:value-of select="@type"/>
@@ -1727,7 +1726,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	<xsl:when test="$site = 'sherpa'">Sherpa Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
 	<xsl:when test="$site = 'csc'">CSC Threads</xsl:when>
 	<xsl:when test="$site = 'iris'">Iris Threads</xsl:when>
-	<xsl:when test="$site = 'pog'">POG Threads (<xsl:value-of select="$siteversion"/>)</xsl:when>
+	<xsl:when test="$site = 'pog'">Proposer Threads (<xsl:value-of select="$siteversion"/>)</xsl:when>
       </xsl:choose></p>
 	  
       <xsl:call-template name="add-proglang-sub-header"/>
