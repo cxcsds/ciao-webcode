@@ -626,7 +626,7 @@
   <xsl:template match="software">
 
     <h4 id="software">Software &amp; Calibration Updates:</h4>
-    <p>This thread requires the following updates to the <a href="../../faq/stciao.html">standard CIAO 4.3 installation</a></p>
+    <p>This thread requires the following updates to the <a href="../../faq/stciao.html">standard CIAO <xsl:value-of select="$siteversion"/> installation</a></p>
       <ul>
 	<xsl:for-each select="item">
 	  <li>
