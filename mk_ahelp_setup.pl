@@ -681,7 +681,7 @@ sub protect_xml_chars_for_printf ($) {
     # since being used as part of a printf statement, protect % characters
     # - this is not guaranteed to be a sufficient check but should hopefully
     #   work for the cases we have
-    $out =~ s{ % }{ %% }g;
+    $out =~ s{%}{%%}g;
 
     return $out;
 
