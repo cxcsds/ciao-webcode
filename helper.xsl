@@ -304,7 +304,7 @@
       </xsl:choose>
 
       <!--// add an RSS link for the news page //-->
-      <xsl:if test="$pagename='news'">
+      <xsl:if test="$site='ciao' and ($pagename='news' or ($pagename='index' and $depth=1))">
 	<link rel="alternate" type="application/rss+xml" title="CIAO News RSS Feed" href="{$outurl}feed.xml" />
       </xsl:if>
 
