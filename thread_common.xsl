@@ -244,7 +244,16 @@
 	<xsl:call-template name="mylink">
 	  <xsl:with-param name="dir">../</xsl:with-param>
 	  <xsl:with-param name="filename"></xsl:with-param>
-	  <xsl:with-param name="text">Threads Page</xsl:with-param>
+	  <xsl:with-param name="text">
+	    <xsl:choose>
+	      <xsl:when test="$site = 'pog'">
+		Proposer Threads Page
+	      </xsl:when>
+	      <xsl:otherwise>
+		Threads Page
+	      </xsl:otherwise>
+	    </xsl:choose>
+	  </xsl:with-param>
 	</xsl:call-template>
       </div>
     </div>
