@@ -1579,32 +1579,20 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
       *
       * filetypelist/filetype = name
       *-->
-  <xsl:template match="obsidlist">
-    <xsl:if test="boolean(ancestor::p)">
-      <xsl:message terminate="yes">
-  ERROR: You have an &lt;obsidlist> block within a &lt;p> block
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:variable name="count" select="count(obsid)"/>
+  <xsl:template match="dataset">
+    <xsl:variable name="ocount" select="count(obsidlist/obsid)"/>
     <p>
-      <strong>Sample ObsID<xsl:if test="$count != 1">s</xsl:if> used:</strong><xsl:text> </xsl:text>
-      <xsl:for-each select="obsid">
+      <strong>Sample ObsID<xsl:if test="$ocount != 1">s</xsl:if> used:</strong><xsl:text> </xsl:text>
+      <xsl:for-each select="obsidlist/obsid">
 	<xsl:value-of select="."/>
 	<xsl:if test="boolean(@desc)"><xsl:value-of select="concat(' (',@desc,')')"/></xsl:if>
-	<xsl:if test="position() != $count"><xsl:text>; </xsl:text></xsl:if>
+	<xsl:if test="position() != $ocount"><xsl:text>; </xsl:text></xsl:if>
       </xsl:for-each>
     </p>
-  </xsl:template> <!--* match=obsidlist *-->
 
-  <xsl:template match="filetypelist">
-    <xsl:if test="boolean(ancestor::p)">
-      <xsl:message terminate="yes">
-  ERROR: You have a &lt;filetypelist> block within a &lt;p> block
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:variable name="count" select="count(filetype)"/>
+    <xsl:variable name="fcount" select="count(filetypelist/filetype)"/>
+    <!-- only add this section if a filetypelist is present -->
+    <xsl:if test="$fcount > 0">
       <p>
         <a>
           <xsl:attribute name="href">
@@ -1614,15 +1602,16 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 	    </xsl:choose>
 	  </xsl:attribute>
 
-	  <strong>File types needed:</strong><xsl:text> </xsl:text>
-	</a>
+	  <strong>File types needed:</strong>
+	</a><xsl:text> </xsl:text>
 
-      <xsl:for-each select="filetype">
+      <xsl:for-each select="filetypelist/filetype">
 	<xsl:value-of select="."/>
-	<xsl:if test="position() != $count"><xsl:text>; </xsl:text></xsl:if>
+	<xsl:if test="position() != $fcount"><xsl:text>, </xsl:text></xsl:if>
       </xsl:for-each>
     </p>
-  </xsl:template> <!--* match=filetypelist *-->
+    </xsl:if>
+  </xsl:template> <!--* match=dataset *-->
 
   <!--*
       * handle imglink tags 
