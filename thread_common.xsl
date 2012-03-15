@@ -1441,6 +1441,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
     <xsl:call-template name="check-plist-name-exists">
       <xsl:with-param name="name" select="@name"/>
+      <xsl:with-param name="id" select="@id"/>
     </xsl:call-template>
 
     <!--* process the contents, surrounded by styles *-->
@@ -1461,6 +1462,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
   <xsl:template name="check-plist-name-exists">
     <xsl:param name="name" select="''"/>
+    <xsl:param name="id" select="''"/>
     <xsl:if test="$name = ''">
       <xsl:message terminate="yes">
 	ERROR: plist tag is missing a name value
@@ -1476,11 +1478,26 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/>'.
 	</xsl:message>
      </xsl:when>
+
      <xsl:otherwise>
-	<xsl:message terminate="yes">
-ERROR: there are multiple (<xsl:value-of select="$nmatches"/>) paramfile entries with a name of '<xsl:value-of select="$name"/>'.
-	</xsl:message>
+       <!-- look for the same tool name with different ids -->
+       <xsl:variable name="idmatches" select="count(//parameters/paramfile[@name=$name][@id=$id])"/>
+
+       <xsl:choose>
+	 <xsl:when test="$idmatches=1"/>
+	 <xsl:when test="$idmatches=0">
+	   <xsl:message terminate="yes">
+	     ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/>' and id of '<xsl:value-of select="$id"/>'.
+	   </xsl:message>
+	 </xsl:when>
+	 <xsl:otherwise>
+	   <xsl:message terminate="yes">
+	     ERROR: there are multiple (<xsl:value-of select="$nmatches"/>) paramfile entries with a name of '<xsl:value-of select="$name"/>' and id of '<xsl:value-of select="$id"/>'.
+	   </xsl:message>
+	 </xsl:otherwise>
+       </xsl:choose>
      </xsl:otherwise>
+
    </xsl:choose>
  </xsl:template> <!--* name=check-plist-name-exists *-->
 
