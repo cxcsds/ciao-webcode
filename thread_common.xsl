@@ -1439,6 +1439,10 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
 
   <xsl:template match="plist">
 
+    <xsl:call-template name="check-plist-name-exists">
+      <xsl:with-param name="name" select="@name"/>
+    </xsl:call-template>
+
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
@@ -1454,6 +1458,33 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     </xsl:call-template>
     
   </xsl:template> <!--* match=plist *-->
+
+  <xsl:template name="check-plist-name-exists">
+    <xsl:param name="name" select="''"/>
+    <xsl:if test="$name = ''">
+      <xsl:message terminate="yes">
+	ERROR: plist tag is missing a name value
+      </xsl:message>
+    </xsl:if>
+
+    <!-- make sure there is a paramfile that matches the plist tag -->
+    <xsl:variable name="nmatches" select="count(//parameters/paramfile[@name=$name])"/>
+    <xsl:choose>
+     <xsl:when test="$nmatches=1"/>
+     <xsl:when test="$nmatches=0">
+	<xsl:message terminate="yes">
+ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/>'.
+	</xsl:message>
+     </xsl:when>
+     <xsl:otherwise>
+	<xsl:message terminate="yes">
+ERROR: there are multiple (<xsl:value-of select="$nmatches"/>) paramfile entries with a name of '<xsl:value-of select="$name"/>'.
+	</xsl:message>
+     </xsl:otherwise>
+   </xsl:choose>
+ </xsl:template> <!--* name=check-plist-name-exists *-->
+
+
 
   <!--*
       * create img<n>.html files
@@ -1582,7 +1613,7 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
   <xsl:template match="dataset">
     <xsl:variable name="ocount" select="count(obsidlist/obsid)"/>
     <p>
-      <strong>Sample ObsID<xsl:if test="$ocount != 1">s</xsl:if> used:</strong><xsl:text> </xsl:text>
+      <strong>Download the sample data:</strong><xsl:text> </xsl:text>
       <xsl:for-each select="obsidlist/obsid">
 	<xsl:value-of select="."/>
 	<xsl:if test="boolean(@desc)"><xsl:value-of select="concat(' (',@desc,')')"/></xsl:if>
@@ -1593,23 +1624,36 @@ Parameters for /home/username/cxcds_param/<xsl:value-of select="@name"/>.par
     <xsl:variable name="fcount" select="count(filetypelist/filetype)"/>
     <!-- only add this section if a filetypelist is present -->
     <xsl:if test="$fcount > 0">
-      <p>
-        <a>
-          <xsl:attribute name="href">
-	    <xsl:choose>
-	      <xsl:when test="$site='ciao'">../intro_data/</xsl:when>
-	      <xsl:otherwise>/ciao/threads/intro_data</xsl:otherwise>
-	    </xsl:choose>
-	  </xsl:attribute>
 
-	  <strong>File types needed:</strong>
-	</a><xsl:text> </xsl:text>
+      <xsl:choose>
+	<xsl:when test="@download = 'no'">
+	  <p>
+	    <strong>File types needed:</strong>
+	    <xsl:text> </xsl:text>
 
-      <xsl:for-each select="filetypelist/filetype">
-	<xsl:value-of select="."/>
-	<xsl:if test="position() != $fcount"><xsl:text>, </xsl:text></xsl:if>
-      </xsl:for-each>
-    </p>
+	    <xsl:for-each select="filetypelist/filetype">
+	      <xsl:value-of select="."/>
+	      <xsl:if test="position() != $fcount"><xsl:text>, </xsl:text></xsl:if>
+	    </xsl:for-each>
+	  </p>
+	</xsl:when>
+
+	<xsl:otherwise>
+            <div class="screen"><pre class="highlight"><xsl:text>unix% </xsl:text><a><xsl:attribute name="href">/ciao/ahelp/download_chandra_obsid.html</xsl:attribute>download_chandra_obsid</a>
+	    <xsl:text> </xsl:text>
+
+	    <xsl:for-each select="obsidlist/obsid">
+	      <xsl:value-of select="."/>
+	      	<xsl:if test="position() != $ocount"><xsl:text>,</xsl:text></xsl:if>
+	    </xsl:for-each>
+	    <xsl:text> </xsl:text> 
+	    <xsl:for-each select="filetypelist/filetype">
+	      <xsl:value-of select="."/>
+	      <xsl:if test="position() != $fcount"><xsl:text>,</xsl:text></xsl:if>
+	    </xsl:for-each></pre></div>
+	  
+	</xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
   </xsl:template> <!--* match=dataset *-->
 
