@@ -682,7 +682,7 @@
 
 	<tr>
 	  <th colspan="4">
-	    <a name="{translate(@name,' ','')}"><xsl:value-of select="@name"/></a>
+	    <h3 name="{translate(@name,' ','')}"><xsl:value-of select="@name"/></h3>
 	  </th>
 	</tr>
 
