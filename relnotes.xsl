@@ -50,7 +50,11 @@
     </xsl:call-template>
 
     <!--* what do we create *-->
-    <xsl:apply-templates select="relnotes"/>
+    <xsl:apply-templates select="relnotes" mode="page"/>
+
+    <xsl:if test="$site = 'ciao'">      
+      <xsl:apply-templates select="//relnotes/text/category[@name='Tools']" mode="include"/>
+    </xsl:if>
 
   </xsl:template> <!--* match=/ *-->
 
@@ -58,7 +62,7 @@
       * create: <relnotes>.html
       *-->
 
-  <xsl:template match="relnotes">
+  <xsl:template match="relnotes" mode="page">
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$pagename"/>.html</xsl:variable>
 
@@ -183,7 +187,36 @@
       </html>
 
     </xsl:document>
-  </xsl:template> <!--* match=relnotes *-->
+  </xsl:template> <!--* match=relnotes, mode=page *-->
+
+
+  <!-- create the includes for the ahelp webpages -->
+  <xsl:template match="//relnotes/text/category[@name='Tools']" mode="include">
+
+    <xsl:for-each select="section">
+		
+      <xsl:variable name="filename"><xsl:value-of select="$install"/>ciao_<xsl:value-of select="$siteversion"/>.<xsl:value-of select="@name"/>.incl.html</xsl:variable>
+
+      <!--* output filename to stdout *-->
+      <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
+
+      <xsl:document href="{$filename}" method="html" media-type="text/html" version="4.0" encoding="us-ascii">
+
+	<!--* add disclaimer about editing this HTML file *-->
+	<xsl:call-template name="add-disclaimer"/>
+	
+	<ul>
+	  <xsl:for-each select="note">
+	    <li>
+	      <xsl:apply-templates select="child::*|child::text()"/>
+	    </li>
+	  </xsl:for-each> <!-- select="note" -->
+	</ul>
+	
+      </xsl:document>
+    </xsl:for-each>
+  </xsl:template> <!--* match=relnotes, mode=include *-->
+
 
     <!--*
         * We can not guarantee that the contents do not contain <p>..</p>
