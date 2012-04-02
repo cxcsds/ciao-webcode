@@ -441,7 +441,7 @@
     <!--* output filename to stdout *-->
     <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
 
-    <xsl:document href="{$filename}" method="html">
+    <xsl:document href="{$filename}" method="html" encoding="us-ascii">
 
 	<!--* add disclaimer about editing this HTML file *-->
 	<xsl:call-template name="add-disclaimer"/>
