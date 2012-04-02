@@ -205,7 +205,7 @@
 	<!--* add disclaimer about editing this HTML file *-->
 	<xsl:call-template name="add-disclaimer"/>
 	
-	<ul>
+	<ul class="helplist">
 	  <xsl:for-each select="note">
 	    <li>
 	      <xsl:apply-templates select="child::*|child::text()"/>
