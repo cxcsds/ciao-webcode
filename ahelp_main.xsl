@@ -31,7 +31,7 @@
   <xsl:param name="texttitlepostfix"  select='""'/>
   <xsl:param name="dname"/>
   <xsl:param name="urlbase"/>
- 
+
  <!--* 
       * create: $outname.html
       * We now no-longer need to use the xsl:document trick
@@ -40,7 +40,6 @@
       * publishing setup, not just this stylesheet.
       *-->
   <xsl:template match="cxchelptopics">
-
     <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$outname"/>.html</xsl:variable>
 
     <!--// needed for canonical link //-->
@@ -145,6 +144,9 @@
     <xsl:apply-templates select="QEXAMPLELIST"/>
     <xsl:apply-templates select="PARAMLIST"/>
     <xsl:apply-templates select="ADESC"/>
+    <xsl:if test="$site='ciao'">
+      <xsl:call-template name="add-relnotes"/>
+    </xsl:if>
     <xsl:apply-templates select="BUGS"/>
     <xsl:call-template   name="add-seealso"/>
 
@@ -1043,6 +1045,28 @@
 	</xsl:otherwise>
       </xsl:choose>
   </xsl:template> <!--* match=BUGS *-->
+
+
+  <!--*
+      * 
+      * add a release notes block, if it exists
+      * 
+      *-->
+
+  <xsl:template name="add-relnotes">
+    <xsl:variable name="relincl"><xsl:text>../releasenotes/ciao_</xsl:text><xsl:value-of select="$version"/>.<xsl:value-of select="$outname"/>.incl.html</xsl:variable>
+
+    <!-- if an include file exists in the HTML directory -->
+    <xsl:if test="boolean(document(string(concat($outdir,$relincl))))">
+
+      <h3><a name="Changes_in_CIAO">Changes in CIAO <xsl:value-of select="$version"/></a></h3>
+
+      <xsl:call-template name="add-ssi-include">
+	<xsl:with-param name="file" select="$relincl"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template> <!--* relnotes *-->
+
 
   <!--*
       * DTD Entry:
