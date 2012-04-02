@@ -1056,35 +1056,15 @@
   <xsl:template name="add-relnotes">
     <xsl:variable name="relincl"><xsl:text>../releasenotes/ciao_</xsl:text><xsl:value-of select="$version"/>.<xsl:value-of select="$outname"/>.incl.html</xsl:variable>
 
-	<xsl:if test="$site='ciao'">
+    <!-- include the release note text -->
+    <xsl:if test="boolean(document(string(concat($outdir,$relincl))))">
 
-	  <xsl:choose>
+      <h3><a name="relnotes">Changes in CIAO <xsl:value-of select="$version"/></a></h3>
 
-	    <!-- include the release note text -->
-	    <!-- have to check the outdir to see if relnotes html exists	    
-		 this slows down the processing a bit -->
-	    <xsl:when test="boolean(document(string(concat($outdir,$relincl))))">
-
-	      <h3><a name="relnotes">Changes in CIAO <xsl:value-of select="$version"/></a></h3>
-
-              <xsl:call-template name="add-ssi-include">
-		<xsl:with-param name="file" select="$relincl"/>
-              </xsl:call-template>
-	    </xsl:when>
-
-	    <xsl:otherwise>
-
-	      <h3><a name="relnotes">CIAO <xsl:value-of select="$version"/> Release Notes</a></h3>
-
-	      <p>
-		Refer to the <a href="/ciao/releasenotes">release
-		notes</a> for a list of changes in the CIAO <xsl:value-of select="$version"/> software release.
-	      </p>
-	    </xsl:otherwise>
-	  </xsl:choose>
-
-      </xsl:if>
-
+      <xsl:call-template name="add-ssi-include">
+	<xsl:with-param name="file" select="$relincl"/>
+      </xsl:call-template>
+    </xsl:if>
   </xsl:template> <!--* relnotes *-->
 
 
@@ -1181,7 +1161,7 @@
 		  <xsl:value-of select="@title"/></a>
 	      </xsl:if>
 	    </xsl:for-each>
-	    <xsl:if test="$site='ciao'"><xsl:text> &#183; </xsl:text><a title="Jump to the Release Notes section" href="#relnotes">Release Notes</a></xsl:if>
+<!--	    <xsl:if test="$site='ciao'"><xsl:text> &#183; </xsl:text><a title="Jump to the Release Notes section" href="#relnotes">Release Notes</a></xsl:if>-->
 	    <xsl:if test="$have-bugs"><xsl:text> &#183; </xsl:text><a title="Jump to the Bugs section" href="#bugs">Bugs</a></xsl:if>
 	    <xsl:if test="$have-seealso"><xsl:text> &#183; </xsl:text><a title="Jump to the 'See Also' section" href="#seealso">See Also</a></xsl:if>
 	  </div>
