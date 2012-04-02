@@ -53,7 +53,7 @@
     <xsl:apply-templates select="relnotes" mode="page"/>
 
     <xsl:if test="$site = 'ciao'">      
-      <xsl:apply-templates select="//relnotes/text/category[@name='Tools']" mode="include"/>
+      <xsl:apply-templates select="//relnotes/text/category[@name='Tools']" mode="ahelp"/>
     </xsl:if>
 
   </xsl:template> <!--* match=/ *-->
@@ -191,7 +191,7 @@
 
 
   <!-- create the includes for the ahelp webpages -->
-  <xsl:template match="//relnotes/text/category[@name='Tools']" mode="include">
+  <xsl:template match="//relnotes/text/category[@name='Tools']" mode="ahelp">
 
     <xsl:for-each select="section">
 		
@@ -215,7 +215,7 @@
 	
       </xsl:document>
     </xsl:for-each>
-  </xsl:template> <!--* match=relnotes, mode=include *-->
+  </xsl:template> <!--* match=relnotes, mode=ahelp *-->
 
 
     <!--*
