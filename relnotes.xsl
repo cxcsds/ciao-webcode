@@ -200,7 +200,7 @@
       <!--* output filename to stdout *-->
       <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
 
-      <xsl:document href="{$filename}" method="html" media-type="text/html" version="4.0" encoding="us-ascii">
+      <xsl:document href="{$filename}" method="html">
 
 	<!--* add disclaimer about editing this HTML file *-->
 	<xsl:call-template name="add-disclaimer"/>
