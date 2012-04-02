@@ -204,15 +204,25 @@
 
 	<!--* add disclaimer about editing this HTML file *-->
 	<xsl:call-template name="add-disclaimer"/>
-	
-	<ul class="helplist">
-	  <xsl:for-each select="note">
-	    <li>
+
+	<xsl:choose>
+	  <xsl:when test="count(note) = 1">
+	    <xsl:for-each select="note">
 	      <xsl:apply-templates select="child::*|child::text()"/>
-	    </li>
-	  </xsl:for-each> <!-- select="note" -->
-	</ul>
-	
+	    </xsl:for-each> <!-- select="note" -->
+	  </xsl:when>
+
+	  <xsl:otherwise>
+	    <ul class="helplist">
+	      <xsl:for-each select="note">
+		<li>
+		  <xsl:apply-templates select="child::*|child::text()"/>
+		</li>
+	      </xsl:for-each> <!-- select="note" -->
+	    </ul> 
+	  </xsl:otherwise>
+	</xsl:choose>
+
       </xsl:document>
     </xsl:for-each>
   </xsl:template> <!--* match=relnotes, mode=ahelp *-->
