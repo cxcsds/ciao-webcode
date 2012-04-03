@@ -1161,7 +1161,7 @@
 		  <xsl:value-of select="@title"/></a>
 	      </xsl:if>
 	    </xsl:for-each>
-<!--	    <xsl:if test="$site='ciao'"><xsl:text> &#183; </xsl:text><a title="Jump to the Release Notes section" href="#relnotes">Release Notes</a></xsl:if>-->
+	    <xsl:if test="$have-relnotes='1'"><xsl:text> &#183; </xsl:text><a title="Jump to the Release Notes section" href="#relnotes">Changes in CIAO <xsl:value-of select="$version"/></a></xsl:if>
 	    <xsl:if test="$have-bugs"><xsl:text> &#183; </xsl:text><a title="Jump to the Bugs section" href="#bugs">Bugs</a></xsl:if>
 	    <xsl:if test="$have-seealso"><xsl:text> &#183; </xsl:text><a title="Jump to the 'See Also' section" href="#seealso">See Also</a></xsl:if>
 	  </div>
