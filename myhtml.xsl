@@ -667,74 +667,59 @@
       *-->
   <xsl:template match="scriptlist">
 
-    <h2><a name="scripts">Scripts and Modules (by category)</a></h2>
-    
-    <ul>
-      <xsl:for-each select="category">
-	<li>
+    <!-- make the navigation links -->
+    <div style="text-align: center;">
+      <p>
+	<xsl:for-each select="category">
 	  <a href="{concat('#',translate(@name,' ',''))}"><xsl:value-of select="@name"/></a>
-	</li>
-      </xsl:for-each> <!-- select="category" -->
-    </ul>
+	  <xsl:if test="position() != last()"><xsl:text> | </xsl:text></xsl:if>
+	</xsl:for-each> <!-- select="category" -->
+      </p>
+    </div>
 
     <table class="scripts" border="0" cellpadding="5" width="100%">
       <xsl:for-each select="category">
 
-	<tr>
-	  <th colspan="4">
-	    <h3 name="{translate(@name,' ','')}"><xsl:value-of select="@name"/></h3>
-	  </th>
-	</tr>
+        <tr>
+          <th colspan="4">
+            <h3 id="{translate(@name,' ','')}"><xsl:value-of select="@name"/></h3>
+          </th>
+        </tr>
 
-	<xsl:if test="boolean(intro)">
+        <xsl:if test="boolean(intro)">
           <tr>
-	    <td colspan="4">
-	      <xsl:apply-templates select="intro/."/>
-	    </td>
-	  </tr>
-	</xsl:if>
+            <td colspan="4">
+              <xsl:apply-templates select="intro/."/>
+            </td>
+          </tr>
+        </xsl:if>
+
 
 	<xsl:if test="boolean(script)">
-	<tr>
-	  <td>Name</td>
-	  <td>Associated thread(s)</td>
-	  <td>Language</td>
-	  <td>Last update</td>
-	</tr>
         <xsl:for-each select="script">
           <tr class="scriptrow">
-	    <td class="scriptcell" rowspan="2">
-	      <strong><xsl:value-of select="@name"/></strong>
-	    </td>
 	    <td>
-	      <xsl:apply-templates select="thread" mode="scripts"/>
-	    </td>
-	    <td class="scriptcell"><xsl:value-of select="@lang"/></td>
-	    <td class="scriptcell">
-	      <xsl:value-of select="@day"/>-<xsl:call-template name="get-month"><xsl:with-param name="month" select="@month"/></xsl:call-template>-<xsl:value-of select="@year"/>
-	      <xsl:if test="@updated = 'yes'">
-	        <br/>
-		<xsl:call-template name="add-image">
-		  <xsl:with-param name="src"   select="'imgs/updated.gif'"/>
-		  <xsl:with-param name="alt"   select="'Updated'"/>
-		</xsl:call-template>
-	      </xsl:if>
-	      <xsl:if test="@new = 'yes'">
-	        <br/>
-		<xsl:call-template name="add-image">
-		  <xsl:with-param name="src"   select="'imgs/new.gif'"/>
-		  <xsl:with-param name="alt"   select="'New'"/>
-		</xsl:call-template>
-	      </xsl:if>
-	    </td>
-          </tr>
-          <tr class="scriptrow">
-	    <td colspan="3">
+	      <xsl:attribute name="class">scriptcell</xsl:attribute>	      
+	      <xsl:if test="thread"><xsl:attribute name="rowspan">2</xsl:attribute></xsl:if>
+		
+              <strong><xsl:apply-templates select="name" mode="scripts"/></strong>
+            </td>
+	    <td>
 	      <xsl:apply-templates select="desc" mode="scripts"/>
 	    </td>
-	  </tr>
+          </tr>
+	  <xsl:if test="thread">
+            <tr class="scriptrow">
+	      <td>
+		<p>
+		<xsl:text>Thread: </xsl:text> <xsl:apply-templates select="thread" mode="scripts"/>
+		</p>
+	      </td>
+	    </tr>
+	  </xsl:if>
+
 	  <tr>
-	    <td colspan="4"/>
+	    <td colspan="2"/>
 	  </tr>
         </xsl:for-each> <!-- select="script" -->
 	</xsl:if>
@@ -743,9 +728,9 @@
     </table>
   </xsl:template> <!-- match=scriptlist -->
 
-  <xsl:template match="desc|thread" mode="scripts">
+  <xsl:template match="name|desc|thread" mode="scripts">
     <xsl:apply-templates/>
-  </xsl:template> <!-- match=desc|thread mode=scripts -->
+  </xsl:template> <!-- match=name|desc|thread mode=scripts -->
 
   <xsl:template name="get-month">
     <xsl:param name="month"/>
