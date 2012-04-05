@@ -127,10 +127,10 @@
 			<xsl:text> ahelp file</xsl:text>
 		   </a>.  
 
-		  <xsl:if test="$site='ciao' and (/bugs/info/contrib)">
+		  <xsl:if test="$site='ciao' and (/bugs/info/scripts)">
 		    <br/>
 		    This script is part of
-		    the <a href="../download/scripts">contributed science tarfile</a>.
+		    the <a href="../download/scripts">CIAO Scripts Package</a>.
 		  </xsl:if> 
 		  </p>
 		 </xsl:if>
