@@ -126,7 +126,7 @@ logotext=CIAO Logo
 %outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
 
 # live outurl is unversioned for use in canonical header link
-%outurl=live http://cxc.harvard.edu/ciao/
+%outurl=live http://cxc.harvard.edu/ciao4.4/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/ciao4.4/
 %outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
 
@@ -466,8 +466,8 @@ depth_offset=0
 +version ciao44
 number=4.4
 
-headtitlepostfix=CIAO 4.4 Sherpa v1
-texttitlepostfix=CIAO 4.4 Sherpa v1
+headtitlepostfix=CIAO 4.4 Sherpa v2
+texttitlepostfix=CIAO 4.4 Sherpa v2
 
 version_string=4.4
 
@@ -519,7 +519,7 @@ googlessi=/sherpa4.4/analytics.ssi
 %outdir=trial /proj/web-icxc/htdocs/sds/sherpa_trial/
 
 # live outurl is unversioned for use in canonical header link
-%outurl=live http://cxc.harvard.edu/sherpa/
+%outurl=live http://cxc.harvard.edu/sherpa4.4/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/sherpa4.4/
 %outurl=trial http://icxc.harvard.edu/sds/sherpa_trial/
 
@@ -713,7 +713,7 @@ googlessi=/chips4.4/analytics.ssi
 %outdir=trial /proj/web-icxc/htdocs/sds/chips_trial/
 
 # live outurl is unversioned for use in canonical header link
-%outurl=live http://cxc.harvard.edu/chips/
+%outurl=live http://cxc.harvard.edu/chips4.4/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/chips4.4/
 %outurl=trial http://icxc.harvard.edu/sds/chips_trial/
 
