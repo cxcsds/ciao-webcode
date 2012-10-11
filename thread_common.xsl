@@ -1615,7 +1615,7 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
 
   <!--*
       * Used in a section block to indicate file types
-      * - would be niver in the overview section (say)
+      * - would be nicer in the overview section (say)
       *   since it's meta-information about the thread but
       *   no time to work out how to work out where to
       *   place this info in the thread
@@ -1638,12 +1638,16 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
       </xsl:for-each>
     </p>
 
+    <!-- Trying to get the behavior right here; we want
+         the download_chandra_obsid section to appear even when no filetype is
+         present, but I am unclear at present what we have in the system.
+     -->
     <xsl:variable name="fcount" select="count(filetypelist/filetype)"/>
-    <!-- only add this section if a filetypelist is present -->
-    <xsl:if test="$fcount > 0">
 
-      <xsl:choose>
-	<xsl:when test="@download = 'no'">
+    <!-- only add this section if a filetypelist is present -->
+    <xsl:choose>
+      <xsl:when test="@download = 'no'">
+        <xsl:if test="$fcount > 0">
 	  <p>
 	    <strong>File types needed:</strong>
 	    <xsl:text> </xsl:text>
@@ -1653,9 +1657,10 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
 	      <xsl:if test="position() != $fcount"><xsl:text>, </xsl:text></xsl:if>
 	    </xsl:for-each>
 	  </p>
-	</xsl:when>
+        </xsl:if>
+      </xsl:when>
 
-	<xsl:otherwise>
+      <xsl:otherwise>
             <div class="screen"><pre class="highlight"><xsl:text>unix% </xsl:text><a><xsl:attribute name="href">/ciao/ahelp/download_chandra_obsid.html</xsl:attribute>download_chandra_obsid</a>
 	    <xsl:text> </xsl:text>
 
@@ -1670,8 +1675,7 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
 	    </xsl:for-each></pre></div>
 	  
 	</xsl:otherwise>
-      </xsl:choose>
-    </xsl:if>
+     </xsl:choose>
   </xsl:template> <!--* match=dataset *-->
 
   <!--*
