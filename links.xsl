@@ -434,6 +434,9 @@
     <xsl:variable name="namematches" select="$ahelpindexfile//ahelp[key=$name]"/>
     <xsl:variable name="num" select="count($namematches)"/>
 
+    <!-- This is now handled by add-ahelp-single-context;
+         TODO - work out if needed for add-ahelp-multiple-context
+
     <xsl:if test="$num=0">
 	<xsl:message terminate="yes">
 
@@ -441,6 +444,7 @@
 
       </xsl:message>
     </xsl:if>
+    -->
 
     <!--*
         * Hack to link to both sl.* and py.* versions of a file if they
@@ -488,6 +492,10 @@
 
     <xsl:variable name="context"><xsl:choose>
 	<xsl:when test="boolean(@context)"><xsl:value-of select="@context"/></xsl:when>
+
+	<!-- special case when num=0 (ie ahelp is unknown) -->
+	<xsl:when test="$num=0 and $type!='live'">unknown</xsl:when>
+	
 	<xsl:when test="$num=1"><xsl:value-of select="$namematches/context"/></xsl:when>
 
 	<!--*
