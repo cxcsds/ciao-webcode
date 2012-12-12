@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE xsl:stylesheet>
 
 <!--* 
@@ -68,7 +68,7 @@
 
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="us-ascii">
+      version="4.0" encoding="utf-8">
 
       <!--* create document *-->
       <html lang="en">

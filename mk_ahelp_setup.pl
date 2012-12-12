@@ -894,7 +894,7 @@ sub create_seealso_files ($\%) {
     my $fh = IO::File->new( "> $ofile" )
       or die "Error: Unable to create $ofile\n";
     
-    $fh->print( '<?xml version="1.0" encoding="us-ascii" ?>' . "\n" .
+    $fh->print( '<?xml version="1.0" encoding="utf-8" ?>' . "\n" .
 		"<!DOCTYPE seealso>\n" );
     
     if ( $flag ) { print_seealso_list $fh, $obj, $pkg, $listref, %$objlist; }
@@ -968,7 +968,7 @@ sub create_index_files ($\%\%\%) {
     my $xmlfh = IO::File->new( "> $xmlfile" )
       or die "Error: unable to open $xmlfile for writing\n";
 
-    $xmlfh->print( '<?xml version="1.0" encoding="us-ascii" ?>' . "\n" .
+    $xmlfh->print( '<?xml version="1.0" encoding="utf-8" ?>' . "\n" .
 		   "<!DOCTYPE ahelpindex>\n" .
 		   "<ahelpindex>\n"
 		 );

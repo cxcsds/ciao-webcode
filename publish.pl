@@ -1828,7 +1828,7 @@ sub xml2html_thread ($) {
     }
 
     my $xml_text = <<'EOX';
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 EOX
 
     my $process;

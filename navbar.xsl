@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE xsl:stylesheet>
 
 <!--*
@@ -101,7 +101,7 @@
       * xsl:document statement in the section (mode=process) template
       * below as HTML files
       *-->
-  <xsl:output method="text" encoding="us-ascii"/>
+  <xsl:output method="text" encoding="utf-8"/>
 
   <!--* 
       * ROOT ELEMENT
