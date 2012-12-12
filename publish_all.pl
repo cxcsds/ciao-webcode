@@ -329,7 +329,7 @@ unless ( $yes ) {
 my $cfg_opt = "--config=$configfile";
 my $type_opt = "--type=$type";
 my $force_opt = $force ? "--force" : "--noforce";
-my $verbose_opt = $verbose ? "--verbose" : "";
+my $verbose_opt = $verbose ? "--verbose" : "--noverbose";
 
 foreach my $href ( \%images, \%files ) {
     foreach my $dir ( keys %{$href} ) {
@@ -356,7 +356,7 @@ if ( defined $threadindex ) {
 
     # and do the actual publishing
     system @pexe, $script,
-      "--type=$type", $force_opt, $verbose_opt,
+      $cfg_opt, $type_opt, $force_opt, $verbose_opt,
       @files
 	and die "\nerror in\n dir=$dir\n with files=" . join(" ",@files) . "\n\n";
 }
