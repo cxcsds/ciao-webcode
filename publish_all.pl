@@ -8,6 +8,7 @@
 #     --excludedir=<dir1 to ignore>,...,<dirN to ignore> - ie comma-separated list
 #     --xmlonly
 #     --yes
+#     --verbose
 #
 # Aim:
 #  This script provides a way to publish all the files in the current
@@ -26,6 +27,7 @@
 #    --xmlonly means that only files matching *xml are published
 #    --excludedir is a way of specifying a set of directories that should
 #           be excluded from the search
+#    --verbose - display extra output for debugging
 #  
 # Notes:
 #  - files that are checked out for editing are skipped;
@@ -65,6 +67,7 @@ use FindBin;
 use lib $FindBin::Bin;
 use CIAODOC qw (:util :cfg);
 
+# Do I need a 'use vars' line here for configfile?
 use vars qw( $configfile );
 $configfile = "$FindBin::Bin/config.dat";
 
@@ -91,7 +94,7 @@ my @prefixes =
 
 my %_types = map { ($_,1); } qw( test live trial );
 
-my $usage = "Usage: $0 --config=filename --type=live|test --force --xmlonly --excludedir=one,two,.. --yes\n";
+my $usage = "Usage: $0 --config=filename --type=live|test --force --xmlonly --excludedir=one,two,.. --yes --verbose\n";
 
 ## Code
 #
@@ -100,9 +103,12 @@ my $force = 0;
 my $xmlonly = 0;
 my $excludedirs = "";
 my $yes = 0;
+my $verbose = 0;
+
 die $usage unless
   GetOptions 'config=s' => \$configfile, 'type=s' => \$type, 'force!' => \$force,
-  'excludedir=s' => \$excludedirs, 'xmlonly!' => \$xmlonly, 'yes!' => \$yes;
+  'excludedir=s' => \$excludedirs, 'xmlonly!' => \$xmlonly, 'yes!' => \$yes,
+  'verbose!' => \$verbose;
 
 # Get the name of the perl executable
 #
@@ -323,6 +329,7 @@ unless ( $yes ) {
 my $cfg_opt = "--config=$configfile";
 my $type_opt = "--type=$type";
 my $force_opt = $force ? "--force" : "--noforce";
+my $verbose_opt = $verbose ? "--verbose" : "";
 
 foreach my $href ( \%images, \%files ) {
     foreach my $dir ( keys %{$href} ) {
@@ -332,7 +339,7 @@ foreach my $href ( \%images, \%files ) {
 
 	# and do the actual publishing
 	system @pexe, $script,
-	  $cfg_opt, $type_opt, $force_opt,
+	  $cfg_opt, $type_opt, $force_opt, $verbose_opt,
 	  @files
 	    and die "\nerror in\n dir=$dir\n with files=" . join(" ",@files) . "\n\n";
     }
@@ -349,7 +356,7 @@ if ( defined $threadindex ) {
 
     # and do the actual publishing
     system @pexe, $script,
-      "--type=$type", $force ? "--force" : "--noforce",
+      "--type=$type", $force_opt, $verbose_opt,
       @files
 	and die "\nerror in\n dir=$dir\n with files=" . join(" ",@files) . "\n\n";
 }
