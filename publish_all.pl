@@ -43,16 +43,6 @@
 #    (ie we add another case to the list when we find a file to ignore)
 #    rather than anything clever.
 #
-# Changes:
-#    2007 Oct 24 DJB
-#      Fix up RCS check (only run rlog if the RCS file exists) and calling
-#      of the perl executable
-#    2007 Oct 22 DJB
-#      We now run the publish.pl that is in the same directory as this
-#      script, rather than hard code it to /data/da/Docs/web/, and we use
-#      CIAODOC/config.dat to get the perl executable name
-#      We now exclude RCS/ dirs, as we do SCCS/ dirs.
-#
 
 use strict;
 $|++;
@@ -116,6 +106,13 @@ my $ostype = get_ostype;
 my $config = parse_config( $configfile );
 my $perlexe = get_config_main_type ($config, "perl", $ostype);
 my @pexe = split / /, $perlexe;
+
+# Actually; over-riding this as it looks like this version could be
+# causing problems (could change the config file to remove this but for now
+# try this approach).
+print "\nNOTE: over-riding @pexe\n";
+@pexe = ("perl");
+print "      with @pexe\n\n";
 
 die "Error: unknown type ($type)\n"
   unless exists $_types{$type};
@@ -323,8 +320,7 @@ unless ( $yes ) {
     die unless $answer eq "y\n";
 }
 
-# first we publish all the "img" directories
-# (since they may be useful for creating PDF files)
+# Publish everything but the thread indexes:
 #
 my $cfg_opt = "--config=$configfile";
 my $type_opt = "--type=$type";
