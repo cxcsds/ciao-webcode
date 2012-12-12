@@ -82,6 +82,9 @@ my @prefixes =
    "/data/da/Docs/ciaoweb/ciao44",
    "/data/da/Docs/sherpaweb/ciao44",
    "/data/da/Docs/chipsweb/ciao44",
+   "/data/da/Docs/ciaoweb/ciao45",
+   "/data/da/Docs/sherpaweb/ciao45",
+   "/data/da/Docs/chipsweb/ciao45",
 
    "/Users/doug/doc/ahelp/", # Doug's testing
   );
