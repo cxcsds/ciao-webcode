@@ -123,12 +123,14 @@ logotext=CIAO Logo
 # what's the location for the output files?
 %outdir=live /proj/web-cxc-dmz/htdocs/ciao4.5/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/ciao4.5/
-%outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
+##%outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/ciao_trial/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/ciao/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/ciao4.5/
-%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+#%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/ciao_trial/
 
 # location of the "storage" space
 %storage=live /data/da/Docs/ciaoweb/published/ciao45/live/
@@ -195,7 +197,8 @@ version_string=4.4
 # location of the news file for the "What's new" link
 %newsfile=live /proj/web-cxc-dmz/htdocs/ciao4.4/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/ciao4.4/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+#%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+%newsfile=trial /proj/web-icxc-test/htdocs/sds/ciao_trial/news.html
 
 %newsurl=live /ciao/news.html
 %newsurl=test /ciao/news.html
@@ -229,12 +232,14 @@ logotext=CIAO Logo
 # what's the location for the output files?
 %outdir=live /proj/web-cxc-dmz/htdocs/ciao4.4/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/ciao4.4/
-%outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
+#%outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/ciao_trial/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/ciao/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/ciao4.4/
-%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+#%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/ciao_trial/
 
 # location of the "storage" space
 %storage=live /data/da/Docs/ciaoweb/published/ciao44/live/
@@ -300,7 +305,8 @@ version_string=4.3
 # location of the news file for the "What's new" link
 %newsfile=live /proj/web-cxc-dmz/htdocs/ciao4.3/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/ciao4.3/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+#%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+%newsfile=trial /proj/web-icxc-test/htdocs/sds/ciao_trial/news.html
 
 %newsurl=live /ciao/news.html
 %newsurl=test /ciao/news.html
@@ -334,12 +340,14 @@ logotext=CIAO Logo
 # what's the location for the output files?
 %outdir=live /proj/web-cxc-dmz/htdocs/ciao4.3/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/ciao4.3/
-%outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
+#%outdir=trial /proj/web-icxc/htdocs/sds/ciao_trial/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/ciao_trial/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/ciao/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/ciao4.3/
-%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+#%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/ciao_trial/
 
 # location of the "storage" space
 %storage=live /data/da/Docs/ciaoweb/published/ciao43/live/
@@ -395,7 +403,8 @@ version_string=dev
 %favicon=trial /sds/ciaositedev/favicon.ico
 
 # location of the news file for the "What's new" link
-%newsfile=trial /proj/web-icxc/htdocs/sds/ciaositedev/news.html
+#%newsfile=trial /proj/web-icxc/htdocs/sds/ciaositedev/news.html
+%newsfile=trial /proj/web-icxc-test/htdocs/sds/ciaositedev/news.html
 
 %newsurl=trial /sds/ciaositedev/news.html
 
@@ -418,10 +427,12 @@ logotext=CIAO Logo
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 # what's the location for the output files?
-%outdir=trial /proj/web-icxc/htdocs/sds/ciaositedev/
+#%outdir=trial /proj/web-icxc/htdocs/sds/ciaositedev/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/ciaositedev/
 
 # live outurl is unversioned for use in canonical header link
-%outurl=trial http://icxc.harvard.edu/sds/ciaositedev/
+#%outurl=trial http://icxc.harvard.edu/sds/ciaositedev/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/ciaositedev/
 
 # location of the "storage" space
 %storage=trial /data/da/Docs/ciaoweb/published/ciaositedev/trial/
@@ -526,11 +537,13 @@ googlessi=/chart/analytics.ssi
 
 %outdir=live /proj/web-cxc-dmz/htdocs/chart/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chart/
-%outdir=trial /proj/web-icxc/htdocs/sds/chart_trial/
+#%outdir=trial /proj/web-icxc/htdocs/sds/chart_trial/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/chart_trial/
 
 %outurl=live http://cxc.harvard.edu/chart/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/chart/
-%outurl=trial http://icxc.harvard.edu/sds/chart_trial/
+#%outurl=trial http://icxc.harvard.edu/sds/chart_trial/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/chart_trial/
 
 %storage=live /data/da/Docs/chartweb/published/internal/live/
 %storage=test /data/da/Docs/chartweb/published/internal/test/
@@ -594,7 +607,8 @@ version_string=4.5
 # location of the news file for the "What's new" link
 %newsfile=live /proj/web-cxc-dmz/htdocs/sherpa4.5/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.5/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/sherpa_trial/news.html
+#%newsfile=trial /proj/web-icxc/htdocs/sds/sherpa_trial/news.html
+%newsfile=trial /proj/web-icxc-test/htdocs/sds/sherpa_trial/news.html
 
 %newsurl=live /sherpa/news.html
 %newsurl=test /sherpa/news.html
@@ -622,12 +636,14 @@ googlessi=/sherpa4.5/analytics.ssi
 
 %outdir=live /proj/web-cxc-dmz/htdocs/sherpa4.5/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.5/
-%outdir=trial /proj/web-icxc/htdocs/sds/sherpa_trial/
+#%outdir=trial /proj/web-icxc/htdocs/sds/sherpa_trial/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/sherpa_trial/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/sherpa/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/sherpa4.5/
-%outurl=trial http://icxc.harvard.edu/sds/sherpa_trial/
+#%outurl=trial http://icxc.harvard.edu/sds/sherpa_trial/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/sherpa_trial/
 
 %storage=live /data/da/Docs/sherpaweb/published/ciao45/live/
 %storage=test /data/da/Docs/sherpaweb/published/ciao45/test/
@@ -675,7 +691,8 @@ version_string=4.4
 # location of the news file for the "What's new" link
 %newsfile=live /proj/web-cxc-dmz/htdocs/sherpa4.4/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.4/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/sherpa_trial/news.html
+#%newsfile=trial /proj/web-icxc/htdocs/sds/sherpa_trial/news.html
+%newsfile=trial /proj/web-icxc-test/htdocs/sds/sherpa_trial/news.html
 
 %newsurl=live /sherpa/news.html
 %newsurl=test /sherpa/news.html
@@ -703,12 +720,14 @@ googlessi=/sherpa4.4/analytics.ssi
 
 %outdir=live /proj/web-cxc-dmz/htdocs/sherpa4.4/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.4/
-%outdir=trial /proj/web-icxc/htdocs/sds/sherpa_trial/
+#%outdir=trial /proj/web-icxc/htdocs/sds/sherpa_trial/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/sherpa_trial/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/sherpa/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/sherpa4.4/
-%outurl=trial http://icxc.harvard.edu/sds/sherpa_trial/
+#%outurl=trial http://icxc.harvard.edu/sds/sherpa_trial/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/sherpa_trial/
 
 %storage=live /data/da/Docs/sherpaweb/published/ciao44/live/
 %storage=test /data/da/Docs/sherpaweb/published/ciao44/test/
@@ -760,7 +779,8 @@ version_string=4.3
 # location of the news file for the "What's new" link
 %newsfile=live /proj/web-cxc-dmz/htdocs/sherpa4.3/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.3/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/sherpa_trial/news.html
+#%newsfile=trial /proj/web-icxc/htdocs/sds/sherpa_trial/news.html
+%newsfile=trial /proj/web-icxc-test/htdocs/sds/sherpa_trial/news.html
 
 %newsurl=live /sherpa/news.html
 %newsurl=test /sherpa/news.html
@@ -788,12 +808,14 @@ googlessi=/sherpa4.3/analytics.ssi
 
 %outdir=live /proj/web-cxc-dmz/htdocs/sherpa4.3/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.3/
-%outdir=trial /proj/web-icxc/htdocs/sds/sherpa_trial/
+#%outdir=trial /proj/web-icxc/htdocs/sds/sherpa_trial/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/sherpa_trial/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/sherpa/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/sherpa4.3/
-%outurl=trial http://icxc.harvard.edu/sds/sherpa_trial/
+#%outurl=trial http://icxc.harvard.edu/sds/sherpa_trial/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/sherpa_trial/
 
 %storage=live /data/da/Docs/sherpaweb/published/ciao43/live/
 %storage=test /data/da/Docs/sherpaweb/published/ciao43/test/
@@ -870,7 +892,8 @@ imglinkiconheight=16
 
 %newsfile=live /proj/web-cxc-dmz/htdocs/ciao4.5/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/ciao4.5/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+#%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+%newsfile=trial /proj/web-icxc-test/htdocs/sds/ciao_trial/news.html
 
 %newsurl=live /ciao/news.html
 %newsurl=test /ciao/news.html
@@ -898,12 +921,14 @@ googlessi=/chips4.5/analytics.ssi
 
 %outdir=live /proj/web-cxc-dmz/htdocs/chips4.5/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chips4.5/
-%outdir=trial /proj/web-icxc/htdocs/sds/chips_trial/
+#%outdir=trial /proj/web-icxc/htdocs/sds/chips_trial/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/chips_trial/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/chips/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/chips4.5/
-%outurl=trial http://icxc.harvard.edu/sds/chips_trial/
+#%outurl=trial http://icxc.harvard.edu/sds/chips_trial/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/chips_trial/
 
 %storage=live /data/da/Docs/chipsweb/published/ciao45/live/
 %storage=test /data/da/Docs/chipsweb/published/ciao45/test/
@@ -954,7 +979,8 @@ imglinkiconheight=16
 
 %newsfile=live /proj/web-cxc-dmz/htdocs/ciao4.4/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/ciao4.4/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+#%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+%newsfile=trial /proj/web-icxc-test/htdocs/sds/ciao_trial/news.html
 
 %newsurl=live /ciao/news.html
 %newsurl=test /ciao/news.html
@@ -982,12 +1008,14 @@ googlessi=/chips4.4/analytics.ssi
 
 %outdir=live /proj/web-cxc-dmz/htdocs/chips4.4/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chips4.4/
-%outdir=trial /proj/web-icxc/htdocs/sds/chips_trial/
+#%outdir=trial /proj/web-icxc/htdocs/sds/chips_trial/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/chips_trial/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/chips/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/chips4.4/
-%outurl=trial http://icxc.harvard.edu/sds/chips_trial/
+#%outurl=trial http://icxc.harvard.edu/sds/chips_trial/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/chips_trial/
 
 %storage=live /data/da/Docs/chipsweb/published/ciao44/live/
 %storage=test /data/da/Docs/chipsweb/published/ciao44/test/
@@ -1037,7 +1065,8 @@ imglinkiconheight=16
 
 %newsfile=live /proj/web-cxc-dmz/htdocs/ciao4.3/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/ciao4.3/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+#%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+%newsfile=trial /proj/web-icxc-test/htdocs/sds/ciao_trial/news.html
 
 %newsurl=live /ciao/news.html
 %newsurl=test /ciao/news.html
@@ -1065,12 +1094,14 @@ googlessi=/chips4.3/analytics.ssi
 
 %outdir=live /proj/web-cxc-dmz/htdocs/chips4.3/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chips4.3/
-%outdir=trial /proj/web-icxc/htdocs/sds/chips_trial/
+#%outdir=trial /proj/web-icxc/htdocs/sds/chips_trial/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/chips_trial/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/chips/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/chips4.3/
-%outurl=trial http://icxc.harvard.edu/sds/chips_trial/
+#%outurl=trial http://icxc.harvard.edu/sds/chips_trial/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/chips_trial/
 
 %storage=live /data/da/Docs/chipsweb/published/ciao43/live/
 %storage=test /data/da/Docs/chipsweb/published/ciao43/test/
@@ -1146,7 +1177,8 @@ headtitlepostfix=CALDB 4
 
 %newsfile=live /proj/web-cxc-dmz/htdocs/caldb4/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/caldb4/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/caldb4/news.html
+#%newsfile=trial /proj/web-icxc/htdocs/sds/caldb4/news.html
+%newsfile=trial /proj/web-icxc-test/htdocs/sds/caldb4/news.html
 
 %newsurl=live /caldb/news.html
 %newsurl=test /caldb/news.html
@@ -1166,12 +1198,14 @@ headtitlepostfix=CALDB 4
 #
 %outdir=live /proj/web-cxc-dmz/htdocs/caldb4/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/caldb4/
-%outdir=trial /proj/web-icxc/htdocs/sds/caldb4_trial/
+#%outdir=trial /proj/web-icxc/htdocs/sds/caldb4_trial/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/caldb4_trial/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/caldb/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/caldb4/
-%outurl=trial http://icxc.harvard.edu/sds/caldb4_trial/
+#%outurl=trial http://icxc.harvard.edu/sds/caldb4_trial/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/caldb4_trial/
 
 %storage=live /data/da/Docs/caldbweb/published/caldb4/live/
 %storage=test /data/da/Docs/caldbweb/published/caldb4/test/
@@ -1233,7 +1267,8 @@ texttitlepostfix=CSC
 
 %newsfile=live /proj/web-cxc/htdocs/csc1/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/csc1/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/csc_trial/news.html
+#%newsfile=trial /proj/web-icxc/htdocs/sds/csc_trial/news.html
+%newsfile=trial /proj/web-icxc-test/htdocs/sds/csc_trial/news.html
 
 %newsurl=live /csc/news.html
 %newsurl=test /csc/news.html
@@ -1256,12 +1291,14 @@ logotext=Chandra Source Catalog logo
 
 %outdir=live /proj/web-cxc-dmz/htdocs/csc1/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/csc1/
-%outdir=trial /proj/web-icxc/htdocs/sds/csc_trial/
+#%outdir=trial /proj/web-icxc/htdocs/sds/csc_trial/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/csc_trial/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/csc/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/csc1/
-%outurl=trial http://icxc.harvard.edu/sds/csc_trial/
+#%outurl=trial http://icxc.harvard.edu/sds/csc_trial/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/csc_trial/
 
 %storage=live /data/da/Docs/cscweb/published/csc1/live/
 %storage=test /data/da/Docs/cscweb/published/csc1/test/
@@ -1343,11 +1380,13 @@ googlessi=/iris/analytics.ssi
 
 %outdir=live /proj/web-cxc-dmz/htdocs/iris/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/iris/
-%outdir=trial /proj/web-icxc/htdocs/sds/site_iris/
+#%outdir=trial /proj/web-icxc/htdocs/sds/site_iris/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/site_iris/
 
 %outurl=live http://cxc.harvard.edu/iris/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/iris/
-%outurl=trial http://icxc.harvard.edu/sds/site_iris/
+#%outurl=trial http://icxc.harvard.edu/sds/site_iris/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/site_iris/
 
 %storage=live /data/da/Docs/irisweb/published/iris/live/
 %storage=test /data/da/Docs/irisweb/published/iris/test/
@@ -1426,11 +1465,13 @@ googlessi=/obsvis/analytics.ssi
 
 %outdir=live /proj/web-cxc-dmz/htdocs/obsvis/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/obsvis/
-%outdir=trial /proj/web-icxc/htdocs/sds/obsvis_trial/
+#%outdir=trial /proj/web-icxc/htdocs/sds/obsvis_trial/
+%outdir=trial /proj/web-icxc-test/htdocs/sds/obsvis_trial/
 
 %outurl=live http://cxc.harvard.edu/obsvis/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/obsvis/
-%outurl=trial http://icxc.harvard.edu/sds/obsvis_trial/
+#%outurl=trial http://icxc.harvard.edu/sds/obsvis_trial/
+%outurl=trial http://icxc1.cfa.harvard.edu/sds/obsvis_trial/
 
 %storage=live /data/da/Docs/obsvisweb/published/obsvis/live/
 %storage=test /data/da/Docs/obsvisweb/published/obsvis/test/
@@ -1466,7 +1507,8 @@ googlessi=/obsvis/analytics.ssi
 
 group=cxcweb_ciao
 @types=test
-prefix=/proj/web-icxc/htdocs
+#prefix=/proj/web-icxc/htdocs
+prefix=/data/da/Docs/icxcweb
 
 depth_offset=0
 
@@ -1484,10 +1526,13 @@ logotext=Science Data Systems
 
 %favicon=test http://cxc.harvard.edu/ciao/favicon.ico
 
-%stylesheets=test /data/da/Docs/web4/icxc/
+#%stylesheets=test /data/da/Docs/web4/icxc/
+%stylesheets=test /data/da/Docs/web4/ciao45/
 
-%outdir=test /proj/web-icxc/htdocs/sds/
-%outurl=test http://icxc.harvard.edu/sds/
+#%outdir=test /proj/web-icxc/htdocs/sds/
+#%outurl=test http://icxc.harvard.edu/sds/
+%outdir=test /proj/web-icxc-test/htdocs/sds/
+%outurl=test http://icxc1.cfa.harvard.edu/sds/
 
 # ugh - a hack; do not need ahelp here
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao43/test/ahelp/
