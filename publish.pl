@@ -2043,9 +2043,6 @@ sub process_xml ($$) {
 #
 # uses lots of global variables...
 #
-# We do nothing if site=icxc (since we're within the
-# live site anyway)
-#
 # NOTE: we no longer copy the files over to the storage site
 # to save space
 #
@@ -2056,12 +2053,6 @@ sub process_files ($$) {
 
     # nothing to do?
     return if $#$aref == -1;
-
-    # wrong site?
-    if ( $site eq "icxc" ) {
-	print "NOTE: you do NOT publish non XML files in the iCXC site\n";
-	return;
-    }
 
     # process the files
     foreach my $in ( @$aref ) {
