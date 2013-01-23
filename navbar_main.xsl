@@ -4,16 +4,6 @@
 <!--*
     * Convert navbar.xml into the SSI pages
     * 
-    * Recent changes:
-    *  19 Mar 2008 ECG
-    *    added csc as a site for news section 
-    *	 removed a br from news markup
-    *  Oct 19 2007 DJB
-    *    Re-written so that we only process a single depth at a time
-    *   v1.6 - use CSS for news section of navbar
-    *   v1.2 - code is now split between navbar.xsl and navbar_main.xsl
-    *   v1.1 - copy of v1.35 of navbar.xsl
-    *
     * To do:
     *
     *-->

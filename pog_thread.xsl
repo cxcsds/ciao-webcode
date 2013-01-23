@@ -4,34 +4,6 @@
 <!--* 
     * Create the HTML version of the ChaRT thread
     *
-    * Recent changes:
-    * 2007 Oct 30 DJB
-    *    start work on supporting proglang (=sl or py)
-    * 2007 Oct 19 DJB
-    *    depth parameter is now a global, no need to send around
-    *  v1.17 - <html> changed to <html lang="en"> following
-    *            http://www.w3.org/TR/2005/WD-i18n-html-tech-lang-20050224/
-    *  v1.16 - Big change for CIAO 3.1: moved chart_thread_hard.xsl
-    *          into this stylesheet - see v1.23/1.24 of ciao_thread.xsl
-    *  v1.15 - added an anchor for the 'skip nav. bar' link
-    *  v1.14 - imglinkicon[width/height] parameters now define icon for
-    *          imglink tag (so user can change them via config file)
-    *  v1.13 - threadVersion variable replaced by siteversion
-    *  v1.12 - fixes to HTML plus more table-related changes (add-header/footer)
-    *          imglink now uses a single a tag with name and href attributes
-    *  v1.11 - added newsfile/newsfileurl parameters + use of globalparams_thread.xsl
-    *  v1.10 - use of tables for the main text has changed.
-    *   v1.9 - call add-header/footer so that the PDF links are created correctly
-    *   v1.8 - change format for CIAO 3.0; added cssfile parameter
-    *          year can be > 2000 now
-    *   v1.7 - ahelpindex for CIAO 3.0
-    *   v1.6 - removed xsl-revision/version as pointless
-    *   v1.5 - added siteversion variable which does NOTHING for now
-    *   v1.4 - add-bottom-links-pog-html
-    *   v1.3 - cleaned up (moved image generation code to thread_common.xsl)
-    *   v1.2 - converted to POG
-    *   v1.1 - copy of v1.2 of the ChaRT thread stylesheet
-    *
     * To do:
     *
     * Parameters:

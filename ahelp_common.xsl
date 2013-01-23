@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE xsl:stylesheet>
 
-<!-- AHELP XML to HTML convertor using XSL Transformations -->
-
-<!--* 
-    * Recent changes:
-    *  30 May 2008 DJB Removed links to PDF version in header/footer
-    *  21 Feb 2008 ECG - updated copyright statement to extend to 2008
-    *  Oct 15 2007 DJB
-    *    added $allowed-sites, removed dist from $allowed-types; copyright statement
-    *    now 2007
+<!--* AHELP XML to HTML convertor using XSL Transformations
     * 
     * Common templates used by ahelp.xsl and ahelp_index.xsl. These stylesheets
     * will define a number of parameters used below (don't describe them here

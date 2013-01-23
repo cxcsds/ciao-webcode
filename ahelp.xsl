@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE xsl:stylesheet>
 
-<!-- AHELP XML to HTML convertor using XSL Transformations -->
-
-<!--* 
-    * Recent changes:
-    *  2008 May 30 DJB Removed PDF/hardcopy generation
-    *  2007 Oct 16 DJB
-    *    Removed support for type=dist
+<!--* AHELP XML to HTML convertor using XSL Transformations
     * 
     * The stylesheet produces a text output - to STDOUT - listing the files it
     * has created (it uses xsl:document to create the HTML files). This is

@@ -3,12 +3,6 @@
 
 <!--* 
     * Create the bugs HTML page from XML source file
-    *
-    * Recent changes:
-    * 2008 May 30 DJB Removed generation of PDF version
-    * 2007 Oct 19 DJB
-    *    depth parameter is now a global, no need to send around
-    *
     *-->
 
 <xsl:stylesheet version="1.0"

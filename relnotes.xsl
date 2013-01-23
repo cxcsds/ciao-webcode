@@ -4,11 +4,6 @@
 <!--* 
     * Convert an XML web page into an HTML one
     *
-    * Recent changes:
-    * 2008 May 30 DJB Removed generation of PDF version
-    * 2007 Oct 19 DJB
-    *    depth parameter is now a global, no need to send around
-    *
     *-->
 
 <xsl:stylesheet version="1.0"

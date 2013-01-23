@@ -2,23 +2,6 @@
 <!DOCTYPE xsl:stylesheet>
 
 <!--* 
-    * Recent changes:
-    * 2008 May 30 DJB Removed generation of PDF links in header/footer
-    *   except for threads
-    * 2008 Apr 18 ECG: added dictionary_onepage as an allowed-pdf
-    * 2008 Mar 13 ECG
-    *  added cscdb as an allowed-pdf
-    * [2008 Feb 14] ECG
-    *  added csc as an allowed-site
-    *  21 Feb 2008 ECG - updated copyright statement to extend to 2008
-    * 2007 Oct 29 DJB
-    *    added is-proglang-valid
-    * 2007 Oct 22 DJB
-    *    belatedly changed copyright date from "-2006" to "-2007"
-    * 2007 Oct 19 DJB
-    *    depth parameter is now a global, no need to send around
-    *    Need to check users of add-attribute, add-image
-    *
     * "helper" templates
     *
     * Requires:

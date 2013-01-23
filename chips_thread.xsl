@@ -3,16 +3,6 @@
 
 <!--* 
     * Create the HTML version of the ChIPS thread
-    *
-    * Recent changes:
-    * 2007 Oct 30 DJB
-    *    start work on supporting proglang (=sl or py)
-    * 2007 Oct 19 DJB
-    *    depth parameter is now a global, no need to send around
-    *   v1.3 - added syntax line under thread title
-    *   v1.2 - changed "Sherpa" to "ChIPS"
-    *   v1.1 - copy of v1.12 of the Sherpa thread stylesheet
-    *
     *-->
 
 <xsl:stylesheet version="1.0"

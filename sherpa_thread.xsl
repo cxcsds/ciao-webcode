@@ -4,28 +4,6 @@
 <!--* 
     * Create the HTML version of the Sherpa thread
     *
-    * Recent changes:
-    * 2007 Oct 30 DJB
-    *    start work on supporting proglang (=sl or py)
-    * 2007 Oct 19 DJB
-    *    depth parameter is now a global, no need to send around
-    *  v1.12 - <html> changed to <html lang="en"> following
-    *            http://www.w3.org/TR/2005/WD-i18n-html-tech-lang-20050224/
-    *  v1.11 - Big change for CIAO 3.1: moved sherpa_thread_hard.xsl
-    *          into this stylesheet - see v1.23/1.24 of ciao_thread.xsl
-    *  v1.10 - added an anchor for the 'skip nav. bar' link
-    *   v1.9 - imglinkicon[width/height] parameters now define icon for
-    *          imglink tag (so user can change them via config file)
-    *   v1.8 - fixes to HTML plus more table-related changes (add-header/footer)
-    *          imglink now uses a single a tag with name and href attributes
-    *   v1.7 - added newsfile/newsfileurl parameters + use of globalparams_thread.xsl
-    *   v1.6 - use of tables for the main text has changed.
-    *   v1.5 - oops: need to do to add-footer too
-    *   v1.4 - call add-header correctly so that PDF links are created correctly
-    *   v1.3 - change format for CIAO 3.0; added cssfile parameter
-    *   v1.2 - update title to better-match the new style
-    *   v1.1 - copy of v1.6 of the ChaRT thread stylesheet
-    *
     * To do:
     *
     * Parameters:

@@ -4,17 +4,6 @@
 <!--*
     * List of "global" templates for the web-page stylesheets
     *
-    * Recent changes:
-    *   2007 Oct 31 DJB Added storageloc parameters, not sure about storage
-    *   2007 Oct 26 DJB Added proglang and storage parameters
-    *
-    *   v1.6 - added cssprintfile parameter
-    *   v1.5 - added headtitlepostfix and texttitlepostfix parameters
-    *   v1.4 - comment change to indicate expeced value of ahelpindex
-    *   v1.3 - added watchouturl parameter
-    *   v1.2 - added searchssi parameter
-    *   v1.1 - Initial version
-    *
     * Note:
     *  Not all pages need all these parameters but it's easier to have
     *  them all in one place

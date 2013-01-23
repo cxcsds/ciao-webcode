@@ -4,21 +4,6 @@
 <!--* 
     * Useful templates for creating the CIAO threads
     *
-    * Recent changes:
-    * 2010 Nov 30 ECG Removed PDF/hardcopy generation
-    * 2008 Sep 16 ECG
-    *    don't include siteversion in header of CSC threads
-    * 2008 May 14 DJB
-    *    support new "figure" markup as an alternative to the images version
-    * 2007 Dec 18 ECG
-    *    parentheses are added to endstr at different point in 
-    *	 "add-htmlhead-site-thread"
-    * 2007 Oct 29 DJB
-    *    updating to support proglang; fix for newer libxslt/xml (need to
-    *    explicitly list params to stylesheet with xsl:param ?)
-    * 2007 Oct 19 DJB
-    *    depth parameter is now a global, no need to send around
-    *
     * User-defineable parameters:
     *  - defined in including stylesheets
     *
