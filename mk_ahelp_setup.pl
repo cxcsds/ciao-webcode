@@ -30,17 +30,6 @@
 # Author:
 #  Doug Burke (dburke@cfa.harvard.edu)
 #
-# History:
-#  02 Oct 03 DJB Re-worked ahelp2html.pl into separate parts
-#  12 Oct 07 DJB Removed ldpath var as no longer used
-#                and updates to better support CIAO 4 changes
-#  15 Oct 07 DJB Executables are now OS specific
-#                Indexes now contain site information on each ahelp page.
-#                This script should *only* be run from the ciao site
-#  16 Oct 07 DJB Removed support for type=dist
-#  17 Oct 07 DJB Removed support for xsltproc tool
-#  19 Oct 07 DJB Removed use of ahelp_list_info stylesheet
-#
 # Future?:
 #  - include parameter names + synopsis for each ahelp file in the
 #    index. This will be used by the web code to add title attribute to
