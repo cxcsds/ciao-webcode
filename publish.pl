@@ -1938,7 +1938,14 @@ sub process_xml ($$) {
 	    die_if_icxc $root;
 	    xml2html_relnotes $opts;
 	} else {
+	  # We have some "non-publishing" XML files on iCXC (they are used
+	  # to create other XML files that can be published), so skip them
+	  #.
+	  if ($site eq "icxc") {
+	    print "Skipping $in.xml has it has an unknown root node [$root]\n";
+	  } else {
 	    die "Error: $in.xml has an unknown root node [$root]\n";
+	  }
 	}
 
 	# copy file over to storage space and sort out protection/group
