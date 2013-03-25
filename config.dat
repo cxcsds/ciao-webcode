@@ -1502,12 +1502,15 @@ googlessi=/obsvis/analytics.ssi
 
 -site  # end of obsvis
 
-
+# This is for the internal iCXC web site
+#     https://icxc.cfa.harvard.edu 
+# See icxc-secure for the publically-visible site
+#
 +site icxc
 
 group=cxcweb_ciao
+@types=live
 @types=test
-#prefix=/proj/web-icxc/htdocs
 prefix=/data/da/Docs/icxcweb
 
 depth_offset=0
@@ -1521,22 +1524,25 @@ number=1.0
 
 logotext=Science Data Systems
 
+%css=live /sds/ciao.css
 %css=test /sds/ciao.css
+%cssprint=live /sds/ciao.print.css
 %cssprint=test /sds/ciao.print.css
 
+%favicon=live http://cxc.harvard.edu/ciao/favicon.ico
 %favicon=test http://cxc.harvard.edu/ciao/favicon.ico
 
-#%stylesheets=test /data/da/Docs/web4/icxc/
+%stylesheets=live /data/da/Docs/web4/ciao45/
 %stylesheets=test /data/da/Docs/web4/ciao45/
 
-#%outdir=test /proj/web-icxc/htdocs/sds/
-#%outurl=test http://icxc.harvard.edu/sds/
+%outdir=live /proj/web-icxc/htdocs/sds/
 %outdir=test /proj/web-icxc-test/htdocs/sds/
-%outurl=test http://icxc1.cfa.harvard.edu/sds/
+%outurl=live https://icxc.cfa.harvard.edu/sds/
+%outurl=test https://icxc2.cfa.harvard.edu/sds/
 
 # ugh - a hack; do not need ahelp here
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao43/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao43/test/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao45/test/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao45/test/ahelp/
 
 -version
 
@@ -1547,6 +1553,62 @@ logotext=Science Data Systems
 @stylesheets=myhtml
 
 -site  # end of icxc
+
+# This is for the ipublic iCXC web site
+#     https://cxc.cfa.harvard.edu 
+# See icxc for the internal site.
+#
+# Not clear at present wheter there will be any difference in the live
+# and test versions.
+#
++site icxc-secure
+
+group=cxcweb_ciao
+@types=live
+@types=test
+prefix=/data/da/Docs/icxcweb
+
+depth_offset=0
+
+# use of version = secure is a bit of a hack just to avoid
+# special processing.
+#
++version secure
+
+number=1.0
+
+logotext=Science Data Systems
+
+%css=live /sds/ciao.css
+%css=test /sds/ciao.css
+%cssprint=live /sds/ciao.print.css
+%cssprint=test /sds/ciao.print.css
+
+%favicon=live http://cxc.harvard.edu/ciao/favicon.ico
+%favicon=test http://cxc.harvard.edu/ciao/favicon.ico
+
+%stylesheets=live /data/da/Docs/web4/ciao45/
+%stylesheets=test /data/da/Docs/web4/ciao45/
+
+# TODO: what is the correct output directory?
+%outdir=live /proj/web-icxc-test/htdocs/sds/
+%outdir=test /proj/web-icxc-test/htdocs/sds/
+%outurl=live https://cxc.cfa.harvard.edu/sds/
+%outurl=test https://cxc.cfa.harvard.edu/sds/
+
+# ugh - a hack; do not need ahelp here
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao45/test/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao45/test/ahelp/
+
+-version
+
+@stylesheets=page
+@stylesheets=navbar
+@stylesheets=helper
+@stylesheets=links
+@stylesheets=myhtml
+
+-site  # end of icxc-secure
 
 +site pog
 
