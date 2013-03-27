@@ -1562,8 +1562,8 @@ logotext=Science Data Systems
 %stylesheets=live /data/da/Docs/web4/ciao45/
 %stylesheets=test /data/da/Docs/web4/ciao45/
 
-%outdir=live /proj/web-icxc-secure/htdocs/sds/
-%outdir=test /proj/web-icxc-secure/htdocs/sds/
+%outdir=live /proj/web-cxc-secure/htdocs/sds/
+%outdir=test /proj/web-cxc-secure/htdocs/sds/
 %outurl=live https://cxc.cfa.harvard.edu/sds/
 %outurl=test https://cxc.cfa.harvard.edu/sds/
 
