@@ -1517,9 +1517,6 @@ prefix=/data/da/Docs/icxcweb
 
 depth_offset=0
 
-# use of version = sds is a bit of a hack just to avoid
-# special processing.
-#
 +version sds
 
 number=1.0
@@ -1548,9 +1545,6 @@ logotext=Science Data Systems
 
 -version
 
-# use of version = secure is a bit of a hack just to avoid
-# special processing.
-#
 +version secure
 
 number=1.0
@@ -1568,9 +1562,8 @@ logotext=Science Data Systems
 %stylesheets=live /data/da/Docs/web4/ciao45/
 %stylesheets=test /data/da/Docs/web4/ciao45/
 
-# TODO: what is the correct output directory?
-%outdir=live /proj/web-icxc-test/htdocs/sds/
-%outdir=test /proj/web-icxc-test/htdocs/sds/
+%outdir=live /proj/web-icxc-secure/htdocs/sds/
+%outdir=test /proj/web-icxc-secure/htdocs/sds/
 %outurl=live https://cxc.cfa.harvard.edu/sds/
 %outurl=test https://cxc.cfa.harvard.edu/sds/
 
