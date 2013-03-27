@@ -1502,9 +1502,11 @@ googlessi=/obsvis/analytics.ssi
 
 -site  # end of obsvis
 
-# This is for the internal iCXC web site
+# This is for the internal iCXC web site, either
 #     https://icxc.cfa.harvard.edu 
-# See icxc-secure for the publically-visible site
+#     https://cxc.cfa.harvard.edu 
+# depending on whether you are in the sds/ or secure/
+# sub-directories of /data/da/Docs/icxcweb/
 #
 +site icxc
 
@@ -1546,30 +1548,6 @@ logotext=Science Data Systems
 
 -version
 
-@stylesheets=page
-@stylesheets=navbar
-@stylesheets=helper
-@stylesheets=links
-@stylesheets=myhtml
-
--site  # end of icxc
-
-# This is for the ipublic iCXC web site
-#     https://cxc.cfa.harvard.edu 
-# See icxc for the internal site.
-#
-# Not clear at present wheter there will be any difference in the live
-# and test versions.
-#
-+site icxc-secure
-
-group=cxcweb_ciao
-@types=live
-@types=test
-prefix=/data/da/Docs/icxcweb
-
-depth_offset=0
-
 # use of version = secure is a bit of a hack just to avoid
 # special processing.
 #
@@ -1608,7 +1586,7 @@ logotext=Science Data Systems
 @stylesheets=links
 @stylesheets=myhtml
 
--site  # end of icxc-secure
+-site  # end of icxc
 
 +site pog
 
