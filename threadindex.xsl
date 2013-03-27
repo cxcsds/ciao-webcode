@@ -4,14 +4,6 @@
 <!--* 
     * Create the thread index pages - site agnostic
     *
-    * Recent changes:
-    * 2008 May 30 DJB Removed generation of PDF version
-    *
-    * 2007 Oct 19 DJB
-    *    depth parameter is now a global, no need to send around
-    *    also changed a few name attributes of xsl:apply-template nodes
-    *    to select attributes (why hasn't this caused a problem previously?)
-    *
     *-->
 
 <xsl:stylesheet version="1.0"

@@ -2,12 +2,6 @@
 <!DOCTYPE xsl:stylesheet>
 
 <!--* 
-    * Recent changes:
-    * 2008 May 30 DJB Removed generation of PDF version
-    * 2008 Apr 29 ECG - adjust '|' around thread quicklinks
-    * 2007 Oct 19 DJB
-    *    depth parameter is now a global, no need to send around
-    *
     * process the sections of the thread index for the CIAO, ChIPS, and Sherpa pages
     *
     * Parameters set in threadindex.xsl
@@ -33,7 +27,7 @@
     *    requirements.
     *
     *  - For CIAO 4 we need to deal with language-specific versions of
-    *    some threads
+    *    some threads; for CIAO 4.3 this is no-longer needed.
     *-->
 
 <xsl:stylesheet version="1.0"

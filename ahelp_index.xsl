@@ -1,22 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE xsl:stylesheet>
 
-<!-- AHELP XML to HTML convertor using XSL Transformations -->
-
-<!--* 
-    * Recent changes:
-    *  2008 May 30 DJB Removed PDF/hardcopy generation
-    *  Nov 30 2007 DJB
-    *    minor refactoring of ahelp link code in preparation for improved support of
-    *    context=py.*/sl.* pages
-    *  Oct 17 2007 DJB
-    *    navbar for ahelp pages now contains a link to the home page for that
-    *    site.
-    *  Oct 16 2007 DJB
-    *    Removed support for type=dist and support for newsfile/newsfileurl/
-    *    watchouturl params
-    *  Oct 15 2007 DJB
-    *    Updated to allow site-specific indexes
+<!--* AHELP XML to HTML convertor using XSL Transformations 
+    *
     * 
     * Create the "index" pages for the ahelp pages - at least the
     * alphabetical and contextual listings.
@@ -80,7 +66,6 @@
     *    used to create title element in html block.
     *    If "CIAO 2.2.1", then version = "2.2.1"
     *    NOTE: don't 'trust' the contents of the version block
-    *
     * 
     * Notes:
     *  . we make use of EXSLT functions for date/time

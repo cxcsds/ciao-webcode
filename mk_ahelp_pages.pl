@@ -38,20 +38,6 @@
 # Author:
 #  Doug Burke (dburke@cfa.harvard.edu)
 #
-# History:
-#  21 Jan 04 DJB Re-worked ahelp2html.pl into separate parts
-#  05 May 04 DJB changed so that - if no XML files are given - it uses
-#                the contents of the ahelpfiles directory
-#  11 May 04 DJB support for media=print css file
-#  22 Aug 06 ECG make headtitlepostfix and texttitlepostfix available
-#  12 Oct 07 DJB Removed ldpath and htmllib vars as no longer used
-#                and updates to better support CIAO 4 changes
-#  15 Oct 07 DJB Executables are now OS specific
-#  16 Oct 07 DJB Handle site-specific pages
-#                Removed support for type=dist
-#  17 Oct 07 DJB Removed support for xsltproc tool
-#  30 May 08 DJB Removed PDF generation
-#
 # To Do:
 #  - 
 #

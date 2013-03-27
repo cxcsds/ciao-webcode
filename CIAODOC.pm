@@ -5,21 +5,6 @@
 # Author:
 #  Doug Burke (dburke@cfa.harvard.edu)
 #
-# History:
-#  02 Oct 03 DJB Introduced due to reworking of ahelp2html.pl into
-#                multiple scripts & using the config file directly
-#  13 Feb 04 DJB removed warning message about protecting params as seems
-#                to work
-#  12 Oct 07 DJB removed ldpath and htmllib options; we now encode this
-#                information in the xsltproc and htmldoc options, which should
-#                give the 'correct' way to call the code. It means we lose
-#                the ability to check that the executable exists before
-#                processing files, but makes it easier to run on multiple
-#                OS's
-#  15 Oct 07 DJB Initial support for having ahelp pages in multiple sites.
-#  17 Oct 07 DJB Changed xslt processing to use XML::LibXSLT rather than xsltproc
-#  26 Oct 07 DJB Initial support for individual S-Lang/Python pages
-#
 
 #
 # Global (ie in package main) variables used by this module

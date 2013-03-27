@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE xsl:stylesheet>
 
-<!-- AHELP XML to HTML convertor using XSL Transformations -->
-
-<!--* 
-    * Recent changes:
-    *  2008 May 30 DJB Remove support for PDF generation
-    *  2007 Oct 17 DJB 
-    *    Try and handle TABLE's the same way that ahelp does; if all rows (but the first)
-    *    of a column are empty then do not display that column.
-    *    Removed support for type=dist
-    *
+<!--*
+    * AHELP XML to HTML convertor using XSL Transformations
+    * 
     * These are the routines that actually transfrom the ahelp document
     * - broken out of ahelp.xsl to make it easier to test
     *-->

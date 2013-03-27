@@ -2,47 +2,6 @@
 <!DOCTYPE xsl:stylesheet>
 
 <!--* 
-    * Recent changes:
-    * 2007 Oct 19 DJB
-    *    depth parameter is now a global, no need to send around
-    *  v1.35 - moved "screen" code from thread_common.xsl to myhtml.xsl
-    *  v1.34 - add-start-html now includes lang="en" attribute in tag following
-    *            http://www.w3.org/TR/2005/WD-i18n-html-tech-lang-20050224/
-    *  v1.33 - removed tab character to make testing easier. no functional change
-    *  v1.32 - bug fixes in scriptlist handling: had missed converting an id tag to
-    *          <a name=...> and had missed setting the scripts mode for processing desc
-    *  v1.31 - changed to using &#160; for nbsp rather than the disable-encoding hack
-    *  v1.30 - cleaned up un-needed add-start/end templates from list code (~v1.25)
-    *          We now make it an error for a list block to appear within a p block
-    *  v1.29 - added the calculate-date-from-attributes template (perhaps should
-    *          be in helper.xsl) and used it in "add-date"
-    *  v1.28 - bug-fix to 1.27: need to use copy-of to preserve tags/attributes
-    *  v1.27 - clean up to handling of p tags (similar, but simpler, than v1.25)
-    *  v1.26 - removed empty-content check in add-text-styles as we seem to need
-    *          to do this in the calling template (ie in links.xsl)
-    *  v1.25 - major revamp of adding 'styles' to links: remove start/end-styles
-    *          and just have a add-text-styles template
-    *  v1.24 - pre/@header now uses add-highlight template
-    *  v1.23 - updated to account for scripts all now in one package (i.e.
-    *          not available separately)
-    *  v1.22 - new/updated dates now in bold/normal size if in a thread index
-    *  v1.21 - ensure $depth is used by templates called from scriptlist
-    *          [really need to sort out this issue]
-    *  v1.20 - added in Chris' scriptlist support
-    *  v1.19 - (re v1.18: unless it's in the thread index page)
-    *  v1.18 - list's now complain if contain anything but li tags or in p blocks
-    *  v1.17 - add-date template now uses the first 3 letters of the month name
-    *  v1.16 - added a "year 4000" problem to the date handling
-    *  v1.15 - added bugnum tag as a stop-gap measure
-    *  v1.14 - added ssi tag: flastmod
-    *  v1.13 - beginning support for the math tag
-    *  v1.12 - dates for new/updated tags now font size -1
-    *  v1.11 - added support for lists of type "a"
-    *  v1.10 - cleaned up highlight code slightly (more modular)
-    *   v1.9 - amalgamated xhtml.xsl templates (thread code)
-    *   v1.8 - bug fix for v1.7
-    *   v1.7 - images are now looked for in imgs/ not gifs/
-    *
     * support for xHTML-like tags
     * - link tags/support can be found in links.xsl
     *

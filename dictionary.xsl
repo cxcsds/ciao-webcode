@@ -3,14 +3,6 @@
 
 <!--* 
     * Create the dictionary HTML pages from one XML source file
-    *
-    * Recent changes:
-    *
-    * 2008 May 30 DJB Removed generation of PDF version
-    * 2008 Apr 28 ECG: removed "br" before "hr"
-    * 2007 Oct 19 DJB
-    *    depth parameter is now a global, no need to send around
-    *
     *-->
 
 <xsl:stylesheet version="1.0"

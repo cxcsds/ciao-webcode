@@ -5,15 +5,6 @@
     * Create a "redirect" page to automatically redirect the
     * brower to the new page
     *
-    * Recent changes:
-    *   v1.5 - <html> changed to <html lang="en"> following
-    *            http://www.w3.org/TR/2005/WD-i18n-html-tech-lang-20050224/
-    *   v1.4 - added a title tag to make pages match the DTD
-    *   v1.3 - explicitly checks for filename being set; cleaned up
-    *          screen output (no more DTD declaration)
-    *   v1.2 - page is written to the correct file, rather than to STDOUT
-    *   v1.1 - initial version
-    *
     * Currently a very simple stylesheet that requires only one
     * parameter.
     *

@@ -3,10 +3,6 @@
 
 <!--* 
     * Create the HTML version of the CSC thread
-    *
-    * Recent changes:
-    * 2008 Sept 11 ECG
-    *      new file, copied from ciao_thread.xsl
     *-->
 
 <xsl:stylesheet version="1.0"

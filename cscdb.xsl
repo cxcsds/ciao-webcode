@@ -3,14 +3,6 @@
 
 <!--* 
     * Convert an XML web page into an HTML one
-    *
-    * Recent changes:
-    *
-    * 2008 May 30 DJB Removed generation of PDF version
-    *
-    * 2008 Mar/Feb ECG
-    *	 new stylesheet for cscdb page type
-    *
     *-->
 
 <xsl:stylesheet version="1.0"
