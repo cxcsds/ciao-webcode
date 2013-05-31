@@ -40,6 +40,7 @@
     *  . pagename=name of page (ie without .xml or .html or any proglang additions)
     *
     *  . url=URL of page (on live server)
+    *  . outurl=This appears to be the "base" url (ie the directory containing the page)
     *
     *  . sourcedir=full path to directory containing navbar.xml
     *

@@ -768,6 +768,8 @@ sub xml2html_page ($) {
     foreach my $page ( @pages ) { myrm $page; }
     clean_up_math( $outdir, @math );
 
+    my $url = "${outurl}${in}.html";
+
     # used to set up the list of parameters sent to the
     # stylesheet
     #
@@ -779,7 +781,7 @@ sub xml2html_page ($) {
        install => $outdir,
        pagename => $in,
        #	  navbarlink => $nlink,
-       url => "${outurl}${in}.html",
+       url => $url,
        sourcedir => cwd() . "/",
        updateby => $$opts{updateby},
        depth => $depth,
@@ -808,7 +810,7 @@ sub xml2html_page ($) {
     # math?
     process_math( $outdir, @math );
 
-    print "\nThe page can be viewed on:\n  ${outurl}$in.html\n\n";
+    print "\nThe page can be viewed on:\n  ${url}\n\n";
 
 } # sub: xml2html_page
 
@@ -852,6 +854,8 @@ sub xml2html_cscdb ($) {
     initialise_pages( @pages );
     clean_up_math( $outdir, @math );
 
+    my $url = "${outurl}${in}.html";
+
     # used to set up the list of parameters sent to the
     # stylesheet
     #
@@ -863,7 +867,7 @@ sub xml2html_cscdb ($) {
        install => $outdir,
        pagename => $in,
        #	  navbarlink => $nlink,
-       url => "${outurl}${in}.html",
+       url => $url,
        urlhead => $outurl,
        sourcedir => cwd() . "/",
        updateby => $$opts{updateby},
@@ -893,7 +897,7 @@ sub xml2html_cscdb ($) {
     # math?
     process_math( $outdir, @math );
 
-    print "\nThe pages can be viewed at:\n  ${outurl}$in.html\n";
+    print "\nThe pages can be viewed at:\n  $url\n";
     print "and:\n  ${outurl}$in\_alpha.html\n\n";
 
 } # sub: xml2html_cscdb
@@ -938,6 +942,8 @@ sub xml2html_bugs ($) {
     foreach my $page ( @pages ) { myrm $page; }
     clean_up_math( $outdir, @math );
 
+    my $url = "${outurl}${in}.html";
+
     # used to set up the list of parameters sent to the
     # stylesheet
     #
@@ -949,7 +955,7 @@ sub xml2html_bugs ($) {
        install => $outdir,
        pagename => $in,
        #	  navbarlink => $nlink,
-       url => "${outurl}${in}.html",
+       url => $url,
        sourcedir => cwd() . "/",
        updateby => $$opts{updateby},
        depth => $depth,
@@ -978,7 +984,7 @@ sub xml2html_bugs ($) {
     # math?
     process_math( $outdir, @math );
 
-    print "\nThe page can be viewed on:\n  ${outurl}$in.html\n\n";
+    print "\nThe page can be viewed on:\n  $url\n\n";
 
 } # sub: xml2html_bugs
 
@@ -1016,6 +1022,8 @@ sub xml2html_news ($) {
     foreach my $page ( @pages ) { myrm $page; }
     clean_up_math( $outdir, @math );
 
+    my $url = "${outurl}${in}.html";
+
     # used to set up the list of parameters sent to the
     # stylesheet
     #
@@ -1028,7 +1036,7 @@ sub xml2html_news ($) {
        pagename => $in,
        #	  navbarlink => $nlink,
        outurl => $outurl,
-       url => "${outurl}${in}.html",
+       url => $url,
        sourcedir => cwd() . "/",
        updateby => $$opts{updateby},
        depth => $depth,
@@ -1057,7 +1065,7 @@ sub xml2html_news ($) {
     # math?
     process_math( $outdir, @math );
 
-    print "\nThe page can be viewed on:\n  ${outurl}$in.html\n";
+    print "\nThe page can be viewed on:\n  $url\n";
     print "An updated feed was created:\n  ${outurl}feed.xml\n\n";
     
 } # sub: xml2html_news
@@ -1182,6 +1190,8 @@ sub xml2html_relnotes ($) {
     foreach my $page ( @pages ) { myrm $page; }
     clean_up_math( $outdir, @math );
 
+    my $url = "${outurl}${in}.html";
+
     # used to set up the list of parameters sent to the
     # stylesheet
     #
@@ -1193,7 +1203,7 @@ sub xml2html_relnotes ($) {
        install => $outdir,
        pagename => $in,
        #	  navbarlink => $nlink,
-       url => "${outurl}${in}.html",
+       url => $url,
        sourcedir => cwd() . "/",
        updateby => $$opts{updateby},
        depth => $depth,
@@ -1222,7 +1232,7 @@ sub xml2html_relnotes ($) {
     # math?
     process_math( $outdir, @math );
 
-    print "\nThe page can be viewed on:\n  ${outurl}$in.html\n\n";
+    print "\nThe page can be viewed on:\n  $url\n\n";
 
 } # sub: xml2html_relnotes
 
@@ -1421,6 +1431,8 @@ sub xml2html_threadindex ($) {
        newsfile => $newsfile,
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
+       # TODO: outurl is wrong here since it should vary with the page
+       #       and use of $in is also wrong
        url => "${outurl}${in}.html",
        searchssi => $searchssi,
        googlessi => $googlessi,
@@ -1447,12 +1459,6 @@ sub xml2html_threadindex ($) {
 #   need to copy over /thread/info/files/file entries
 #   updating to support proglang tags in header which
 #     indicate creation of index.<lang>.html/index.html files
-#
-# XXX TODO XXX
-# At present we do not have language-specific versions of the
-# files we copy or include - e.g. as indicated by the screen tag -
-# which could need changing.
-#
 #
 sub xml2html_thread ($) {
     my $opts = shift;
@@ -1495,6 +1501,9 @@ sub xml2html_thread ($) {
     #
     my $rnode = $dom->documentElement();
 
+    # TODO: remove the proglang checks (first it should warn if
+    #    any exist and then take out the code)
+    #
     my @html;
     my @lang;
     foreach my $node ($rnode->findnodes('info/proglang')) {
@@ -1515,6 +1524,9 @@ sub xml2html_thread ($) {
     die "Repeated //thread/info/proglang elements in $threadname\n"
       if $#lang == 1 and $lang[0] eq $lang[1];
 
+    # TODO: we no longer create the img<n>.html pages, or so I believe, so 
+    #       this should be cleaned up
+    #
     if ($#lang == -1) {
       push @html, "index.html";
       push @html, map { "img$_.html"; } ( 1 .. $rnode->findnodes('images/image')->size );
@@ -1586,8 +1598,9 @@ sub xml2html_thread ($) {
     #   and hack the .hard. version so that we look for the
     #   correct pdf file names (not index.[a4|letter].pdf)
     #
-    # XXX TODO XXX
-    #   update this to handle proglang!='', if necessary
+    #
+    # TODO: given that this is looking for *.hard.html it is old
+    #       code and should probably be removed.
     #
     return if should_we_skip \$time,
       map { my $a = $_; $a =~ s/index\.hard\.html$/$threadname.hard.html/; "${outdir}$a"; } @html,
@@ -1672,7 +1685,8 @@ sub xml2html_thread ($) {
        newsfile => $newsfile,
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
-       url => "${outurl}${in}.html",
+       # url => "${outurl}${in}.html",  NOTE: we should only be creating one page now
+       url => "${outurl}index.html",
        searchssi => $searchssi,
        googlessi => $googlessi,
        headtitlepostfix => $headtitlepostfix,
@@ -1689,6 +1703,7 @@ sub xml2html_thread ($) {
 
     # Safety check: ensure all restrict attributes are set to sl or py
     #
+    # TODO: chande so that we error out if these exist any more
     my @fails = $rnode->findnodes('//@restrict[. != "sl" and . != "py"]');
     die "ERROR: thread=$threadname restrict attribute can only be 'sl' or 'py', not:\n\t" .
       join (" ", map { $_->textContent; } @fails ) . "\n"
@@ -1696,6 +1711,8 @@ sub xml2html_thread ($) {
 
     # Hack to avoid translate_file_langs having to know the xslt path
     # (not a very good idea)
+    #
+    # TODO: this can probably be removed now?
     #
     preload_stylesheet "$$opts{xslt}strip_proglang.xsl", "strip_proglang.xsl";
     translate_file "$$opts{xslt}${site}_thread.xsl", $dom, \%params;
@@ -1724,6 +1741,8 @@ sub xml2html_thread ($) {
       return;
     }
 
+    # TODO: the following should be removed, I think
+ 
     # If proglang != '' then we need an index.html file. Its contents
     # depend on whether there are one or two languages to be created.
     # We create either a redirect or page DOM and then treat it as
