@@ -1685,8 +1685,10 @@ sub xml2html_thread ($) {
        newsfile => $newsfile,
        newsfileurl => $newsfileurl,
        watchouturl => $watchouturl,
-       # url => "${outurl}${in}.html",  NOTE: we should only be creating one page now
-       url => "${outurl}index.html",
+       # NOTE: we drop the index.html part of the URL here to
+       #       look neater and potentially support later changes
+       # url => "${outurl}index.html",
+       url => $outurl,
        searchssi => $searchssi,
        googlessi => $googlessi,
        headtitlepostfix => $headtitlepostfix,
