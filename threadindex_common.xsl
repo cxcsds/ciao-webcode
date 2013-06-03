@@ -167,8 +167,6 @@
         *   OR, do we assume that as we are in the thread index everything
         *   is in the sub-directory of this page so we needn't bother?
 	*
-	* As we now have to bother about language-specific versions it
-	* would be nice to consolidate the logic.
         *-->
     <a class="threadlink" href="{$thisThreadInfo/name}/"><xsl:value-of select="$thisThreadInfo/title/long"/></a>
 
