@@ -54,7 +54,6 @@ my @funcs_xslt =
      translate_file
      read_xml_file read_xml_string
      find_math_pages
-     preload_stylesheet
     );
 my @funcs_cfg  =
   qw(
@@ -355,18 +354,6 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     return $xslt_store{$filename};
   }
 
-  # An ugly hack to allow strip_proglang.xsl be referenced below
-  # without a path name. This should be solved properly.
-  #
-  sub preload_stylesheet ($$) {
-      my $filename = shift;
-      my $name = shift;
-      return if exists $xslt_store{$filename};
-      my $style = $xslt->parse_stylesheet_file ($filename) ||
-	die "ERROR: unable to parse stylesheet '$filename'\n";
-      $xslt_store{$name} = $style;
-  }
-
   # Returns the DOM for the file or dies, although it may be that this
   # method already dies and I need to improve my error handling here.
   # 
@@ -452,29 +439,6 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     return $retval;
 
   } # sub: translate_file()
-
-  # Return a DOM that is specialized to the given language, which
-  # should be "sl" or "py".
-  # 
-  sub specialize_lang ($$) {
-    my $dom  = shift;
-    my $lang = shift;
-
-    dbg "*** Language specialisation for lang=$lang ***";
-
-    die "Unknown language '$lang'\n" unless $lang eq "sl" or $lang eq "py";
-    die "Expect to be sent a DOM\n"
-      unless ref $dom eq "XML::LibXML::Document";
-
-    # We could trap errors, but no real need at present.
-    #
-    my $sheet = _get_stylesheet "strip_proglang.xsl";
-    my $newdom = $sheet->transform($dom, proglang => "'$lang'");
-    dbg "*** Finished language specialization (lang=$lang)";
-
-    return $newdom;
-
-  } # sub: specialize_lang()
 
 }
 

@@ -19,10 +19,7 @@
 
     * 
     * Thread support:
-    *   We have added support for the proglang attribute to threadlink tags, and
-    *   the /thread/info/proglang tags to thread pages. This complicates thread
-    *   linking, since we have to check the storage location for the given thread
-    *   to see if the thread has language-specific versions.
+    *   The proglang support is being removed.
     * 
     * Thoughts:
     * - a number of links go to the 'index' page (eg ahelp)
@@ -245,7 +242,8 @@
       * In CIAO 4 we have added the $proglang variable which, if set,
       * is used to determine which of the context=sl.*/py.*  files
       * to link to. If $proglang is not set and you have context=sl.*/py.*
-      * matches, we automatically link to both. 
+      * matches, we automatically link to both. This is being phased out in
+      * CIAO 4.5 since it hasn't been needed since CIAO 4.2. 
       *-->
 
 
@@ -1949,10 +1947,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *   - if the root node is thread, link to the current page
       *   - else throw a wobbly and tell the user to use threadpage (or there's an error). 
       *
-      *  we now support the proglang attribute - which says link to
-      *  a specific language - and the //thread/info/proglang values -
-      *  which indicate what language(s) the thread covers.
-      *
       *  id only is only allowed if the rootnode is thread
       *    OR dummy (ie an include file)
       *
@@ -1960,9 +1954,21 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * thread link tags, which would mean using the short/long title
       * elements for the thread as the link text.
       *
+      * Any threadlink with a proglink attribute is considered an error.
       *-->
 
   <xsl:template match="threadlink">
+
+    <!-- *
+         * NOTE: proglang support has been removed, so error out if
+	 *       any thing uses the proglang attribute.
+         *-->
+    <xsl:if test="boolean(@proglang)">
+	<xsl:message terminate="yes">
+ ERROR: threadlink tag has proglang attribute (value=<xsl:value-of select="@proglang"/>)
+    which is no longer supported; please remove and re-publish.
+	</xsl:message>
+    </xsl:if>
 
     <!--* safety checks *-->
     <xsl:call-template name="check-contents-are-not-empty"/>
@@ -1990,64 +1996,25 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:message>
     </xsl:if>
 
+    <!-- * Left in so that we check that the thread exists -->
     <xsl:variable name="threadInfo" select="djb:read-in-thread-info()"/>
+    <!--
     <xsl:variable name="tInfo" select="exsl:node-set($threadInfo)"/>
     <xsl:variable name="tname" select="$tInfo/name"/>
     <xsl:variable name="nlang" select="count($tInfo/proglang)"/>
+    -->
 
-    <!--*
-	* How do we process the link?
-	* We first handle the obvious error cases
-	*-->
-    <xsl:choose>
-
-      <xsl:when test="boolean(@proglang) and $nlang=0">
-	<xsl:message terminate="yes">
- ERROR: threadlink tag has proglang attribute (value=<xsl:value-of select="@proglang"/>)
-    but the thread (name=<xsl:value-of select="$tname"/>) has no //thread/info/proglang nodes!
-	</xsl:message>
-      </xsl:when>
-
-      <xsl:when test="$nlang = 1 and boolean(@proglang) and @proglang != $tInfo/proglang">
-	<xsl:message terminate="yes">
- ERROR: threadlink tag has proglang attribute=<xsl:value-of select="@proglang"/>
-   but the thread (name=<xsl:value-of select="$name"/>) only has
-   //thread/info/proglang=<xsl:value-of select="$tInfo/proglang"/>
-	</xsl:message>
-      </xsl:when>
-
-      <xsl:when test="$nlang &gt; 0 and (boolean(@proglang) or $proglang != '')">
-	<xsl:call-template name="threadlink-single-proglang">
-	  <xsl:with-param name="in-thread" select="$in-thread"/>
-	</xsl:call-template>
-      </xsl:when>
-
-      <xsl:when test="$nlang &gt; 1">
-	<xsl:call-template name="threadlink-multiple-proglang">
-	  <xsl:with-param name="in-thread" select="$in-thread"/>
-	</xsl:call-template>
-      </xsl:when>
-
-      <xsl:otherwise>
-
-	<xsl:if test="boolean(@proglang)">
-	  <xsl:message>
- WARNING: threadlink has @proglang=<xsl:value-of select="@proglang"/> but the thread,
-          name=<xsl:value-of select="$tname"/>, does not appear to be language-specific
-	  </xsl:message>
-	</xsl:if>
-
-	<xsl:call-template name="threadlink-simple">
-	  <xsl:with-param name="in-thread" select="$in-thread"/>
-	</xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="threadlink-simple">
+      <xsl:with-param name="in-thread" select="$in-thread"/>
+    </xsl:call-template>
 
   </xsl:template> <!--* match=threadlink *-->
 
-  <!--* XXX TODO XXX refactor the threadlink-* templates *-->
-
-  <!--* Handle a threadlink when we do not have to bother about proglang values *-->
+  <!-- *
+       * This was pulled out of threadlink when support for multiple
+       * languages (proglang) was introduced; it no longer needs to
+       * be separate but is left as is for now.
+       *-->
   <xsl:template name="threadlink-simple">
     <xsl:param name="in-thread" select="false()"/>
 
@@ -2064,7 +2031,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     
     <!--*
 	* Process the contents, surrounded by styles.
-	* I think the code below can be cleaned up; see threadlink-multiple-proglang
+	* I think the code below can be cleaned up
 	*-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
@@ -2095,93 +2062,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     </xsl:call-template>
 
   </xsl:template> <!--* name=threadlink-simple *-->
-
-  <!--*
-      * Thread has multiple languages, use
-      * @proglang or $proglang to determine which to use
-      * (check for @proglang first, then fall back to $proglang)
-      *-->
-  <xsl:template name="threadlink-single-proglang">
-    <xsl:param name="in-thread" select="false()"/>
-
-    <xsl:variable name="urlfrag"><xsl:call-template name="handle-thread-site-link">
-      <xsl:with-param name="linktype"  select="'threadlink'"/>
-      <xsl:with-param name="in-thread" select="$in-thread"/>
-    </xsl:call-template></xsl:variable>
-
-    <xsl:variable name="index">index<xsl:choose>
-    <xsl:when test="boolean(@proglang)"><xsl:value-of select="concat('.',@proglang)"/></xsl:when>
-    <xsl:when test="$proglang != ''"><xsl:value-of select="concat('.',$proglang)"/></xsl:when>
-    <xsl:otherwise>
-      <xsl:message terminate="yes">
- Internal error: neither @proglang or $proglang is available for threadlink disambiguation
-      </xsl:message>
-    </xsl:otherwise>
-    </xsl:choose>.html</xsl:variable>
-
-    <xsl:call-template name="add-text-styles">
-      <xsl:with-param name="contents">
-	<a>
-	  <xsl:attribute name="href"><xsl:value-of
-		select="$urlfrag"/><xsl:choose>
-	
-		<xsl:when test="boolean(@name)"><xsl:value-of select="concat(@name,'/',$index)"/><xsl:if
-		    test="boolean(@id)"><xsl:value-of select="concat('#',@id)"/></xsl:if></xsl:when>
-
-		<xsl:when test="boolean(@id)"><xsl:value-of select="concat($index,'#',@id)"/></xsl:when>
-
-		<xsl:otherwise><xsl:value-of select="$index"/></xsl:otherwise>
-	  </xsl:choose></xsl:attribute>
-
-	  <xsl:apply-templates/>
-	</a>
-      </xsl:with-param>
-    </xsl:call-template>
-
-  </xsl:template> <!--* name=threadlink-single-proglang *-->
-
-  <!--*
-      * We have multiple programming languages to deal with,
-      * and - at present - we assume these are always
-      * "sl" and "py". The output contains two links, one
-      * to each version.
-      *-->
-  <xsl:template name="threadlink-multiple-proglang">
-    <xsl:param name="in-thread" select="false()"/>
-
-    <xsl:variable name="urlfrag"><xsl:call-template name="handle-thread-site-link">
-      <xsl:with-param name="linktype"  select="'threadlink'"/>
-      <xsl:with-param name="in-thread" select="$in-thread"/>
-    </xsl:call-template></xsl:variable>
-
-    <!--* is this correct? *-->
-    <xsl:variable name="urlpagehead"><xsl:choose>
-      <xsl:when test="boolean(@name)"><xsl:value-of select="concat(@name,'/')"/></xsl:when>
-    </xsl:choose>index.</xsl:variable>
-
-    <xsl:variable name="urltail">.html<xsl:if
-    test="boolean(@id)"><xsl:value-of select="concat('#',@id)"/></xsl:if></xsl:variable>
-    
-    <xsl:call-template name="add-text-styles">
-      <xsl:with-param name="contents">
-	<xsl:apply-templates/>
-	<xsl:text> (</xsl:text>
-	<a>
-	  <xsl:attribute name="href"><xsl:value-of
-	  select='concat($urlfrag,$urlpagehead,"sl",$urltail)'/></xsl:attribute>
-	  <xsl:text>S-Lang</xsl:text>
-	</a>
-	<xsl:text> or </xsl:text>
-	<a>
-	  <xsl:attribute name="href"><xsl:value-of
-	  select='concat($urlfrag,$urlpagehead,"py",$urltail)'/></xsl:attribute>
-	  <xsl:text>Python</xsl:text>
-	</a>
-	<xsl:text>)</xsl:text>
-      </xsl:with-param>
-    </xsl:call-template>
-
-  </xsl:template> <!--* name=threadlink-multiple-proglang *-->
 
   <!--*
       * this mess is to allow threadlink/threadpage to
@@ -2538,6 +2418,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * At present assumed to be called with a threadlink tag as the
       * context node. Perhaps the input values should be sent in as
       * arguments to the function?
+      *
       *-->
   <func:function name="djb:read-in-thread-info">
     <xsl:choose>

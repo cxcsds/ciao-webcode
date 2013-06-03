@@ -1457,8 +1457,6 @@ sub xml2html_threadindex ($) {
 #   use site-specific stylesheets
 #   $xslt, $outdir, and $outurl end in a /
 #   need to copy over /thread/info/files/file entries
-#   updating to support proglang tags in header which
-#     indicate creation of index.<lang>.html/index.html files
 #
 sub xml2html_thread ($) {
     my $opts = shift;
@@ -1501,41 +1499,28 @@ sub xml2html_thread ($) {
     #
     my $rnode = $dom->documentElement();
 
-    # TODO: remove the proglang checks (first it should warn if
-    #    any exist and then take out the code)
+    # TODO: the proglang support (for both Python and S-Lang)
+    #       has been removed, so refuse to publish any threads
+    #       containing this element.
     #
-    my @html;
     my @lang;
     foreach my $node ($rnode->findnodes('info/proglang')) {
 	my $lang = $node->textContent;
-	$lang =~ s/^\s*//;
-	$lang =~ s/\s*$//;
-	$lang = lc $lang;
-	die "Error: //thread/info/proglang = '$lang' is unrecognized\n"
-	  unless $lang eq "sl" or $lang eq "py";
 	push @lang, $lang;
     }
+    die "There are info/proglang elements in $threadname - please remove (values=@lang)\n"
+      unless $#lang == -1;
 
-    # We assume that there are either 0, 1, or 2 proglang elements below,
-    # and that they are unique.
-    #
-    die "Unexpected number of //thread/info/proglang elements in $threadname\n"
-      if $#lang >= 2;
-    die "Repeated //thread/info/proglang elements in $threadname\n"
-      if $#lang == 1 and $lang[0] eq $lang[1];
+    my @fails = $rnode->findnodes('//@restrict');
+    die "ERROR: thread=$threadname contains element(s) with a restrict attribute.\n\tPlease fix and re-publish (see Doug for help)\n"
+	unless $#fails == -1;
 
     # TODO: we no longer create the img<n>.html pages, or so I believe, so 
     #       this should be cleaned up
     #
-    if ($#lang == -1) {
-      push @html, "index.html";
-      push @html, map { "img$_.html"; } ( 1 .. $rnode->findnodes('images/image')->size );
-    } else {
-      foreach my $lang ( @lang ) {
-	push @html, "index.${lang}.html";
-	push @html, map { "img${_}.${lang}.html"; } ( 1 .. $rnode->findnodes('images/image')->size );
-      }
-    }
+    my @html;
+    push @html, "index.html";
+    push @html, map { "img$_.html"; } ( 1 .. $rnode->findnodes('images/image')->size );
 
     die "Error: no HTML files to be generated for thread=$threadname!\n"
       if $#html == -1;
@@ -1600,7 +1585,7 @@ sub xml2html_thread ($) {
     #
     #
     # TODO: given that this is looking for *.hard.html it is old
-    #       code and should probably be removed.
+    #       code and should probably be cleaned up.
     #
     return if should_we_skip \$time,
       map { my $a = $_; $a =~ s/index\.hard\.html$/$threadname.hard.html/; "${outdir}$a"; } @html,
@@ -1611,9 +1596,6 @@ sub xml2html_thread ($) {
 
     # convert the text file into XML format
     # (it will be included by the main transformation)
-    #
-    # For now we assume we do not need language-specific versions,
-    # but this could change.
     #
     foreach my $page ( @screen ) {
 	my $in  = "$page.txt";
@@ -1703,20 +1685,6 @@ sub xml2html_thread ($) {
        storageloc => $$opts{storageloc},
       );
 
-    # Safety check: ensure all restrict attributes are set to sl or py
-    #
-    # TODO: chande so that we error out if these exist any more
-    my @fails = $rnode->findnodes('//@restrict[. != "sl" and . != "py"]');
-    die "ERROR: thread=$threadname restrict attribute can only be 'sl' or 'py', not:\n\t" .
-      join (" ", map { $_->textContent; } @fails ) . "\n"
-	unless $#fails == -1;
-
-    # Hack to avoid translate_file_langs having to know the xslt path
-    # (not a very good idea)
-    #
-    # TODO: this can probably be removed now?
-    #
-    preload_stylesheet "$$opts{xslt}strip_proglang.xsl", "strip_proglang.xsl";
     translate_file "$$opts{xslt}${site}_thread.xsl", $dom, \%params;
 
     # set the correct owner/permissions for the HTML files
