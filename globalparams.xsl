@@ -37,7 +37,7 @@
     *
     *  . install=full path to directory where to install file
     *
-    *  . pagename=name of page (ie without .xml or .html or any proglang additions)
+    *  . pagename=name of page (ie without .xml or .html)
     *
     *  . url=URL of page (on live server)
     *  . outurl=This appears to be the "base" url (ie the directory containing the page)
@@ -62,7 +62,8 @@
     *    gives the location of the "storage" files - ie the copies of the
     *    published XML documents for the site/version. This is currently
     *    needed so we can access the thread pages for the threadlink tags
-    *    (proglang info). It should be sent to the top-level storage
+    *    (not really needed any more since taken out proglang support
+    *     but left in for now). It should be sent to the top-level storage
     *    location for the site/version, not the location for this particular
     *    page - EXCEPT THAT I DO NOT KNOW HOW WE ARE GOING TO HANDLE LINKS
     *    BETWEEN SITES USING THIS SCHEME ...
@@ -70,10 +71,6 @@
     *    For now we assume the threadlinking is done within the same site
     *
     *    IT IS VERY LIKELY THAT STORAGE WILL BE REMOVED RSN
-    *
-    *  . proglang - string, optional, default=''
-    *    if set - to either "sl" or "py" - then 'specialize' the document
-    *    for the given language.
     *
     *  . storageloc - string, optional, default=''
     *    points to an XML file that contains the "storage" directories
@@ -117,12 +114,6 @@
 
   <xsl:param name="depth" select="1"/>
   
-  <!--*
-      * If set (not empty) to sl or py then the output document should
-      * be for the given language (S-lang or Python)
-      *-->
-  <xsl:param name="proglang" select="''"/>
-
   <!--* not sure about this; see header *-->
   <xsl:param name="storage" select="''"/>
 

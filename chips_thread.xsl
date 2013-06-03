@@ -34,7 +34,6 @@
       <xsl:with-param name="pname"  select="'install'"/>
       <xsl:with-param name="pvalue" select="$install"/>
     </xsl:call-template>
-    <xsl:call-template name="is-proglang-valid"/>
 
     <xsl:apply-templates select="thread" mode="html-viewable-standard"/>
     <xsl:apply-templates select="thread/images/image" mode="list"/>

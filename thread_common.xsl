@@ -677,32 +677,29 @@
     <xsl:if test="count(text/sectionlist/section) > 1">
       <!--* Table of contents, list of parameter files, history *-->
 
-      <!--* should this be sent in to the stylesheet ? *-->
-      <xsl:variable name="pageName" select="djb:get-index-page-name()"/>
-
       <h2><a name="toc">Contents</a></h2>
 
       <ul>
 	<!--* Sections & Subsections *-->
 	<xsl:apply-templates select="text/sectionlist/section" mode="toc">
-	  <xsl:with-param name="pageName" select="$pageName"/>
+	  <xsl:with-param name="pageName" select="'index.html'"/>
 	</xsl:apply-templates>
 	      
 	<!--* do we have a summary? *-->
 	<xsl:if test="boolean(text/summary)">
-	  <li><a href="{$pageName}#summary"><strong>Summary</strong></a></li>
+	  <li><a href="index.html#summary"><strong>Summary</strong></a></li>
 	</xsl:if>
 	      
 	<!--* Parameter files (if any) *-->
 	<xsl:if test="boolean(parameters)">
 	  <xsl:apply-templates select="parameters" mode="toc">
-	    <xsl:with-param name="pageName" select="$pageName"/>
+	    <xsl:with-param name="pageName" select="'index.html'"/>
 	  </xsl:apply-templates>
 	</xsl:if>
 
     <xsl:if test="$site != 'pog'">	      
 	<!--* History *-->
-	<li><strong><a href="{$pageName}#history">History</a></strong></li>
+	<li><strong><a href="index.html#history">History</a></strong></li>
  	</xsl:if>
 
 	<!--* safety check to make sure we do not mix up old and new figure styles (really needed?) *-->
@@ -1275,15 +1272,10 @@ or do we, as this case is already caught in add-parameters?
     <xsl:variable name="thispos" select="position()"/>
     <xsl:variable name="id" select="../image[position()=$thispos]/@id"/>
 
-    <xsl:variable name="langid"><xsl:choose>
-      <xsl:when test="$proglang=''"/>
-      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
     <li>
       <a>
 	<xsl:attribute name="href">
-	  <xsl:value-of select="concat('img',$thispos,$langid,'.html')"/></xsl:attribute>
+	  <xsl:value-of select="concat('img',$thispos,'.html')"/></xsl:attribute>
 	<xsl:value-of select='title'/>
       </a>
     </li>
@@ -1513,17 +1505,10 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
 
   <xsl:template match="image" mode="list">
 
-    <xsl:variable name="langid"><xsl:choose>
-      <xsl:when test="$proglang=''"/>
-      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
     <xsl:variable name="pos" select="position()"/>
-    <xsl:variable name="filename" select='concat($install,"img",$pos,$langid,".html")'/>
+    <xsl:variable name="filename" select='concat($install,"img",$pos,".html")'/>
     <xsl:variable name="imgname" select='concat("Image ",$pos)'/>
     <xsl:variable name="imgtitle" select="title"/>
-
-    <xsl:variable name="endstr"><xsl:if test="$proglang != ''"><xsl:value-of select="concat(' (',djb:get-proglang-string(),')')"/></xsl:if></xsl:variable>
 
     <xsl:document href="{$filename}" method="html" media-type="text/html" 
       version="4.0" encoding="utf-8">
@@ -1533,7 +1518,7 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
 
       <!--* make the HTML head node *-->
       <xsl:call-template name="add-htmlhead">
-	<xsl:with-param name="title"><xsl:value-of select="concat($imgname,$endstr)"/></xsl:with-param>
+	<xsl:with-param name="title"><xsl:value-of select="$imgname"/></xsl:with-param>
       </xsl:call-template>
       
       <!--* add disclaimer about editing the HTML file *-->
@@ -1545,14 +1530,14 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
       <!--* link back to thread *-->
       <div class="topbar">
 	<div class="qlinkbar">
-	  <a href="{djb:get-index-page-name()}#{@id}">Return to thread</a>
+	  <a href="index.html#{@id}">Return to thread</a>
 	</div>
       </div>
 
       <div class="mainbar">
 	  
 	<!-- set up the title block of the page -->
-	<h2><xsl:value-of select="concat($imgname,': ',title,$endstr)"/></h2>
+	<h2><xsl:value-of select="concat($imgname,': ',title)"/></h2>
 	<hr/>
 
 	<!--* "pre-image" text *-->
@@ -1577,7 +1562,7 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
 
       <!--* link back to thread *-->
       <div class="bottombar">
-	<a href="{djb:get-index-page-name()}#{@id}">Return to thread</a>
+	<a href="index.html#{@id}">Return to thread</a>
       </div>
 
       <!--* add the footer text *-->
@@ -1708,13 +1693,8 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
       </xsl:call-template>
     </xsl:variable>
 
-    <xsl:variable name="langid"><xsl:choose>
-      <xsl:when test="$proglang=''"/>
-      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
     <xsl:variable name="href">
-      <xsl:value-of select="concat('img',$pos,$langid,'.html')"/>
+      <xsl:value-of select="concat('img',$pos,'.html')"/>
     </xsl:variable>
 
     <!--* need an anchor so that we can link back to the text *-->
@@ -1736,16 +1716,6 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
     </a>
 
   </xsl:template> <!--* match=imglink *-->
-
-  <!--*
-      * Intended for use after displaying the thread title
-      *-->
-  <xsl:template name="add-proglang-sub-header">
-    <xsl:choose>
-      <xsl:when test="$proglang = ''"/>
-      <xsl:otherwise><p>[<xsl:value-of select="djb:get-proglang-string()"/> Syntax]</p></xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
 
   <!--*
       * Display the thread title in its own block,
@@ -1777,7 +1747,6 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
 	<xsl:when test="$site = 'pog'">Proposer Threads (<xsl:value-of select="$siteversion"/>)</xsl:when>
       </xsl:choose></p>
 	  
-      <xsl:call-template name="add-proglang-sub-header"/>
     </div>
     <xsl:call-template name="add-hr-strong"/>
   </xsl:template>
@@ -1794,26 +1763,22 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
       <xsl:when test="boolean($threadInfo/title/short)"><xsl:value-of select="$threadInfo/title/short"/></xsl:when>
       <xsl:otherwise><xsl:value-of select="$threadInfo/title/long"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
-
-    <xsl:variable name="endstr"><xsl:if test="$proglang != ''">
-      <xsl:value-of select="concat(' (',djb:get-proglang-string(),')')"/>
-    </xsl:if></xsl:variable>
-
-      <xsl:choose>
-	<!--// don't put siteversion in head of CSC threads //-->
-	<xsl:when test="$site = 'csc' or $site = 'chart'">
-	  <xsl:call-template name="add-htmlhead">
-            <xsl:with-param name="title" select="concat($start,' - ',djb:get-sitename-string(),' ',$endstr)"/>
-	  </xsl:call-template>
-	</xsl:when>
-
-	<xsl:otherwise>
-	  <xsl:call-template name="add-htmlhead">
-            <xsl:with-param name="title" select="concat($start,' - ',$headtitlepostfix,$endstr)"/>
-	  </xsl:call-template>
-	</xsl:otherwise>
-      </xsl:choose>
-
+    
+    <xsl:choose>
+      <!--// don't put siteversion in head of CSC threads //-->
+      <xsl:when test="$site = 'csc' or $site = 'chart'">
+	<xsl:call-template name="add-htmlhead">
+	  <xsl:with-param name="title" select="concat($start,' - ',djb:get-sitename-string(),)"/>
+	</xsl:call-template>
+      </xsl:when>
+      
+      <xsl:otherwise>
+	<xsl:call-template name="add-htmlhead">
+	  <xsl:with-param name="title" select="concat($start,' - ',$headtitlepostfix)"/>
+	</xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+    
   </xsl:template> <!--* name=add-htmlhead-site-thread *-->
 
   <!--*
@@ -1836,14 +1801,6 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
   </func:function>
 
   <!--*
-      * Returns the name of the page - index.html, index.sl.html, or
-      * index.py.html 
-      *-->
-  <func:function name="djb:get-index-page-name">
-    <func:result>index<xsl:if test="$proglang != ''">.<xsl:value-of select="$proglang"/></xsl:if>.html</func:result>
-  </func:function>
-
-  <!--*
       * For those threads that want a common look and feel, use
       * these templates.
       *-->
@@ -1851,13 +1808,11 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
   <!--*
       * create:
       *    $install/index.html
-      * or
-      *    $install/index.<proglang>.html
       *-->
   <xsl:template match="thread" mode="html-viewable-standard">
     
     <xsl:variable name="filename"
-		  select="concat($install,djb:get-index-page-name())"/>
+		  select="concat($install,'index.html')"/>
 
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html" 

@@ -44,9 +44,6 @@
   <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc obsvis iris '"/>
   <xsl:variable name="allowed-download-types" select="' solaris solaris10 fc4 fc8 osx_ppc osx_intel caldb atomdb '"/>
 
-  <!--* note that '' is also allowed for proglang but this is checked for separately *-->
-  <xsl:variable name="allowed-proglang" select="' py sl '"/>
-
   <!--*
       * handle unknown tags
       *  - perhaps we should exit with an error when we find an unknown tag?
@@ -608,20 +605,6 @@
     </xsl:if>
   </xsl:template> <!--* name=is-site-valid *-->
 
-  <xsl:template name="is-proglang-valid">
-    <xsl:choose>
-      <xsl:when test="$proglang=''"/>
-      <xsl:when test="contains($allowed-sites,concat(' ',$site,' '))=true()"/>
-      <xsl:otherwise>
-	<xsl:message terminate="yes">
-  Error:
-    proglang parameter [<xsl:value-of select="$proglang"/>] is unknown
-    allowed values: '' or <xsl:value-of select="$allowed-proglang"/>
-	</xsl:message>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template> <!--* name=is-proglang-valid *-->
-
   <!--***
       *** check parameters are okay
       ***-->
@@ -865,23 +848,5 @@ Programming error: add-ssi-include called with an empty file parameter
     </div>
 
   </xsl:template> <!--* name=add-progress-link *-->
-
-
-
-  <!--*
-      * Convert the $proglang variable into printable text.
-      * It is not expected to be called when $proglang is empty.
-      *-->
-  <func:function name="djb:get-proglang-string">
-    <func:result><xsl:choose>
-      <xsl:when test="$proglang = 'sl'">S-Lang</xsl:when>
-      <xsl:when test="$proglang = 'py'">Python</xsl:when>
-      <xsl:otherwise>
-	<xsl:message terminate="yes">
- Internal error - djb:get-proglang-string() does not recognise proglang='<xsl:value-of select="$proglang"/>
-	</xsl:message>
-      </xsl:otherwise>
-    </xsl:choose></func:result>
-  </func:function>
 
 </xsl:stylesheet>
