@@ -1513,17 +1513,13 @@ sub xml2html_thread ($) {
 
     my @fails = $rnode->findnodes('//@restrict');
     die "ERROR: thread=$threadname contains element(s) with a restrict attribute.\n\tPlease fix and re-publish (see Doug for help)\n"
-	unless $#fails == -1;
+      unless $#fails == -1;
 
-    # TODO: we no longer create the img<n>.html pages, or so I believe, so 
-    #       this should be cleaned up
-    #
-    my @html;
-    push @html, "index.html";
-    push @html, map { "img$_.html"; } ( 1 .. $rnode->findnodes('images/image')->size );
+    @fails = $rnode->findnodes('images');
+    die "ERROR: thread=$threadname contains an images block. This should be converted to inline figure blocks. See Doug for help.\n"
+      unless $#fails == -1; 
 
-    die "Error: no HTML files to be generated for thread=$threadname!\n"
-      if $#html == -1;
+    my @html = ("index.html");
 
     # What files need pre-processing before being included?
     #
@@ -1532,19 +1528,8 @@ sub xml2html_thread ($) {
        $rnode->findnodes('images/descendant::screen[boolean(@file)]'),
        $rnode->findnodes('parameters/paramfile[boolean(@file)]'));
 
-#    my @image =
-#      (
-#       map { $_->getAttribute('src'); } 
-#       ($rnode->findnodes('images/image'), $rnode->findnodes('text/descendant::img')),
-#       map { $_->getAttribute('ps'); } $rnode->findnodes('images/image[boolean(@ps)]')
-#      );
     my @image =
-      map { $_->getAttribute('src'); }
-	($rnode->findnodes('images/image'), $rnode->findnodes('text/descendant::img'));
-    push @image,
-      map { $_->getAttribute('ps'); } $rnode->findnodes('images/image[boolean(@ps)]');
-
-    # support the new "figure" environment
+      map { $_->getAttribute('src'); } $rnode->findnodes('text/descendant::img');
     push @image,
       map { $_->textContent }
       ($rnode->findnodes('//figure/bitmap'), $rnode->findnodes('//figure/vector'));
@@ -1580,15 +1565,9 @@ sub xml2html_thread ($) {
     #  the file, rather than the file itself)
     #
     # + need to add installation dir onto output file names
-    #   and hack the .hard. version so that we look for the
-    #   correct pdf file names (not index.[a4|letter].pdf)
-    #
-    #
-    # TODO: given that this is looking for *.hard.html it is old
-    #       code and should probably be cleaned up.
     #
     return if should_we_skip \$time,
-      map { my $a = $_; $a =~ s/index\.hard\.html$/$threadname.hard.html/; "${outdir}$a"; } @html,
+      map { my $a = $_; "${outdir}$a"; } @html,
 	map( { "${outdir}${_}.gif"; } @math );
     print "\n";
 
