@@ -276,14 +276,6 @@
       </xsl:message>
     </xsl:if>
 
-    <xsl:if test="$proglang != ''">
-      <xsl:message terminate="no">
-
- NOTE: please tell Doug that ahelp publishing has proglang=<xsl:value-of select="$proglang"/>
-
-      </xsl:message>
-    </xsl:if>
-
     <!--*
         * find the matching entry:
         *   search on either
