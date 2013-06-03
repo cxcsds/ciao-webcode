@@ -36,7 +36,6 @@
     </xsl:call-template>
 
     <xsl:apply-templates select="thread" mode="html-viewable-standard"/>
-    <xsl:apply-templates select="thread/images/image" mode="list"/>
 
   </xsl:template> <!-- match="/" *-->
 
