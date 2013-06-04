@@ -1517,7 +1517,7 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
       <!--// don't put siteversion in head of CSC threads //-->
       <xsl:when test="$site = 'csc' or $site = 'chart'">
 	<xsl:call-template name="add-htmlhead">
-	  <xsl:with-param name="title" select="concat($start,' - ',djb:get-sitename-string(),)"/>
+	  <xsl:with-param name="title" select="concat($start,' - ',djb:get-sitename-string())"/>
 	</xsl:call-template>
       </xsl:when>
       
