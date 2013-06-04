@@ -2,7 +2,19 @@
 <!DOCTYPE xsl:stylesheet>
 
 <!--* 
-    * Convert an XML web page into an HTML one
+    * Handle CIAO release notes. This creates a main page and
+    * creates 'slugs' (or includable snippets) for other pages.
+    *
+    * Note that the slugs start with the '<?xml ...' line, so need
+    * post-processing to remove this (since inclusion into generated
+    * files is not smart enough to remove this at present).
+    *
+    * We only want to generate the slugs for the current release, so
+    * we check relnotes/@release against the siteversion parameter. In order
+    * support updates (e.g. CIAO 4.5.2) then the check is that siteversion
+    * matches the start of relnotes/@release (since siteversion is expected
+    * to remain at 4.5, although this is not guaranteed).
+    *    *** NOT IMPLEMENTED YET. ***
     *
     *-->
 
@@ -32,8 +44,8 @@
 
   <!--*
       * top level: create
-      *   index.html
-      *
+      *   $pagename.html
+      *   ciao_<siteversion>.<toolname>.incl.html (CIAO only)
       *-->
   <xsl:template match="/">
 
@@ -44,9 +56,7 @@
       <xsl:with-param name="pvalue" select="$install"/>
     </xsl:call-template>
 
-    <!--* what do we create *-->
     <xsl:apply-templates select="relnotes" mode="page"/>
-
     <xsl:if test="$site = 'ciao'">      
       <xsl:apply-templates select="//relnotes/text/category[@name='Tools']" mode="ahelp"/>
     </xsl:if>
@@ -84,29 +94,29 @@
 	  <xsl:with-param name="name" select="$pagename"/>
 	</xsl:call-template>
 
-	  <!--// main div begins page layout //-->
-	    <div id="main">
+	<!--// main div begins page layout //-->
+	<div id="main">
 
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
+	  <!--* the main text *-->
+	  <div id="content">
+	    <div class="wrap">
        
               <xsl:variable name="release">
 		<xsl:value-of select="@release"/>
 	      </xsl:variable>
-
-	        <h1 class="pagetitle">
-		  CIAO <xsl:value-of select="$release"/> Release Notes
-		</h1>
-
-		<xsl:if test="@package">
-		  <h2 class="pagetitle"><xsl:value-of select="@package"/> Release</h2>
-		</xsl:if>
-
+	      
+	      <h1 class="pagetitle">
+		CIAO <xsl:value-of select="$release"/> Release Notes
+	      </h1>
+	      
+	      <xsl:if test="@package">
+		<h2 class="pagetitle"><xsl:value-of select="@package"/> Release</h2>
+	      </xsl:if>
+	      
               <div class="qlinkbar"><a href="history.html">Version History</a></div>
-
+	      
 	      <hr/>
-
+	      
 	      <!--* add any summary text *-->
 	      <xsl:if test="text/summary">
 	        <xsl:apply-templates select="text/summary/*"/>
@@ -126,9 +136,9 @@
 	          </li>
 	        </xsl:for-each> <!-- select="category" -->
 	      </ul>
-	
+	      
 	      <hr/>
-	
+	      
 	      <xsl:for-each select="text/category">
 		<h2>
 		  <a>
@@ -138,12 +148,12 @@
 		    <xsl:value-of select="@name"/>
 		  </a>
 		</h2>
-	
+		
 		<xsl:apply-templates select="intro"/>
-	
+		
 		<xsl:for-each select="section">
 		  <h3><xsl:value-of select="@name"/></h3>
-	
+		  
 		  <ul>
 		    <xsl:for-each select="note">
 		      <li>
@@ -157,20 +167,20 @@
 	        <hr/>
 	      </xsl:for-each> <!-- select="category" -->
 
-		  </div>
-		</div> <!--// close id=content //-->
+	    </div>
+	  </div> <!--// close id=content //-->
 
-		<div id="navbar">
-		  <div class="wrap">
-		    <a name="navtext"/>
-
-		  <xsl:call-template name="add-navbar">
-		    <xsl:with-param name="name" select="info/navbar"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
-		
-	    </div> <!--// close id=main  //-->
+	  <div id="navbar">
+	    <div class="wrap">
+	      <a name="navtext"/>
+	      
+	      <xsl:call-template name="add-navbar">
+		<xsl:with-param name="name" select="info/navbar"/>
+	      </xsl:call-template>
+	    </div>
+	  </div> <!--// close id=navbar //-->
+	  
+	</div> <!--// close id=main  //-->
 	    
 	<!--* add the footer text *-->
 	<xsl:call-template name="add-footer">
@@ -180,26 +190,30 @@
 	<!--* add </body> tag [the <body> is added by the add-htmlhead template] *-->
 	<xsl:call-template name="add-end-body"/>
       </html>
-
+      
     </xsl:document>
   </xsl:template> <!--* match=relnotes, mode=page *-->
 
-
-  <!-- create the includes for the ahelp webpages -->
+  <!--*
+      * create the includes for the ahelp webpages
+      *
+      * TODO: can we not just say match="category" rather than the
+      *       selector used below?
+      *-->
   <xsl:template match="//relnotes/text/category[@name='Tools']" mode="ahelp">
-
+    
     <xsl:for-each select="section">
-		
+      
       <xsl:variable name="filename"><xsl:value-of select="$install"/>ciao_<xsl:value-of select="$siteversion"/>.<xsl:value-of select="@name"/>.incl.html</xsl:variable>
-
+      
       <!--* output filename to stdout *-->
       <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-
+      
       <xsl:document href="{$filename}" method="xml" encoding="utf-8">
-
+	
 	<!--* add disclaimer about editing this HTML file *-->
 	<xsl:call-template name="add-disclaimer"/>
-
+	
 	<ul class="helplist">
 	  <xsl:for-each select="note">
 	    <li>
@@ -213,26 +227,26 @@
   </xsl:template> <!--* match=relnotes, mode=ahelp *-->
 
 
-    <!--*
-        * We can not guarantee that the contents do not contain <p>..</p>
-        * tags, so we do not want to surround the whole thing in a p block
-        * So we use a div instead.
-        * We could be clever and look for the contents containing a p and
-        * adding the containing p block if there are not any.
-        *
-        * This template is needed to remove the intro tag from the output
-        *-->
-    <xsl:template match="intro">
-      <div>
-	<xsl:apply-templates/>
-      </div>
-    </xsl:template>
+  <!--*
+      * We can not guarantee that the contents do not contain <p>..</p>
+      * tags, so we do not want to surround the whole thing in a p block
+      * So we use a div instead.
+      * We could be clever and look for the contents containing a p and
+      * adding the containing p block if there are not any.
+      *
+      * This template is needed to remove the intro tag from the output
+      *-->
+  <xsl:template match="intro">
+    <div>
+      <xsl:apply-templates/>
+    </div>
+  </xsl:template>
 
-<xsl:template match="@*|node()">
-  <xsl:copy>
-    <xsl:apply-templates select="@*|node()"/>
-  </xsl:copy>
-</xsl:template> <!-- match="@*|node()" -->
+  <xsl:template match="@*|node()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template> <!-- match="@*|node()" -->
 
   <!--* note: we process the text so we can handle our `helper' tags *-->
   <xsl:template match="text">
