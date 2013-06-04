@@ -576,10 +576,64 @@ sub count_slash_in_string ($) {
   return length ($str);
 } # count_slash_in_string
 
+# QUESTION:
+#
+# How best to extend this to support multiple output files?;
+#   perhaps have a "primary" output and ancillary ones, which may
+#  or may not be HTML.
+#
+# Probably do not want to set outurl here since used to
+# generate the canonical link and header for hardcopy output
+#
+
+# Create the basic/default set of options for the stylesheets.
+#
+# TODO: should url be sent in as an optional/named argument?
+sub basic_params ($) {
+    my $opts = shift;
+
+    my $in     = $$opts{xml};
+    my $outurl = $$opts{outurl};
+  
+    my $url = "${outurl}${in}.html";
+
+    return {
+	    type => $$opts{type},
+	    site => $$opts{site},
+	    lastmod => $$opts{lastmod},
+	    install => $$opts{outdir},
+	    pagename => $in,
+	    url => $url,
+	    # TODO: should outurl be set ?
+	    sourcedir => cwd() . "/",
+	    updateby => $$opts{updateby},
+	    depth => $$opts{depth},
+	    siteversion => $site_version,
+	    ahelpindex => $ahelpindex,
+	    cssfile => $css,
+	    cssprintfile => $cssprint,
+	    favicon => $favicon,
+	    newsfile => $newsfile,
+	    newsfileurl => $newsfileurl,
+	    watchouturl => $watchouturl,
+	    searchssi => $searchssi,
+	    googlessi => $googlessi,
+	    headtitlepostfix => $headtitlepostfix,
+	    texttitlepostfix => $texttitlepostfix,
+	    
+	    storageloc => $$opts{storageloc},
+
+	   };
+
+} # basic_params
+
 # xml2html_basic
 #   Process a 'basic' or 'generic' page style
 #
 # note: $xslt, $outdir, and $outurl end in a /
+#
+# At present pagelabel and stylesheethead are set to the
+# same value, so could amalgamate; leave as is for now
 #
 sub xml2html_basic ($$$) {
     my $pagelabel = shift; # used to identify the page type to the user
@@ -588,11 +642,8 @@ sub xml2html_basic ($$$) {
 
     my $in     = $$opts{xml};
     my $dom    = $$opts{xml_dom};
-    my $depth  = $$opts{depth};
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
-
-    my $lastmod = $$opts{lastmod};
 
     print "Parsing [${pagelabel}]: $in";
 
@@ -612,39 +663,9 @@ sub xml2html_basic ($$$) {
     clean_up_math( $outdir, @math );
 
     my $url = "${outurl}${in}.html";
+    my $params = basic_params $opts;
 
-    # used to set up the list of parameters sent to the
-    # stylesheet
-    #
-    my %params =
-      (
-       type => $$opts{type},
-       site => $$opts{site},
-       lastmod => $lastmod,
-       install => $outdir,
-       pagename => $in,
-       url => $url,
-       # TODO: should outurl be set ?
-       sourcedir => cwd() . "/",
-       updateby => $$opts{updateby},
-       depth => $depth,
-       siteversion => $site_version,
-       ahelpindex => $ahelpindex,
-       cssfile => $css,
-       cssprintfile => $cssprint,
-       favicon => $favicon,
-       newsfile => $newsfile,
-       newsfileurl => $newsfileurl,
-       watchouturl => $watchouturl,
-       searchssi => $searchssi,
-       googlessi => $googlessi,
-       headtitlepostfix => $headtitlepostfix,
-       texttitlepostfix => $texttitlepostfix,
-
-       storageloc => $$opts{storageloc},
-      );
-
-    translate_file "$$opts{xslt}${stylesheethead}.xsl", $dom, \%params;
+    translate_file "$$opts{xslt}${stylesheethead}.xsl", $dom, $params;
 
     # success or failure?
     check_for_page( @pages );
@@ -684,29 +705,9 @@ sub xml2html_navbar ($) {
     #
     print "Parsing [navbar]: $in"; # don't '\n' until skip check
 
-    my %params = 
-      (
-       type => $$opts{type},
-       site => $$opts{site},
-       #depth => $depth,
-       install => $outdir,
-       sourcedir => cwd() . "/",
-       updateby => $$opts{updateby},
-       pagename => $in,
-       # ahelpindex added in CIAO 3.0
-       ahelpindex => $ahelpindex,
-       ## cssfile => $css, # not needed for navbar
-       newsfile => $newsfile,
-       newsfileurl => $newsfileurl,
-       watchouturl => $watchouturl,
-       searchssi => $searchssi,
-       googlessi => $googlessi,
-
-       storageloc => $$opts{storageloc},
-      );
-
-    $params{logoimage} = $logoimage if $logoimage ne "";
-    $params{logotext}  = $logotext  if $logotext  ne "";
+    my $params = basic_params $opts;
+    $$params{logoimage} = $logoimage if $logoimage ne "";
+    $$params{logotext}  = $logotext  if $logotext  ne "";
 
     # get a list of the pages: we need this so that:
     # - we can create the directory if necessary
@@ -766,9 +767,9 @@ sub xml2html_navbar ($) {
     # process each depth
     #
     foreach my $d (keys %depths) {
-      $params{startdepth} = $depth;
-      $params{depth} = $d;
-      translate_file "$$opts{xslt}navbar.xsl", $dom, \%params;
+      $$params{startdepth} = $depth;
+      $$params{depth} = $d;
+      translate_file "$$opts{xslt}navbar.xsl", $dom, $params;
     }
 
     foreach my $page ( @pages ) {
@@ -814,7 +815,6 @@ sub xml2html_cscdb ($) {
 
     my $in     = $$opts{xml};
     my $dom    = $$opts{xml_dom};
-    my $depth  = $$opts{depth};
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
 
@@ -846,40 +846,10 @@ sub xml2html_cscdb ($) {
 
     my $url = "${outurl}${in}.html";
 
-    # used to set up the list of parameters sent to the
-    # stylesheet
-    #
-    my %params =
-      (
-       type => $$opts{type},
-       site => $$opts{site},
-       lastmod => $lastmod,
-       install => $outdir,
-       pagename => $in,
-       #	  navbarlink => $nlink,
-       url => $url,
-       urlhead => $outurl, # NOTE: urlhead rather than outurl; TODO look at this -- have done, and it does not seem to be used.
-       sourcedir => cwd() . "/",
-       updateby => $$opts{updateby},
-       depth => $depth,
-       siteversion => $site_version,
-       # ahelpindex added in CIAO 3.0
-       ahelpindex => $ahelpindex,
-       cssfile => $css,
-       cssprintfile => $cssprint,
-       favicon => $favicon,
-       newsfile => $newsfile,
-       newsfileurl => $newsfileurl,
-       watchouturl => $watchouturl,
-       searchssi => $searchssi,
-       googlessi => $googlessi,
-       headtitlepostfix => $headtitlepostfix,
-       texttitlepostfix => $texttitlepostfix,
+    my $params = basic_params $opts;
+    $$params{urlhead} = $outurl; # TODO: this probably does nothing
 
-       storageloc => $$opts{storageloc},
-      );
-
-    translate_file "$$opts{xslt}cscdb.xsl", $dom, \%params;
+    translate_file "$$opts{xslt}cscdb.xsl", $dom, $params;
 
     # success or failure?
     check_for_page( @pages );
@@ -905,7 +875,6 @@ sub xml2html_news ($) {
 
     my $in     = $$opts{xml};
     my $dom    = $$opts{xml_dom};
-    my $depth  = $$opts{depth};
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
 
@@ -931,40 +900,10 @@ sub xml2html_news ($) {
 
     my $url = "${outurl}${in}.html";
 
-    # used to set up the list of parameters sent to the
-    # stylesheet
-    #
-    my %params =
-      (
-       type => $$opts{type},
-       site => $$opts{site},
-       lastmod => $lastmod,
-       install => $outdir,
-       pagename => $in,
-       #	  navbarlink => $nlink,
-       outurl => $outurl,
-       url => $url,
-       sourcedir => cwd() . "/",
-       updateby => $$opts{updateby},
-       depth => $depth,
-       siteversion => $site_version,
-       # ahelpindex added in CIAO 3.0
-       ahelpindex => $ahelpindex,
-       cssfile => $css,
-       cssprintfile => $cssprint,
-       favicon => $favicon,
-       newsfile => $newsfile,
-       newsfileurl => $newsfileurl,
-       watchouturl => $watchouturl,
-       searchssi => $searchssi,
-       googlessi => $googlessi,
-       headtitlepostfix => $headtitlepostfix,
-       texttitlepostfix => $texttitlepostfix,
+    my $params = basic_params $opts;
+    $$params{outurl} = $outurl;
 
-       storageloc => $$opts{storageloc},
-      );
-
-    translate_file "$$opts{xslt}news.xsl", $dom, \%params;
+    translate_file "$$opts{xslt}news.xsl", $dom, $params;
 
     # success or failure?
     check_for_page( @pages );
@@ -1011,7 +950,7 @@ sub xml2html_redirect ($) {
 
 # xml2html_softlink - called by xml2html
 #
-# behavious is somewhat different to other XML
+# behaviour is somewhat different to other XML
 # docs
 #
 # we always recreate
@@ -1076,7 +1015,6 @@ sub xml2html_multiple ($$$) {
 
     my $in     = $$opts{xml};
     my $dom    = $$opts{xml_dom};
-    my $depth  = $$opts{depth};
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
     my $site   = $$opts{site};
@@ -1134,35 +1072,9 @@ sub xml2html_multiple ($$$) {
     initialise_pages( @soft );
     clean_up_math( $outdir, @math );
 
-    my %params =
-      (
-       type => $$opts{type},
-       site => $site,
-       lastmod => $lastmod,
-       install => $outdir,
-       sourcedir => cwd() . "/",
-       urlhead => $outurl,
-       depth => $depth,
-       updateby => $$opts{updateby},
-       pagename => $in,
-       siteversion => $site_version,
-       # ahelpindex added in CIAO 3.0
-       ahelpindex => $ahelpindex,
-       cssfile => $css,
-       cssprintfile => $cssprint,
-       favicon => $favicon,
-       newsfile => $newsfile,
-       newsfileurl => $newsfileurl,
-       watchouturl => $watchouturl,
-       searchssi => $searchssi,
-       googlessi => $googlessi,
-       headtitlepostfix => $headtitlepostfix,
-       texttitlepostfix => $texttitlepostfix,
+    my $params = basic_params $opts;
 
-       storageloc => $$opts{storageloc},
-      );
-
-    translate_file "$$opts{xslt}${pagename}.xsl", $dom, \%params;
+    translate_file "$$opts{xslt}${pagename}.xsl", $dom, $params;
 
     # check the softcopy versions
     check_for_page( @soft );
@@ -1186,7 +1098,6 @@ sub xml2html_threadindex ($) {
 
     my $in     = $$opts{xml};
     my $dom    = $$opts{xml_dom};
-    my $depth  = $$opts{depth};
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
     my $site   = $$opts{site};
@@ -1224,40 +1135,13 @@ sub xml2html_threadindex ($) {
     # create dirs/remove files
     initialise_pages( @soft );
 
-    my %params =
-      (
-       type => $$opts{type},
-       site => $site,
-       lastmod => $lastmod,
-       install => $outdir,
-       sourcedir => cwd() . "/",
-       urlhead => $outurl,
-       depth => $depth,
-       updateby => $$opts{updateby},
-       pagename => $in,
-       # where the published threads are stored
-       threadDir => $$opts{store},
-       siteversion => $site_version,
-       # ahelpindex added in CIAO 3.0
-       ahelpindex => $ahelpindex,
-       cssfile => $css,
-       cssprintfile => $cssprint,
-       favicon => $favicon,
-       newsfile => $newsfile,
-       newsfileurl => $newsfileurl,
-       watchouturl => $watchouturl,
-       # TODO: outurl is wrong here since it should vary with the page
-       #       and use of $in is also wrong
-       url => "${outurl}${in}.html",
-       searchssi => $searchssi,
-       googlessi => $googlessi,
-       headtitlepostfix => $headtitlepostfix,
-       texttitlepostfix => $texttitlepostfix,
+    # The $$params{url} parameter is probably wrong here (since it does not
+    # for each file)
+    my $params = basic_params $opts;
+    $$params{threadDir} = $$opts{store};
+    $$params{urlhead} = $outurl; # TODO: does this actually do anything?
 
-       storageloc => $$opts{storageloc},
-      );
-
-    translate_file "$$opts{xslt}threadindex.xsl", $dom, \%params;
+    translate_file "$$opts{xslt}threadindex.xsl", $dom, $params;
 
     # check the softcopy versions
     check_for_page( @soft );
@@ -1278,7 +1162,6 @@ sub xml2html_thread ($) {
 
     my $in     = $$opts{xml};
     my $dom    = $$opts{xml_dom};
-    my $depth  = $$opts{depth};
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
     my $threadname = $$opts{dirname};
@@ -1438,48 +1321,16 @@ sub xml2html_thread ($) {
     foreach my $page ( @html ) { myrm "${outdir}$page"; }
     clean_up_math( $outdir, @math );
 
-    # Note that threads contain their own history block, and we use that
-    # to create the last modified date, rather than send one in.
-    #
-    my %params =
-      (
-       type => $$opts{type},
-       site => $site,
-       install => $outdir,
-       sourcedir => cwd() . "/",
-       depth => $depth,
-       updateby => $$opts{updateby},
-       pagename => $in,
-       # where the published threads are stored [if they are]
-       threadDir => $threadDir,
-       siteversion => $site_version,
-       # ahelpindex added in CIAO 3.0
-       ahelpindex => $ahelpindex,
-       cssfile => $css,
-       cssprintfile => $cssprint,
-       favicon => $favicon,
-       newsfile => $newsfile,
-       newsfileurl => $newsfileurl,
-       watchouturl => $watchouturl,
-       # NOTE: we drop the index.html part of the URL here to
-       #       look neater and potentially support later changes
-       # url => "${outurl}index.html",
-       url => $outurl,
-       searchssi => $searchssi,
-       googlessi => $googlessi,
-       headtitlepostfix => $headtitlepostfix,
-       texttitlepostfix => $texttitlepostfix,
-       # currently imglinkicon/... are always set [since we define
-       # a default value above if they are not specified]. This may
-       # change ?
-       imglinkicon => $imglinkicon,
-       imglinkiconwidth => $imglinkiconwidth,
-       imglinkiconheight => $imglinkiconheight,
+    my $params = basic_params $opts;
+    delete $$params{lastmod};
+    $$params{threadDir} = $threadDir;
+    $$params{url} = $outurl; # drop the index.html part
 
-       storageloc => $$opts{storageloc},
-      );
+    $$params{imglinkicon} = $imglinkicon;
+    $$params{imglinkiconwidth} = $imglinkiconwidth;
+    $$params{imglinkiconheight} = $imglinkiconheight;
 
-    translate_file "$$opts{xslt}thread.xsl", $dom, \%params;
+    translate_file "$$opts{xslt}thread.xsl", $dom, $params;
 
     # set the correct owner/permissions for the HTML files
     #
