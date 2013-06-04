@@ -408,9 +408,6 @@ sub undup_stderr ($) {
 #
 # uses the global variable $force
 #
-# TODO:
-#   - remove support for hard-copy files
-#
 sub should_we_skip ($@) {
     my $in = shift;
     my @files = @_;
@@ -430,7 +427,7 @@ sub should_we_skip ($@) {
 	} else {
 	    # HACK for when the XML is created in-memory
 	    # For now we assume that we can skip these pages;
-	    # perhaps in this case the intie should have been
+	    # perhaps in this case the intime should have been
 	    # sent in instead.
 	    #
 	    return 0;
@@ -438,18 +435,8 @@ sub should_we_skip ($@) {
     }
 
     foreach my $file ( @files ) {
-	# is this a 'hard copy' page?
-	if ( $file =~ /\.hard\.html$/ ) {
-	    $file =~ s/\.hard\.html$//;
-	    foreach my $f ( map { "${file}.$_.pdf"; } qw( a4 letter ) ) {
-		return 0
-		  unless -e $f and -M $f < $intime;
-	    }
-	} else {
-	    return 0
-	      unless -e $file and -M $file < $intime;
-	}
-
+	return 0
+	    unless -e $file and -M $file < $intime;
     } # foreach: @files
 
     # if got this far the file's for skipping
@@ -466,6 +453,8 @@ sub should_we_skip ($@) {
 # then delete $tex
 #
 # NOTE: this is based on text2im v1.5
+#
+# TODO: should we convert to PNG instead?
 #
 sub math2gif ($$) {
     my $head = shift;
@@ -592,6 +581,8 @@ sub count_slash_in_string ($) {
 # 02/13/04 - we now pass the site depth into the stylesheet
 #  (since the slang directory has its own navbar we can no longer
 #   assume that depth=1)
+# 05/03/13 - is this still needed (was it added for the proglang
+#  code or some other reason)?
 #
 sub xml2html_navbar ($) {
     my $opts = shift;
