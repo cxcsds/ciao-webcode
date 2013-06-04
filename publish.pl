@@ -576,6 +576,86 @@ sub count_slash_in_string ($) {
   return length ($str);
 } # count_slash_in_string
 
+# xml2html_basic
+#   Process a 'basic' or 'generic' page style
+#
+# note: $xslt, $outdir, and $outurl end in a /
+#
+sub xml2html_basic ($$$) {
+    my $pagelabel = shift; # used to identify the page type to the user
+    my $stylesheethead = shift; # name of stylesheet, without path or trailing .xsl
+    my $opts = shift;
+
+    my $in     = $$opts{xml};
+    my $dom    = $$opts{xml_dom};
+    my $depth  = $$opts{depth};
+    my $outdir = $$opts{outdir};
+    my $outurl = $$opts{outurl};
+
+    my $lastmod = $$opts{lastmod};
+
+    print "Parsing [${pagelabel}]: $in";
+
+    # we 'hardcode' the output of the transformation
+    my @pages = ( "${outdir}${in}.html" );
+
+    # how about math pages?
+    #
+    my @math = find_math_pages $dom;
+
+    # do we need to recreate (include the equations created by any math blocks)
+    return if should_we_skip $in, @pages, map( { "${outdir}${_}.gif"; } @math );
+    print "\n";
+
+    # remove files [already ensured the dir exists]
+    foreach my $page ( @pages ) { myrm $page; }
+    clean_up_math( $outdir, @math );
+
+    my $url = "${outurl}${in}.html";
+
+    # used to set up the list of parameters sent to the
+    # stylesheet
+    #
+    my %params =
+      (
+       type => $$opts{type},
+       site => $$opts{site},
+       lastmod => $lastmod,
+       install => $outdir,
+       pagename => $in,
+       url => $url,
+       # TODO: should outurl be set ?
+       sourcedir => cwd() . "/",
+       updateby => $$opts{updateby},
+       depth => $depth,
+       siteversion => $site_version,
+       ahelpindex => $ahelpindex,
+       cssfile => $css,
+       cssprintfile => $cssprint,
+       favicon => $favicon,
+       newsfile => $newsfile,
+       newsfileurl => $newsfileurl,
+       watchouturl => $watchouturl,
+       searchssi => $searchssi,
+       googlessi => $googlessi,
+       headtitlepostfix => $headtitlepostfix,
+       texttitlepostfix => $texttitlepostfix,
+
+       storageloc => $$opts{storageloc},
+      );
+
+    translate_file "$$opts{xslt}${stylesheethead}.xsl", $dom, \%params;
+
+    # success or failure?
+    check_for_page( @pages );
+
+    # math?
+    process_math( $outdir, @math );
+
+    print "\nThe page can be viewed at:\n  ${url}\n\n";
+
+} # sub: xml2html_basic
+
 # xml2html_navbar - called by xml2html
 #
 # 02/13/04 - we now pass the site depth into the stylesheet
@@ -720,95 +800,14 @@ sub xml2html_navbar ($) {
 
 } # sub: xml2html_navbar
 
-# xml2html_page - called by xml2html
-#
-# note: $xslt, $outdir, and $outurl end in a /
-#
-sub xml2html_page ($) {
-    my $opts = shift;
-
-    my $in     = $$opts{xml};
-    my $dom    = $$opts{xml_dom};
-    my $depth  = $$opts{depth};
-    my $outdir = $$opts{outdir};
-    my $outurl = $$opts{outurl};
-
-    my $lastmod = $$opts{lastmod};
-
-    # the navbarlink is currently not used by the code
-    # - see the comments in helper.xsl
-    # - note that I do not believe $nlink is set to
-    #   a sensible value by the following !!
-#    my $nlink = $$opts{navbar_link};
-#    $nlink .= "${in}.html" unless $in eq "index";
-
-    print "Parsing [page]: $in";
-
-    # we 'hardcode' the output of the transformation
-    my @pages = ( "${outdir}${in}.html" );
-
-    # how about math pages?
-    #
-    my @math = find_math_pages $dom;
-
-    # do we need to recreate (include the equations created by any math blocks)
-    return if should_we_skip $in, @pages, map( { "${outdir}${_}.gif"; } @math );
-    print "\n";
-
-    # remove files [already ensured the dir exists]
-    foreach my $page ( @pages ) { myrm $page; }
-    clean_up_math( $outdir, @math );
-
-    my $url = "${outurl}${in}.html";
-
-    # used to set up the list of parameters sent to the
-    # stylesheet
-    #
-    my %params =
-      (
-       type => $$opts{type},
-       site => $$opts{site},
-       lastmod => $lastmod,
-       install => $outdir,
-       pagename => $in,
-       #	  navbarlink => $nlink,
-       url => $url,
-       sourcedir => cwd() . "/",
-       updateby => $$opts{updateby},
-       depth => $depth,
-       siteversion => $site_version,
-       # ahelpindex added in CIAO 3.0
-       ahelpindex => $ahelpindex,
-       cssfile => $css,
-       cssprintfile => $cssprint,
-       favicon => $favicon,
-       newsfile => $newsfile,
-       newsfileurl => $newsfileurl,
-       watchouturl => $watchouturl,
-       searchssi => $searchssi,
-       googlessi => $googlessi,
-       headtitlepostfix => $headtitlepostfix,
-       texttitlepostfix => $texttitlepostfix,
-
-       storageloc => $$opts{storageloc},
-      );
-
-    translate_file "$$opts{xslt}page.xsl", $dom, \%params;
-
-    # success or failure?
-    check_for_page( @pages );
-
-    # math?
-    process_math( $outdir, @math );
-
-    print "\nThe page can be viewed on:\n  ${url}\n\n";
-
-} # sub: xml2html_page
-
-
 # xml2html_cscdb - called by xml2html
 #
 # note: $xslt, $outdir, and $outurl end in a /
+#
+# TODO: can be processed by _basic if we support multiple values
+#       for @pages and displaying at end (also, need to check that
+#       setting outurl is not a problem here and what is the urlhead
+#       parameter that this routine sets)
 #
 sub xml2html_cscdb ($) {
     my $opts = shift;
@@ -859,7 +858,7 @@ sub xml2html_cscdb ($) {
        pagename => $in,
        #	  navbarlink => $nlink,
        url => $url,
-       urlhead => $outurl,
+       urlhead => $outurl, # NOTE: urlhead rather than outurl; TODO look at this -- have done, and it does not seem to be used.
        sourcedir => cwd() . "/",
        updateby => $$opts{updateby},
        depth => $depth,
@@ -893,96 +892,13 @@ sub xml2html_cscdb ($) {
 
 } # sub: xml2html_cscdb
 
-
-# xml2html_bugs - called by xml2html
-#
-# note: $xslt, $outdir, and $outurl end in a /
-#
-sub xml2html_bugs ($) {
-    my $opts = shift;
-
-    my $in     = $$opts{xml};
-    my $dom    = $$opts{xml_dom};
-    my $depth  = $$opts{depth};
-    my $outdir = $$opts{outdir};
-    my $outurl = $$opts{outurl};
-
-    my $lastmod = $$opts{lastmod};
-
-    # the navbarlink is currently not used by the code
-    # - see the comments in helper.xsl
-    # - note that I do not believe $nlink is set to
-    #   a sensible value by the following !!
-#    my $nlink = $$opts{navbar_link};
-#    $nlink .= "${in}.html" unless $in eq "index";
-
-    print "Parsing [bugs]: $in";
-
-    # we 'hardcode' the output of the transformation
-    my @pages = ( "${outdir}${in}.html" );
-
-    # how about math pages?
-    #
-    my @math = find_math_pages $dom;
-
-    # do we need to recreate (include the equations created by any math blocks)
-    return if should_we_skip $in, @pages, map( { "${outdir}${_}.gif"; } @math );
-    print "\n";
-
-    # remove files [already ensured the dir exists]
-    foreach my $page ( @pages ) { myrm $page; }
-    clean_up_math( $outdir, @math );
-
-    my $url = "${outurl}${in}.html";
-
-    # used to set up the list of parameters sent to the
-    # stylesheet
-    #
-    my %params =
-      (
-       type => $$opts{type},
-       site => $$opts{site},
-       lastmod => $lastmod,
-       install => $outdir,
-       pagename => $in,
-       #	  navbarlink => $nlink,
-       url => $url,
-       sourcedir => cwd() . "/",
-       updateby => $$opts{updateby},
-       depth => $depth,
-       siteversion => $site_version,
-       # ahelpindex added in CIAO 3.0
-       ahelpindex => $ahelpindex,
-       cssfile => $css,
-       cssprintfile => $cssprint,
-       favicon => $favicon,
-       newsfile => $newsfile,
-       newsfileurl => $newsfileurl,
-       watchouturl => $watchouturl,
-       searchssi => $searchssi,
-       googlessi => $googlessi,
-       headtitlepostfix => $headtitlepostfix,
-       texttitlepostfix => $texttitlepostfix,
-
-       storageloc => $$opts{storageloc},
-      );
-
-    translate_file "$$opts{xslt}bugs.xsl", $dom, \%params;
-
-    # success or failure?
-    check_for_page( @pages );
-
-    # math?
-    process_math( $outdir, @math );
-
-    print "\nThe page can be viewed on:\n  $url\n\n";
-
-} # sub: xml2html_bugs
-
-
 # xml2html_news - called by xml2html
 #
 # note: $xslt, $outdir, and $outurl end in a /
+#
+# TODO: can be processed by _basic if we support multiple values
+#       for @pages and displaying at end (also, need to check that
+#       setting outurl is not a problem here)
 #
 sub xml2html_news ($) {
     my $opts = shift;
@@ -1133,101 +1049,6 @@ sub xml2html_softlink ($) {
 
 } # sub: xml2html_softlink
 
-# xml2html_register - called by xml2html
-#
-# note: $xslt, $outdir, and $outurl end in a /
-#
-
-  ## This subroutine was removed in
-  ## web4/ciao42 version of publish.pl
-
-
-# xml2html_relnotes - called by xml2html
-#
-# note: $xslt, $outdir, and $outurl end in a /
-#
-sub xml2html_relnotes ($) {
-    my $opts = shift;
-
-    my $in     = $$opts{xml};
-    my $dom    = $$opts{xml_dom};
-    my $depth  = $$opts{depth};
-    my $outdir = $$opts{outdir};
-    my $outurl = $$opts{outurl};
-
-    my $lastmod = $$opts{lastmod};
-
-    # the navbarlink is currently not used by the code
-    # - see the comments in helper.xsl
-    # - note that I do not believe $nlink is set to
-    #   a sensible value by the following !!
-#    my $nlink = $$opts{navbar_link};
-#    $nlink .= "${in}.html" unless $in eq "index";
-
-    print "Parsing [relnotes]: $in";
-
-    # we 'hardcode' the output of the transformation
-    my @pages = ( "${outdir}${in}.html" );
-
-    # how about math pages?
-    #
-    my @math = find_math_pages $dom;
-
-    # do we need to recreate (include the equations created by any math blocks)
-    return if should_we_skip $in, @pages, map( { "${outdir}${_}.gif"; } @math );
-    print "\n";
-
-    # remove files [already ensured the dir exists]
-    foreach my $page ( @pages ) { myrm $page; }
-    clean_up_math( $outdir, @math );
-
-    my $url = "${outurl}${in}.html";
-
-    # used to set up the list of parameters sent to the
-    # stylesheet
-    #
-    my %params =
-      (
-       type => $$opts{type},
-       site => $$opts{site},
-       lastmod => $lastmod,
-       install => $outdir,
-       pagename => $in,
-       #	  navbarlink => $nlink,
-       url => $url,
-       sourcedir => cwd() . "/",
-       updateby => $$opts{updateby},
-       depth => $depth,
-       siteversion => $site_version,
-       # ahelpindex added in CIAO 3.0
-       ahelpindex => $ahelpindex,
-       cssfile => $css,
-       cssprintfile => $cssprint,
-       favicon => $favicon,
-       newsfile => $newsfile,
-       newsfileurl => $newsfileurl,
-       watchouturl => $watchouturl,
-       searchssi => $searchssi,
-       googlessi => $googlessi,
-       headtitlepostfix => $headtitlepostfix,
-       texttitlepostfix => $texttitlepostfix,
-
-       storageloc => $$opts{storageloc},
-      );
-
-    translate_file "$$opts{xslt}relnotes.xsl", $dom, \%params;
-
-    # success or failure?
-    check_for_page( @pages );
-
-    # math?
-    process_math( $outdir, @math );
-
-    print "\nThe page can be viewed on:\n  $url\n\n";
-
-} # sub: xml2html_relnotes
-
-
 # Usage:
 #   xml2html_multiple $opts, $pagename, \@sitelist;
 #
@@ -1244,6 +1065,9 @@ sub xml2html_relnotes ($) {
 # e.g. faq, dictionary
 #
 # note: $xslt, $outdir, and $outurl end in a /
+#
+# TODO: this could be a wrapper around a _basic-like routine;
+#   need to set up @pages and what to print at the end.
 #
 sub xml2html_multiple ($$$) {
     my $opts     = shift;
@@ -1762,9 +1586,9 @@ sub process_xml ($$) {
 	if ( $root eq "navbar" ) {
 	    xml2html_navbar $opts;
 	} elsif ( $root eq "page" ) {
-	    xml2html_page $opts;
+	    xml2html_basic 'page', 'page', $opts;
 	} elsif ( $root eq "bugs" ) {
-	    xml2html_bugs $opts;
+	    xml2html_basic 'bugs', 'bugs', $opts;
 	} elsif ( $root eq "news" ) {
 	    xml2html_news $opts;
 	} elsif ( $root eq "redirect" ) {
@@ -1798,7 +1622,7 @@ sub process_xml ($$) {
 	    xml2html_cscdb $opts;
 	} elsif ( $root eq "relnotes" ) {
 	    die_if_icxc $root;
-	    xml2html_relnotes $opts;
+	    xml2html_basic 'relnotes', 'relnotes', $opts;
 	} else {
 	  # We have some "non-publishing" XML files on iCXC (they are used
 	  # to create other XML files that can be published), so skip them
