@@ -118,6 +118,8 @@ logotext=CIAO Logo
 
 %stylesheets=live /data/da/Docs/web4/ciao45/
 %stylesheets=test /data/da/Docs/web4/ciao45/
+# HACK for testing
+#%stylesheets=test /data/da/Docs/web4/devel/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
 # what's the location for the output files?
@@ -480,7 +482,7 @@ ahelpindexnavbar=analysis
 @stylesheets=ahelp_main
 @stylesheets=threadindex
 @stylesheets=threadindex_common
-@stylesheets=ciao_thread
+@stylesheets=thread
 @stylesheets=thread_common
 @stylesheets=helper
 @stylesheets=links
@@ -561,7 +563,7 @@ googlessi=/chart/analytics.ssi
 @stylesheets=page
 @stylesheets=navbar
 @stylesheets=redirect
-@stylesheets=chart_thread
+@stylesheets=thread
 @stylesheets=thread_common
 @stylesheets=helper
 @stylesheets=links
@@ -842,7 +844,7 @@ ahelpindexnavbar=ahelp
 @stylesheets=redirect
 @stylesheets=threadindex
 @stylesheets=threadindex_common
-@stylesheets=sherpa_thread
+@stylesheets=thread
 @stylesheets=thread_common
 @stylesheets=helper
 @stylesheets=links
@@ -1126,7 +1128,7 @@ ahelpindexnavbar=ahelp
 @stylesheets=redirect
 @stylesheets=threadindex
 @stylesheets=threadindex_common
-@stylesheets=chips_thread
+@stylesheets=thread
 @stylesheets=thread_common
 @stylesheets=helper
 @stylesheets=links
@@ -1759,7 +1761,7 @@ number=Cycle 13
 @stylesheets=helper
 @stylesheets=links
 @stylesheets=myhtml
-@stylesheets=pog_thread
+@stylesheets=thread
 @stylesheets=thread_common
 
 -site  # end of pog

@@ -1664,7 +1664,7 @@ sub xml2html_thread ($) {
        storageloc => $$opts{storageloc},
       );
 
-    translate_file "$$opts{xslt}${site}_thread.xsl", $dom, \%params;
+    translate_file "$$opts{xslt}thread.xsl", $dom, \%params;
 
     # set the correct owner/permissions for the HTML files
     #
