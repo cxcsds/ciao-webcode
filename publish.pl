@@ -1622,6 +1622,9 @@ sub process_xml ($$) {
 	    xml2html_cscdb $opts;
 	} elsif ( $root eq "relnotes" ) {
 	    die_if_icxc $root;
+	    # TODO: relnotes creates multiple files, so 
+	    #   a) need to know about them to clean up beforehand
+	    #   b) remove the <?xml... line from the 'slugs'/included files
 	    xml2html_basic 'relnotes', 'relnotes', $opts;
 	} else {
 	  # We have some "non-publishing" XML files on iCXC (they are used

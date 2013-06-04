@@ -14,7 +14,6 @@
     * support updates (e.g. CIAO 4.5.2) then the check is that siteversion
     * matches the start of relnotes/@release (since siteversion is expected
     * to remain at 4.5, although this is not guaranteed).
-    *    *** NOT IMPLEMENTED YET. ***
     *
     *-->
 
@@ -57,14 +56,14 @@
     </xsl:call-template>
 
     <xsl:apply-templates select="relnotes" mode="page"/>
-    <xsl:if test="$site = 'ciao'">      
+    <xsl:if test="$site = 'ciao' and starts-with(//relnotes/@release, $siteversion)">
       <xsl:apply-templates select="//relnotes/text/category[@name='Tools']" mode="ahelp"/>
     </xsl:if>
 
   </xsl:template> <!--* match=/ *-->
 
   <!--* 
-      * create: <relnotes>.html
+      * create: $pagename.html
       *-->
 
   <xsl:template match="relnotes" mode="page">
@@ -197,10 +196,8 @@
   <!--*
       * create the includes for the ahelp webpages
       *
-      * TODO: can we not just say match="category" rather than the
-      *       selector used below?
       *-->
-  <xsl:template match="//relnotes/text/category[@name='Tools']" mode="ahelp">
+  <xsl:template match="category" mode="ahelp">
     
     <xsl:for-each select="section">
       
@@ -217,6 +214,7 @@
 	<ul class="helplist">
 	  <xsl:for-each select="note">
 	    <li>
+	      <!-- should this not just process everything as normal? -->
 	      <xsl:apply-templates select="child::*|child::text()"/>
 	    </li>
 	  </xsl:for-each> <!-- select="note" -->
@@ -224,7 +222,7 @@
 
       </xsl:document>
     </xsl:for-each>
-  </xsl:template> <!--* match=relnotes, mode=ahelp *-->
+  </xsl:template> <!--* match=category, mode=ahelp *-->
 
 
   <!--*
