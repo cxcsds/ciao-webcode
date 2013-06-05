@@ -14,6 +14,10 @@
 #     --verbose
 #     Turn on screen output that's only useful for testing/debugging
 #
+#     --localxslt
+#     Replace the %stylesheets directive in the config file with
+#     the location of this script (for testing purposes)
+#
 #   by default will not create HTML files if they already exist
 #   and are newer than the XML file (also checks for other
 #   associated files and the created PDF files).
@@ -42,10 +46,6 @@
 #   (which defaults to test if not specified). Please don't use
 #   the trial type unless you really know what you're doing.
 #
-# Notes:
-#   The support for iCXC pages [ie for our internal pages only] is
-#   experimental.
-#
 # Creates:
 #   The location of the output HTML (and possibly PDF) files
 #   is defined by the contents of the config file you supply with the
@@ -53,7 +53,8 @@
 #
 # Requires:
 #   The location searched for the stylesheets is defined
-#   in the config file, as are the actual stylesheets needed.
+#   in the config file, as are the actual stylesheets needed,
+#   unless the --localxslt flag is used to override this.
 #
 # Author:
 #  Doug Burke (dburke@cfa.harvard.edu)
@@ -114,6 +115,9 @@ file).
 
 The --verbose option is useful for testing/debugging the code.
 
+The --localxslt option overides the \%stylesheets directive in the
+config file to use the location of $progname instead.
+
 EOD
 
 # this will be mangled later
@@ -122,11 +126,13 @@ my $dname = cwd();
 # handle options
 my $type = "test";
 my $force = 0;
+my $localxslt = 0;
 die $usage unless
   GetOptions
   'config=s' => \$configfile,
   'type=s'   => \$type,
   'force!'   => \$force,
+  'localxslt!' => \$localxslt,
   'verbose!' => \$verbose;
 
 # what OS are we running?
@@ -176,6 +182,11 @@ my $outurl      = get_config_type $version_config, "outurl", $type;
 my $css         = get_config_type $version_config, "css", $type;
 my $cssprint    = get_config_type $version_config, "cssprint", $type;
 my $favicon     = get_config_type $version_config, "favicon", $type;
+
+if ($localxslt) {
+    dbg "Overriding stylesheets setting: from $stylesheets to $FindBin::Bin/";
+    $stylesheets = "$FindBin::Bin/";
+}
 
 # get the site version
 my $site_version = "";
