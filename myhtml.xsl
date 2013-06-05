@@ -717,4 +717,70 @@
     </xsl:choose>
   </xsl:template> <!-- name="get-month" -->
 
+  <!-- * Docbook-like admonitions; rather than have separate tags use a single
+       * tag and use an attribute to determine the type of admonition.
+       *
+       * Valid values for @type are
+       *     caution important note tip warning
+       * or the type attribute can be left out.
+       *-->
+
+  <xsl:variable name="allowed-annotations" select="' caution important note tip warning  '"/>
+
+  <xsl:template match="admonition[@type]">
+    <xsl:if test="not(contains($allowed-annotations, concat(' ', @type, ' ')))">
+      <xsl:message terminate="yes">
+ ERROR: admonition found with unsupported type=<xsl:value-of select="@type"/>
+   allowed values: <xsl:value-of select="$allowed-annotations" />
+      </xsl:message>
+    </xsl:if>
+
+    <div>
+      <xsl:attribute name="class">admonition <xsl:value-of select="@type"/></xsl:attribute>
+      <div>
+	<xsl:attribute name="class"><xsl:value-of select="concat(@type, '-inner')"/></xsl:attribute>
+	<!-- Title handling should be cleaned up -->
+	<xsl:choose>
+	  <xsl:when test="boolean(title)">
+	    <xsl:apply-templates select="title" mode="admonition"/>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <div class="title">
+	      <span class="title">
+		<xsl:choose>
+		  <xsl:when test="$type='caution'">Caution</xsl:when>
+		  <xsl:when test="$type='important'">Important</xsl:when>
+		  <xsl:when test="$type='note'">Note</xsl:when>
+		  <xsl:when test="$type='tip'">Tip</xsl:when>
+		  <xsl:when test="$type='warning'">Warning</xsl:when>
+		  <xsl:otherwise>
+		    <xsl:message terminate="yes">
+ Internal error: unexpected type=<xsl:value-of select="$type"/> when processing
+   admonition block with no title.
+		    </xsl:message>
+		  </xsl:otherwise>
+		</xsl:choose>
+	      </span>
+	    </div>
+	  </xsl:otherwise>
+	</xsl:choose>
+	<xsl:apply-templates select="*[name()!='title']"/>
+      </div>
+    </div>
+
+  </xsl:template> <!-- match=admonition/@type -->
+
+  <xsl:template match="admonition">
+    <div class="admonition">
+	<xsl:apply-templates select="title" mode="admonition"/>
+	<xsl:apply-templates select="*[name()!='title']"/>
+    </div>
+  </xsl:template> <!-- match=admonition/@type -->
+
+  <xsl:template match="title" mode="admonition">
+    <div class="title">
+      <span class="title"><xsl:apply-templates/></span>
+    </div>
+  </xsl:template> <!-- match=title mode=admonition -->
+
 </xsl:stylesheet>
