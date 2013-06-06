@@ -1017,15 +1017,12 @@
 
 	  <xsl:choose>
 	    <!-- CIAO site includes the bug page text -->
-	    <xsl:when test="boolean(document(string(concat($dname,'/../bugs/',$outname,'.xml'))))">
-              <xsl:call-template name="add-ssi-include">
-		<xsl:with-param name="file" select="$bugincl"/>
-              </xsl:call-template>
+	    <xsl:when test="$have-bugs-external">
+	      <xsl:copy-of select="$bugs-contents/slug/*"/>
 	    </xsl:when>
 
 	    <xsl:otherwise>
 	      <xsl:apply-templates/>
-
 	      <p>
 		Refer to the <a href="/ciao/bugs/">CIAO bug pages</a> for an up-to-date listing of known issues.
 	      </p>

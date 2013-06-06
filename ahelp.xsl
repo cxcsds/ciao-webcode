@@ -155,7 +155,14 @@
   <xsl:param name="have-example"  select="$nexample!=0"/>
   <xsl:param name="have-param"    select="$nparam!=0"/>
   <xsl:param name="have-seealso"  select="$seealso != ''"/>
-  <xsl:param name="have-bugs"     select="count(//ENTRY/BUGS)!=0"/>
+  <xsl:param name="have-bugs"     select="count(//ENTRY/BUGS)!=0"/> <!-- FIX THIS as depends on the site -->
+
+  <!-- only need to worry about this for site=ciao? -->
+  <xsl:param name="bugs-path"><xsl:value-of 
+	select="concat($storageInfo//dir[@site=$site],'bugs/',
+                       $outname, '.slug.xml')"/></xsl:param>
+  <xsl:param name="bugs-contents" select="extfuncs:read-file-if-exists($bugs-path)"/>
+  <xsl:param name="have-bugs-external" select="count($bugs-contents/slug) != 0"/>
 
   <xsl:param name="relnotes-path"><xsl:value-of 
 	select="concat($storageInfo//dir[@site=$site],'releasenotes/ciao_',
