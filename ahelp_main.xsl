@@ -1043,19 +1043,19 @@
   <!--*
       * 
       * add a release notes block, if it exists
+      *
+      * TODO: convert to using XInclude to add the data rather than a SSI
       * 
       *-->
 
   <xsl:template name="add-relnotes">
-    <xsl:variable name="relincl"><xsl:text>../releasenotes/ciao_</xsl:text><xsl:value-of select="$version"/>.<xsl:value-of select="$outname"/>.incl.html</xsl:variable>
-
     <!-- include the release note text -->
-    <xsl:if test="boolean(document(string(concat($outdir,$relincl))))">
+    <xsl:if test="$have-relnotes = '1'">
 
       <h3><a name="relnotes">Changes in CIAO <xsl:value-of select="$version"/></a></h3>
 
       <xsl:call-template name="add-ssi-include">
-	<xsl:with-param name="file" select="$relincl"/>
+	<xsl:with-param name="file" select="$relnotes-path"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:template> <!--* relnotes *-->

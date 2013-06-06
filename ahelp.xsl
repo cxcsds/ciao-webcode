@@ -150,15 +150,15 @@
   <xsl:param name="have-param"    select="$nparam!=0"/>
   <xsl:param name="have-seealso"  select="$seealso != ''"/>
   <xsl:param name="have-bugs"     select="count(//ENTRY/BUGS)!=0"/>
-  <xsl:param name="have-relnotes">
-    <xsl:variable name="relincl"><xsl:text>../releasenotes/ciao_</xsl:text><xsl:value-of select="$version"/>.<xsl:value-of select="$outname"/>.incl.html</xsl:variable>
 
+  <xsl:param name="relnotes-path"><xsl:value-of 
+	select="concat('../releasenotes/ciao_',$version,'.',$outname,'.incl.html')"/></xsl:param>
+  <xsl:param name="have-relnotes">
     <xsl:choose>
-      <xsl:when test="boolean(document(string(concat($outdir,$relincl))))">1</xsl:when>
+      <xsl:when test="boolean(document(string(concat($outdir,$relnotes-path))))">1</xsl:when>
       <xsl:otherwise>0</xsl:otherwise>
     </xsl:choose>
   </xsl:param>
-
 
   <xsl:variable name="url"        select="concat($urlbase,$outname,'.html')"/>
 
