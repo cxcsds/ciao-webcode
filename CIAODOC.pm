@@ -43,14 +43,15 @@ XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs
 				"read-file-if-exists",
   sub {
     my $filename = shift;
+    # want to differentiate between 'file does not exist' and
+    # 'file is invalid'.
+    return XML::LibXML::NodeList->new()
+	unless -e $filename;
     my $rval;
     eval { $rval = $parser->parse_file($filename); };
-    if ($@) {
-      # Not clear if need to send back an empty list, but do so just in case
-      return XML::LibXML::NodeList->new();
-    } else {
-      return $rval;
-    }
+    die "ERROR: problem parsing XML file $filename\n  $@\n"
+	if $@;
+    return $rval;
   }
 );
 
