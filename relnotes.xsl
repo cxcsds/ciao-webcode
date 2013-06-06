@@ -5,26 +5,11 @@
     * Handle CIAO release notes. This creates a main page and
     * creates 'slugs' (or includable snippets) for other pages.
     *
-    * Note that the slugs start with the '<?xml ...' line, so need
-    * post-processing to remove this (since inclusion into generated
-    * files is not smart enough to remove this at present).
-    * Alternatively, we change the including code to use XInclude
-    * to process these files.
-    *
     * We only want to generate the slugs for the current release, so
     * we check relnotes/@release against the siteversion parameter. In order
     * support updates (e.g. CIAO 4.5.2) then the check is that siteversion
     * matches the start of relnotes/@release (since siteversion is expected
     * to remain at 4.5, although this is not guaranteed).
-    *
-    * TODO:
-    *   - write out the slugs to the storage location rather than
-    *     the web directory
-    *
-    *   - can we write out an XML file that contains the ahelpkey names
-    *     of tools for which we have created a slug (so that ahelp pages
-    *     can query it) 
-    *
     *
     *-->
 
@@ -55,7 +40,8 @@
   <!--*
       * top level: create
       *   $pagename.html
-      *   ciao_<siteversion>.<toolname>.incl.html (CIAO only)
+      *   slugs for tools changed in this release (to be used
+      *     to populate the ahelp files when they are published)
       *-->
   <xsl:template match="/">
 
