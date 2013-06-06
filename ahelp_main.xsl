@@ -1050,13 +1050,11 @@
 
   <xsl:template name="add-relnotes">
     <!-- include the release note text -->
-    <xsl:if test="$have-relnotes = '1'">
+    <xsl:if test="$have-relnotes">
 
       <h3><a name="relnotes">Changes in CIAO <xsl:value-of select="$version"/></a></h3>
 
-      <xsl:call-template name="add-ssi-include">
-	<xsl:with-param name="file" select="$relnotes-path"/>
-      </xsl:call-template>
+      <xsl:copy-of select="$relnotes-contents/slug/*"/>
     </xsl:if>
   </xsl:template> <!--* relnotes *-->
 

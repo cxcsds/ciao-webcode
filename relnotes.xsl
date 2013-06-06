@@ -233,7 +233,7 @@
       *    @name (which should exist).
       *-->
   <xsl:template match="section[@ahelpskip='1']" mode="ahelp-relnotes">
-    <xsl:message terminate="no"> DBG: skipping relnotes name=<xsl:value-of select="@name"/></xsl:message>
+    <xsl:message terminate="no">DBG: skipping relnotes name=<xsl:value-of select="@name"/></xsl:message>
   </xsl:template>
 
   <xsl:template match="section" mode="ahelp-relnotes">
@@ -260,16 +260,21 @@
       </xsl:when>
 
       <xsl:otherwise>
-        <xsl:variable name="filename"><xsl:value-of select="$install"/>ciao_<xsl:value-of select="$siteversion"/>.<xsl:value-of select="$pagename"/>.incl.html</xsl:variable>
+	<!-- write the slug to the storage area -->
+	<xsl:variable name="outloc" select="$storageInfo//dir[@site=$site]"/>
+
+	<xsl:variable name="filename"
+	  select="concat($outloc, 'releasenotes/ciao_', $siteversion, '.', $pagename, '.slug.xml')"/>
       
-        <!--* output filename to stdout *-->
+        <!--* output filename to stdout (at present not used by publishing code) *-->
         <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
+<xsl:message terminate="no">DBG: <xsl:value-of select="$filename"/></xsl:message>
       
         <xsl:document href="{$filename}" method="xml" encoding="utf-8">
 	
 	  <!--* add disclaimer about editing this HTML file *-->
 	  <xsl:call-template name="add-disclaimer"/>
-	
+	  <slug>
 	  <ul class="helplist">
 	    <xsl:for-each select="note">
 	      <li>
@@ -278,6 +283,7 @@
 	      </li>
 	    </xsl:for-each> <!-- select="note" -->
 	  </ul> 
+          </slug>
         </xsl:document>
 
       </xsl:otherwise>

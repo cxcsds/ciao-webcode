@@ -32,9 +32,27 @@ use XML::LibXSLT;
 my $parser = XML::LibXML->new()
   or die "Error: Unable to create XML::LibXML parser instance.\n";
 $parser->validation(0);
+# $parser->expand_xinclude(1); NOTE: don't actually use XInclude at the moment
 
 my $xslt = XML::LibXSLT->new()
   or die "Error: Unable to create XML::LibXSLT instance.\n";
+
+# Set up potentially-useful functions
+#
+XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				"read-file-if-exists",
+  sub {
+    my $filename = shift;
+    my $rval;
+    eval { $rval = $parser->parse_file($filename); };
+    if ($@) {
+      # Not clear if need to send back an empty list, but do so just in case
+      return XML::LibXML::NodeList->new();
+    } else {
+      return $rval;
+    }
+  }
+);
 
 # default depth is 250 but this causes problems with some style sheets
 # (eg wavdetect, tg_create_mask), so increase randomly until everything
