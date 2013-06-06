@@ -254,7 +254,6 @@
       
         <!--* output filename to stdout (at present not used by publishing code) *-->
         <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-<xsl:message terminate="no">DBG: <xsl:value-of select="$filename"/></xsl:message>
       
         <xsl:document href="{$filename}" method="xml" encoding="utf-8">
 	
