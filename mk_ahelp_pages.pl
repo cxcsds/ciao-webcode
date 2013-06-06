@@ -340,8 +340,9 @@ my %paramlist = @extra;
 #
 foreach my $in ( @names ) {
 
-    dbg "Processing: $in";
+    # To match publish.pl
     my $name = (split("/",$in))[-1];
+    print "Parsing [ahelp]: $name\n";
 
     # We need to convert depth from a number to a string
     # - e.g. from 2 to '../' - here
