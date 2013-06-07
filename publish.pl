@@ -871,6 +871,7 @@ sub xml2html_cscdb ($) {
 
     my $params = basic_params $opts;
     $$params{urlhead} = $outurl; # TODO: this probably does nothing
+    delete $$params{url}; # try to stop display of canonical link as have multiple output HTML pages
 
     translate_file "$$opts{xslt}cscdb.xsl", $dom, $params;
 
@@ -1096,6 +1097,7 @@ sub xml2html_multiple ($$$) {
     clean_up_math( $outdir, @math );
 
     my $params = basic_params $opts;
+    delete $$params{url}; # try to stop display of canonical link as have multiple output HTML pages
 
     translate_file "$$opts{xslt}${pagename}.xsl", $dom, $params;
 
@@ -1158,11 +1160,10 @@ sub xml2html_threadindex ($) {
     # create dirs/remove files
     initialise_pages( @soft );
 
-    # The $$params{url} parameter is probably wrong here (since it does not
-    # for each file)
     my $params = basic_params $opts;
     $$params{threadDir} = $$opts{store};
     $$params{urlhead} = $outurl; # TODO: does this actually do anything?
+    delete $$params{url}; # try to stop display of canonical link as have multiple output HTML pages
 
     translate_file "$$opts{xslt}threadindex.xsl", $dom, $params;
 
