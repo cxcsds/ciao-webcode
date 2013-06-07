@@ -467,7 +467,13 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
 #
 # Should be sent a DOM
 #
+# NOTE:
+#   always returns an empty list since moved to MathJax
+#   but want to leave code in for now in case needed
+#
 sub find_math_pages ($) {
+  return (); # DBG: MathJax
+
   my $dom = shift;
 
   # Should use a proper OO check here to allow sub-classes to match.

@@ -246,6 +246,8 @@
       * and ditto for the htmlscripts/htmlscript
       * (added html prefix to separate from scripts used in threads)
       *
+      * MathJax support is added if the page contains any math tags.
+      *
       * input variables:
       *   title - required
       *   css   - optional: text of css-1 rules
@@ -265,6 +267,12 @@
       <!--// CSC pages get cscview.js //-->
       <xsl:if test="$site = 'csc'">
 	<script type="text/javascript" language="JavaScript" src="/csc/cscview.js"/>
+      </xsl:if>
+
+      <xsl:if test="count(//math) != 0">
+	<!-- for now use the version in CIAO; could use CDN? -->
+	<script type="text/javascript"
+		src="/ciao/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js"/>
       </xsl:if>
 
       <!--* add the favicon *-->

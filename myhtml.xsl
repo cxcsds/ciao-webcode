@@ -539,11 +539,10 @@
       * {   <mathml>...</mathml>   (MathML version)   NOT YET IMPLEMENTED    }
       *   </math>
       *
-      * Creates a file (name.png) which is included in the text
-      * (with alt attribute = [text]). name is also used to set the
-      * anchor of the equation
-      *
-      * A lot of the processing is actually done external to the stylesheet
+      * We now use the MathJax javascript system - http://www.mathjax.org/ -
+      * for rendering LaTeX, rather than calling out to LaTeX to create
+      * an image (although this may be required to support users who
+      * have JavaScript turned off).
       *
       * Notes:
       * - may want to add attributes that are used to control the created formula
@@ -574,7 +573,7 @@
         * - apparently xsl:document will nest
         * - need to remove leading/trailing whitespace so that
         *   latex doesn't complain
-        *-->
+
     <xsl:document href="{concat($sourcedir,name,'.tex')}" method="text">
 \documentclass{article}
 \usepackage{color}
@@ -589,7 +588,11 @@
 \end{document}
     </xsl:document>
 
-    <a name="{name}"><img src="{name}.png" alt="{text}"/></a>
+        *-->
+
+    <!-- how best to supply an anchor now? -->
+    <a name="{name}"/>
+    <xsl:value-of select="concat('\[', normalize-space(latex), '\]')"/>
 
   </xsl:template> <!--* match=math *-->
 

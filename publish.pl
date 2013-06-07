@@ -465,6 +465,10 @@ sub should_we_skip ($@) {
 #
 # NOTE: this is based on text2im v1.5
 #
+# NOTE: the code has been left in although, now using
+#       MathJax, it is currently not used (may want to
+#       create an image for non-JavaScript users?)
+#
 sub math2image ($$) {
     my $head    = shift;
     my $outfile = shift;
@@ -548,7 +552,12 @@ sub check_for_page {
 #   ensures none of the files that will be needed to support the math
 #   tag are present
 #
+# NOTE:
+#   does nothing at the moment sinceusing MathJax
+#   code left in for now
 sub clean_up_math {
+    return; # DBG: MathJax
+
     my $outdir = shift;
     foreach my $page ( @_ ) {
 	myrm "${page}.tex";
@@ -567,7 +576,13 @@ sub clean_up_math {
 # Aim:
 #   Creates the PNG images
 #
+# NOTE:
+#   Currently does nothing since we now use MathJax to
+#   render the LaTeX within the browser.
+#
 sub process_math {
+    return; # DBG: MathJax
+
     my $outdir = shift;
     foreach my $page ( @_ ) { math2image $page, "${outdir}${page}.png"; }
 } # process_math()
@@ -1131,10 +1146,10 @@ sub xml2html_threadindex ($) {
     @soft = map { "${outdir}$_"; } @soft;
 
     # do not allow math in the threadindex (for now)
-    #
+    # (remove with use of MathJax)
     my @math = find_math_pages $dom;
-    die "Error: found math blocks in $in - not allowed here\n"
-      unless $#math == -1;
+    #die "Error: found math blocks in $in - not allowed here\n"
+    #  unless $#math == -1;   # DBG: MathJax
 
     # NOTE: we always recreate the threadindex
     # (it just makes things easier, since the thread index pages
