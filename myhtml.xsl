@@ -745,14 +745,14 @@
 	    <div class="title">
 	      <span class="title">
 		<xsl:choose>
-		  <xsl:when test="$type='caution'">Caution</xsl:when>
-		  <xsl:when test="$type='important'">Important</xsl:when>
-		  <xsl:when test="$type='note'">Note</xsl:when>
-		  <xsl:when test="$type='tip'">Tip</xsl:when>
-		  <xsl:when test="$type='warning'">Warning</xsl:when>
+		  <xsl:when test="@type='caution'">Caution</xsl:when>
+		  <xsl:when test="@type='important'">Important</xsl:when>
+		  <xsl:when test="@type='note'">Note</xsl:when>
+		  <xsl:when test="@type='tip'">Tip</xsl:when>
+		  <xsl:when test="@type='warning'">Warning</xsl:when>
 		  <xsl:otherwise>
 		    <xsl:message terminate="yes">
- Internal error: unexpected type=<xsl:value-of select="$type"/> when processing
+ Internal error: unexpected type=<xsl:value-of select="@type"/> when processing
    admonition block with no title.
 		    </xsl:message>
 		  </xsl:otherwise>
@@ -772,7 +772,7 @@
 	<xsl:apply-templates select="title" mode="admonition"/>
 	<xsl:apply-templates select="*[name()!='title']"/>
     </div>
-  </xsl:template> <!-- match=admonition/@type -->
+  </xsl:template> <!-- match=admonition -->
 
   <xsl:template match="title" mode="admonition">
     <div class="title">
