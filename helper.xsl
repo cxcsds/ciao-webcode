@@ -296,11 +296,11 @@
 	<link rel="alternate" type="application/rss+xml" title="CIAO News RSS Feed" href="{$outurl}feed.xml" />
       </xsl:if>
 
-      <!-- canonical link for search results -->
-      <xsl:if test="$type = 'live'">
-	<xsl:if test="$url != ''">
-	  <link rel="canonical" href="{$url}"/>
-	</xsl:if>
+      <!-- canonical link for search results
+           (include in non-live sites for better testing)
+	-->
+      <xsl:if test="$url != ''">
+	<link rel="canonical" href="{$url}"/>
       </xsl:if>
 	  
       <!--*
