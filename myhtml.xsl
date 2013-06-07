@@ -265,7 +265,7 @@
       * add a "new" icon
       * - see also the updated template
       * - uses the "package" variable depth to work
-      *   out where the gif actually is
+      *   out where the image actually is
       * - if the day attribute is supplied also adds in the date
       *   using (29 June 2002) format where
       *    day=29 month=June year=2
@@ -539,13 +539,11 @@
       * {   <mathml>...</mathml>   (MathML version)   NOT YET IMPLEMENTED    }
       *   </math>
       *
-      * Creates a gif (name.gif) which is included in the text
+      * Creates a file (name.png) which is included in the text
       * (with alt attribute = [text]). name is also used to set the
       * anchor of the equation
       *
       * A lot of the processing is actually done external to the stylesheet
-      * - eg list_math.xsl is called and the perl script does the actual
-      *   conversion to GIF
       *
       * Notes:
       * - may want to add attributes that are used to control the created formula
@@ -591,8 +589,7 @@
 \end{document}
     </xsl:document>
 
-    <!--* and add the img tag to the resulting tree, within an anchor *-->
-    <a name="{name}"><img src="{name}.gif" alt="{text}"/></a>
+    <a name="{name}"><img src="{name}.png" alt="{text}"/></a>
 
   </xsl:template> <!--* match=math *-->
 

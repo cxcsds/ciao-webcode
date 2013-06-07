@@ -456,21 +456,19 @@ sub should_we_skip ($@) {
 
 } # should_we_skip()
 
-# math2gif $head, $gif
+# math2image $head, $outfile
 #
 # convert trhe equation sotred in the file $head.tex
-# into a gif called $gif, sets its protections
+# into an image called $outfile, sets its protections
 #
 # then delete $tex
 #
 # NOTE: this is based on text2im v1.5
 #
-# TODO: should we convert to PNG instead?
-#
-sub math2gif ($$) {
-    my $head = shift;
-    my $gif  = shift;
-    my $tex  = $head . ".tex";
+sub math2image ($$) {
+    my $head    = shift;
+    my $outfile = shift;
+    my $tex     = $head . ".tex";
 
     die "Error: transformation did not create $tex\n"
       unless -e $tex;
@@ -485,21 +483,20 @@ sub math2gif ($$) {
     die "Error: unable to run dvips on $head.dvi to create $head.eps\n"
       if $rflag;
 
-    # and now the gif file
-    # note - creates 2 versions
-    system "convert", "+adjoin", "-density", "150x150", "$head.eps", "$head.gif"
-      and die "Error: unable to convert to GIF\n";
+    # and now the output file
+    system "convert", "+adjoin", "-density", "150x150", "$head.eps", "$head.png"
+      and die "Error: unable to convert to PNG\n";
 
-    die "Error: $gif was not created\n"
-      unless -e "$head.gif";
-    system "cp", "$head.gif", $gif;
+    die "Error: PNG for equation=$head was not created\n"
+      unless -e "$head.png";
+    system "cp", "$head.png", $outfile;
 
     # clean up and return
-    foreach my $ext ( qw( log aux dvi eps tex gif gif.0 gif.1 ) ) { myrm $head . ".$ext"; }
-    mysetmods $gif;
-    print "\nCreated: $gif\n";
+    foreach my $ext ( qw( log aux dvi eps tex png ) ) { myrm $head . ".$ext"; }
+    mysetmods $outfile;
+    print "\nCreated: $outfile\n";
 
-} # sub: math2gif()
+} # sub: math2image()
 
 # can we publish this page for this site?
 #
@@ -559,7 +556,7 @@ sub clean_up_math {
 	myrm "${page}.log";
 	myrm "${page}.dvi";
 	myrm "${page}.eps";
-	myrm "${outdir}${page}.gif";
+	myrm "${outdir}${page}.png";
     }
 } # clean_up_math()
 
@@ -568,11 +565,11 @@ sub clean_up_math {
 #   process_math( $outdir, $page1, ..., $pageN );
 #
 # Aim:
-#   Creates the GIF images
+#   Creates the PNG images
 #
 sub process_math {
     my $outdir = shift;
-    foreach my $page ( @_ ) { math2gif $page, "${outdir}${page}.gif"; }
+    foreach my $page ( @_ ) { math2image $page, "${outdir}${page}.png"; }
 } # process_math()
 
 # Usage:
@@ -666,7 +663,7 @@ sub xml2html_basic ($$$) {
     my @math = find_math_pages $dom;
 
     # do we need to recreate (include the equations created by any math blocks)
-    return if should_we_skip $in, @pages, map( { "${outdir}${_}.gif"; } @math );
+    return if should_we_skip $in, @pages, map( { "${outdir}${_}.png"; } @math );
     print "\n";
 
     # remove files [already ensured the dir exists]
@@ -848,7 +845,7 @@ sub xml2html_cscdb ($) {
     my @math = find_math_pages $dom;
 
     # do we need to recreate (include the equations created by any math blocks)
-    return if should_we_skip $in, @pages, map( { "${outdir}${_}.gif"; } @math );
+    return if should_we_skip $in, @pages, map( { "${outdir}${_}.png"; } @math );
     print "\n";
 
     # remove files [already ensured the dir exists]
@@ -902,7 +899,7 @@ sub xml2html_news ($) {
     my @math = find_math_pages $dom;
 
     # do we need to recreate (include the equations created by any math blocks)
-    return if should_we_skip $in, @pages, map( { "${outdir}${_}.gif"; } @math );
+    return if should_we_skip $in, @pages, map( { "${outdir}${_}.png"; } @math );
     print "\n";
 
     # remove files [already ensured the dir exists]
@@ -1076,7 +1073,7 @@ sub xml2html_multiple ($$$) {
     # do we need to recreate
     return
       if should_we_skip $in, @soft,
-	map( { "${outdir}${_}.gif"; } @math );
+	map( { "${outdir}${_}.png"; } @math );
     print "\n";
 
     # create dirs/remove files
@@ -1277,7 +1274,7 @@ sub xml2html_thread ($) {
     #
     return if should_we_skip \$time,
       map { my $a = $_; "${outdir}$a"; } @html,
-	map( { "${outdir}${_}.gif"; } @math );
+	map( { "${outdir}${_}.png"; } @math );
     print "\n";
 
     print "  install to: $outdir\n";
