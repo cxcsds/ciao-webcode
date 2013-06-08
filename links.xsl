@@ -18,9 +18,6 @@
   <xsl:variable name="ahelpindexfile" select="document($ahelpindex)"/>
 
     * 
-    * Thread support:
-    *   The proglang support is being removed.
-    * 
     * Thoughts:
     * - a number of links go to the 'index' page (eg ahelp)
     *   when no attribute is given whereas some tags have a separate
@@ -33,13 +30,14 @@
     * - a number of tags are essentially the same (eg dpguide, caveat, aguide, why)
     *   so they should all be thin wrappers around a single template
     *
+    * - checks on thread/faq/dictionary can lead to repeated reads of the same
+    *   file; it is not worth optimising this away at the moment.
+    *
     * To do:
     *   We link to /ciao/... or /$site/... when we may want to go to the
     *   beta version of that page instead. How do we handle this?
     *   Perhaps we need to consider ciaobeta a new site, etc.
-    *-->
-
-<!--* 
+    *
     * handle links
     *
     * Requires:
@@ -62,7 +60,8 @@
   xmlns:exsl="http://exslt.org/common"
   xmlns:func="http://exslt.org/functions"
   xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
-  extension-element-prefixes="exsl func djb">
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="exsl func djb extfuncs">
 
   <!--* we don't like "a" tags! *-->
   <xsl:template match="a|A">
@@ -482,6 +481,67 @@
   </xsl:template> <!--* name=add-ahelp-context *-->
 
   <!--*
+      * Error out if there is no faq entry for the id value.
+      * The faq-contents parameter is the node set containing
+      * the faq/index.xml file. The sitevalue parameter is
+      * the site of the faq (used for an error message).
+      *
+      * There is a special case so that when we publish the
+      * ditionary we do not error out if the faq has not been
+      * published yet (so that we can avoid a loop as the
+      * dictionary is very likely to refer to a least one faq),
+      * so without this we couldn't publish anything.
+      *-->
+  <xsl:template name="validate-faq-link">
+    <xsl:param name="faq-contents"/>
+    <xsl:param name="id"/>
+    <xsl:param name="sitevalue"/>
+
+    <xsl:variable name="nfaq" select="count($faq-contents/faq)"/>
+    <xsl:choose>
+      <xsl:when test="$nfaq = 0">
+	
+	<xsl:choose>
+	  <!--* This will fail if the dictionary includes a file and the
+	      * included text contains a faq link, but worry about that if
+	      * it happens -->
+	  <xsl:when test="name(//*) = 'dictionary'">
+	    <xsl:message terminate="no">
+ WARNING: the dictionary contains a FAQ link but the FAQ has not been
+  published yet. Please publish the FAQ and then re-publish the dictionary.
+            </xsl:message>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:message terminate="yes">
+ ERROR: the FAQ (site=<xsl:value-of select="$sitevalue"/>) has not been published yet, so I can not
+  check whether the link for id=<xsl:value-of select="$id"/> is valid!
+            </xsl:message>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:when>
+
+      <xsl:otherwise>
+	<xsl:variable name="nid" select="count($faq-contents//faqentry[@id=$id])"/>
+	<xsl:choose>
+	  <xsl:when test="$nid = 1"/>
+	  <xsl:when test="$nid = 0">
+	    <xsl:message terminate="yes">
+ ERROR: there is no known FAQ entry with id=<xsl:value-of select="$id"/>
+            </xsl:message>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:message terminate="yes">
+ ERROR: there are *multiple* FAQ entries with id=<xsl:value-of select="$id"/>
+   this should have been caught when the FAQ was published!
+            </xsl:message>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </xsl:template> <!--* name=validate-faq-link *-->
+
+  <!--*
       * handle FAQ tags:
       * produces different links depending on whether type=test or live
       *
@@ -494,6 +554,14 @@
       *   a faq link in the ciao   pages links to the CIAO faq
       *   a faq link in the sherpa pages links to the Sherpa faq
       *   a faq link elsewhere assumes the CIAO faq
+      *
+      * The @id/@site value is checked for validity (for live site)
+      *    faq.xml not available, then error out
+      *      as long this is not the dictionary page (not 100% reliable test)
+      *      (this is to allow the dictionary to be published, then faq, then
+      *       dictionary)   
+      *    exists but not valid, then error out
+      * At the moment these are also errors for non-live sites
       *-->
 
   <xsl:template match="faq">
@@ -503,40 +571,13 @@
       <xsl:with-param name="tag" select="'id'"/>
     </xsl:call-template>
 
-    <!--* check id attribute *-->
+    <!--* check id attribute (validity check is later) *-->
     <xsl:call-template name="check-id-for-no-html"/>
 
-    <!--* TEMPORARY: throw a wobbly if an old id is supplied *-->
-    <xsl:if test="boolean(@id)">
-      <xsl:if test="starts-with(@id,'general-') or
-	starts-with(@id,'parameter-') or
-	starts-with(@id,'ce-') or
-	starts-with(@id,'firstlook-') or
-	starts-with(@id,'prism-') or
-	starts-with(@id,'filtwin-') or
-	starts-with(@id,'ds9-') or
-	starts-with(@id,'sherpa-') or
-	starts-with(@id,'acis_process_events-') or
-	starts-with(@id,'asphist-') or
-	starts-with(@id,'dmcopy-') or
-	starts-with(@id,'dmextract-') or
-	starts-with(@id,'dmgroup-') or
-	starts-with(@id,'dmhedit-') or
-	starts-with(@id,'dmstat-') or
-	starts-with(@id,'dmtcalc-') or
-	starts-with(@id,'lightcurve-') or
-	starts-with(@id,'mkrmf-') or
-	starts-with(@id,'tg_create_mask') or
-	starts-with(@id,'fullgarf-') or
-	starts-with(@id,'spectrum.sl-')">
-	<xsl:message terminate="yes">
-  Error: it appears that you are using the old style FAQ id
-  (<xsl:value-of select="@id"/>). Please convert to the new one
-  - see /data/da/Docs/ciaoweb/faq_ids
-  If you are using the new one then bug Doug about why I'm complaining.
-	</xsl:message>
-      </xsl:if>
-    </xsl:if>
+    <xsl:variable name="sitevalue"><xsl:choose>
+	<xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
+	<xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
 
     <!--*
         * complicated mess to work out where to link to
@@ -555,13 +596,51 @@
 	  </xsl:call-template></xsl:otherwise>
       </xsl:choose></xsl:variable>
 
+    <xsl:variable name="href"><xsl:value-of select="$hrefstart"/><xsl:if test="boolean(@id)"><xsl:value-of select="@id"/>.html</xsl:if></xsl:variable>
+
+    <!-- create the title for the link and where we check that the id value is
+	 valid -->
+    <xsl:variable name="title"><xsl:choose>
+	<xsl:when test="boolean(@id)">
+
+	  <!--* TODO: maybe this should just be a get-faq-title template 
+	      * which errors out if @id is invalid?
+	      *-->
+
+	  <!--*
+	      * I tried to add this logic to faqContents but wasn't able to 
+	      * make it work, so we now re-read the document for the faq
+	      * page itself, which is wasteful.
+	      *
+	      *-->
+	  <xsl:variable name="faq-file"><xsl:choose>
+	      <xsl:when test="name(//*) = 'faq'"><xsl:value-of select="concat($sourcedir, '/', $pagename, '.xml')"/></xsl:when>
+	      <xsl:otherwise><xsl:value-of 
+				select="djb:get-faq-filename($sitevalue)"/></xsl:otherwise>
+	  </xsl:choose></xsl:variable>
+	  <xsl:variable name="faq-contents"
+			select="extfuncs:read-file-if-exists($faq-file)"/>
+
+	  <xsl:call-template name="validate-faq-link">
+	    <xsl:with-param name="faq-contents" select="$faq-contents"/>
+	    <xsl:with-param name="id" select="@id"/>
+	    <xsl:with-param name="sitevalue" select="$sitevalue"/>
+	  </xsl:call-template>
+
+	  <!-- TODO: strip out HTML code? -->
+	  <xsl:variable name="idval" select="@id"/>
+	  <xsl:value-of select="concat('FAQ: ', normalize-space($faq-contents//faqentry[@id=$idval]/title))"/>
+	</xsl:when>
+	<xsl:otherwise>CIAO Frequently Asked Questions</xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
 	<!--* are we linking to the whole file, or a specific part of it? *-->
 	<a>
-	  <xsl:attribute name="title">CIAO Frequently Asked Questions</xsl:attribute>
-	  <xsl:attribute name="href"><xsl:value-of select="$hrefstart"/><xsl:if test="boolean(@id)"><xsl:value-of select="@id"/>.html</xsl:if></xsl:attribute>
+	  <xsl:attribute name="title"><xsl:value-of select="$title"/></xsl:attribute>
+	  <xsl:attribute name="href"><xsl:value-of select="$href"/></xsl:attribute>
 
 	  <!--* text *-->
 	  <xsl:choose>
@@ -2214,25 +2293,15 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   </xsl:template>
 
   <!--*
-      * djb:get-thread-filename($name,$site)
+      * djb:get-storage-path($site)
       *
-      * Returns the full path to the given thread; it
-      * does not check that the name/site parameters
-      * are valid.
+      * Returns the full path to the storage for the site,
+      * which defaults to the global $site variable if not given.
       *
-      *   $name is the thread name (ie as used in threadlink @name)
-      *   $site is the site name (e.g. threadlink @site attribute)
-      *     and can be left out, when it defaults to the site of the page
+      * This will error out if invalid value(s) are found.
       *-->
-  <func:function name="djb:get-thread-filename">
-    <xsl:param name="name" select="''"/>
+  <func:function name="djb:get-storage-path">
     <xsl:param name="site" select="$site"/>
-
-    <xsl:if test="$name = ''">
-      <xsl:message terminate="yes">
- Internal error: djb:get-thread-filename called with an empty name argument.
-      </xsl:message>
-    </xsl:if>
 
     <!--* this only needs to be tested once but do it every time, for now *-->
     <xsl:if test="$storageloc = ''">
@@ -2264,9 +2333,51 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:when>
     </xsl:choose>
 
+    <func:result select="$head"/>
+
+  </func:function> <!--* name djb:get-storage-path *-->
+
+  <!--*
+      * djb:get-thread-filename($name,$site)
+      *
+      * Returns the full path to the given thread; it
+      * does not check that the name/site parameters
+      * are valid.
+      *
+      *   $name is the thread name (ie as used in threadlink @name)
+      *   $site is the site name (e.g. threadlink @site attribute)
+      *     and can be left out, when it defaults to the site of the page
+      *-->
+  <func:function name="djb:get-thread-filename">
+    <xsl:param name="name" select="''"/>
+    <xsl:param name="site" select="$site"/>
+
+    <xsl:if test="$name = ''">
+      <xsl:message terminate="yes">
+ Internal error: djb:get-thread-filename called with an empty name argument.
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:variable name="head" select="djb:get-storage-path($site)"/>
     <func:result select="concat($head,'threads/',$name,'/thread.xml')"/>
 
   </func:function> <!--* name djb:get-thread-filename *-->
+
+  <!--*
+      * djb:get-faq-filename($site)
+      *
+      * Returns the full path to the FAQ (stored version)
+      *
+      *   $site is the site name (e.g. faq @site attribute)
+      *     and can be left out, when it defaults to the site of the page
+      *-->
+  <func:function name="djb:get-faq-filename">
+    <xsl:param name="site" select="$site"/>
+
+    <xsl:variable name="head" select="djb:get-storage-path($site)"/>
+    <func:result select="concat($head,'faq/index.xml')"/>
+
+  </func:function> <!--* name djb:get-faq-filename *-->
 
   <!--*
       * Returns the //thread/info node for either the current document
