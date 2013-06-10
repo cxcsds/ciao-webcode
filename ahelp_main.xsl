@@ -34,6 +34,7 @@
       *-->
   <xsl:template match="cxchelptopics">
     <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$outname"/>.html</xsl:variable>
+    <xsl:variable name="title">Ahelp: <xsl:value-of select="ENTRY/@key"/> - <xsl:value-of select="$headtitlepostfix"/></xsl:variable>
 
     <!--* output filename to stdout *-->
     <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
@@ -44,7 +45,7 @@
       
       <html lang="en">
 	<head>
-	  <title>Ahelp: <xsl:value-of select="ENTRY/@key"/> - <xsl:value-of select="$headtitlepostfix"/></title>
+	  <title><xsl:value-of select="$title"/></title>
 
 	  <link rel="canonical" href="{$url}"/> 
 
@@ -58,6 +59,10 @@
 }
 </style>
 
+          <xsl:call-template name="add-sao-metadata">
+	    <xsl:with-param name="title" select="normalize-space($title)"/>
+	  </xsl:call-template>
+          
 	</head>
 
 	<!--* add header and banner *-->
