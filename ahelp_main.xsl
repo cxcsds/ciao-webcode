@@ -35,9 +35,6 @@
   <xsl:template match="cxchelptopics">
     <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$outname"/>.html</xsl:variable>
 
-    <!--// needed for canonical link //-->
-    <xsl:variable name="url" select="concat('http://cxc.harvard.edu/',$site,'/ahelp/',$outname,'.html')"/>
-
     <!--* output filename to stdout *-->
     <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
 

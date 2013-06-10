@@ -170,7 +170,8 @@
   <xsl:param name="relnotes-contents" select="extfuncs:read-file-if-exists($relnotes-path)"/>
   <xsl:param name="have-relnotes" select="count($relnotes-contents/slug) != 0"/>
 
-  <xsl:variable name="url"        select="concat($urlbase,$outname,'.html')"/>
+  <!-- used for the canonical link and the URL bar (hard copy) -->
+  <xsl:variable name="url" select="concat($urlbase,'ahelp/', $outname,'.html')"/>
 
   <!--*
       * Start processing here: "/"
