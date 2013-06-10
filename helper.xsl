@@ -340,6 +340,8 @@
 	  * SAO required metadata (added after the rest so that they don't
 	  * delay user agents who are looking for the other elements in
 	  * the head block)
+	  *
+	  * TODO: if these change, also change ahelp_index.xsl:add-htmlhead
 	  * -->
       <meta name="title"><xsl:attribute name="content"><xsl:value-of select="normalize-space($title)"/></xsl:attribute></meta>
       <meta name="creator" content="SAO-HEA"/>

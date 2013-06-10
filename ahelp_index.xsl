@@ -121,6 +121,10 @@
   <xsl:variable name="dt" select="date:date-time()"/>
   <xsl:variable name="lastmod"
     select="concat(date:day-in-month($dt),' ',date:month-name($dt),' ',date:year($dt))"/>
+  <xsl:variable name="month2"><xsl:number value="date:month-in-year($dt)" format="01"/></xsl:variable>
+  <xsl:variable name="day2"><xsl:number value="date:day-in-month($dt)" format="01"/></xsl:variable>
+  <xsl:variable name="lastmodiso"
+		select="concat(date:year($dt), '-', $month2, '-', $day2)"/>
 
   <!--*
       * Start processing here: "/"
@@ -556,6 +560,7 @@
 
 	<xsl:call-template name="add-htmlhead">
 	  <xsl:with-param name="title">Ahelp (alphabetical) - <xsl:value-of select="$headtitlepostfix"/></xsl:with-param>
+	  <xsl:with-param name="pagename" select="$pagename"/>
 	</xsl:call-template>
 
 	<!--* add header and banner *-->
@@ -759,6 +764,7 @@
 
 	<xsl:call-template name="add-htmlhead">
 	  <xsl:with-param name="title">Ahelp (contextual) - <xsl:value-of select="$headtitlepostfix"/></xsl:with-param>
+	  <xsl:with-param name="pagename" select="$pagename"/>
 	</xsl:call-template>
 
 	<!--* add header and banner *-->
@@ -971,10 +977,12 @@
       *
       * input variables:
       *   title - string, required
+      *   pagename - string, required
       *   withcss - 0 or 1, defaults to 1
       *-->
   <xsl:template name="add-htmlhead">
     <xsl:param name='title'/>
+    <xsl:param name='pagename'/>
     <xsl:param name='withcss' select="1"/>
 
     <head>
@@ -985,6 +993,48 @@
 	<link rel="stylesheet" title="Default stylesheet for CIAO-related pages" href="{$cssfile}"/>
 	<link rel="stylesheet" title="Default stylesheet for CIAO-related pages" media="print" href="{$cssprintfile}"/>
       </xsl:if>
+
+      <!-- canonical link -->
+      <link rel="canonical" href="{concat($urlbase, 'ahelp/', $pagename, '.html')}"/>
+
+      <!--*
+	  * SAO/SI mandated header items.
+	  * Copied from helper.xsl:add_htmlhead (have not edited to remove
+	  * items we know are not possible here)
+	  *-->
+      <meta name="title"><xsl:attribute name="content"><xsl:value-of select="normalize-space($title)"/></xsl:attribute></meta>
+      <meta name="creator" content="SAO-HEA"/>
+      <meta http-equiv="content-language" content="en-US"/>
+      <xsl:if test="$lastmodiso != ''">
+	<meta name="date" content="{$lastmodiso}"/>
+      </xsl:if>
+      
+      <!--*
+	  * TODO: could add in tags/logic to set these to something more specific
+	  *
+	  * -->
+      <xsl:variable name="desc"><xsl:choose>
+	<xsl:when test="$site = 'ciao'">The CIAO software package for analyzing data from X-ray telescopes, including the Chandra X-ray telescope.</xsl:when>
+	<xsl:when test="$site = 'sherpa'">The Sherpa package for fitting and modeling data (part of CIAO).</xsl:when>
+	<xsl:when test="$site = 'chips'">The ChIPS package for plotiting and imaging data (part of CIAO).</xsl:when>
+	<xsl:when test="$site = 'csc'">The Chandra Source Catalog</xsl:when>
+	<xsl:when test="$site = 'pog'">Help for writing proposals for the Chandra X-ray telescope.</xsl:when>
+
+	<xsl:when test="$site = 'iris'">IRIS - the VAO Spectral Energy Distribution Analysis Tool</xsl:when>
+
+	<xsl:otherwise>Information about the Chandra X-ray Telescope for Astronomers.</xsl:otherwise>
+      </xsl:choose></xsl:variable>
+
+      <xsl:if test="not(boolean(info/metalist/meta[@name='subject']))">
+	<meta name="subject" content="{$desc}"/>
+      </xsl:if>
+      <xsl:if test="not(boolean(info/metalist/meta[@name='description']))">
+	<meta name="description" content="{$desc}"/>
+      </xsl:if>
+      
+      <meta name="keywords" content="SI,Smithsonian,Smithsonian Institute"/>
+      <meta name="keywords" content="CfA,SAO,Harvard-Smithsonian,Center for Astrophysics"/>
+      <meta name="keywords" content="HEA,HEAD,High Energy Astrophysics Division"/>
 
     </head>
   </xsl:template> <!--* add-htmlhead *-->
