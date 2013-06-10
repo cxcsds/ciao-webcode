@@ -624,6 +624,7 @@ sub basic_params ($) {
 	    type => $$opts{type},
 	    site => $$opts{site},
 	    lastmod => $$opts{lastmod},
+	    lastmodiso => $$opts{lastmodiso},
 	    install => $$opts{outdir},
 	    pagename => $in,
 	    url => $url,
@@ -841,8 +842,6 @@ sub xml2html_cscdb ($) {
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
 
-    my $lastmod = $$opts{lastmod};
-
     # the navbarlink is currently not used by the code
     # - see the comments in helper.xsl
     # - note that I do not believe $nlink is set to
@@ -901,8 +900,6 @@ sub xml2html_news ($) {
     my $dom    = $$opts{xml_dom};
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
-
-    my $lastmod = $$opts{lastmod};
 
     print "Parsing [news]: $in";
 
@@ -1043,8 +1040,6 @@ sub xml2html_multiple ($$$) {
     my $outurl = $$opts{outurl};
     my $site   = $$opts{site};
 
-    my $lastmod = $$opts{lastmod};
-
     # temporary
     site_check( $site, $pagename, $sitelist );
 
@@ -1126,8 +1121,6 @@ sub xml2html_threadindex ($) {
     my $outdir = $$opts{outdir};
     my $outurl = $$opts{outurl};
     my $site   = $$opts{site};
-
-    my $lastmod = $$opts{lastmod};
 
     # temporary
     site_check( $site, "threadindex", [ "ciao", "sherpa", "chips", "csc", "iris" ] );
@@ -1347,6 +1340,7 @@ sub xml2html_thread ($) {
 
     my $params = basic_params $opts;
     delete $$params{lastmod};
+    #delete $$params{lastmodiso}; # we still need to send this value in for the header
     $$params{threadDir} = $threadDir;
     $$params{url} = $outurl; # drop the index.html part
 
@@ -1454,6 +1448,8 @@ sub process_xml ($$) {
 	    my @tm = localtime( (stat("$in.xml"))[9] );
 	    $$opts{lastmod} = sprintf "%d %s %d",
 	      $tm[3], $month[$tm[4]], 1900+$tm[5];
+	    $$opts{lastmodiso} = sprintf "%4d-%02d-%02d",
+	      1900 + $tm[5], $tm[4] + 1, $tm[3];
 	}
 
 	# what transformation do we apply?

@@ -13,6 +13,8 @@
     *    whether to create the test or "real" version
     *
     *  . lastmod=string to use to say when page was last modified
+    *  . lastmodiso=string to use to say when page was last modified
+    *               in format YYYY-MM-DD
     *
     *  . site=one of: ciao chart chips sherpa pog icxc
     *    tells the stylesheet what site we are working with
@@ -99,6 +101,7 @@
   <xsl:param name="updateby"     select='""'/>
   <xsl:param name="siteversion"  select='""'/>
   <xsl:param name="lastmod"      select='""'/>
+  <xsl:param name="lastmodiso"   select='""'/>
 
   <xsl:param name="newsfile"    select='""'/>
   <xsl:param name="newsfileurl" select='""'/>
