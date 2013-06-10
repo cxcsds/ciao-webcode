@@ -246,6 +246,9 @@
       * and ditto for the htmlscripts/htmlscript
       * (added html prefix to separate from scripts used in threads)
       *
+      * Support for the "standard" set of metadata pages for SAO
+      * pages is included.
+      *
       * MathJax support is added if the page contains any math tags.
       *
       * input variables:
@@ -256,6 +259,7 @@
     <xsl:param name='title'/>
     <xsl:param name='css'/>
     <head>
+
       <title><xsl:value-of select="$title"/></title>
 
       <!--* any meta information to add ? *-->
@@ -331,6 +335,46 @@
 <xsl:value-of select="$css"/>
 </style>
       </xsl:if>
+
+      <!--*
+	  * SAO required metadata (added after the rest so that they don't
+	  * delay user agents who are looking for the other elements in
+	  * the head block)
+	  * -->
+      <meta name="title"><xsl:attribute name="content"><xsl:value-of select="normalize-space($title)"/></xsl:attribute></meta>
+      <meta name="creator" content="SAO-HEA"/>
+      <meta http-equiv="content-language" content="en-US"/>
+      <xsl:if test="$lastmodiso != ''">
+	<meta name="date" content="{$lastmodiso}"/>
+      </xsl:if>
+      
+      <!--*
+	  * TODO: could add in tags/logic to set these to something more specific
+	  *
+	  * -->
+      <xsl:variable name="desc"><xsl:choose>
+	<xsl:when test="$site = 'ciao'">The CIAO software package for analyzing data from X-ray telescopes, including the Chandra X-ray telescope.</xsl:when>
+	<xsl:when test="$site = 'sherpa'">The Sherpa package for fitting and modeling data (part of CIAO).</xsl:when>
+	<xsl:when test="$site = 'chips'">The ChIPS package for plotiting and imaging data (part of CIAO).</xsl:when>
+	<xsl:when test="$site = 'csc'">The Chandra Source Catalog</xsl:when>
+	<xsl:when test="$site = 'pog'">Help for writing proposals for the Chandra X-ray telescope.</xsl:when>
+
+	<xsl:when test="$site = 'iris'">IRIS - the VAO Spectral Energy Distribution Analysis Tool</xsl:when>
+
+	<xsl:otherwise>Information about the Chandra X-ray Telescope for Astronomers.</xsl:otherwise>
+      </xsl:choose></xsl:variable>
+
+      <xsl:if test="not(boolean(info/metalist/meta[@name='subject']))">
+	<meta name="subject" content="{$desc}"/>
+      </xsl:if>
+      <xsl:if test="not(boolean(info/metalist/meta[@name='description']))">
+	<meta name="description" content="{$desc}"/>
+      </xsl:if>
+      
+      <meta name="keywords" content="SI,Smithsonian,Smithsonian Institute"/>
+      <meta name="keywords" content="CfA,SAO,Harvard-Smithsonian,Center for Astrophysics"/>
+      <meta name="keywords" content="HEA,HEAD,High Energy Astrophysics Division"/>
+
     </head>
     
     <xsl:call-template name="start-tag"/>body<xsl:call-template name="end-tag"/>  <!--// open html body //-->
