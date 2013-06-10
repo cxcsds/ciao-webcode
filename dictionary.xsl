@@ -167,12 +167,14 @@
 	<!--*
             * make the HTML head node
             *
-            * note: need to supply the text for the page title
-            *       since document title will be too long (in general)
-            *
             *-->
 	<xsl:call-template name="add-htmlhead">
-	  <xsl:with-param name="title">Dictionary Entry<xsl:if test="$texttitlepostfix!=''"><xsl:value-of select="concat(' - ',$texttitlepostfix)"/></xsl:if></xsl:with-param>
+	  <!-- We used to just have this as Dictionary Entry rather than the actual
+	       title, in case it was too long, but have changed this
+	       -->
+	  <xsl:with-param name="title">
+	    <xsl:value-of select="concat('Dictionary: ', normalize-space(title))"/><xsl:if test="$texttitlepostfix!=''"><xsl:value-of select="concat(' - ',$texttitlepostfix)"/></xsl:if>
+	  </xsl:with-param>
 	</xsl:call-template>
 
 	<!--* add disclaimer about editing this HTML file *-->
