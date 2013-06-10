@@ -280,7 +280,9 @@
       </xsl:if>
 
       <!--* add the favicon *-->
-      <link rel="icon" href="{$favicon}"/>
+      <xsl:if test="$favicon != ''">
+	<link rel="icon" href="{$favicon}"/>
+      </xsl:if>
 
       <!--* add main stylesheets *-->
       <xsl:choose>

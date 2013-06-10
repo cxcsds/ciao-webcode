@@ -206,6 +206,7 @@ my $navbar       = get_config_version $version_config, "ahelpindexnavbar";
 
 my $cssfile      = get_config_type $version_config, "css", $type;
 my $cssprintfile = get_config_type $version_config, "cssprint", $type;
+my $favicon      = get_config_type $version_config, "favicon", $type;
 my $searchssi    = get_config_type $version_config, "searchssi", $type;
 my $googlessi    = get_config_version( $version_config, "googlessi" );
 my $urlbase      = get_config_type $version_config, "outurl", $type;
@@ -231,6 +232,7 @@ dbg "  urlbase=$urlbase";
 dbg "  searchssi=$searchssi";
 dbg "  cssfile=$cssfile";
 dbg "  cssprintfile=$cssprintfile";
+dbg "  favicon=$favicon";
 dbg "  googlessi=$googlessi";
 dbg "  navbarname=$navbar";
 dbg "  logoimage=$logoimage";
@@ -245,6 +247,7 @@ dbg "*** CONFIG DATA (end) ***";
    updateby     => $uname,
    cssfile      => $cssfile,
    cssprintfile => $cssprintfile,
+   favicon      => $favicon,
    searchssi    => $searchssi,
    googlessi    => $googlessi,
    navbarname   => $navbar,

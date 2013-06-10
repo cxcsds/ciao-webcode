@@ -44,6 +44,8 @@
     *  . url=URL of page (on live server)
     *  . outurl=This appears to be the "base" url (ie the directory containing the page)
     *
+    *  . favicon=URL of the favicon for the site (optional)
+    *
     *  . sourcedir=full path to directory containing navbar.xml
     *
     *  . depth=depth of the file
@@ -97,6 +99,7 @@
   <xsl:param name="navbarlink"   select='""'/>
   <xsl:param name="url"          select='""'/>
   <xsl:param name="outurl"       select='""'/>
+  <xsl:param name="favicon"      select='""'/>
   <xsl:param name="sourcedir"    select='""'/>
   <xsl:param name="updateby"     select='""'/>
   <xsl:param name="siteversion"  select='""'/>
