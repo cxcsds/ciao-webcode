@@ -607,17 +607,8 @@
 	      * which errors out if @id is invalid?
 	      *-->
 
-	  <!--*
-	      * I tried to add this logic to faqContents but wasn't able to 
-	      * make it work, so we now re-read the document for the faq
-	      * page itself, which is wasteful.
-	      *
-	      *-->
-	  <xsl:variable name="faq-file"><xsl:choose>
-	      <xsl:when test="name(//*) = 'faq'"><xsl:value-of select="concat($sourcedir, '/', $pagename, '.xml')"/></xsl:when>
-	      <xsl:otherwise><xsl:value-of 
-				select="djb:get-faq-filename($sitevalue)"/></xsl:otherwise>
-	  </xsl:choose></xsl:variable>
+	  <xsl:variable name="faq-file"><xsl:value-of 
+				select="djb:get-faq-filename($sitevalue)"/></xsl:variable>
 	  <xsl:variable name="faq-contents"
 			select="extfuncs:read-file-if-exists($faq-file)"/>
 
@@ -2366,7 +2357,10 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   <!--*
       * djb:get-faq-filename($site)
       *
-      * Returns the full path to the FAQ (stored version)
+      * Returns the full path to the FAQ (stored version), unless
+      * we are currently processing the FAQ, in which case it
+      * returns the name of the file being processed (since
+      * the version in storage is not the latest).
       *
       *   $site is the site name (e.g. faq @site attribute)
       *     and can be left out, when it defaults to the site of the page
@@ -2374,8 +2368,15 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   <func:function name="djb:get-faq-filename">
     <xsl:param name="site" select="$site"/>
 
-    <xsl:variable name="head" select="djb:get-storage-path($site)"/>
-    <func:result select="concat($head,'faq/index.xml')"/>
+    <xsl:choose>
+      <xsl:when test="name(//*) = 'faq'">
+	<func:result select="concat($sourcedir, '/', $pagename, '.xml')"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:variable name="head" select="djb:get-storage-path($site)"/>
+	<func:result select="concat($head,'faq/index.xml')"/>
+      </xsl:otherwise>
+    </xsl:choose>
 
   </func:function> <!--* name djb:get-faq-filename *-->
 
