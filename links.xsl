@@ -645,6 +645,48 @@
   </xsl:template> <!--* faq *-->
 
   <!--*
+      * Error out if there is no dictionary entry for the id value.
+      * The dictionary-contents parameter is the node set containing
+      * the dictionary/index.xml file. The sitevalue parameter is
+      * the site of the dictionary (used for an error message).
+      *
+      *-->
+  <xsl:template name="validate-dictionary-link">
+    <xsl:param name="dictionary-contents"/>
+    <xsl:param name="id"/>
+    <xsl:param name="sitevalue"/>
+
+    <xsl:variable name="ndict" select="count($dictionary-contents/dictionary)"/>
+    <xsl:choose>
+      <xsl:when test="$ndict = 0">
+	<xsl:message terminate="yes">
+ ERROR: the Dictionary (site=<xsl:value-of select="$sitevalue"/>) has not been published yet, so I can not
+  check whether the link for id=<xsl:value-of select="$id"/> is valid!
+	</xsl:message>
+      </xsl:when>
+
+      <xsl:otherwise>
+	<xsl:variable name="nid" select="count($dictionary-contents//entry[@id=$id])"/>
+	<xsl:choose>
+	  <xsl:when test="$nid = 1"/>
+	  <xsl:when test="$nid = 0">
+	    <xsl:message terminate="yes">
+ ERROR: there is no known Dictionary entry with id=<xsl:value-of select="$id"/>
+            </xsl:message>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:message terminate="yes">
+ ERROR: there are *multiple* Dictionary entries with id=<xsl:value-of select="$id"/>
+   this should have been caught when the Dictionary was published!
+            </xsl:message>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </xsl:template> <!--* name=validate-dictionary-link *-->
+
+  <!--*
       * handle dictionary tags:
       * produces different links depending on whether type=test or live
       *
@@ -681,9 +723,13 @@
     <!--* check id attribute *-->
     <xsl:call-template name="check-id-for-no-html"/>
 
+    <xsl:variable name="sitevalue"><xsl:choose>
+	<xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
+	<xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
     <!--* are we in the ciao pages or not (ie is this an `external' link or not) *-->
     <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
-
 
     <!--// if there is an attribute, use it 
 	   otherwise, link to the "in-site" dictionary //-->
@@ -707,15 +753,36 @@
       </xsl:otherwise>
       </xsl:choose></xsl:variable>
 
+    <!-- create the title for the link and where we check that the id value is
+	 valid -->
+    <xsl:variable name="title"><xsl:choose>
+	<xsl:when test="boolean(@id)">
+
+	  <xsl:variable name="dictionary-file"><xsl:value-of 
+				select="djb:get-dictionary-filename($sitevalue)"/></xsl:variable>
+	  <xsl:variable name="dictionary-contents"
+			select="extfuncs:read-file-if-exists($dictionary-file)"/>
+
+	  <xsl:call-template name="validate-dictionary-link">
+	    <xsl:with-param name="dictionary-contents" select="$dictionary-contents"/>
+	    <xsl:with-param name="id" select="@id"/>
+	    <xsl:with-param name="sitevalue" select="$sitevalue"/>
+	  </xsl:call-template>
+
+	  <!-- Too laxy to make the 'Dictionary' part contain the site name -->
+	  <xsl:variable name="idval" select="@id"/>
+	  <xsl:value-of select="concat('Dictionary: ', normalize-space($dictionary-contents//entry[@id=$idval]/title))"/>
+	</xsl:when>
+	<xsl:when test="$site = 'csc' or @site = 'csc'">CSC Dictionary</xsl:when>
+	<xsl:otherwise>CIAO Dictionary</xsl:otherwise>
+    </xsl:choose></xsl:variable>
 
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
-	<a>
+	<a title="{$title}">
 	  <xsl:choose>
 	    <xsl:when test="($site != 'csc') or (@site = 'ciao')">
- 	      <xsl:attribute name="title">CIAO Dictionary</xsl:attribute>
-  
 	      <xsl:attribute name="href">
 	        <xsl:value-of select="$hrefstart"/>
 		<xsl:if test="boolean(@id)">
@@ -724,13 +791,18 @@
 	    </xsl:when>
 
 	    <xsl:when test="($site = 'csc') or (@site = 'csc')">
- 	      <xsl:attribute name="title">CSC Dictionary</xsl:attribute>
-  
 	      <xsl:attribute name="href">
 	        <xsl:value-of select="$hrefstart"/>
 		<xsl:if test="boolean(@id)">entries.html#<xsl:value-of select="@id"/></xsl:if>
 	      </xsl:attribute>
 	    </xsl:when>
+
+	    <xsl:otherwise>
+	      <xsl:message terminate="yes">
+ INTERNAL ERROR: when publishing dictionary link (id=<xsl:value-of select="@id"/>)
+   do not recognize $site=<xsl:value-of select="$site"/> @site=<xsl:value-of select="@site"/>
+	      </xsl:message>
+	    </xsl:otherwise>
 	  </xsl:choose>
 
 	  <!--* text *-->
@@ -2379,6 +2451,33 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     </xsl:choose>
 
   </func:function> <!--* name djb:get-faq-filename *-->
+
+  <!--*
+      * djb:get-dictionary-filename($site)
+      *
+      * Returns the full path to the Dictionary (stored version), unless
+      * we are currently processing the dictionary, in which case it
+      * returns the name of the file being processed (since
+      * the version in storage is not the latest).
+      *
+      *   $site is the site name (e.g. dictionary @site attribute)
+      *     and can be left out, when it defaults to the site of the page
+      *-->
+  <func:function name="djb:get-dictionary-filename">
+    <xsl:param name="site" select="$site"/>
+
+    <xsl:choose>
+      <!-- TODO: handle the one-page version used by CSC -->
+      <xsl:when test="name(//*) = 'dictionary'">
+	<func:result select="concat($sourcedir, '/', $pagename, '.xml')"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:variable name="head" select="djb:get-storage-path($site)"/>
+	<func:result select="concat($head,'dictionary/index.xml')"/>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </func:function> <!--* name djb:get-dictionary-filename *-->
 
   <!--*
       * Returns the //thread/info node for either the current document
