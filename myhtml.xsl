@@ -723,6 +723,12 @@
        * Valid values for @type are
        *     caution important note tip warning
        * or the type attribute can be left out.
+       *
+       * I had originally followed the docbook style sheet and used
+       * the background-image CSS attribute on the div.*-inner block
+       * to set the icon. However, this is likely ignored by the
+       * media print (browser option), so explicitly adding the
+       * image.
        *-->
 
   <xsl:variable name="allowed-annotations" select="' caution important note tip warning  '"/>
@@ -739,6 +745,8 @@
       <xsl:attribute name="class">admonition <xsl:value-of select="@type"/></xsl:attribute>
       <div>
 	<xsl:attribute name="class"><xsl:value-of select="concat(@type, '-inner')"/></xsl:attribute>
+	<xsl:call-template name="add-admonition-image"/>
+
 	<!-- Title handling should be cleaned up -->
 	<xsl:choose>
 	  <xsl:when test="boolean(title)">
@@ -782,5 +790,18 @@
       <span class="title"><xsl:apply-templates/></span>
     </div>
   </xsl:template> <!-- match=title mode=admonition -->
+
+  <!--* Add an an image tag for the admonition -->
+  <xsl:template name="add-admonition-image">
+    <xsl:if test="boolean(@type)">
+      <!--*
+	  * TODO: do we want to add a class to this?
+	  *-->
+      <xsl:call-template name="add-image">
+	<xsl:with-param name="src" select="concat('imgs/', @type,'.png')"/>
+	<xsl:with-param name="alt" select="translate(@type, 'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template> <!-- name=add-admonition-image -->
 
 </xsl:stylesheet>
