@@ -274,7 +274,13 @@
       </xsl:if>
 
       <xsl:if test="count(//math) != 0">
-	<!-- for now use the version in CIAO; could use CDN? -->
+	<!--*
+	    * We do not use the CDN version because of HEAD/SAO policy
+	    *
+	    * Given that we do not support Ascii Math (AMS) or MathML (MML)
+	    * input, and do not need the texjax input processor, is it
+	    * worth using a "custom" config?
+	    *-->
 	<script type="text/javascript"
 		src="/ciao/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js"/>
       </xsl:if>

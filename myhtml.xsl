@@ -535,7 +535,8 @@
       *   <math>
       *     <name>...</name>
       *     <latex>...</latex> (latex formula with NO being/end math values)
-      *     <text>...</text>   (plain text representation)
+      *     <text>...</text>   (plain text representation;
+      *        if not given then we re-use the latex block)
       * {   <mathml>...</mathml>   (MathML version)   NOT YET IMPLEMENTED    }
       *   </math>
       *
@@ -551,10 +552,9 @@
   <xsl:template match="math">
 
     <!--* DTD-style checks *-->
-    <xsl:if test="boolean(name)=false() or boolean(latex)=false() or boolean(text)=false()">
+    <xsl:if test="boolean(name)=false() or boolean(latex)=false()">
       <xsl:message terminate="yes">
- Error: a match tag is missing at least one of the following
-   nodes - name, latex, text
+ Error: math tag is missing at least one of name or latex
       </xsl:message>
     </xsl:if>
 
@@ -590,9 +590,19 @@
 
         *-->
 
-    <!-- how best to supply an anchor now? -->
+    <!--*
+	* how best to supply an anchor now?
+	* MathJax does add anchors automatically; can we add this?
+	*-->
     <a name="{name}"/>
-    <xsl:value-of select="concat('\[', normalize-space(latex), '\]')"/>
+    <script type="math/tex; mode=display">
+      <xsl:value-of select="latex"/>
+    </script>
+    <!--* is this sensible? *-->
+    <noscript><xsl:choose>
+      <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="latex"/></xsl:otherwise>
+    </xsl:choose></noscript>
 
   </xsl:template> <!--* match=math *-->
 
