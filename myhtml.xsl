@@ -595,14 +595,18 @@
 	* MathJax does add anchors automatically; can we add this?
 	*-->
     <a name="{name}"/>
+    <!--* 
+	* Could place human-readable form in a noscript tag, but this
+	* way we get to provide something hopefully-readable whilst the
+	* LaTeX is being rendered.
+	*-->
+    <span class="MathJax_Preview"><xsl:choose>
+      <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="latex"/></xsl:otherwise>
+    </xsl:choose></span>
     <script type="math/tex; mode=display">
       <xsl:value-of select="latex"/>
     </script>
-    <!--* is this sensible? *-->
-    <noscript><xsl:choose>
-      <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
-      <xsl:otherwise><xsl:value-of select="latex"/></xsl:otherwise>
-    </xsl:choose></noscript>
 
   </xsl:template> <!--* match=math *-->
 
