@@ -26,6 +26,8 @@
   xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
   extension-element-prefixes="date func djb">
 
+  <xsl:include href="common.xsl"/>
+
   <!--*
       * used to determine whether the site is valid
       *
@@ -285,11 +287,6 @@
 		src="/ciao/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js"/>
       </xsl:if>
 
-      <!--* add the favicon *-->
-      <xsl:if test="$favicon != ''">
-	<link rel="icon" href="{$favicon}"/>
-      </xsl:if>
-
       <!--* add main stylesheets *-->
       <xsl:choose>
 	<xsl:when test="$site='iris'">
@@ -344,48 +341,10 @@
 </style>
       </xsl:if>
 
-      <!--*
-	  * SAO required metadata (added after the rest so that they don't
-	  * delay user agents who are looking for the other elements in
-	  * the head block)
-	  *
-	  * TODO: if these change, also change ahelp_common.xsl:add-sao-metadata
-          * TODO: really should be in a common template
-	  * -->
-      <meta name="title"><xsl:attribute name="content"><xsl:value-of select="normalize-space($title)"/></xsl:attribute></meta>
-      <meta name="creator" content="SAO-HEA"/>
-      <meta http-equiv="content-language" content="en-US"/>
-      <xsl:if test="$lastmodiso != ''">
-	<meta name="date" content="{$lastmodiso}"/>
-      </xsl:if>
+      <xsl:call-template name="add-sao-metadata">
+	<xsl:with-param name="title" select="normalize-space($title)"/>
+      </xsl:call-template>
       
-      <!--*
-	  * TODO: could add in tags/logic to set these to something more specific
-	  *
-	  * -->
-      <xsl:variable name="desc"><xsl:choose>
-	<xsl:when test="$site = 'ciao'">The CIAO software package for analyzing data from X-ray telescopes, including the Chandra X-ray telescope.</xsl:when>
-	<xsl:when test="$site = 'sherpa'">The Sherpa package for fitting and modeling data (part of CIAO).</xsl:when>
-	<xsl:when test="$site = 'chips'">The ChIPS package for plotiting and imaging data (part of CIAO).</xsl:when>
-	<xsl:when test="$site = 'csc'">The Chandra Source Catalog</xsl:when>
-	<xsl:when test="$site = 'pog'">Help for writing proposals for the Chandra X-ray telescope.</xsl:when>
-
-	<xsl:when test="$site = 'iris'">IRIS - the VAO Spectral Energy Distribution Analysis Tool</xsl:when>
-
-	<xsl:otherwise>Information about the Chandra X-ray Telescope for Astronomers.</xsl:otherwise>
-      </xsl:choose></xsl:variable>
-
-      <xsl:if test="not(boolean(info/metalist/meta[@name='subject']))">
-	<meta name="subject" content="{$desc}"/>
-      </xsl:if>
-      <xsl:if test="not(boolean(info/metalist/meta[@name='description']))">
-	<meta name="description" content="{$desc}"/>
-      </xsl:if>
-      
-      <meta name="keywords" content="SI,Smithsonian,Smithsonian Institute"/>
-      <meta name="keywords" content="CfA,SAO,Harvard-Smithsonian,Center for Astrophysics"/>
-      <meta name="keywords" content="HEA,HEAD,High Energy Astrophysics Division"/>
-
     </head>
     
     <xsl:call-template name="start-tag"/>body<xsl:call-template name="end-tag"/>  <!--// open html body //-->

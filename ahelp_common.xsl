@@ -29,6 +29,8 @@
   xmlns:exsl="http://exslt.org/common"
   extension-element-prefixes="date str func exsl">
 
+  <xsl:include href="common.xsl"/>
+
   <!--*
       * allowed values for these parameters (if there are any)
       * - see check-param-allowed template for why want spaces
@@ -542,57 +544,6 @@
   <xsl:template name="add-hr-strong">
     <hr size="3"/> <!--* could also use noshade="0" *-->
   </xsl:template>
-
-  <!--*
-      * SAO/SI mandated header items.
-      * Copied from helper.xsl:add_htmlhead (have not edited to remove
-      * items we know are not possible here)
-      *
-      * Also add in the favicon here to make things simpler,
-      * if not cleaner/semantically sensible.
-      *-->
-  <xsl:template name="add-sao-metadata">
-    <xsl:param name="title"/>
-
-    <xsl:if test="$favicon != ''">
-      <link rel="icon" href="{$favicon}"/>
-    </xsl:if>
-
-    <meta name="title"><xsl:attribute name="content"><xsl:value-of select="$title"/></xsl:attribute></meta>
-    <meta name="creator" content="SAO-HEA"/>
-    <meta http-equiv="content-language" content="en-US"/>
-    <xsl:if test="$lastmodiso != ''">
-      <meta name="date" content="{$lastmodiso}"/>
-    </xsl:if>
-      
-    <!--*
-	* TODO: could add in tags/logic to set these to something more specific
-	*
-	* -->
-    <xsl:variable name="desc"><xsl:choose>
-	<xsl:when test="$site = 'ciao'">The CIAO software package for analyzing data from X-ray telescopes, including the Chandra X-ray telescope.</xsl:when>
-	<xsl:when test="$site = 'sherpa'">The Sherpa package for fitting and modeling data (part of CIAO).</xsl:when>
-	<xsl:when test="$site = 'chips'">The ChIPS package for plotiting and imaging data (part of CIAO).</xsl:when>
-	<xsl:when test="$site = 'csc'">The Chandra Source Catalog</xsl:when>
-	<xsl:when test="$site = 'pog'">Help for writing proposals for the Chandra X-ray telescope.</xsl:when>
-	
-	<xsl:when test="$site = 'iris'">IRIS - the VAO Spectral Energy Distribution Analysis Tool</xsl:when>
-	
-	<xsl:otherwise>Information about the Chandra X-ray Telescope for Astronomers.</xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
-    <xsl:if test="not(boolean(info/metalist/meta[@name='subject']))">
-      <meta name="subject" content="{$desc}"/>
-    </xsl:if>
-    <xsl:if test="not(boolean(info/metalist/meta[@name='description']))">
-      <meta name="description" content="{$desc}"/>
-    </xsl:if>
-    
-    <meta name="keywords" content="SI,Smithsonian,Smithsonian Institute"/>
-    <meta name="keywords" content="CfA,SAO,Harvard-Smithsonian,Center for Astrophysics"/>
-    <meta name="keywords" content="HEA,HEAD,High Energy Astrophysics Division"/>
-
-  </xsl:template> <!-- name=add-sao-metadata -->
 
   <!--***** START: TEMP SEARCH/REPLACE FUNCTION *****-->
 
