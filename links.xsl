@@ -656,7 +656,10 @@
     <xsl:param name="id"/>
     <xsl:param name="sitevalue"/>
 
-    <xsl:variable name="ndict" select="count($dictionary-contents/dictionary)"/>
+    <!-- could check on $dictionary-contents/dictionary or dictionary_onepage,
+         to match the FAQ check, but just look for the entries block instead
+         since it's the same in both forms -->
+    <xsl:variable name="ndict" select="count($dictionary-contents//entries)"/>
     <xsl:choose>
       <xsl:when test="$ndict = 0">
 	<xsl:message terminate="yes">
@@ -672,6 +675,7 @@
 	  <xsl:when test="$nid = 0">
 	    <xsl:message terminate="yes">
  ERROR: there is no known Dictionary entry with id=<xsl:value-of select="$id"/>
+     (sitevalue=<xsl:value-of select="$sitevalue"/>)
             </xsl:message>
 	  </xsl:when>
 	  <xsl:otherwise>
@@ -697,10 +701,10 @@
       * The id attribute gives the id entry in the dictionary you want to link to
       * If you want to link to just the dictionary then don't supply an id attribute
       *
-      * CURRENTLY links to the CIAO dictionary only
-      *
       * Could make it clever so that it recognises when the root node is dictionary
       * so that we don't add the ../dictionary/ to the url - but can not be bothered
+      *
+      * CIAO dictionary has one page per term, CSC dictionary has a single page.
       *
       *-->
   
@@ -2464,15 +2468,15 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *     and can be left out, when it defaults to the site of the page
       *-->
   <func:function name="djb:get-dictionary-filename">
-    <xsl:param name="site" select="$site"/>
+    <xsl:param name="sitevalue" select="$site"/>
 
     <xsl:choose>
-      <!-- TODO: handle the one-page version used by CSC -->
-      <xsl:when test="name(//*) = 'dictionary'">
-	<func:result select="concat($sourcedir, '/', $pagename, '.xml')"/>
+      <!-- Need to check whether link is to dictionary in the same site or not -->
+      <xsl:when test="$site = $sitevalue and (name(//*) = 'dictionary' or name(//*) = 'dictionary_onepage')">
+	<func:result select="concat($sourcedir, '/index.xml')"/>
       </xsl:when>
       <xsl:otherwise>
-	<xsl:variable name="head" select="djb:get-storage-path($site)"/>
+	<xsl:variable name="head" select="djb:get-storage-path($sitevalue)"/>
 	<func:result select="concat($head,'dictionary/index.xml')"/>
       </xsl:otherwise>
     </xsl:choose>
