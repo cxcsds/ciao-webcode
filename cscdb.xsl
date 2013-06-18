@@ -108,74 +108,77 @@
 
 
 	 <!--// start database column table //-->
-	 <table id="dbtable" width="100%" border="0" cellspacing="2" cellpadding="4">
-	 <tr>
-	   <th>Context</th>
-	   <th>Column Name</th>
-	   <th>Type</th>
-	   <th>Units</th>
-	   <th>Description</th>
-	 </tr>
+	 <table id="dbtable" class="csctable">
+	   <thead>
+	     <tr>
+	       <th>Context</th>
+	       <th>Column Name</th>
+	       <th>Type</th>
+	       <th>Units</th>
+	       <th>Description</th>
+	     </tr>
+	   </thead>
 
-	 <xsl:for-each select="//objgrp">
+	   <tbody>
+	     <xsl:for-each select="//objgrp">
 
-	   <xsl:for-each select="group">
-	   <xsl:variable name="rowcount"><xsl:value-of select="count(cols/col)"/></xsl:variable>
-	   <tr>
-	      <td valign="top" rowspan="{$rowcount}">
+	       <xsl:for-each select="group">
+		 <xsl:variable name="rowcount"><xsl:value-of select="count(cols/col)"/></xsl:variable>
+		 <tr>
+		   <td valign="top" rowspan="{$rowcount}" class="context">
 
-	      <xsl:variable name="grpname">
-	        <xsl:value-of select="@id"/>
-	      </xsl:variable>
+		     <xsl:variable name="grpname">
+		       <xsl:value-of select="@id"/>
+		     </xsl:variable>
 	      
-	      <!--// make an anchor for TOC //-->
-	      <a name="{$grpname}"></a>
-	      
-	      <xsl:choose>
+		     <!--// make an anchor for TOC //-->
+		     <a name="{$grpname}"></a>
+		     
+		     <xsl:choose>
+		       
+		       <xsl:when test="@link">
+			 <xsl:variable name="grplink">
+			   <xsl:value-of select="@link"/>
+			 </xsl:variable>
+			 
+			 <a class="grouptitle" href="{$grplink}.html">
+			   <strong><xsl:value-of select="title"/></strong>
+			 </a>
+		       </xsl:when>
+		       
+		       <xsl:otherwise>
+			 <span class="grouptitle"><strong><xsl:value-of select="title"/></strong></span>
+		       </xsl:otherwise>
+		     </xsl:choose>
+		   </td>
+		   
+		   <!--// if first row, don't include open "tr" tag //-->
+		   <xsl:for-each select="cols/col">
+		     <xsl:if test="position() = 1">
+		       <xsl:call-template name="add-dbcols"/>
+		     </xsl:if>
+		   </xsl:for-each>
+		 </tr>
+		 
+		 <xsl:for-each select="cols/col">
+		   <xsl:if test="position() != 1">
+		     <tr>
+		       <xsl:call-template name="add-dbcols"/>
+		     </tr>
+		   </xsl:if>
+		 </xsl:for-each>
+		 
+		 <xsl:if test="last()">
+		   <tr><td colspan="5" class="separator"><hr/></td></tr>
+		 </xsl:if>
+		 
+	       </xsl:for-each>  <!--// end select="group" //-->
 
-	        <xsl:when test="@link">
-		  <xsl:variable name="grplink">
-		    <xsl:value-of select="@link"/>
-		  </xsl:variable>
-
-		  <a class="grouptitle" href="{$grplink}.html">
-		    <strong><xsl:value-of select="title"/></strong>
-		  </a>
-		</xsl:when>
-
-		<xsl:otherwise>
-		  <span class="grouptitle"><strong><xsl:value-of select="title"/></strong></span>
-		</xsl:otherwise>
-	      </xsl:choose>
-              </td>
-	    
-	    <!--// if first row, don't include open "tr" tag //-->
-	    <xsl:for-each select="cols/col">
-	      <xsl:if test="position() = 1">
-	        <xsl:call-template name="add-dbcols"/>
-	      </xsl:if>
-	    </xsl:for-each>
-	   </tr>
-
-	    <xsl:for-each select="cols/col">
-	      <xsl:if test="position() != 1">
-	      <tr>
-	        <xsl:call-template name="add-dbcols"/>
-	      </tr>
-	      </xsl:if>
-	    </xsl:for-each>
-
-	      <xsl:if test="last()">
-	        <tr><td colspan="5"><hr/></td></tr>
-	      </xsl:if>
-
-	   </xsl:for-each>  <!--// end select="group" //-->
-
-	 </xsl:for-each>  <!--// end select="objgroup" //-->
-
+	     </xsl:for-each>  <!--// end select="objgroup" //-->
+	   </tbody>
 	 </table>
 	 <!--// end database column table //-->
-
+	 
 
 		  </div>
 		</div> <!--// close id=content //-->
@@ -262,24 +265,28 @@
 
 
 	 <!--// start database column table //-->
-	 <table id="dbtable" width="100%" border="0" cellspacing="2" cellpadding="4">
-	 <tr>
-	   <th>Column Name</th>
-	   <th>Type</th>
-	   <th>Units</th>
-	   <th>Description</th>
-	 </tr>
+	 <table id="dbtable" class="csctable">
+	   <thead>
+	     <tr>
+	       <th>Column Name</th>
+	       <th>Type</th>
+	       <th>Units</th>
+	       <th>Description</th>
+	     </tr>
+	   </thead>
 
-	    <xsl:for-each select="//objgrp/group/cols/col">
-	     <xsl:sort select="@name"/>
+	   <tbody>
+	     <xsl:for-each select="//objgrp/group/cols/col">
+	       <xsl:sort select="@name"/>
 
-	     <!--// don't include anything marked as '@hide="abc"' //-->     
-	     <xsl:if test="(contains(@hide,'abc') != true()) or (@hide != 'abc')">
-	      <tr>
-	        <xsl:call-template name="add-dbcols"/>
-	      </tr>
-	     </xsl:if>
-	    </xsl:for-each>
+	       <!--// don't include anything marked as '@hide="abc"' //-->     
+	       <xsl:if test="(contains(@hide,'abc') != true()) or (@hide != 'abc')">
+		 <tr>
+		   <xsl:call-template name="add-dbcols"/>
+		 </tr>
+	       </xsl:if>
+	     </xsl:for-each>
+	   </tbody>
 
 	 </table>
 	 <!--// end database column table //-->
@@ -314,70 +321,59 @@
 
 
   <xsl:template name="add-dbcols">
-	<td>
-	  <xsl:call-template name="add-table-bg-color"/>
-	  <xsl:variable name="aname">
-	    <xsl:value-of select="@name"/>
-	  </xsl:variable>
+    <td>
+      <xsl:variable name="aname">
+	<xsl:value-of select="@name"/>
+      </xsl:variable>
 
-	  <a class="nohovername" name="{$aname}">
-	  <xsl:value-of select="@name"/>
-	  </a>
-	</td>
+      <a class="nohovername" name="{$aname}">
+	<xsl:value-of select="@name"/>
+      </a>
+    </td>
 
-	<td>
-	  <xsl:if test="@type">
-	    <xsl:call-template name="add-table-bg-color"/>	        
-	    <xsl:value-of select="@type"/>
-	  </xsl:if>
-	</td>
-
-	<td>      
-	  <xsl:call-template name="add-table-bg-color"/>	        
-
-	  <xsl:if test="@units">
-	  <xsl:choose>
-	    <xsl:when test="@units='counts-s'">
-	      counts&#160;s<sup>-1</sup>
-	    </xsl:when>
-
-	    <xsl:when test="@units='ergs-s-cm'">
-	      ergs&#160;s<sup>-1</sup>&#160;cm<sup>-2</sup>
-	    </xsl:when>
-
-	    <xsl:when test="@units='photons-s-cm'">
-	      photons&#160;s<sup>-1</sup>&#160;cm<sup>-2</sup>
-	    </xsl:when>
-
-	    <xsl:when test="@units='n-hi-cm'">
-	      N&#160;<sub>HI&#160;atoms</sub>&#160;10<sup>20</sup>&#160;cm<sup>-2</sup>
-	    </xsl:when>
-
-	    <xsl:otherwise>
-	      <xsl:value-of select="@units"/>
-	    </xsl:otherwise>
-	  </xsl:choose>
-
-	  </xsl:if>
-	</td>
-
-	<td>
-	  <xsl:call-template name="add-table-bg-color"/>	        
-	  <xsl:apply-templates/>
-	</td>
-
+    <td>
+      <xsl:if test="@type">
+	<xsl:value-of select="@type"/>
+      </xsl:if>
+    </td>
+    
+    <td>      
+      <xsl:if test="@units">
+	<xsl:choose>
+	  <xsl:when test="@units='counts-s'">
+	    counts&#160;s<sup>-1</sup>
+	  </xsl:when>
+	  
+	  <xsl:when test="@units='ergs-s-cm'">
+	    ergs&#160;s<sup>-1</sup>&#160;cm<sup>-2</sup>
+	  </xsl:when>
+	  
+	  <xsl:when test="@units='photons-s-cm'">
+	    photons&#160;s<sup>-1</sup>&#160;cm<sup>-2</sup>
+	  </xsl:when>
+	  
+	  <xsl:when test="@units='n-hi-cm'">
+	    N&#160;<sub>HI&#160;atoms</sub>&#160;10<sup>20</sup>&#160;cm<sup>-2</sup>
+	  </xsl:when>
+	  
+	  <xsl:otherwise>
+	    <xsl:value-of select="@units"/>
+	  </xsl:otherwise>
+	</xsl:choose>
+	
+      </xsl:if>
+    </td>
+    
+    <td>
+      <xsl:apply-templates/>
+    </td>
+    
   </xsl:template> <!--* name:add-cols *-->
-
+  
 
   <!--* remove the 'whatever' tag, process the contents *-->
   <xsl:template match="intro|desc">
     <xsl:apply-templates/>
-  </xsl:template>
-
-  <xsl:template name="add-table-bg-color">
-    <xsl:if test="position() mod 2 = 0">
-      <xsl:attribute name="class">oddrow</xsl:attribute>
-    </xsl:if>
   </xsl:template>
 
 </xsl:stylesheet>
