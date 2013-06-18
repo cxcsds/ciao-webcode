@@ -313,6 +313,11 @@
 	  <link rel="stylesheet" title="Stylesheet for Iris pages" media="print" href="{$cssprintfile}"/>
 	</xsl:when>
 	 
+	<xsl:when test="$site='csc'">
+	  <link rel="stylesheet" title="Stylesheet for CSC pages" href="{$cssfile}"/>
+	  <link rel="stylesheet" title="Stylesheet for CSC pages" media="print" href="{$cssprintfile}"/>
+	</xsl:when>
+	 
 	<xsl:otherwise>
 	  <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" href="{$cssfile}"/>
 	  <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" media="print" href="{$cssprintfile}"/>
