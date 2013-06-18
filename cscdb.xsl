@@ -42,6 +42,10 @@
       <xsl:with-param name="pname"  select="'install'"/>
       <xsl:with-param name="pvalue" select="$install"/>
     </xsl:call-template>
+    <xsl:call-template name="check-param-ends-in-a-slash">
+      <xsl:with-param name="pname"  select="'canonicalbase'"/>
+      <xsl:with-param name="pvalue" select="$canonicalbase"/>
+    </xsl:call-template>
 
     <!--* what do we create *-->
     <xsl:apply-templates select="cscdb"/>
@@ -219,7 +223,9 @@
       <html lang="en">
 
 	<!--* make the HTML head node *-->
-	<xsl:call-template name="add-htmlhead-standard"/>
+	<xsl:call-template name="add-htmlhead-standard">
+	  <xsl:with-param name="page" select="concat($alphapagename, '.html')"/>
+	</xsl:call-template>
 
 	<!--* add disclaimer about editing this HTML file *-->
 	<xsl:call-template name="add-disclaimer"/>

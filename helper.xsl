@@ -214,8 +214,19 @@
       * Note that for threads I have moved to using add-htmlhead-site
       * - in thread_common.xsl - which does not (currently) use the
       * headtitlepostfix parameter
+      *
+      * input variables:
+      *   title - required
+      *   css   - optional: text of css-1 rules
+      *   page  - optional: if given then the canonical link is created as
+      *              canonicalbase + page
+      *           else
+      *              canonicalbase + pagename (stylesheet variable) + '.html'
+      *           If canonicalbase is empty then no canonical link is given
+      *           (For developing also use url as a fallback)
       *-->
   <xsl:template name="add-htmlhead-standard">
+    <xsl:param name='page'/>
 
     <!--*
         * rather a mess - wanted to set a variable to info/title or
@@ -235,6 +246,7 @@
 
     <xsl:call-template name="add-htmlhead">
       <xsl:with-param name="title"><xsl:value-of select="$titlestring"/><xsl:if test="$headtitlepostfix!=''"><xsl:value-of select="concat(' - ',$headtitlepostfix)"/></xsl:if></xsl:with-param>
+      <xsl:with-param name="page" select="$page"/>
     </xsl:call-template>
   </xsl:template> <!--* name=add-htmlhead-standard *-->
 
@@ -256,10 +268,17 @@
       * input variables:
       *   title - required
       *   css   - optional: text of css-1 rules
+      *   page  - optional: if given then the canonical link is created as
+      *              canonicalbase + page
+      *           else
+      *              canonicalbase + pagename (stylesheet variable) + '.html'
+      *           If canonicalbase is empty then no canonical link is given
+      *           (For developing also use url as a fallback)
       *-->
   <xsl:template name="add-htmlhead">
     <xsl:param name='title'/>
     <xsl:param name='css'/>
+    <xsl:param name='page'/>
     <head>
 
       <title><xsl:value-of select="$title"/></title>
@@ -307,11 +326,50 @@
 
       <!-- canonical link for search results
            (include in non-live sites for better testing)
+	   The use of url as a fallback is for development only
+	   Trailing /index.html is stripped off if present,
+           replaced by /
 	-->
-      <xsl:if test="$url != ''">
-	<link rel="canonical" href="{$url}"/>
+      <xsl:variable name="canonicalurl"><xsl:choose>
+	<xsl:when test="$canonicalbase = ''">
+	  <xsl:message terminate="no">
+ DEVELOPMENT WARNING: no canonicalbase parameter so falling back to url=<xsl:value-of select="$url"/>
+  (if you see this warning tell Doug!)
+          </xsl:message>
+	  <xsl:choose>
+	    <xsl:when test="$url != ''"><xsl:value-of select="$url"/></xsl:when>
+	    <xsl:otherwise>
+	      <xsl:message terminate="no">
+ WARNING: page has no canonical link (missing canonicalbase/url params)
+	      </xsl:message>
+	    </xsl:otherwise>
+	  </xsl:choose>
+	</xsl:when>
+	<xsl:when test="$page != ''"><xsl:value-of select="concat($canonicalbase, $page)"/></xsl:when>
+	<xsl:when test="$pagename != ''"><xsl:value-of select="concat($canonicalbase, $pagename, '.html')"/></xsl:when>
+	<xsl:otherwise>
+	  <xsl:message terminate="no">
+ WARNING: page has no canonical link (missing page/pagename)
+	  </xsl:message>
+	</xsl:otherwise>
+      </xsl:choose></xsl:variable>
+      <xsl:if test="$canonicalurl != ''">
+	<xsl:variable name="cpos" select="string-length($canonicalurl) - 10"/>
+	<xsl:if test="$cpos &lt; 1">
+	  <xsl:message terminate="yes">
+ ERROR: canonicalurl=<xsl:value-of select="$canonicalurl"/> is too short!
+	  </xsl:message>
+	</xsl:if>
+	<xsl:choose>
+	  <xsl:when test="substring($canonicalurl, $cpos) = '/index.html'">
+	    <link rel="canonical" href="{substring($canonicalurl, 1, $cpos)}"/>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <link rel="canonical" href="{$canonicalurl}"/>
+	  </xsl:otherwise>
+	</xsl:choose>
       </xsl:if>
-	  
+
       <!--*
           * This is an okay idea - although it requires some discipline when
           * creating the navbar and the navbarlink parameter added to 

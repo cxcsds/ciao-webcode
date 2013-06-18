@@ -39,10 +39,17 @@
     *
     *  . install=full path to directory where to install file
     *
+    *  . canonicalbase=URL of parent directory (including trailing hash), so the
+    *    full url is canonicalbase + pagename + '.html'. Overlaps with url/outurl
+    *    and all this mess needs to be cleaned up. Since this is used for the
+    *    canonical link header the URL should probably not be versioned, e.g.
+    *    use http://cxc.harvard.edu/ciao/ rather than http://cxc.harvard.edu/ciao4.5/
+    *
     *  . pagename=name of page (ie without .xml or .html)
     *
     *  . url=URL of page (on live server)
     *  . outurl=This appears to be the "base" url (ie the directory containing the page)
+    *    SEE ALSO canonicalbase
     *
     *  . favicon=URL of the favicon for the site (optional)
     *
@@ -95,6 +102,7 @@
   <xsl:param name="cssprintfile" select='""'/>
   <xsl:param name="site"         select='""'/>
   <xsl:param name="install"      select='""'/>
+  <xsl:param name="canonicalbase" select='""'/>
   <xsl:param name="pagename"     select='""'/>
   <xsl:param name="navbarlink"   select='""'/>
   <xsl:param name="url"          select='""'/>

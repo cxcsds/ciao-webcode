@@ -626,6 +626,7 @@ sub basic_params ($) {
 	    lastmod => $$opts{lastmod},
 	    lastmodiso => $$opts{lastmodiso},
 	    install => $$opts{outdir},
+	    canonicalbase => $outurl,
 	    pagename => $in,
 	    url => $url,
 	    # TODO: should outurl be set ?

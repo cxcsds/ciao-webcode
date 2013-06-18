@@ -40,6 +40,10 @@
       <xsl:with-param name="pname"  select="'install'"/>
       <xsl:with-param name="pvalue" select="$install"/>
     </xsl:call-template>
+    <xsl:call-template name="check-param-ends-in-a-slash">
+      <xsl:with-param name="pname"  select="'canonicalbase'"/>
+      <xsl:with-param name="pvalue" select="$canonicalbase"/>
+    </xsl:call-template>
 
     <!--* check there's a navbar element *-->
     <xsl:if test="boolean(faq/info/navbar) = false()">
@@ -162,6 +166,7 @@
 	  <xsl:with-param name="title">
 	    <xsl:value-of select="concat('FAQ: ', normalize-space(title))"/><xsl:if test="$texttitlepostfix!=''"><xsl:value-of select="concat(' - ',$texttitlepostfix)"/></xsl:if>
 	  </xsl:with-param>
+	  <xsl:with-param name="page" select="concat(@id, '.html')"/>
 	</xsl:call-template>
 
 	<!--* add disclaimer about editing this HTML file *-->

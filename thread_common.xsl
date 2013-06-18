@@ -1524,6 +1524,7 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
       <xsl:otherwise>
 	<xsl:call-template name="add-htmlhead">
 	  <xsl:with-param name="title" select="concat($start,' - ',$headtitlepostfix)"/>
+	  <xsl:with-param name="page" select="'index.html'"/>
 	</xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
