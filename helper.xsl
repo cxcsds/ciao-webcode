@@ -289,11 +289,6 @@
       <!--* any scripts ? *-->
       <xsl:apply-templates select="info/htmlscripts"/>
 
-      <!--// CSC pages get cscview.js //-->
-      <xsl:if test="$site = 'csc'">
-	<script type="text/javascript" language="JavaScript" src="/csc/cscview.js"/>
-      </xsl:if>
-
       <xsl:if test="count(//math) != 0">
 	<!--*
 	    * We do not use the CDN version because of HEAD/SAO policy
