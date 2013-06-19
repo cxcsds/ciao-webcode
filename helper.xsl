@@ -669,10 +669,14 @@
   <xsl:template name="add-navbar">
     <xsl:param name='name'/>
 
-      <xsl:call-template name="add-ssi-include">
-        <xsl:with-param name="file" select="concat('navbar_',$name,'.incl')"/>
-      </xsl:call-template>
+    <xsl:variable name="filename" select="concat('navbar_',$name,'.incl')"/>
+    <xsl:call-template name="add-ssi-include">
+      <xsl:with-param name="file" select="$filename"/>
+    </xsl:call-template>
     <xsl:call-template name="newline"/>
+
+    <xsl:variable name="hack-depends-on-navbar"
+		  select="extfuncs:register-included-file('navbar', $filename)"/>
 
   </xsl:template> <!--* name= add-navbar *-->
 

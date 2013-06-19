@@ -1519,7 +1519,7 @@ sub process_xml ($$) {
 	my $deps = get_dependencies;
 	dbg "dependencies:";
 	while ( my ($key,$value) = each %$deps ) {
-	  dbg " key=$key vals=[@$value]\n";
+	  dbg " key=$key vals=[@$value]";
 	}
 
 	# copy file over to storage space and sort out protection/group
