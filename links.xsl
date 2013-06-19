@@ -591,9 +591,8 @@
     <!--*
         * complicated mess to work out where to link to
         * - if have a site attribute then use that
-        * - otherwise if site=ciao use that
-        * - otherwise if site=sherpa use that
-        * - otherwise assume the CIAO site
+        * - otherwise if site is not ciao, sherpa, or chips then assume CIAO
+        * - otherwise assume the current site
         * 
         *-->
     <xsl:variable name="hrefstart"><xsl:choose>
@@ -631,7 +630,13 @@
 	  <xsl:variable name="idval" select="@id"/>
 	  <xsl:value-of select="concat('FAQ: ', normalize-space($faq-contents//faqentry[@id=$idval]/title))"/>
 	</xsl:when>
-	<xsl:otherwise>CIAO Frequently Asked Questions</xsl:otherwise>
+
+	<xsl:otherwise><xsl:choose>
+	  <xsl:when test="$sitevalue = 'chips'">ChIPS Frequently Asked Questions</xsl:when>
+	  <xsl:when test="$sitevalue = 'sherpa'">Sherpa Frequently Asked Questions</xsl:when>
+	  <xsl:when test="boolean(@site)">Frequently Asked Questions</xsl:when>
+	  <xsl:otherwise>CIAO Frequently Asked Questions</xsl:otherwise>
+	</xsl:choose></xsl:otherwise>
     </xsl:choose></xsl:variable>
 
     <!--* process the contents, surrounded by styles *-->
