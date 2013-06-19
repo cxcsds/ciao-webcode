@@ -63,6 +63,9 @@
   xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
   extension-element-prefixes="exsl func djb extfuncs">
 
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-links" select="extfuncs:register-import-dependency('links.xsl')"/>
+
   <!--* we don't like "a" tags! *-->
   <xsl:template match="a|A">
     <xsl:message terminate="yes">

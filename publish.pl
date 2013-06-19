@@ -70,7 +70,7 @@ use IO::File;
 use IO::Pipe;
 
 use lib $FindBin::Bin;
-use CIAODOC qw( :util :xslt :cfg );
+use CIAODOC qw( :util :xslt :cfg :deps );
 
 ## Subroutines (see end of file)
 #
@@ -1453,6 +1453,8 @@ sub process_xml ($$) {
 	      1900 + $tm[5], $tm[4] + 1, $tm[3];
 	}
 
+	clear_dependencies;
+
 	# what transformation do we apply?
 	#
 	if ( $root eq "navbar" ) {
@@ -1509,10 +1511,22 @@ sub process_xml ($$) {
 	  }
 	}
 
+	# Can we handle dependencies globally (ie not within xml2html_xxx)?
+	# I would think so, but may not be possible.
+	# Since we track the stylesheets then deps will only be empty
+	# if the file was skipped.
+	#
+	my $deps = get_dependencies;
+	dbg "dependencies:";
+	while ( my ($key,$value) = each %$deps ) {
+	  dbg " key=$key vals=[@$value]\n";
+	}
+
 	# copy file over to storage space and sort out protection/group
 	# - we need to be more clever than this because some files will need multiple
 	#   files copied over [eg the threads have images, screen, and include files]
 	#
+	# TODO: IS THIS DONE EVEN IF THE PAGE HAS BEEN SKIPPED?
 	mycp "${in}.xml", "${published}/${in}.xml" if $published ne "";
 
     } # foreach: my $in

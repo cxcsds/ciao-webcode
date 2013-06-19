@@ -27,7 +27,11 @@
   xmlns:str="http://exslt.org/strings"
   xmlns:func="http://exslt.org/functions"
   xmlns:exsl="http://exslt.org/common"
-  extension-element-prefixes="date str func exsl">
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="date str func exsl extfuncs">
+
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-ahelp_common" select="extfuncs:register-import-dependency('ahelp_common.xsl')"/>
 
   <xsl:include href="common.xsl"/>
 

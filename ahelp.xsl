@@ -80,6 +80,9 @@
   xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
   extension-element-prefixes="date str func exsl djb extfuncs">
 
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-ahelp" select="extfuncs:register-import-dependency('ahelp.xsl')"/>
+
   <!--* load in templates (_main includes _common) *-->
   <xsl:include href="ahelp_main.xsl"/>
 

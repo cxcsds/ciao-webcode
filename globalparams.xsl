@@ -94,7 +94,11 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:func="http://exslt.org/functions"
   xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
-  extension-element-prefixes="func djb">
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="func djb extfuncs">
+
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-globalparams" select="extfuncs:register-import-dependency('globalparams.xsl')"/>
 
   <!--* these should be over-ridden from the command line *-->
 

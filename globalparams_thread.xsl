@@ -16,7 +16,12 @@
     *-->
 
 <xsl:stylesheet version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="extfuncs">
+
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-globalparams_thread" select="extfuncs:register-import-dependency('globalparams_thread.xsl')"/>
 
   <!--* NOTE we default to a depth of 3 (unlike most cases) *-->
   <xsl:param name="depth" select="3"/>

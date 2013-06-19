@@ -28,7 +28,7 @@ use XML::LibXML;
 use XML::LibXSLT;
 
 # Set up XML/XSLT processors
-#
+# (registration of functions happens later)
 my $parser = XML::LibXML->new()
   or die "Error: Unable to create XML::LibXML parser instance.\n";
 $parser->validation(0);
@@ -36,24 +36,6 @@ $parser->validation(0);
 
 my $xslt = XML::LibXSLT->new()
   or die "Error: Unable to create XML::LibXSLT instance.\n";
-
-# Set up potentially-useful functions
-#
-XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
-				"read-file-if-exists",
-  sub {
-    my $filename = shift;
-    # want to differentiate between 'file does not exist' and
-    # 'file is invalid'.
-    return XML::LibXML::NodeList->new()
-	unless -e $filename;
-    my $rval;
-    eval { $rval = $parser->parse_file($filename); };
-    die "ERROR: problem parsing XML file $filename\n  $@\n"
-	if $@;
-    return $rval;
-  }
-);
 
 # default depth is 250 but this causes problems with some style sheets
 # (eg wavdetect, tg_create_mask), so increase randomly until everything
@@ -80,15 +62,20 @@ my @funcs_cfg  =
      get_config_site get_config_version get_config_type
      check_config_exists check_type_known check_location get_group
     );
+my @funcs_deps =
+  qw(
+     clear_dependencies get_dependencies
+    );
 
 use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
 
 @ISA    = qw ( Exporter );
 @EXPORT = ();
-@EXPORT_OK = ( @funcs_util, @funcs_xslt, @funcs_cfg );
+@EXPORT_OK = ( @funcs_util, @funcs_xslt, @funcs_cfg, @funcs_deps );
 %EXPORT_TAGS =
   (
    util => \@funcs_util, xslt => \@funcs_xslt, cfg => \@funcs_cfg,
+   deps => \@funcs_deps
   );
 
 ## Subroutines (see end of file)
@@ -127,6 +114,9 @@ sub get_group ($);
 sub get_ostype ();
 sub list_ahelp_sites ();
 sub find_ahelp_site ($$);
+
+sub clear_dependencies ();
+sub get_dependencies ();
 
 ## Subroutines
 #
@@ -975,6 +965,88 @@ sub check_ahelp_site_valid ($) {
     join (" ", list_ahelp_sites) . "\n"
       unless exists $asites{$site};
 } # sub: check_ahelp_site_valid()
+
+# Dependency tracking
+
+my %dependencies;
+
+# Clear the dependency information
+sub clear_dependencies () {
+  if (scalar (keys %dependencies) == 0) {
+    dbg "Clearing dependencies: already empty";
+  } else {
+    # Was going to dump the previous values but decided against it.
+    dbg "Clearing dependencies:";
+  }
+  %dependencies = ();
+}
+
+# Return all the recorded dependencies as a hash reference
+sub get_dependencies () {
+    return \%dependencies; # TODO: copy the hash
+}
+
+# TODO: going to change how things are stored
+sub add_dependency ($$) {
+    my $label = shift;
+    my $value = shift;
+    dbg "add_dependency: label=$label value=$value";
+    if (exists $dependencies{$label}) {
+	push @{$dependencies{$label}}, $value;
+    } else {
+	$dependencies{$label} = [$value];
+    }
+}
+
+sub add_import_dependency ($) {
+    my $name = shift;
+    add_dependency "import", $name;
+}
+
+# Set up potentially-useful functions
+#
+XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				"read-file-if-exists",
+  sub {
+    my $filename = shift;
+    # want to differentiate between 'file does not exist' and
+    # 'file is invalid'.
+    return XML::LibXML::NodeList->new()
+	unless -e $filename;
+    my $rval;
+    eval { $rval = $parser->parse_file($filename); };
+    die "ERROR: problem parsing XML file $filename\n  $@\n"
+	if $@;
+    return $rval;
+  }
+);
+
+# Ideally would not be a function but not convinced that the
+# libXSLT version is modern enough to have register_element.
+#
+# The assumption is that this is processed for a single file,
+# and we know what that is, so we can identify these dependencies
+# with the file.
+
+XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				"register-import-dependency",
+  sub {
+    my $filename = shift;
+    add_import_dependency($filename);
+    return ""; # Dummy return value as do not want this to be a function
+  }
+);
+
+#
+#XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+#				"register-dependency",
+#  sub {
+#    my $label = shift;
+#    my $value = shift;
+#    add_dependency($label, $value);
+#    return ""; # Dummy return value as do not want this to be a function
+#  }
+#);
 
 ## End
 1;
