@@ -173,6 +173,11 @@
   <xsl:param name="relnotes-contents" select="extfuncs:read-file-if-exists($relnotes-path)"/>
   <xsl:param name="have-relnotes" select="count($relnotes-contents/slug) != 0"/>
 
+  <xsl:variable name="hack-depends-on-bugs"
+		select="extfuncs:register-included-file('bugs', $bugs-path)"/>
+  <xsl:variable name="hack-depends-on-relnotes"
+		select="extfuncs:register-included-file('relnotes', $relnotes-path)"/>
+
   <!-- used for the canonical link and the URL bar (hard copy) -->
   <xsl:variable name="url" select="concat($urlbase,'ahelp/', $outname,'.html')"/>
 

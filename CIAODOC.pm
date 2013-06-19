@@ -1001,6 +1001,12 @@ sub add_import_dependency ($) {
   add_dependency "import", $name;
 }
 
+sub add_included_file_dependency ($$) {
+  my $label = shift;
+  my $filename = shift;
+  add_dependency "include", { label => $label, filename => $filename };
+}
+
 sub add_ahelp_dependency ($$$) {
   my $key = shift;
   my $context = shift;
@@ -1016,7 +1022,10 @@ sub add_simple_link_dependency ($$$$) {
   add_dependency $pagetype, "${id}||${site}||${title}";
 }
 
-# Set up potentially-useful functions
+# Set up routines callable from XSLT; at present only want
+# to rely on register_function even though for some of these
+# - e.g. the dependency tracking - it would be better using
+# register_element.
 #
 XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
 				"read-file-if-exists",
@@ -1069,6 +1078,18 @@ XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs
     my $id = shift;
     my $title = shift;
     add_simple_link_dependency($pagetype, $site, $id, $title);
+    return ""; # Dummy return value as do not want this to be a function
+  }
+);
+
+# The contents of this file are incorporated into the document
+# The file may not exists.
+XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				"register-included-file",
+  sub {
+    my $label = shift;
+    my $filename = shift;
+    add_included_file_dependency($label, $filename);
     return ""; # Dummy return value as do not want this to be a function
   }
 );

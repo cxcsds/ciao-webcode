@@ -61,7 +61,7 @@ use IO::File;
 use FindBin;
 
 use lib $FindBin::Bin;
-use CIAODOC qw( :util :xslt :cfg );
+use CIAODOC qw( :util :xslt :cfg :deps );
 
 ## Subroutines (see end of file)
 #
@@ -368,6 +368,8 @@ foreach my $in ( @names ) {
     $paramlist{depth} = '../' x ($depth-1);
 	$paramlist{dname} = $dname;
 
+    clear_dependencies;
+
     my $flag = translate_file "${stylesheets}ahelp.xsl",
       "${in}.xml", \%paramlist;
 
@@ -376,6 +378,12 @@ foreach my $in ( @names ) {
     unless ( defined $flag ) {
 	print "-> problem generating HTML for $in\n";
 	next;
+    }
+
+    my $deps = get_dependencies;
+    dbg "dependencies:";
+    while ( my ($key,$value) = each %$deps ) {
+      dbg " key=$key vals=[@$value]\n";
     }
 
     # success or failure?

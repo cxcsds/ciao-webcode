@@ -53,7 +53,7 @@ use IO::File;
 use FindBin;
 
 use lib $FindBin::Bin;
-use CIAODOC qw( :util :xslt :cfg );
+use CIAODOC qw( :util :xslt :cfg :deps );
 
 ## Subroutines (see end of file)
 #
@@ -267,6 +267,8 @@ push @extra, ( logotext  => $logotext )
 # and ensure that any old files have been deleted
 #
 
+# TODO: take out @h version
+
 my @s;
 my @h;
 
@@ -289,7 +291,15 @@ my %paramlist = (
 		 @extra
 		);
 
+clear_dependencies;
+
 translate_file "${stylesheets}ahelp_index.xsl", $ahelpindex, \%paramlist;
+
+my $deps = get_dependencies;
+dbg "dependencies:";
+while ( my ($key,$value) = each %$deps ) {
+  dbg " key=$key vals=[@$value]\n";
+}
 
 # success or failure?
 foreach my $page ( @soft ) {
