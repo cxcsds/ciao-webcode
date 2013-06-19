@@ -370,6 +370,8 @@
 	    <xsl:apply-templates/>
 	    <!-- allow the page to be published but make it obvious a link is missing -->
 	    <xsl:value-of select="concat('{*** ahelp link to key=',$name,' context=',$context,' ***}')"/>
+	    <xsl:variable name="hack-register-ahelp-missing"
+			  select="extfuncs:register-ahelp-link($name, $context, '***ahelp not published***')"/>
 	  </xsl:otherwise>
 	</xsl:choose>
       </xsl:when>
@@ -426,21 +428,25 @@
 		  *
 		  * NOTE: add the context if including summary 
 		  *-->
-	      
-	      <xsl:choose>
+
+              <xsl:variable name="titleval"><xsl:choose>
 		<xsl:when test="count($parammatch)=1">
-		  <xsl:attribute name="title">Ahelp (<xsl:value-of select="@name"/><xsl:text> </xsl:text><xsl:value-of select="$paramname"/><xsl:text> parameter)</xsl:text>
-		<xsl:if test="$parammatch/synopsis != ''">
-		  <xsl:text>: </xsl:text><xsl:value-of select="$parammatch/synopsis"/>
-		</xsl:if>
-		  </xsl:attribute>
+		  Ahelp (<xsl:value-of select="@name"/><xsl:text> </xsl:text><xsl:value-of select="$paramname"/><xsl:text> parameter)</xsl:text>
+		  <xsl:if test="$parammatch/synopsis != ''">
+		    <xsl:text>: </xsl:text><xsl:value-of select="$parammatch/synopsis"/>
+		  </xsl:if>
 		</xsl:when>
 
 		<xsl:when test="$matches/summary!=''">
-		  <xsl:attribute name="title">Ahelp (<xsl:value-of select="$context"/>): <xsl:value-of select="$matches/summary"/></xsl:attribute>
+		  Ahelp (<xsl:value-of select="$context"/>): <xsl:value-of select="$matches/summary"/>
 		</xsl:when>
-	      </xsl:choose>
-	      
+	      </xsl:choose></xsl:variable>
+	      <xsl:variable name="hack-register-ahelp-set"
+			    select="extfuncs:register-ahelp-link($name, $context, normalize-space($titleval))"/>
+	      <xsl:if test="$titleval!=''">
+		<xsl:attribute name="title"><xsl:value-of select="normalize-space($titleval)"/></xsl:attribute>
+	      </xsl:if>
+
 	      <xsl:attribute name="href">
 		<xsl:value-of select="$hrefstart"/>
 		<xsl:value-of select="$matches/page"/>

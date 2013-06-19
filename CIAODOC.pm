@@ -988,19 +988,24 @@ sub get_dependencies () {
 
 # TODO: going to change how things are stored
 sub add_dependency ($$) {
-    my $label = shift;
-    my $value = shift;
-    dbg "add_dependency: label=$label value=$value";
-    if (exists $dependencies{$label}) {
-	push @{$dependencies{$label}}, $value;
-    } else {
-	$dependencies{$label} = [$value];
-    }
+  my $label = shift;
+  my $value = shift;
+  dbg "add_dependency: label=$label value=$value";
+  $dependencies{$label} = []
+    unless exists $dependencies{$label};
+  push @{$dependencies{$label}}, $value;
 }
 
 sub add_import_dependency ($) {
-    my $name = shift;
-    add_dependency "import", $name;
+  my $name = shift;
+  add_dependency "import", $name;
+}
+
+sub add_ahelp_dependency ($$$) {
+  my $key = shift;
+  my $context = shift;
+  my $title = shift;
+  add_dependency "ahelp", "${key}||${context}||${title}";
 }
 
 # Set up potentially-useful functions
@@ -1033,6 +1038,17 @@ XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs
   sub {
     my $filename = shift;
     add_import_dependency($filename);
+    return ""; # Dummy return value as do not want this to be a function
+  }
+);
+
+XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				"register-ahelp-link",
+  sub {
+    my $key = shift;
+    my $context = shift;
+    my $title = shift; # the title attribute (if set or file not missing)
+    add_ahelp_dependency($key, $context, $title);
     return ""; # Dummy return value as do not want this to be a function
   }
 );
