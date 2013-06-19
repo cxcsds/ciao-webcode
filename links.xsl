@@ -1038,6 +1038,9 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * if no name is supplied we link to the index page
       *
       * if the tag is empty, use the text "Data Products guide"
+      *
+      * TODO:
+      *    verify that the @id value is valid
       *-->
   <xsl:template match="dpguide">
 
@@ -2071,6 +2074,9 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <!--*
 	* Process the contents, surrounded by styles.
 	* I think the code below can be cleaned up
+	*
+	* TODO: add in a title attribute with the Thread title (perhaps section
+	* title if @id is given)
 	*-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
