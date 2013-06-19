@@ -1008,6 +1008,14 @@ sub add_ahelp_dependency ($$$) {
   add_dependency "ahelp", "${key}||${context}||${title}";
 }
 
+sub add_simple_link_dependency ($$$$) {
+  my $pagetype = shift;
+  my $site = shift;
+  my $id = shift;
+  my $title = shift;
+  add_dependency $pagetype, "${id}||${site}||${title}";
+}
+
 # Set up potentially-useful functions
 #
 XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
@@ -1053,16 +1061,17 @@ XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs
   }
 );
 
-#
-#XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
-#				"register-dependency",
-#  sub {
-#    my $label = shift;
-#    my $value = shift;
-#    add_dependency($label, $value);
-#    return ""; # Dummy return value as do not want this to be a function
-#  }
-#);
+XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				"register-simple-link",
+  sub {
+    my $pagetype = shift;
+    my $site = shift;
+    my $id = shift;
+    my $title = shift;
+    add_simple_link_dependency($pagetype, $site, $id, $title);
+    return ""; # Dummy return value as do not want this to be a function
+  }
+);
 
 ## End
 1;

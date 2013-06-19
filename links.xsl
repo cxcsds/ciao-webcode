@@ -639,6 +639,12 @@
 	</xsl:choose></xsl:otherwise>
     </xsl:choose></xsl:variable>
 
+    <!-- only care about tracking if @id is given -->
+    <xsl:if test="boolean(@id)">
+      <xsl:variable name="hack-register-faq-link"
+		    select="extfuncs:register-simple-link('faq', $sitevalue, @id, normalize-space($title))"/>
+    </xsl:if>
+
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
@@ -794,6 +800,12 @@
 	<xsl:when test="$site = 'csc' or @site = 'csc'">CSC Dictionary</xsl:when>
 	<xsl:otherwise>CIAO Dictionary</xsl:otherwise>
     </xsl:choose></xsl:variable>
+
+    <!-- only care about tracking if @id is given -->
+    <xsl:if test="boolean(@id)">
+      <xsl:variable name="hack-register-dictionary-link"
+		    select="extfuncs:register-simple-link('dictionary', $sitevalue, @id, normalize-space($title))"/>
+    </xsl:if>
 
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
