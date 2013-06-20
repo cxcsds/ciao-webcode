@@ -1120,6 +1120,17 @@ sub check_ahelp_site_valid ($) {
 				  }
 				 );
 
+  # The contents of this file are incorporated into the document
+  # via SSI.
+  XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				  "register-ssi-file",
+				  sub {
+				    my $filename = shift;
+				    add_dependency "ssi", $filename;
+				    return "";
+				  }
+				 );
+
 }
 
 # Set up routines callable from XSLT; at present only want

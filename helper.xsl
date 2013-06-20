@@ -675,9 +675,6 @@
     </xsl:call-template>
     <xsl:call-template name="newline"/>
 
-    <xsl:variable name="hack-depends-on-navbar"
-		  select="extfuncs:register-included-file('navbar', $filename)"/>
-
   </xsl:template> <!--* name= add-navbar *-->
 
   <!--***
@@ -741,6 +738,9 @@ Programming error: add-ssi-include called with an empty file parameter
 
       </xsl:message>
     </xsl:if>
+
+    <xsl:variable name="hack-register-ssi"
+		  select="extfuncs:register-ssi-file($file)"/>
 
     <xsl:call-template name="newline"/>
     <xsl:comment>#include virtual="<xsl:value-of select="$file"/>"</xsl:comment>
