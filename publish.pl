@@ -1516,11 +1516,7 @@ sub process_xml ($$) {
 	# Since we track the stylesheets then deps will only be empty
 	# if the file was skipped.
 	#
-	my $deps = get_dependencies;
-	dbg "dependencies:";
-	while ( my ($key,$value) = each %$deps ) {
-	  dbg " key=$key vals=[@$value]";
-	}
+	dump_dependencies;
 
 	# copy file over to storage space and sort out protection/group
 	# - we need to be more clever than this because some files will need multiple

@@ -154,4 +154,6 @@
   <xsl:variable name="nl"><xsl:text>
 </xsl:text></xsl:variable>
 
+  <xsl:variable name="quot">"</xsl:variable>
+
 </xsl:stylesheet>

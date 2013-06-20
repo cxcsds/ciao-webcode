@@ -64,7 +64,7 @@ my @funcs_cfg  =
     );
 my @funcs_deps =
   qw(
-     clear_dependencies get_dependencies
+     clear_dependencies get_dependencies dump_dependencies
     );
 
 use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
@@ -968,58 +968,158 @@ sub check_ahelp_site_valid ($) {
 
 # Dependency tracking
 
-my %dependencies;
+{
+  my %dependencies;
 
-# Clear the dependency information
-sub clear_dependencies () {
-  if (scalar (keys %dependencies) == 0) {
-    dbg "Clearing dependencies: already empty";
-  } else {
-    # Was going to dump the previous values but decided against it.
-    dbg "Clearing dependencies:";
+  # Clear the dependency information
+  sub clear_dependencies () {
+    if (scalar (keys %dependencies) == 0) {
+      dbg "Clearing dependencies: already empty";
+    } else {
+      # Was going to dump the previous values but decided against it.
+      dbg "Clearing dependencies:";
+    }
+    %dependencies = ();
   }
-  %dependencies = ();
-}
 
-# Return all the recorded dependencies as a hash reference
-sub get_dependencies () {
+  # Return all the recorded dependencies as a hash reference
+  sub get_dependencies () {
     return \%dependencies; # TODO: copy the hash
-}
+  }
+  
+  # Display the dependency information via dbg messages
+  sub dump_dependencies() {
+    dbg "dependencies:";
+    
+    #while ( my ($key,$value) = each %dependencies ) {
+    #  if (ref($value) eq "ARRAY") {
+    #	dbg " key=$key vals=[@$value]";
+    #  } elsif (ref($value) eq "HASH") {
+    #	my @ans = map { $_ . "=>" . $$value{$_}; } keys(%$value);
+    #	dbg " key=$key vals={" . join(" ", @ans) . "}";
+    #  } else {
+    #	dbg " key=$key vals=$value";
+    #  }
+    # }
 
-# TODO: going to change how things are stored
-sub add_dependency ($$) {
-  my $label = shift;
-  my $value = shift;
-  dbg "add_dependency: label=$label value=$value";
-  $dependencies{$label} = []
-    unless exists $dependencies{$label};
-  push @{$dependencies{$label}}, $value;
-}
+    use Data::Dumper;
+    dbg Dumper(\%dependencies);
 
-sub add_import_dependency ($) {
-  my $name = shift;
-  add_dependency "import", $name;
-}
+  }
 
-sub add_included_file_dependency ($$) {
-  my $label = shift;
-  my $filename = shift;
-  add_dependency "include", { label => $label, filename => $filename };
-}
+  # TODO: going to change how things are stored
+  # add_dependency is for arrays
+  sub add_dependency ($$) {
+    my $label = shift;
+    my $value = shift;
+    dbg "add_dependency: label=$label value=$value";
+    $dependencies{$label} = []
+      unless exists $dependencies{$label};
+    push @{$dependencies{$label}}, $value;
+  }
 
-sub add_ahelp_dependency ($$$) {
-  my $key = shift;
-  my $context = shift;
-  my $title = shift;
-  add_dependency "ahelp", "${key}||${context}||${title}";
-}
+  # add as a key/value pair
+  sub add_dependency_key ($$$) {
+    my $label = shift;
+    my $key = shift;
+    my $value = shift;
+    $dependencies{$label} = {}
+      unless exists $dependencies{$label};
+    if (exists $dependencies{$label}{$key}) {
+      my $cval = $dependencies{$label}{$key};
+      die "Error: add_dependency_key label=$label key=$key sent both $cval and $value\n"
+	if $cval ne $value;
+    } else {
+      dbg "add_dependency_key: label=$label key=$key value=$value";
+      $dependencies{$label}{$key} = $value;
+    }
+  }
 
-sub add_simple_link_dependency ($$$$) {
-  my $pagetype = shift;
-  my $site = shift;
-  my $id = shift;
-  my $title = shift;
-  add_dependency $pagetype, "${id}||${site}||${title}";
+  # add as a key/key/value setup
+  sub add_dependency_key2 ($$$$) {
+    my $label = shift;
+    my $key1 = shift;
+    my $key = shift;
+    my $value = shift;
+    $dependencies{$label} = {}
+      unless exists $dependencies{$label};
+    $dependencies{$label}{$key1} = {}
+      unless exists $dependencies{$label}{$key1};
+    my $href = $dependencies{$label}{$key1};
+
+    if (exists $$href{$key}) {
+      my $cval = $$href{$key};
+      die "Error: add_dependency_key2 label=$label key1=$key key=$key sent both $cval and $value\n"
+	if $cval ne $value;
+    } else {
+      dbg "add_dependency_key2: label=$label key1=$key1 key=$key value=$value";
+      $$href{$key} = $value;
+    }
+  }
+
+  sub add_import_dependency ($) {
+    my $name = shift;
+    add_dependency "import", $name;
+  }
+  
+  sub add_included_file_dependency ($$) {
+    my $label = shift;
+    my $filename = shift;
+    add_dependency_key "include", $label, $filename;
+  }
+
+  # only allow this if $label has been recorded via
+  # add_included_file_dependency
+  #
+  sub add_xpath_dependency ($$$) {
+    my $label = shift;
+    my $xpath = shift;
+    my $value = shift;
+    die "ERROR: $label has not been included via register-included-file\n"
+      unless exists $dependencies{"include"}{$label};
+    add_dependency_key2 "xpath", $label, $xpath, $value;
+  }
+
+  # Ideally would not be a function but not convinced that the
+  # libXSLT version is modern enough to have register_element.
+  #
+  # The assumption is that this is processed for a single file,
+  # and we know what that is, so we can identify these dependencies
+  # with the file.
+  #
+  # The functions all return "", a dummy value.
+  XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				  "register-import-dependency",
+				  sub {
+				    my $filename = shift;
+				    add_import_dependency $filename;
+				    return "";
+				  }
+				 );
+
+  XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				  "register-xpath",
+				  sub {
+				    my $label = shift;
+				    my $xpath = shift;
+				    my $value = shift;
+				    add_xpath_dependency $label, $xpath, $value;
+				    return "";
+				  }
+				 );
+
+  # The contents of this file are incorporated into the document
+  # The file may not exists.
+  XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				  "register-included-file",
+				  sub {
+				    my $label = shift;
+				    my $filename = shift;
+				    add_included_file_dependency $label, $filename;
+				    return "";
+				  }
+				 );
+
 }
 
 # Set up routines callable from XSLT; at present only want
@@ -1040,57 +1140,6 @@ XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs
     die "ERROR: problem parsing XML file $filename\n  $@\n"
 	if $@;
     return $rval;
-  }
-);
-
-# Ideally would not be a function but not convinced that the
-# libXSLT version is modern enough to have register_element.
-#
-# The assumption is that this is processed for a single file,
-# and we know what that is, so we can identify these dependencies
-# with the file.
-
-XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
-				"register-import-dependency",
-  sub {
-    my $filename = shift;
-    add_import_dependency($filename);
-    return ""; # Dummy return value as do not want this to be a function
-  }
-);
-
-XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
-				"register-ahelp-link",
-  sub {
-    my $key = shift;
-    my $context = shift;
-    my $title = shift; # the title attribute (if set or file not missing)
-    add_ahelp_dependency($key, $context, $title);
-    return ""; # Dummy return value as do not want this to be a function
-  }
-);
-
-XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
-				"register-simple-link",
-  sub {
-    my $pagetype = shift;
-    my $site = shift;
-    my $id = shift;
-    my $title = shift;
-    add_simple_link_dependency($pagetype, $site, $id, $title);
-    return ""; # Dummy return value as do not want this to be a function
-  }
-);
-
-# The contents of this file are incorporated into the document
-# The file may not exists.
-XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
-				"register-included-file",
-  sub {
-    my $label = shift;
-    my $filename = shift;
-    add_included_file_dependency($label, $filename);
-    return ""; # Dummy return value as do not want this to be a function
   }
 );
 
