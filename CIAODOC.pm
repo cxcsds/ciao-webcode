@@ -1184,8 +1184,10 @@ sub check_ahelp_site_valid ($) {
   # all the revdep files), instead these get cleaned up
   # when actually checking the dependency information.
   #
-  # $revdepfile is the file on which $basefile depends
-  # (both should end in xml and be full paths).
+  # $revdepfile is the file on which the current page
+  # $name.xml stored in $storage and user-editable found in
+  # $userdir
+  # ($revdepfile should end in xml and be a full path).
   #
   # We only do this IF the $main::group variable matches
   # the group of the file/directory. This is to avoid
@@ -1193,14 +1195,21 @@ sub check_ahelp_site_valid ($) {
   # to ahelp files. This does lose a lot of functionality
   # but worry about that at a later date.
   # 
-  sub add_revdep($$) {
+  sub add_revdep($$$$) {
     my $revdepfile = shift;
-    my $basefile = shift;
+    my $name = shift;
+    my $storage = shift;
+    my $userdir = shift;
 
     die "Expected revdepfile=$revdepfile to end in .xml\n"
       unless $revdepfile =~ /\.xml$/;
-    die "Expected basefile=$basefile to end in .xml\n"
-      unless $basefile =~ /\.xml$/;
+
+    my $sfile = "${storage}${name}.xml";
+    my $ufile = "${userdir}${name}.xml";
+    die "Unable to find storage version: $sfile\n"
+      unless -e $sfile;
+    die "Unable to find original/user-editable version: $ufile\n"
+      unless -e $ufile;
 
     my $fname = substr($revdepfile, 0, length($revdepfile)-4) . ".revdep";
     my $dom;
@@ -1225,17 +1234,22 @@ sub check_ahelp_site_valid ($) {
       $dom->setDocumentElement($root);
     }
 
-    my $count = $dom->find("count(//revdep[normalize-space(.)='" . $basefile . "'])");
+    my $count = $dom->find("count(//revdep/store[normalize-space(.)='" . $sfile . "'])");
     if ($count == 0) {
-      dbg "Adding revdep $basefile";
-      add_text_node $root, "revdep", $basefile;
+      dbg "Adding revdep $sfile";
+      my $revdep = XML::LibXML::Element->new("revdep");
+      $root->appendChild($revdep);
+
+      add_text_node $revdep, "store", $sfile;
+      add_text_node $revdep, "user", $ufile;
+      
       myrm $fname;
       $dom->toFile($fname, 0);
       mysetmods $fname;
 
     } elsif ($count > 1) {
       # could clean up, but shouldn't happen so error out
-      die "Internal error: multiple ($count) revdep=$basefile in $fname\n";
+      die "Internal error: multiple ($count) revdep store=$sfile in $fname\n";
     }
 
   } # sub: add_revdep
@@ -1246,9 +1260,10 @@ sub check_ahelp_site_valid ($) {
   # either write my own format or require another
   # perl package be installed.
   #
-  sub write_dependencies ($$$) {
+  sub write_dependencies ($$$$) {
     my $name = shift;
     my $storage = shift;
+    my $userdir = shift;
     my $stylesheetdir = shift;
 
     my $hdeps = hash_dependencies $stylesheetdir;
@@ -1309,8 +1324,7 @@ sub check_ahelp_site_valid ($) {
     dbg "Now creating reverse dependencies";
     while ( my ($label, $vals) = each %{$$hdeps{include}}) {
       dbg "Rev dep for label=$label";
-      add_revdep $$vals{filename},
-	"${storage}${name}.xml";
+      add_revdep $$vals{filename}, $name, $storage, $userdir;
     }
 
   } # sub: write_dependencies

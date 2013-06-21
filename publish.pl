@@ -1395,7 +1395,7 @@ sub process_changed ($$) {
     dbg "Do we need to republish anything?";
 
     foreach my $in ( @$changed ) {
-	dbg "Checking revdeps of $in";
+	dbg "TODO: Checking revdeps of $in";
     }
 
 } # sub: process_changed
@@ -1536,9 +1536,6 @@ sub process_xml ($$) {
 	if ($published ne "" and have_dependencies) {
 	  push @changed, $in;
 
-	  dump_dependencies;
-	  write_dependencies $in, $published, $stylesheets;
-
 	  # copy file over to storage space and sort out protection/group
 	  # - we need to be more clever than this because some files will need multiple
 	  #   files copied over [eg the threads have images, screen, and include files]
@@ -1546,6 +1543,13 @@ sub process_xml ($$) {
 	  # TODO: Is there ever a case when we have no dependencies but want to publish?
 	  #       Should *not* be
 	  mycp "${in}.xml", "${published}/${in}.xml";
+
+	  # Write the dependencies out after copying the file to the storage directory
+	  # since we check on the published copy existing when writing out the reverse
+	  # dependencies.
+	  dump_dependencies;
+	  write_dependencies $in, $published, cwd() . "/", $stylesheets;
+
 	}
 
     } # foreach: my $in
