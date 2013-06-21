@@ -1349,13 +1349,20 @@ sub check_ahelp_site_valid ($) {
   # TODO: do we need to store the site along with things like
   #       faq/dictionary (for reverse dependency tracking?)
   #
-  # add_dependency is for arrays
+  # add_dependency is for arrays/sets (ie we only add the value
+  # if it isn't already included).
+  #
+  # Theproblem of multiple entries comes about when handling
+  # stylesheets that produce multiple pages.
+  #
   sub add_dependency ($$) {
     my $label = shift;
     my $value = shift;
     dbg "add_dependency: label=$label value=$value";
     $dependencies{$label} = []
       unless exists $dependencies{$label};
+    
+    return if grep /^$value$/, @{$dependencies{$label}};
     push @{$dependencies{$label}}, $value;
   }
 
