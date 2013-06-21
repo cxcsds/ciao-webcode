@@ -1384,6 +1384,22 @@ sub die_if_icxc ($) {
 
 } # sub: die_if_icxc()
 
+# Given the files that have been changed, work out
+# if any other files need to be re-published.
+#
+sub process_changed ($$) {
+    my $type = shift;
+    my $changed = shift;
+
+    return if $#$changed < 0;
+    dbg "Do we need to republish anything?";
+
+    foreach my $in ( @$changed ) {
+	dbg "Checking revdeps of $in";
+    }
+
+} # sub: process_changed
+
 # handle non-ahelp XML files
 #
 # uses lots of global variables...
@@ -1403,6 +1419,7 @@ sub process_xml ($$) {
     #   system to use, and then farms it off. It does this on the
     #   basis of the name of the root node of the document
     #
+    my @changed = ();
     foreach my $in ( @$aref ) {
 
 	die "Error: unable to find the output directory '$outdir'\n"
@@ -1517,6 +1534,8 @@ sub process_xml ($$) {
 	# if the file was skipped.
 	#
 	if ($published ne "" and have_dependencies) {
+	  push @changed, $in;
+
 	  dump_dependencies;
 	  write_dependencies $in, $published, $stylesheets;
 
@@ -1530,6 +1549,9 @@ sub process_xml ($$) {
 	}
 
     } # foreach: my $in
+
+    # TODO: send in more information
+    process_changed $type, \@changed;
 
 } # sub: process_xml()
 

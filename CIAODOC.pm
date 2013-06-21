@@ -1155,15 +1155,63 @@ sub check_ahelp_site_valid ($) {
       $el->appendText($value);
     }
     
-  }
+  } # sub: add_node
+
+  # Add the reverse dependency information. We do not
+  # look for "deletions" here (since would need to process
+  # all the revdep files), instead these get cleaned up
+  # when actually checking the dependency information.
+  #
+  # $revdepfile is the file on which $basefile depends
+  # (both should end in xml and be full paths).
+  #
+  # TODO: may not have permission to add to a revdep file
+  # (e.g. CDO person with anb ahelp link), so need to
+  # check permissions/handle this case.
+  # 
+  sub add_revdep($$) {
+    my $revdepfile = shift;
+    my $basefile = shift;
+
+    die "Expected revdepfile=$revdepfile to end in .xml\n"
+      unless $revdepfile =~ /\.xml$/;
+    die "Expected basefile=$basefile to end in .xml\n"
+      unless $basefile =~ /\.xml$/;
+
+    my $fname = substr($revdepfile, 0, length($revdepfile)-4) . ".revdep";
+    my $dom;
+    my $root;
+    if (-e $fname) {
+      dbg "Reading in revdep file: $fname";
+      $dom = $parser->parse_file($fname);
+      $root = $dom->documentElement();
+    } else {
+      dbg "Creating new revdep file: $fname";
+      $dom = XML::LibXML::Document->new();
+      $root = $dom->createElement("reversedependencies");
+      $dom->setDocumentElement($root);
+    }
+
+    my $count = $dom->find("count(//revdep[normalize-space(.)='" . $basefile . "'])");
+    if ($count == 0) {
+      dbg "Adding revdep $basefile";
+      add_text_node $root, "revdep", $basefile;
+      myrm $fname;
+      $dom->toFile($fname, 0);
+      mysetmods $fname;
+
+    } elsif ($count > 1) {
+      # could clean up, but shouldn't happen so error out
+      die "Internal error: multiple ($count) revdep=$basefile in $fname\n";
+    }
+
+  } # sub: add_revdep
 
   # Write out the dependency information
   #
   # Doesn't need to be XML, but don't want to
   # either write my own format or require another
   # perl package be installed.
-  #
-  # TODO: write out reverse dependencies
   #
   sub write_dependencies ($$$) {
     my $name = shift;
@@ -1188,6 +1236,49 @@ sub check_ahelp_site_valid ($) {
     $doc->toFile($outfile, 0); # do not bother with indention
     mysetmods $outfile;
     dbg("Created dependency file: $outfile");
+
+    # Now for the reverse dependencies:
+    #
+    # At present, hdeps contains
+    #    include
+    #    ssi
+    #    import
+    #    xpath
+    #
+    # As xpath does not contiain file names (it uses include
+    # to identify that), we are not interested in this here.
+    #
+    # Both ssi and import could be tracked - but for now
+    # not tracking this, so just interested in the include
+    # section.
+    #
+    # TODO: what about ahelp/bugs pages?
+    #   publishing a ahelp page - such as
+    #   /data/da/Docs/sxml_manuals/webxml/4.5//doc/xml/dmextract.xml
+    # creates interesting dependencies (before running hash_dependencies)
+    #
+    #      'include' => {
+    #                     'relnotes' => bless( [
+    #                                            bless( do{\(my $o = 109304048)}, 'XML::LibXML::Document' )
+    #                                          ], 'XML::LibXML::NodeList' ),
+    #                     'bugs' => bless( [
+    #                                        bless( do{\(my $o = 108813264)}, 'XML::LibXML::Document' )
+    #                                      ], 'XML::LibXML::NodeList' )
+    #                   },
+    #      'import' => [
+    #                    'ahelp_common.xsl',
+    #                    'common.xsl',
+    #                    'ahelp_main.xsl',
+    #                    'ahelp.xsl'
+    #                  ]
+    #    };
+    #
+    dbg "Now creating reverse dependencies";
+    while ( my ($label, $vals) = each %{$$hdeps{include}}) {
+      dbg "Rev dep for label=$label";
+      add_revdep $$vals{filename},
+	"${storage}${name}.xml";
+    }
 
   } # sub: write_dependencies
 
