@@ -380,11 +380,7 @@ foreach my $in ( @names ) {
 	next;
     }
 
-    my $deps = get_dependencies;
-    dbg "dependencies:";
-    while ( my ($key,$value) = each %$deps ) {
-      dbg " key=$key vals=[@$value]\n";
-    }
+    dump_dependencies;
 
     # success or failure?
     foreach my $page ( @pages ) {

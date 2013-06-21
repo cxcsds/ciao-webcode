@@ -295,11 +295,7 @@ clear_dependencies;
 
 translate_file "${stylesheets}ahelp_index.xsl", $ahelpindex, \%paramlist;
 
-my $deps = get_dependencies;
-dbg "dependencies:";
-while ( my ($key,$value) = each %$deps ) {
-  dbg " key=$key vals=[@$value]\n";
-}
+dump_dependencies;
 
 # success or failure?
 foreach my $page ( @soft ) {
