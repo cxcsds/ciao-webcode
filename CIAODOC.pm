@@ -66,7 +66,9 @@ my @funcs_cfg  =
     );
 my @funcs_deps =
   qw(
-     clear_dependencies get_dependencies have_dependencies dump_dependencies write_dependencies
+     clear_dependencies get_dependencies have_dependencies 
+     dump_dependencies write_dependencies
+     identify_files_to_republish
     );
 
 use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
@@ -1211,6 +1213,20 @@ sub check_ahelp_site_valid ($) {
     die "Unable to find original/user-editable version: $ufile\n"
       unless -e $ufile;
 
+    # It's important not to refer to yourself in the revdep
+    # file, as don't want infinite loops and am too lazy to
+    # set up a proper graph system to process the data.
+    #
+    return if $revdepfile eq $sfile;
+
+    # Above we needed to check the .xml for the storage version of
+    # the file, but we actually want to store the '.dep' version of
+    # the file, so
+    #
+    $sfile = "${storage}${name}.dep";
+    die "Unable to find dependency file $sfile\n"
+      unless -e $sfile;
+
     my $fname = substr($revdepfile, 0, length($revdepfile)-4) . ".revdep";
     my $dom;
     my $root;
@@ -1457,6 +1473,92 @@ sub check_ahelp_site_valid ($) {
 				 );
 
 }
+
+
+# Read in the dependencies from the input file
+# and see if any of them have changed.
+#
+# The return value is 0 (unchanged/no need to re-publish)
+# or 1 (need to re-publish)
+#
+sub process_dep_file ($) {
+  my $depfile = shift;
+  dbg "Processing dependency file: $depfile";
+
+  my $dom = $parser->parse_file($depfile);
+  my $root = $dom->documentElement();
+
+  # First identify all the files that we need to check
+  # and see if any of them have changed.
+  #
+  my %changed;
+  foreach my $node ( $root->findnodes('//include/hash/hitem') ) {
+    my $label = $node->findvalue('key');
+    my $fname = $node->findvalue('value/hash/hitem[key="filename"]/value');
+    my $ohash = $node->findvalue('value/hash/hitem[key="hash"]/value');
+    
+    # As outside the publishing loop here we can, and should, cache the
+    # hash calculation.
+    #
+    my $nhash = get_filehash_cache $fname;
+    dbg "Has label=$label changed hash (" . ($ohash ne $nhash) . ")";
+    $changed{$label} = $fname unless $ohash eq $nhash;
+    
+  }
+
+  # Now loop through all the xpath elements for those labels that
+  # have changed.
+  #
+  while ( my ($label, $filename) = each %changed ) {
+    dbg "Reading in from $filename";
+    my $xdom = $parser->parse_file($filename);
+    my $xroot = $xdom->documentElement();
+
+    foreach my $node ( $root->findnodes('//xpath/hash/hitem[key="' . $label . '"]/value/hash/hitem') ) {
+      my $xpath = $node->findvalue('key');
+      my $ovalue = $node->findvalue('value');
+
+      # query filename using xpath and compare to value
+      my $nvalue = $xroot->findvalue("normalize-space(${xpath})");
+      ###dbg "Comparing $ovalue to $nvalue";
+      return 1 if $ovalue ne $nvalue;
+    }
+  }
+
+  # if got to here then there's been no change
+  return 0;
+
+} # sub: process_dep_file
+
+# Identify the files that need to be re-processed because a
+# file has changed.
+#
+# If there's no revdep file, then nothing.
+# If there is, then need to do something....
+#
+sub identify_files_to_republish ($$) {
+  my $storage = shift;
+  my $name = shift;
+  my $fname = "${storage}${name}.revdep";
+  return unless -e $fname;
+
+  dbg "Looking for reverse dependencies in $fname";
+
+  my $dom = $parser->parse_file($fname);
+  my $root = $dom->documentElement();
+  my @out;
+  clear_filehash_cache;
+  foreach my $node ( $root->findnodes("//revdep") ) {
+    my $store = $node->findvalue('store');
+    my $user = $node->findvalue('user');
+
+    push @out, $user if process_dep_file $store;
+  }
+
+  return \@out;
+  
+} # identify_files_to_republish
+
 
 # Set up routines callable from XSLT; at present only want
 # to rely on register_function even though for some of these

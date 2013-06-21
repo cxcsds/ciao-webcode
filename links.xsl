@@ -353,7 +353,7 @@
 	*-->
     <xsl:variable name="matches" select="$namematches[context=$context]"/>
     <xsl:variable name="matches-xpath"
-		  select="concat('//ahelp[key=', $quot, $name, $quot, ',context=', $quot, $context, $quot, ']')"/>
+		  select="concat('//ahelp[key=', $quot, $name, $quot, '][context=', $quot, $context, $quot, ']')"/>
 
     <xsl:choose>
       <xsl:when test="count($matches)!=1">

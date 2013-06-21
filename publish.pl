@@ -1387,16 +1387,31 @@ sub die_if_icxc ($) {
 # Given the files that have been changed, work out
 # if any other files need to be re-published.
 #
-sub process_changed ($$) {
-    my $type = shift;
-    my $changed = shift;
+sub process_changed ($$$) {
+  my $type = shift;
+  my $storage = shift;
+  my $changed = shift;
 
-    return if $#$changed < 0;
-    dbg "Do we need to republish anything?";
-
-    foreach my $in ( @$changed ) {
-	dbg "TODO: Checking revdeps of $in";
+  return if $#$changed < 0;
+  dbg "Do we need to republish anything?";
+  
+  my @todo = ();
+  foreach my $in ( @$changed ) {
+    my $c = identify_files_to_republish $storage, $in;
+    for my $fname ( @$c ) {
+      push @todo, $fname;
     }
+  }
+
+  if ($#todo == -1) {
+    dbg "No files need to be republished";
+    return;
+  }
+
+  print "The following files need re-publishing:\n";
+  foreach my $fname ( @todo ) {
+    print "   $fname\n";
+  }
 
 } # sub: process_changed
 
@@ -1555,7 +1570,7 @@ sub process_xml ($$) {
     } # foreach: my $in
 
     # TODO: send in more information
-    process_changed $type, \@changed;
+    process_changed $type, $published, \@changed;
 
 } # sub: process_xml()
 
