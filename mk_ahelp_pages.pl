@@ -376,20 +376,20 @@ foreach my $in ( @names ) {
     # we skip further processing on error
     #
     unless ( defined $flag ) {
-	print "-> problem generating HTML for $in\n";
-	next;
+	die "-> problem generating HTML for $in\n";
+	# next;
     }
 
     dump_dependencies;
 
     # success or failure?
     foreach my $page ( @pages ) {
-	#die "Error: transformation did not create $page\n"
-	#  unless -e $page;
-	unless ( -e $page ) {
-	    print "Error: transformation did not create $page\n";
-	    next;
-	}
+	die "Error: transformation did not create $page\n"
+	  unless -e $page;
+	#unless ( -e $page ) {
+	#    print "Error: transformation did not create $page\n";
+	#    next;
+	#}
 	mysetmods( $page );
 	dbg("Created: $page");
     }
