@@ -1191,7 +1191,10 @@ sub check_ahelp_site_valid ($) {
 
   } # sub: write_dependencies
 
-  # TODO: going to change how things are stored
+  # TODO: probably going to need to change how things are stored
+  # TODO: do we need to store the site along with things like
+  #       faq/dictionary (for reverse dependency tracking?)
+  #
   # add_dependency is for arrays
   sub add_dependency ($$) {
     my $label = shift;
