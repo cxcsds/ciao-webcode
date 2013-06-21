@@ -23,6 +23,8 @@ $|++;
 use Carp;
 use Cwd;
 use IO::File;
+use File::stat;
+use File::Basename;
 
 use XML::LibXML;
 use XML::LibXSLT;
@@ -1157,6 +1159,26 @@ sub check_ahelp_site_valid ($) {
     
   } # sub: add_node
 
+  # Given a file/directory name, return 1 if its group
+  # name matches $main::group.
+  #
+  # It might be nice to use stat(..)->cando
+  # but can not guarantee that we have that.
+  #
+  # This may not be sufficient, but hopefully the
+  # publishing code enforces a sensible group value
+  # for each file/directory.
+  #
+  sub grp_matches($) {
+    my $name = shift;
+
+    my $stat = stat($name);
+    my @groupinfo = getgrgid($stat->gid);
+    dbg "Checking group for $name = " . $stat->gid . " / ${groupinfo[0]} against $main::group";
+    return $groupinfo[0] eq $main::group;
+
+  } # sub: grp_matches
+
   # Add the reverse dependency information. We do not
   # look for "deletions" here (since would need to process
   # all the revdep files), instead these get cleaned up
@@ -1165,9 +1187,11 @@ sub check_ahelp_site_valid ($) {
   # $revdepfile is the file on which $basefile depends
   # (both should end in xml and be full paths).
   #
-  # TODO: may not have permission to add to a revdep file
-  # (e.g. CDO person with anb ahelp link), so need to
-  # check permissions/handle this case.
+  # We only do this IF the $main::group variable matches
+  # the group of the file/directory. This is to avoid
+  # permission problems such as CDO proposals which link
+  # to ahelp files. This does lose a lot of functionality
+  # but worry about that at a later date.
   # 
   sub add_revdep($$) {
     my $revdepfile = shift;
@@ -1182,10 +1206,19 @@ sub check_ahelp_site_valid ($) {
     my $dom;
     my $root;
     if (-e $fname) {
+      if (not grp_matches $fname) {
+	dbg "NOTE: unable to write to dependency file $fname as group differs";
+	return;
+      }
       dbg "Reading in revdep file: $fname";
       $dom = $parser->parse_file($fname);
       $root = $dom->documentElement();
     } else {
+      my $dname = dirname($fname);
+      if (not grp_matches $dname) {
+	dbg "NOTE: unable to create dependency file $fname as group differs";
+	return;
+      }
       dbg "Creating new revdep file: $fname";
       $dom = XML::LibXML::Document->new();
       $root = $dom->createElement("reversedependencies");
