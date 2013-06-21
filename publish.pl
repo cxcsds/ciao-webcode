@@ -1516,14 +1516,18 @@ sub process_xml ($$) {
 	# Since we track the stylesheets then deps will only be empty
 	# if the file was skipped.
 	#
-	dump_dependencies;
+	if ($published ne "" and have_dependencies) {
+	  dump_dependencies;
+	  write_dependencies $in, $published, $stylesheets;
 
-	# copy file over to storage space and sort out protection/group
-	# - we need to be more clever than this because some files will need multiple
-	#   files copied over [eg the threads have images, screen, and include files]
-	#
-	# TODO: IS THIS DONE EVEN IF THE PAGE HAS BEEN SKIPPED?
-	mycp "${in}.xml", "${published}/${in}.xml" if $published ne "";
+	  # copy file over to storage space and sort out protection/group
+	  # - we need to be more clever than this because some files will need multiple
+	  #   files copied over [eg the threads have images, screen, and include files]
+ 	  #
+	  # TODO: Is there ever a case when we have no dependencies but want to publish?
+	  #       Should *not* be
+	  mycp "${in}.xml", "${published}/${in}.xml";
+	}
 
     } # foreach: my $in
 

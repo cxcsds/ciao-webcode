@@ -64,7 +64,7 @@ my @funcs_cfg  =
     );
 my @funcs_deps =
   qw(
-     clear_dependencies get_dependencies dump_dependencies
+     clear_dependencies get_dependencies have_dependencies dump_dependencies write_dependencies
     );
 
 use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
@@ -915,11 +915,60 @@ sub get_group ($) {
 sub get_ostype () {
   if ($^O eq "darwin")     { return "osx"; }
   elsif ($^O eq "linux")   { return "lin"; }
-  elsif ($^O eq "solaris") { return "sun"; }
+  elsif ($^O eq "solaris") { die "ERROR: Doug did not expect this to be run on a Solaris box; please contact him\n"; return "sun"; }
   else {
     die "Unrecognized OS: $^O\n";
   }
 } # sub: get_ostype()
+
+# $hash = get_filehash $filename;
+#
+# Returns a hash of the file contents. This is only used for
+# identifying when a file has changed. We could cache results,
+# which would imply that the file is not expected to change whilst
+# the code is running, but this may be problematic if publishing
+# many files at once and so some do change! See get_filehash_cache()
+# for explicit cacheing.
+#
+sub get_filehash ($) {
+  my $file = shift;
+  my $os = get_ostype;
+  my $hash;
+  # do not want to rely on an external module for this
+  if ($os eq "osx") {
+    $hash = `/sbin/md5 $file`;
+    $hash = (split / /, $hash)[-1];
+  } elsif ($os eq "lin") {
+    $hash = `/usr/bin/md5sum $file`;
+    $hash = (split / /, $hash)[0];
+  } else {
+    die "Internal error: ostype=${os} not handled by get_filehash\n";
+  }
+  return $hash;
+
+} # sub: get_filehash()
+
+{
+  my %filehash_cache = ();
+  
+  sub clear_filehash_cache () {
+    %filehash_cache = ();
+  }
+
+  # get_filehash but caching the results
+  # (see clear_filehash_cache)
+  sub get_filehash_cache ($) {
+    my $file = shift;
+    if (exists $filehash_cache{$file}) {
+      return $filehash_cache{$file};
+    } else {
+      my $hash = get_filehash $file;
+      $filehash_cache{$file} = $hash;
+      return $hash;
+    }
+  } # sub: get_filehash_cache
+
+}
 
 # @sitelist = list_ahelp_sites();
 #
@@ -987,6 +1036,12 @@ sub check_ahelp_site_valid ($) {
     return \%dependencies; # TODO: copy the hash
   }
   
+  # returns 1 if there are any dependencies (ie page has not been skipped)
+  # and 0 otherwise.
+  sub have_dependencies () {
+    return scalar (keys %dependencies) > 0;
+  }
+
   # Display the dependency information via dbg messages
   sub dump_dependencies() {
     dbg "dependencies:";
@@ -1006,6 +1061,135 @@ sub check_ahelp_site_valid ($) {
     dbg Dumper(\%dependencies);
 
   }
+
+  # Take the current set of dependencies and
+  # add in the hash values of files.
+  #
+  # Send in
+  #   path to the stylesheet directory
+  #   path to the parent directory of the output files (not supported)
+  sub hash_dependencies($) {
+    my $stylesheetdir = shift;
+    #my $outdir = shift;
+    my %out;
+
+    while (my ($key, $vals) = each %dependencies) {
+      if ($key eq "import") {
+	# stylesheets used to process the file
+	$out{$key} = {};
+	foreach my $filename (@$vals) {
+	  my $fullpath = $stylesheetdir . $filename;
+	  $out{$key}{$filename} =
+	    { hash => get_filehash_cache $fullpath,
+	      filename => $fullpath };
+	}
+      } elsif ($key eq "ssi") {
+	# For now we do not hash these values (it is
+	# more complicated since need to cross sites)
+	#
+	$out{$key} = $vals;
+      } elsif ($key eq "include") {
+	# files that are read in and (potentially) used
+	# in xpath; we do NOT cache these hash values
+	$out{$key} = {};
+	while (my ($ilabel, $ifilename) = each %$vals) {
+	  $out{$key}{$ilabel} = { hash => get_filehash $ifilename,
+				  filename => $ifilename };
+	}
+      } else {
+	$out{$key} = $vals;
+      }
+    }
+    return \%out;
+  } # sub: hash_dependencies
+
+  sub add_node ($$$);
+
+  sub add_text_node ($$$) {
+    my $parent = shift;
+    my $name = shift;
+    my $text = shift;
+    my $node = XML::LibXML::Element->new($name);
+    $node->appendText($text);
+    $parent->appendChild($node);
+  }
+
+  sub add_array_node ($$) {
+    my $parent = shift;
+    my $values = shift;
+
+    my $el = XML::LibXML::Element->new("array");
+    $parent->appendChild($el);
+    foreach my $aval (@$values) {
+      add_text_node $el, "item", $aval;
+    }
+  }
+
+  sub add_hash_node ($$) {
+    my $parent = shift;
+    my $values = shift;
+
+    my $el = XML::LibXML::Element->new("hash");
+    $parent->appendChild($el);
+    while (my ($key, $value) = each %$values) {
+      my $hel = XML::LibXML::Element->new("hitem");
+      add_text_node $hel, "key", $key;
+      add_node $hel, "value", $value;
+      $el->appendChild($hel);
+    }
+  }
+
+  sub add_node ($$$) {
+    my $parent = shift;
+    my $name   = shift;
+    my $value  = shift;
+
+    my $el = XML::LibXML::Element->new($name);
+    $parent->appendChild($el);
+    if (ref($value) eq "ARRAY") {
+      add_array_node $el, $value;
+    } elsif (ref ($value) eq "HASH") {
+      add_hash_node $el, $value;
+    } else {
+      # assume a text node
+      $el->appendText($value);
+    }
+    
+  }
+
+  # Write out the dependency information
+  #
+  # Doesn't need to be XML, but don't want to
+  # either write my own format or require another
+  # perl package be installed.
+  #
+  # TODO: write out reverse dependencies
+  #
+  sub write_dependencies ($$$) {
+    my $name = shift;
+    my $storage = shift;
+    my $stylesheetdir = shift;
+
+    my $hdeps = hash_dependencies $stylesheetdir;
+
+    my $outfile = "${storage}${name}.dep";
+
+    my $doc = XML::LibXML::Document->new();
+    my $root = $doc->createElement("dependencies");
+    $doc->setDocumentElement($root);
+
+    add_text_node($root, "base", "${name}.xml");
+
+    while (my ($key,$val) = each %$hdeps) {
+      add_node $root, $key, $val;
+    }
+
+    myrm $outfile;
+    $doc->toFile($outfile, 0); # do not bother with indention
+    mysetmods $outfile;
+    dbg("Created dependency file: $outfile");
+
+  } # sub: write_dependencies
 
   # TODO: going to change how things are stored
   # add_dependency is for arrays
