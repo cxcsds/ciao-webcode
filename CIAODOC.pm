@@ -63,6 +63,7 @@ my @funcs_cfg  =
      parse_config find_site get_config_main get_config_main_type
      get_config_site get_config_version get_config_type
      check_config_exists check_type_known check_location get_group
+     get_storage_location
     );
 my @funcs_deps =
   qw(
@@ -111,6 +112,7 @@ sub get_config_version ($@);
 sub get_config_type ($$$);
 sub check_config_exists ($$);
 sub check_type_known ($$);
+sub get_storage_location ($$);
 
 sub check_location ($$);
 sub get_group ($);
@@ -903,6 +905,24 @@ sub get_group ($) {
 
 } # sub: get_group()
 
+# Returns the location of the storage area (ie where we store the
+# published version of a page + metadata) for a given site.
+#
+# $storageloc  - location of the storage file
+# $site        - site name
+#
+sub get_storage_location ($$) {
+  my $storageloc = shift;
+  my $site = shift;
+
+  my $dom = $parser->parse_file($storageloc);
+  my $root = $dom->getDocumentElement();
+  my $loc = $root->findvalue('/storage/dir[@site="' . $site . '"]');
+  die "Unable to find site='$site' in $storageloc\n"
+    if $loc eq "";
+  return $loc;
+
+} # sub: get_storage_location
 
 # $ostype = get_ostype;
 #
@@ -1206,6 +1226,8 @@ sub check_ahelp_site_valid ($) {
     die "Expected revdepfile=$revdepfile to end in .xml\n"
       unless $revdepfile =~ /\.xml$/;
 
+    # print "HACK: add_revdep\n  name=$name  storage=$storage  userdir=$userdir\n"; # TODO checking processing ahelp files
+
     my $sfile = "${storage}${name}.xml";
     my $ufile = "${userdir}${name}.xml";
     die "Unable to find storage version: $sfile\n"
@@ -1315,27 +1337,6 @@ sub check_ahelp_site_valid ($) {
     # Both ssi and import could be tracked - but for now
     # not tracking this, so just interested in the include
     # section.
-    #
-    # TODO: what about ahelp/bugs pages?
-    #   publishing a ahelp page - such as
-    #   /data/da/Docs/sxml_manuals/webxml/4.5//doc/xml/dmextract.xml
-    # creates interesting dependencies (before running hash_dependencies)
-    #
-    #      'include' => {
-    #                     'relnotes' => bless( [
-    #                                            bless( do{\(my $o = 109304048)}, 'XML::LibXML::Document' )
-    #                                          ], 'XML::LibXML::NodeList' ),
-    #                     'bugs' => bless( [
-    #                                        bless( do{\(my $o = 108813264)}, 'XML::LibXML::Document' )
-    #                                      ], 'XML::LibXML::NodeList' )
-    #                   },
-    #      'import' => [
-    #                    'ahelp_common.xsl',
-    #                    'common.xsl',
-    #                    'ahelp_main.xsl',
-    #                    'ahelp.xsl'
-    #                  ]
-    #    };
     #
     dbg "Now creating reverse dependencies";
     while ( my ($label, $vals) = each %{$$hdeps{include}}) {
