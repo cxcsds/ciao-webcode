@@ -26,6 +26,7 @@
 #
 # Creates:
 #   Files in the storage location given in the config file
+#   (Actually, we don't at present).
 #
 # Requires:
 #   in styledir
