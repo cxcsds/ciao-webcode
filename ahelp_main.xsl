@@ -1171,22 +1171,4 @@
 </xsl:text>
   </xsl:template>
 
-  <!--* taken from helper.xsl *-->
-  <xsl:template name="add-ssi-include">
-    <xsl:param name='file'/>
-    <xsl:if test="$file = ''">
-      <xsl:message terminate="yes">
-
-Programming error: add-ssi-include called with an empty file parameter
-
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:call-template name="newline"/>
-    <xsl:comment>#include virtual="<xsl:value-of select="$file"/>"</xsl:comment>
-    <xsl:call-template name="newline"/>
-
-  </xsl:template> <!--* name=add-ssi *-->
-
-
 </xsl:stylesheet> <!--* FIN *-->

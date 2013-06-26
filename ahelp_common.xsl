@@ -227,10 +227,10 @@
       <xsl:with-param name="template" select="'add-navbar'"/>
     </xsl:call-template>
 
-      <!--* add the navbar *-->
-      <xsl:comment>#include virtual="navbar_<xsl:value-of select="$navbar"/>.incl"</xsl:comment>
-
-      <xsl:call-template name="newline"/>
+    <!--* add the navbar *-->
+    <xsl:call-template name="add-ssi-include">
+      <xsl:with-param name="file" select="concat('navbar_', $navbar, '.incl')"/>
+    </xsl:call-template>
     
   </xsl:template> <!--* name=add-navbar *-->
 
@@ -319,12 +319,15 @@
   </xsl:template> <!--* name=add-standard-banner-footer *-->
 
   <xsl:template name="add-cxc-search-ssi">
-    <xsl:comment>#include virtual="<xsl:value-of select="$searchssi"/>"</xsl:comment>
-    <xsl:call-template name="newline"/>
+    <xsl:call-template name="add-ssi-include">
+      <xsl:with-param name="file" select="$searchssi"/>
+    </xsl:call-template>
   </xsl:template> <!--* name=add-cxc-search-ssi *-->
 
   <xsl:template name="add-google-analytics-ssi">
-    <xsl:comment>#include virtual="<xsl:value-of select="$googlessi"/>"</xsl:comment>
+    <xsl:call-template name="add-ssi-include">
+      <xsl:with-param name="file" select="$googlessi"/>
+    </xsl:call-template>
   </xsl:template> <!--* name=add-google-analytics-ssi *-->
 
   <!--*
@@ -358,9 +361,9 @@
       * add the standard header files
       *-->
   <xsl:template name="add-cxc-header-live">
-    <xsl:comment>#include virtual="/incl/cxcheader.html"</xsl:comment>
-    <xsl:call-template name="newline"/>
-
+    <xsl:call-template name="add-ssi-include">
+      <xsl:with-param name="file" select="'/incl/cxcheader.html'"/>
+    </xsl:call-template>
   </xsl:template>
 
   <!--*
@@ -476,7 +479,9 @@
       <xsl:call-template name="add-google-analytics-ssi"/>
     </xsl:if>
 
-    <xsl:comment>#include virtual="/incl/cxcfooter.html"</xsl:comment>
+    <xsl:call-template name="add-ssi-include">
+      <xsl:with-param name="file" select="'/incl/cxcfooter.html'"/>
+    </xsl:call-template>
     <xsl:call-template name="newline"/>
 
   </xsl:template> <!--* add-cxc-footer *-->

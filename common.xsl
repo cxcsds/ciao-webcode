@@ -80,6 +80,34 @@
     <meta name="keywords" content="CfA,SAO,Harvard-Smithsonian,Center for Astrophysics"/>
     <meta name="keywords" content="HEA,HEAD,High Energy Astrophysics Division"/>
 
-  </xsl:template> <!-- name=add-sao-metadata -->
+  </xsl:template> <!--* name=add-sao-metadata *-->
+
+  <!--*
+      * add a ssi include statement to the output, surrounded by new lines
+      * (hopefully obselete, but leave in)
+      *
+      * Parameters:
+      *  file - string, required
+      *    the file to include
+      *
+      *-->
+  <xsl:template name="add-ssi-include">
+    <xsl:param name='file'/>
+    <xsl:if test="$file = ''">
+      <xsl:message terminate="yes">
+
+Programming error: add-ssi-include called with an empty file parameter
+
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:variable name="hack-register-ssi"
+		  select="extfuncs:register-ssi-file($file)"/>
+
+    <xsl:call-template name="newline"/>
+    <xsl:comment>#include virtual="<xsl:value-of select="$file"/>"</xsl:comment>
+    <xsl:call-template name="newline"/>
+
+  </xsl:template> <!--* name=add-ssi-include *-->
 
 </xsl:stylesheet>

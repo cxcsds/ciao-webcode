@@ -718,36 +718,6 @@
     <hr size="5" noshade="0"/>
   </xsl:template>
 
-  <!--*
-      * add a ssi include statement to the output, surrounded by new lines
-      * (because we are having issues with the register CGI stuff
-      *  and I'm hoping that the carriage returns will improve
-      *  things)
-      *
-      * Parameters:
-      *  file - string, required
-      *    the file to include
-      *
-      *-->
-  <xsl:template name="add-ssi-include">
-    <xsl:param name='file'/>
-    <xsl:if test="$file = ''">
-      <xsl:message terminate="yes">
-
-Programming error: add-ssi-include called with an empty file parameter
-
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:variable name="hack-register-ssi"
-		  select="extfuncs:register-ssi-file($file)"/>
-
-    <xsl:call-template name="newline"/>
-    <xsl:comment>#include virtual="<xsl:value-of select="$file"/>"</xsl:comment>
-    <xsl:call-template name="newline"/>
-
-  </xsl:template> <!--* name=add-ssi *-->
-
   <!--* used by the test/trial headers *-->
   <xsl:template name="add-start-body-white">
     <xsl:call-template name="start-tag"/>body bgcolor=<xsl:call-template name="add-quote"/>#FFFFFF<xsl:call-template name="add-quote"/><xsl:call-template name="end-tag"/>
