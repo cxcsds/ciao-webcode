@@ -968,6 +968,7 @@ sub get_filehash ($) {
   } else {
     die "Internal error: ostype=${os} not handled by get_filehash\n";
   }
+  chomp $hash;
   return $hash;
 
 } # sub: get_filehash()
@@ -1201,6 +1202,31 @@ sub check_ahelp_site_valid ($) {
 
   } # sub: grp_matches
 
+  # Add the dependency information.
+  #
+  sub add_dep_file ($$$) {
+    my $storage = shift;
+    my $name = shift;
+    my $hdeps = shift;
+    my $outfile = "${storage}${name}.dep";
+    
+    my $doc = XML::LibXML::Document->new();
+    my $root = $doc->createElement("dependencies");
+    $doc->setDocumentElement($root);
+    
+    add_text_node($root, "base", "${name}.xml");
+    
+    while (my ($key,$val) = each %$hdeps) {
+      add_node $root, $key, $val;
+    }
+    
+    myrm $outfile;
+    $doc->toFile($outfile, 0); # do not bother with indention
+    mysetmods $outfile;
+    dbg("Created dependency file: $outfile");
+
+  } # sub: add_dep_file
+
   # Add the reverse dependency information. We do not
   # look for "deletions" here (since would need to process
   # all the revdep files), instead these get cleaned up
@@ -1216,8 +1242,45 @@ sub check_ahelp_site_valid ($) {
   # permission problems such as CDO proposals which link
   # to ahelp files. This does lose a lot of functionality
   # but worry about that at a later date.
-  # 
-  sub add_revdep($$$$) {
+  #
+  # ahelp files do not fit in nicely since we dont store the
+  # ahelp XML file in the storage location, which means the
+  # checks below fail (in particular the first sfile check).
+  # Instead, we would want to check ahelpindex.xml, but we
+  # do not want to then link the reverse dependency of
+  # $revdepfile (e.g. a releasenotes file) to ahelpindex,
+  # but rather we want to mention the ahelp file.
+  #
+
+=pod HELP
+
+Argh: ahelp reverse dependencies are generally complicated because
+(for example, processing dmextract)
+
+ a) we don't store a version the ahelp XML file in the normal
+    location -> we *could* change this
+
+ b) ahelp links use ahelpindex.xml rather than the stored ahelp
+    file -> the processing code could avoid using the ahelpindex
+    route OR we cheat and use the ahelpindex file but then
+    store the xpath/value from the actual ahelp file *which seems
+    pointless, unless there's a big gain in using ahelpindex [which
+    we could access via perl if necessary]
+
+  NOTE: would need some sort of index to go from key/key+context
+  to file name.
+
+ c) each page includes bugs/release notes, and these are generated
+    from a single page, but at this point we have the individual
+    file names (i.e. *.slug.xml), but these don't exist as a user-visible
+    entity.
+
+    Perhaps want to deal with include vs extract via xpath as
+    different?
+
+=cut
+
+  sub add_revdep_file ($$$$) {
     my $revdepfile = shift;
     my $name = shift;
     my $storage = shift;
@@ -1226,14 +1289,20 @@ sub check_ahelp_site_valid ($) {
     die "Expected revdepfile=$revdepfile to end in .xml\n"
       unless $revdepfile =~ /\.xml$/;
 
-    # print "HACK: add_revdep\n  name=$name  storage=$storage  userdir=$userdir\n"; # TODO checking processing ahelp files
+    # print "HACK: add_revdep_file\n  revdepfile=$revdepfile\n  name=$name  storage=$storage  userdir=$userdir\n"; # TODO checking processing ahelp files
 
     my $sfile = "${storage}${name}.xml";
     my $ufile = "${userdir}${name}.xml";
-    die "Unable to find storage version: $sfile\n"
-      unless -e $sfile;
-    die "Unable to find original/user-editable version: $ufile\n"
-      unless -e $ufile;
+
+    # For now skip checks if processing an ahelp file
+    if ($name ne "index" and $userdir =~ /\/ahelp\/$/) {
+      dbg "Skipping check for storage/user-editable version as ahelp page: $name";
+    } else {
+      die "Unable to find storage version: $sfile\n"
+        unless -e $sfile;
+      die "Unable to find original/user-editable version: $ufile\n"
+        unless -e $ufile;
+    }
 
     # It's important not to refer to yourself in the revdep
     # file, as don't want infinite loops and am too lazy to
@@ -1290,7 +1359,7 @@ sub check_ahelp_site_valid ($) {
       die "Internal error: multiple ($count) revdep store=$sfile in $fname\n";
     }
 
-  } # sub: add_revdep
+  } # sub: add_revdep_file
 
   # Write out the dependency information
   #
@@ -1306,22 +1375,7 @@ sub check_ahelp_site_valid ($) {
 
     my $hdeps = hash_dependencies $stylesheetdir;
 
-    my $outfile = "${storage}${name}.dep";
-
-    my $doc = XML::LibXML::Document->new();
-    my $root = $doc->createElement("dependencies");
-    $doc->setDocumentElement($root);
-
-    add_text_node($root, "base", "${name}.xml");
-
-    while (my ($key,$val) = each %$hdeps) {
-      add_node $root, $key, $val;
-    }
-
-    myrm $outfile;
-    $doc->toFile($outfile, 0); # do not bother with indention
-    mysetmods $outfile;
-    dbg("Created dependency file: $outfile");
+    add_dep_file $storage, $name, $hdeps;
 
     # Now for the reverse dependencies:
     #
@@ -1341,7 +1395,7 @@ sub check_ahelp_site_valid ($) {
     dbg "Now creating reverse dependencies";
     while ( my ($label, $vals) = each %{$$hdeps{include}}) {
       dbg "Rev dep for label=$label";
-      add_revdep $$vals{filename}, $name, $storage, $userdir;
+      add_revdep_file $$vals{filename}, $name, $storage, $userdir;
     }
 
   } # sub: write_dependencies
@@ -1488,6 +1542,10 @@ sub check_ahelp_site_valid ($) {
 #
 # The return value is 0 (unchanged/no need to re-publish)
 # or 1 (need to re-publish)
+#
+# TODO: how to deal with include files that do not have
+# xpath matches, since they are straight-forward includes.
+# ie relnotes and bugs in ahelp .dep files?
 #
 sub process_dep_file ($) {
   my $depfile = shift;

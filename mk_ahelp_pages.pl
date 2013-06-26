@@ -57,6 +57,7 @@ use Carp;
 use Getopt::Long;
 use Cwd;
 use IO::File;
+use File::Basename;
 
 use FindBin;
 
@@ -302,6 +303,15 @@ $storageloc = get_config_type( $version_config, "storageloc", $type )
 die "Error: unable to find storageloc=$storageloc\n"
   unless $storageloc eq "" or -e $storageloc;
 
+my $published = "";
+$published = get_storage_location($storageloc, $site)
+  unless $storageloc eq "";
+
+unless ($published eq "") {
+    $published .= $dhead;
+    mymkdir $published;
+}
+
 # optional "postfix" text for page headers
 my $headtitlepostfix = "";
 my $texttitlepostfix = "";
@@ -344,7 +354,8 @@ my %paramlist = @extra;
 foreach my $in ( @names ) {
 
     # To match publish.pl
-    my $name = (split("/",$in))[-1];
+    my @ans = fileparse $in;
+    my $name = $ans[0];
     print "Parsing [ahelp]: $name\n";
 
     # We need to convert depth from a number to a string
@@ -375,24 +386,19 @@ foreach my $in ( @names ) {
 
     # we skip further processing on error
     #
-    unless ( defined $flag ) {
-	die "-> problem generating HTML for $in\n";
-	# next;
-    }
-
-    dump_dependencies;
-
+    die "-> problem generating HTML for $in\n"
+	unless defined $flag;
+	
     # success or failure?
     foreach my $page ( @pages ) {
 	die "Error: transformation did not create $page\n"
 	  unless -e $page;
-	#unless ( -e $page ) {
-	#    print "Error: transformation did not create $page\n";
-	#    next;
-	#}
 	mysetmods( $page );
 	dbg("Created: $page");
     }
+
+    dump_dependencies;
+    write_dependencies $name, $published, cwd() . "/", $stylesheets;
 
 } # foreach: $in
 
