@@ -1285,8 +1285,8 @@ logotext=Chandra Source Catalog logo
 %searchssi=test /csc1/csc_search.ssi
 %searchssi=trial /sds/csc_trial/csc_search.ssi
 
-%stylesheets=live /data/da/Docs/web4/ciao43/
-%stylesheets=test /data/da/Docs/web4/ciao43/
+%stylesheets=live /data/da/Docs/web4/ciao45/
+%stylesheets=test /data/da/Docs/web4/ciao45/
 %stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
 
 %outdir=live /proj/web-cxc-dmz/htdocs/csc1/
@@ -1306,17 +1306,17 @@ logotext=Chandra Source Catalog logo
 
 # where does the ahelp 'index' file live
 # use CIAO versions
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao43/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao43/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao43/trial/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao45/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao45/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao45/trial/ahelp/
 
-%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.3/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.3/
-%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.3/
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.5/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.5/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.5/
 
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao43.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao43.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao43.trial.xml
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao45.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao45.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao45.trial.xml
 
 -version
 
