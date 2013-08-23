@@ -265,7 +265,7 @@
       * add a "new" icon
       * - see also the updated template
       * - uses the "package" variable depth to work
-      *   out where the gif actually is
+      *   out where the image actually is
       * - if the day attribute is supplied also adds in the date
       *   using (29 June 2002) format where
       *    day=29 month=June year=2
@@ -535,17 +535,15 @@
       *   <math>
       *     <name>...</name>
       *     <latex>...</latex> (latex formula with NO being/end math values)
-      *     <text>...</text>   (plain text representation)
+      *     <text>...</text>   (plain text representation;
+      *        if not given then we re-use the latex block)
       * {   <mathml>...</mathml>   (MathML version)   NOT YET IMPLEMENTED    }
       *   </math>
       *
-      * Creates a gif (name.gif) which is included in the text
-      * (with alt attribute = [text]). name is also used to set the
-      * anchor of the equation
-      *
-      * A lot of the processing is actually done external to the stylesheet
-      * - eg list_math.xsl is called and the perl script does the actual
-      *   conversion to GIF
+      * We now use the MathJax javascript system - http://www.mathjax.org/ -
+      * for rendering LaTeX, rather than calling out to LaTeX to create
+      * an image (although this may be required to support users who
+      * have JavaScript turned off).
       *
       * Notes:
       * - may want to add attributes that are used to control the created formula
@@ -554,10 +552,9 @@
   <xsl:template match="math">
 
     <!--* DTD-style checks *-->
-    <xsl:if test="boolean(name)=false() or boolean(latex)=false() or boolean(text)=false()">
+    <xsl:if test="boolean(name)=false() or boolean(latex)=false()">
       <xsl:message terminate="yes">
- Error: a match tag is missing at least one of the following
-   nodes - name, latex, text
+ Error: math tag is missing at least one of name or latex
       </xsl:message>
     </xsl:if>
 
@@ -576,7 +573,7 @@
         * - apparently xsl:document will nest
         * - need to remove leading/trailing whitespace so that
         *   latex doesn't complain
-        *-->
+
     <xsl:document href="{concat($sourcedir,name,'.tex')}" method="text">
 \documentclass{article}
 \usepackage{color}
@@ -591,8 +588,25 @@
 \end{document}
     </xsl:document>
 
-    <!--* and add the img tag to the resulting tree, within an anchor *-->
-    <a name="{name}"><img src="{name}.gif" alt="{text}"/></a>
+        *-->
+
+    <!--*
+	* how best to supply an anchor now?
+	* MathJax does add anchors automatically; can we add this?
+	*-->
+    <a name="{name}"/>
+    <!--* 
+	* Could place human-readable form in a noscript tag, but this
+	* way we get to provide something hopefully-readable whilst the
+	* LaTeX is being rendered.
+	*-->
+    <span class="MathJax_Preview"><xsl:choose>
+      <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="latex"/></xsl:otherwise>
+    </xsl:choose></span>
+    <script type="math/tex; mode=display">
+      <xsl:value-of select="latex"/>
+    </script>
 
   </xsl:template> <!--* match=math *-->
 
@@ -716,5 +730,92 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template> <!-- name="get-month" -->
+
+  <!-- * Docbook-like admonitions; rather than have separate tags use a single
+       * tag and use an attribute to determine the type of admonition.
+       *
+       * Valid values for @type are
+       *     caution important note tip warning
+       * or the type attribute can be left out.
+       *
+       * I had originally followed the docbook style sheet and used
+       * the background-image CSS attribute on the div.*-inner block
+       * to set the icon. However, this is likely ignored by the
+       * media print (browser option), so explicitly adding the
+       * image.
+       *-->
+
+  <xsl:variable name="allowed-annotations" select="' caution important note tip warning  '"/>
+
+  <xsl:template match="admonition[@type]">
+    <xsl:if test="not(contains($allowed-annotations, concat(' ', @type, ' ')))">
+      <xsl:message terminate="yes">
+ ERROR: admonition found with unsupported type=<xsl:value-of select="@type"/>
+   allowed values: <xsl:value-of select="$allowed-annotations" />
+      </xsl:message>
+    </xsl:if>
+
+    <div>
+      <xsl:attribute name="class">admonition <xsl:value-of select="@type"/></xsl:attribute>
+      <div>
+	<xsl:attribute name="class"><xsl:value-of select="concat(@type, '-inner')"/></xsl:attribute>
+	<xsl:call-template name="add-admonition-image"/>
+
+	<!-- Title handling should be cleaned up -->
+	<xsl:choose>
+	  <xsl:when test="boolean(title)">
+	    <xsl:apply-templates select="title" mode="admonition"/>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <div class="title">
+	      <span class="title">
+		<xsl:choose>
+		  <xsl:when test="@type='caution'">Caution</xsl:when>
+		  <xsl:when test="@type='important'">Important</xsl:when>
+		  <xsl:when test="@type='note'">Note</xsl:when>
+		  <xsl:when test="@type='tip'">Tip</xsl:when>
+		  <xsl:when test="@type='warning'">Warning</xsl:when>
+		  <xsl:otherwise>
+		    <xsl:message terminate="yes">
+ Internal error: unexpected type=<xsl:value-of select="@type"/> when processing
+   admonition block with no title.
+		    </xsl:message>
+		  </xsl:otherwise>
+		</xsl:choose>
+	      </span>
+	    </div>
+	  </xsl:otherwise>
+	</xsl:choose>
+	<xsl:apply-templates select="*[name()!='title']"/>
+      </div>
+    </div>
+
+  </xsl:template> <!-- match=admonition/@type -->
+
+  <xsl:template match="admonition">
+    <div class="admonition">
+	<xsl:apply-templates select="title" mode="admonition"/>
+	<xsl:apply-templates select="*[name()!='title']"/>
+    </div>
+  </xsl:template> <!-- match=admonition -->
+
+  <xsl:template match="title" mode="admonition">
+    <div class="title">
+      <span class="title"><xsl:apply-templates/></span>
+    </div>
+  </xsl:template> <!-- match=title mode=admonition -->
+
+  <!--* Add an an image tag for the admonition -->
+  <xsl:template name="add-admonition-image">
+    <xsl:if test="boolean(@type)">
+      <!--*
+	  * TODO: do we want to add a class to this?
+	  *-->
+      <xsl:call-template name="add-image">
+	<xsl:with-param name="src" select="concat('imgs/', @type,'.png')"/>
+	<xsl:with-param name="alt" select="translate(@type, 'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template> <!-- name=add-admonition-image -->
 
 </xsl:stylesheet>

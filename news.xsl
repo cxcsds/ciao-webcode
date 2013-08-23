@@ -42,6 +42,10 @@
       <xsl:with-param name="pname"  select="'install'"/>
       <xsl:with-param name="pvalue" select="$install"/>
     </xsl:call-template>
+    <xsl:call-template name="check-param-ends-in-a-slash">
+      <xsl:with-param name="pname"  select="'canonicalbase'"/>
+      <xsl:with-param name="pvalue" select="$canonicalbase"/>
+    </xsl:call-template>
 
     <!--* what do we create *-->
     <xsl:apply-templates select="news" mode="main"/>

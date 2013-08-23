@@ -677,49 +677,41 @@
     <xsl:if test="count(text/sectionlist/section) > 1">
       <!--* Table of contents, list of parameter files, history *-->
 
-      <!--* should this be sent in to the stylesheet ? *-->
-      <xsl:variable name="pageName" select="djb:get-index-page-name()"/>
-
       <h2><a name="toc">Contents</a></h2>
 
       <ul>
 	<!--* Sections & Subsections *-->
 	<xsl:apply-templates select="text/sectionlist/section" mode="toc">
-	  <xsl:with-param name="pageName" select="$pageName"/>
+	  <xsl:with-param name="pageName" select="'index.html'"/>
 	</xsl:apply-templates>
 	      
 	<!--* do we have a summary? *-->
 	<xsl:if test="boolean(text/summary)">
-	  <li><a href="{$pageName}#summary"><strong>Summary</strong></a></li>
+	  <li><a href="index.html#summary"><strong>Summary</strong></a></li>
 	</xsl:if>
 	      
 	<!--* Parameter files (if any) *-->
 	<xsl:if test="boolean(parameters)">
 	  <xsl:apply-templates select="parameters" mode="toc">
-	    <xsl:with-param name="pageName" select="$pageName"/>
+	    <xsl:with-param name="pageName" select="'index.html'"/>
 	  </xsl:apply-templates>
 	</xsl:if>
 
     <xsl:if test="$site != 'pog'">	      
 	<!--* History *-->
-	<li><strong><a href="{$pageName}#history">History</a></strong></li>
+	<li><strong><a href="index.html#history">History</a></strong></li>
  	</xsl:if>
 
-	<!--* safety check to make sure we do not mix up old and new figure styles (really needed?) *-->
-	<xsl:if test="boolean(images) and boolean(//figure)">
-	  <xsl:message terminate="yes">
- ERROR: thread contains an images block and at least one figure block!
-	  </xsl:message>
-	</xsl:if>
-	
 	<!--* Images (if any) *-->
 	<xsl:if test="boolean(images)">
 	  <xsl:message terminate="yes">
- ERROR: thread contains an images block, which has been deprecated.  
-        Please update to use a figure block instead.
+
+ ERROR: the thread contains an images block, which is no longer valid.  
+        Please update to use a figure block instead. See Doug for help.
+
 	  </xsl:message>	 
-<!--	  <xsl:apply-templates select="images" mode="toc"/>-->
 	</xsl:if>
+
 	<xsl:if test="boolean(//figure)">
 	  <li>
 	    <strong>Images</strong>
@@ -1245,108 +1237,12 @@ or do we, as this case is already caught in add-parameters?
 
   </xsl:template> <!--* name=add-thread-qlinks *-->
 
-  <!--*** handle images ***-->
-
-  <!--*
-      * list the images in the table of contents
-      *
-      * Parameters:
-      *
-      *-->
-
-  <xsl:template match="images" mode="toc">
-
-    <li>
-      <strong>Images</strong>
-      <ul>
-	<xsl:apply-templates select="image" mode="toc"/>
-      </ul>
-    </li>
-  </xsl:template> <!--* match=images mode=toc *-->
-
-  <!--*
-      * Link to an image in the TOC
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template match="image" mode="toc">
-
-    <xsl:variable name="thispos" select="position()"/>
-    <xsl:variable name="id" select="../image[position()=$thispos]/@id"/>
-
-    <xsl:variable name="langid"><xsl:choose>
-      <xsl:when test="$proglang=''"/>
-      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
-    <li>
-      <a>
-	<xsl:attribute name="href">
-	  <xsl:value-of select="concat('img',$thispos,$langid,'.html')"/></xsl:attribute>
-	<xsl:value-of select='title'/>
-      </a>
-    </li>
-  </xsl:template> <!--* match=image mode=toc *-->
-
   <!--*
       * add a separator between "sections"
       *-->
   <xsl:template name="add-mid-sep">
     <hr class="midsep"/>
   </xsl:template>
-
-  <!--*
-      * return the number of the node (in the set of
-      * input nodes) that has an id attribute matching
-      * an input value. It is used to find the name of the
-      * image HTML file corresponding to a particular image id
-      * [so that we can link to it].
-      *
-      * I'm sure it can be done a better way (eg key()?), but
-      * for know this works and the nodesets we are querying
-      * aren't too large.
-      *
-      * Parameters:
-      *   pos - number, required
-      *     current position of iteration: start at *LAST* node
-      *     ie count($nodes) since we loop downwards
-      *   matchID - string, required
-      *     the value to match against the id attribute
-      *   nodes - nodeset, required
-      *     the set of nodes to query
-      *
-      *-->
-  <xsl:template name="find-pos">
-    <xsl:param name="pos"    select="1"/>
-    <xsl:param name="matchID" select="''"/>
-    <xsl:param name="nodes"/>
-
-    <!--* note: we start the loop at the last node and loop down *-->
-    <xsl:if test="$pos=0">
-      <xsl:message terminate="yes">
-  Error: id=<xsl:value-of select="$matchID"/> does
-    not refer to any known image node.
-
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:variable name="node" select="$nodes[position()=$pos]"/>
-    <xsl:choose>
-      <xsl:when test="$node[@id=$matchID]">
-	<xsl:value-of select="$pos"/>
-      </xsl:when>
-
-      <xsl:otherwise>
-	<xsl:call-template name="find-pos">
-	  <xsl:with-param name="matchID" select="$matchID"/>
-	  <xsl:with-param name="pos"     select="$pos - 1"/>
-	  <xsl:with-param name="nodes"   select="$nodes"/>
-	</xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
-
-  </xsl:template> <!--* name=find-pos *-->
 
   <!--*** handle parameters ***-->
 
@@ -1486,114 +1382,11 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
    </xsl:choose>
  </xsl:template> <!--* name=check-plist-name-exists *-->
 
-
-
   <!--*
-      * create img<n>.html files
-      *
-      * image tag: create the HTML files
-      *  attributes:
-      *    src - string, required
-      *          name of image in gif/jpeg format
-      *    id  - string, required
-      *          used to tie in with imglink, and 
-      *          allow "back to thread" link
-      *
-      *    ps  - string, optional
-      *          name of postscript (ps/eps) image
-      *
-      * The output HTML file is called img<n>.html,
-      * where <n> is the position of this image tag
-      * in the list of image tags.
-      *
-      * The output name is ***UNRELATED*** to the value of the
-      * id parameter.
-      *
+      * handle before/after tags in image blocks;
+      * This can probably be removed now we use figure blocks
+      * instead.
       *-->
-
-  <xsl:template match="image" mode="list">
-
-    <xsl:variable name="langid"><xsl:choose>
-      <xsl:when test="$proglang=''"/>
-      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
-    <xsl:variable name="pos" select="position()"/>
-    <xsl:variable name="filename" select='concat($install,"img",$pos,$langid,".html")'/>
-    <xsl:variable name="imgname" select='concat("Image ",$pos)'/>
-    <xsl:variable name="imgtitle" select="title"/>
-
-    <xsl:variable name="endstr"><xsl:if test="$proglang != ''"><xsl:value-of select="concat(' (',djb:get-proglang-string(),')')"/></xsl:if></xsl:variable>
-
-    <xsl:document href="{$filename}" method="html" media-type="text/html" 
-      version="4.0" encoding="utf-8">
-
-      <!--* get the start of the document over with *-->
-      <xsl:call-template name="add-start-html"/>
-
-      <!--* make the HTML head node *-->
-      <xsl:call-template name="add-htmlhead">
-	<xsl:with-param name="title"><xsl:value-of select="concat($imgname,$endstr)"/></xsl:with-param>
-      </xsl:call-template>
-      
-      <!--* add disclaimer about editing the HTML file *-->
-      <xsl:call-template name="add-disclaimer"/>
-      
-      <!--* make the header *-->
-      <xsl:call-template name="add-header"/>
-
-      <!--* link back to thread *-->
-      <div class="topbar">
-	<div class="qlinkbar">
-	  <a href="{djb:get-index-page-name()}#{@id}">Return to thread</a>
-	</div>
-      </div>
-
-      <div class="mainbar">
-	  
-	<!-- set up the title block of the page -->
-	<h2><xsl:value-of select="concat($imgname,': ',title,$endstr)"/></h2>
-	<hr/>
-
-	<!--* "pre-image" text *-->
-	<xsl:if test="boolean(before)">
-	  <xsl:apply-templates select="before"/>
-	</xsl:if>
-	  
-	<!--* image *-->
-	<img src="{@src}" alt="[{$imgname}: {$imgtitle}]"/>
-	<xsl:if test="boolean(@ps)">
-	  <p>
-	    <a href="{@ps}">Postscript version of image</a>
-	  </p>
-	</xsl:if>
-
-	<!--* "post-image" text *-->
-	<xsl:if test="boolean(after)">
-	  <xsl:apply-templates select="after"/>
-	</xsl:if>
-
-      </div>
-
-      <!--* link back to thread *-->
-      <div class="bottombar">
-	<a href="{djb:get-index-page-name()}#{@id}">Return to thread</a>
-      </div>
-
-      <!--* add the footer text *-->
-      <xsl:call-template name="add-footer">
-	<xsl:with-param name="name"  select="//thread/info/name"/>
-      </xsl:call-template>
-
-      <!--* add </body> tag [the <body> is added by the add-htmlhead template] *-->
-      <xsl:call-template name="add-end-body"/>
-      <xsl:call-template name="add-end-html"/>
-
-    </xsl:document>
-
-  </xsl:template> <!--* match=image mode=list *-->
-
-  <!--* handle before/after tags in image blocks *-->
   <xsl:template match="before|after">
     <xsl:apply-templates/>
   </xsl:template>
@@ -1663,89 +1456,15 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
      </xsl:choose>
   </xsl:template> <!--* match=dataset *-->
 
-  <!--*
-      * handle imglink tags 
-      * 
-      *  attributes:
-      *    src - string, required
-      *          name of image in gif/jpeg format
-      *    id  - string, required
-      *          used to tie in with imglink, and 
-      *          allow "back to thread" link
-      *
-      * This template uses the find-pos template to
-      * find the number of the image node (in the list
-      * of image nodes) that has an id attribute that
-      * matches the input id attribute.
-      * Not elegant, but it works.
-      * In fact, it's made even less elegant by the fact that
-      * imglink can be used in included files, which don't have
-      * the same structure as the thread, and so we have to
-      * explicitly process the thread.xml document...
-      *
-      * We now take the location/width/height of the icon to use
-      * from the imglinkicon[width/height] parameters which are
-      * set by the calling process [user-defined in the config file]
-      *
-      *-->
-
+  <!--* INVALID *-->
   <xsl:template match="imglink">
+    <xsl:message terminate="yes">
 
-    <!--*
-        * get the name of the file that this link links to
-        * - must be a better way of doing this
-        * - since can't guarantee we'll be called with the thread
-        *   as the 'context document', due to include files, we
-        *   have to get the image nodes from the thread using document()
-        *-->
-    <xsl:variable name="nodes" select="document(concat($sourcedir,'thread.xml'))//thread/images/image"/>
+ ERROR: The thread contains an imglink tag; you should be using the
+   figure environment/figlink instead. See Doug for help.
 
-    <xsl:variable name="pos">
-      <xsl:call-template name="find-pos">
-	<xsl:with-param name="matchID" select="@id"/>
-	<xsl:with-param name="pos"     select="count($nodes)"/>
-	<xsl:with-param name="nodes"   select="$nodes"/>
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsl:variable name="langid"><xsl:choose>
-      <xsl:when test="$proglang=''"/>
-      <xsl:otherwise><xsl:value-of select="concat('.',$proglang)"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
-    <xsl:variable name="href">
-      <xsl:value-of select="concat('img',$pos,$langid,'.html')"/>
-    </xsl:variable>
-
-    <!--* need an anchor so that we can link back to the text *-->
-    <a name="{@id}" href="{$href}">
-
-      <xsl:apply-templates/>
-
-      <xsl:variable name="getID" select="@id"/>
-      <xsl:variable name="alttext" select="document(concat($sourcedir,'thread.xml'))//thread/images/image[@id=$getID]/title"/>
-
-      <xsl:call-template name="add-nbsp"/>
-      <xsl:call-template name="add-image">
-	<xsl:with-param name="src"    select="$imglinkicon"/>
-	<xsl:with-param name="alt">Link to Image <xsl:value-of select="$pos"/>: <xsl:value-of select="$alttext"/></xsl:with-param>
-	<xsl:with-param name="width"  select="$imglinkiconwidth"/>
-	<xsl:with-param name="height" select="$imglinkiconheight"/>
-	<xsl:with-param name="border" select="0"/>
-      </xsl:call-template>
-    </a>
-
-  </xsl:template> <!--* match=imglink *-->
-
-  <!--*
-      * Intended for use after displaying the thread title
-      *-->
-  <xsl:template name="add-proglang-sub-header">
-    <xsl:choose>
-      <xsl:when test="$proglang = ''"/>
-      <xsl:otherwise><p>[<xsl:value-of select="djb:get-proglang-string()"/> Syntax]</p></xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
+    </xsl:message>
+  </xsl:template> <!--* match=imglink -->
 
   <!--*
       * Display the thread title in its own block,
@@ -1777,7 +1496,6 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
 	<xsl:when test="$site = 'pog'">Proposer Threads (<xsl:value-of select="$siteversion"/>)</xsl:when>
       </xsl:choose></p>
 	  
-      <xsl:call-template name="add-proglang-sub-header"/>
     </div>
     <xsl:call-template name="add-hr-strong"/>
   </xsl:template>
@@ -1794,26 +1512,23 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
       <xsl:when test="boolean($threadInfo/title/short)"><xsl:value-of select="$threadInfo/title/short"/></xsl:when>
       <xsl:otherwise><xsl:value-of select="$threadInfo/title/long"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
-
-    <xsl:variable name="endstr"><xsl:if test="$proglang != ''">
-      <xsl:value-of select="concat(' (',djb:get-proglang-string(),')')"/>
-    </xsl:if></xsl:variable>
-
-      <xsl:choose>
-	<!--// don't put siteversion in head of CSC threads //-->
-	<xsl:when test="$site = 'csc' or $site = 'chart'">
-	  <xsl:call-template name="add-htmlhead">
-            <xsl:with-param name="title" select="concat($start,' - ',djb:get-sitename-string(),' ',$endstr)"/>
-	  </xsl:call-template>
-	</xsl:when>
-
-	<xsl:otherwise>
-	  <xsl:call-template name="add-htmlhead">
-            <xsl:with-param name="title" select="concat($start,' - ',$headtitlepostfix,$endstr)"/>
-	  </xsl:call-template>
-	</xsl:otherwise>
-      </xsl:choose>
-
+    
+    <xsl:choose>
+      <!--// don't put siteversion in head of CSC threads //-->
+      <xsl:when test="$site = 'csc' or $site = 'chart'">
+	<xsl:call-template name="add-htmlhead">
+	  <xsl:with-param name="title" select="concat($start,' - ',djb:get-sitename-string())"/>
+	</xsl:call-template>
+      </xsl:when>
+      
+      <xsl:otherwise>
+	<xsl:call-template name="add-htmlhead">
+	  <xsl:with-param name="title" select="concat($start,' - ',$headtitlepostfix)"/>
+	  <xsl:with-param name="page" select="'index.html'"/>
+	</xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+    
   </xsl:template> <!--* name=add-htmlhead-site-thread *-->
 
   <!--*
@@ -1836,14 +1551,6 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
   </func:function>
 
   <!--*
-      * Returns the name of the page - index.html, index.sl.html, or
-      * index.py.html 
-      *-->
-  <func:function name="djb:get-index-page-name">
-    <func:result>index<xsl:if test="$proglang != ''">.<xsl:value-of select="$proglang"/></xsl:if>.html</func:result>
-  </func:function>
-
-  <!--*
       * For those threads that want a common look and feel, use
       * these templates.
       *-->
@@ -1851,13 +1558,11 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
   <!--*
       * create:
       *    $install/index.html
-      * or
-      *    $install/index.<proglang>.html
       *-->
   <xsl:template match="thread" mode="html-viewable-standard">
     
     <xsl:variable name="filename"
-		  select="concat($install,djb:get-index-page-name())"/>
+		  select="concat($install,'index.html')"/>
 
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html" 

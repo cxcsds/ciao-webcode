@@ -34,9 +34,7 @@
       *-->
   <xsl:template match="cxchelptopics">
     <xsl:variable name="filename"><xsl:value-of select="$outdir"/><xsl:value-of select="$outname"/>.html</xsl:variable>
-
-    <!--// needed for canonical link //-->
-    <xsl:variable name="url" select="concat('http://cxc.harvard.edu/',$site,'/ahelp/',$outname,'.html')"/>
+    <xsl:variable name="title">Ahelp: <xsl:value-of select="ENTRY/@key"/> - <xsl:value-of select="$headtitlepostfix"/></xsl:variable>
 
     <!--* output filename to stdout *-->
     <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
@@ -47,7 +45,7 @@
       
       <html lang="en">
 	<head>
-	  <title>Ahelp: <xsl:value-of select="ENTRY/@key"/> - <xsl:value-of select="$headtitlepostfix"/></title>
+	  <title><xsl:value-of select="$title"/></title>
 
 	  <link rel="canonical" href="{$url}"/> 
 
@@ -61,6 +59,10 @@
 }
 </style>
 
+          <xsl:call-template name="add-sao-metadata">
+	    <xsl:with-param name="title" select="normalize-space($title)"/>
+	  </xsl:call-template>
+          
 	</head>
 
 	<!--* add header and banner *-->
@@ -1017,15 +1019,12 @@
 
 	  <xsl:choose>
 	    <!-- CIAO site includes the bug page text -->
-	    <xsl:when test="boolean(document(string(concat($dname,'/../bugs/',$outname,'.xml'))))">
-              <xsl:call-template name="add-ssi-include">
-		<xsl:with-param name="file" select="$bugincl"/>
-              </xsl:call-template>
+	    <xsl:when test="$have-bugs-external">
+	      <xsl:copy-of select="$bugs-contents/slug/*"/>
 	    </xsl:when>
 
 	    <xsl:otherwise>
 	      <xsl:apply-templates/>
-
 	      <p>
 		Refer to the <a href="/ciao/bugs/">CIAO bug pages</a> for an up-to-date listing of known issues.
 	      </p>
@@ -1043,20 +1042,18 @@
   <!--*
       * 
       * add a release notes block, if it exists
+      *
+      * TODO: convert to using XInclude to add the data rather than a SSI
       * 
       *-->
 
   <xsl:template name="add-relnotes">
-    <xsl:variable name="relincl"><xsl:text>../releasenotes/ciao_</xsl:text><xsl:value-of select="$version"/>.<xsl:value-of select="$outname"/>.incl.html</xsl:variable>
-
     <!-- include the release note text -->
-    <xsl:if test="boolean(document(string(concat($outdir,$relincl))))">
+    <xsl:if test="$have-relnotes">
 
       <h3><a name="relnotes">Changes in CIAO <xsl:value-of select="$version"/></a></h3>
 
-      <xsl:call-template name="add-ssi-include">
-	<xsl:with-param name="file" select="$relincl"/>
-      </xsl:call-template>
+      <xsl:copy-of select="$relnotes-contents/slug/*"/>
     </xsl:if>
   </xsl:template> <!--* relnotes *-->
 

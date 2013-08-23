@@ -117,11 +117,6 @@
   <!--* not used: just to stop ahelp_common.xsl from complaining (or I've made a mistake ...) *-->
   <xsl:param name="depth" value="''"/>
 
-  <!--* current date (for the 'last modified' date) *-->
-  <xsl:variable name="dt" select="date:date-time()"/>
-  <xsl:variable name="lastmod"
-    select="concat(date:day-in-month($dt),' ',date:month-name($dt),' ',date:year($dt))"/>
-
   <!--*
       * Start processing here: "/"
       *   
@@ -556,6 +551,7 @@
 
 	<xsl:call-template name="add-htmlhead">
 	  <xsl:with-param name="title">Ahelp (alphabetical) - <xsl:value-of select="$headtitlepostfix"/></xsl:with-param>
+	  <xsl:with-param name="pagename" select="$pagename"/>
 	</xsl:call-template>
 
 	<!--* add header and banner *-->
@@ -759,6 +755,7 @@
 
 	<xsl:call-template name="add-htmlhead">
 	  <xsl:with-param name="title">Ahelp (contextual) - <xsl:value-of select="$headtitlepostfix"/></xsl:with-param>
+	  <xsl:with-param name="pagename" select="$pagename"/>
 	</xsl:call-template>
 
 	<!--* add header and banner *-->
@@ -971,10 +968,12 @@
       *
       * input variables:
       *   title - string, required
+      *   pagename - string, required
       *   withcss - 0 or 1, defaults to 1
       *-->
   <xsl:template name="add-htmlhead">
     <xsl:param name='title'/>
+    <xsl:param name='pagename'/>
     <xsl:param name='withcss' select="1"/>
 
     <head>
@@ -985,6 +984,13 @@
 	<link rel="stylesheet" title="Default stylesheet for CIAO-related pages" href="{$cssfile}"/>
 	<link rel="stylesheet" title="Default stylesheet for CIAO-related pages" media="print" href="{$cssprintfile}"/>
       </xsl:if>
+
+      <!-- canonical link -->
+      <link rel="canonical" href="{concat($urlbase, 'ahelp/', $pagename, '.html')}"/>
+
+      <xsl:call-template name="add-sao-metadata">
+	<xsl:with-param name="title" select="normalize-space($title)"/>
+      </xsl:call-template>
 
     </head>
   </xsl:template> <!--* add-htmlhead *-->

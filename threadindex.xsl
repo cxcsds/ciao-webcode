@@ -51,6 +51,10 @@
       <xsl:with-param name="pname"  select="'threadDir'"/>
       <xsl:with-param name="pvalue" select="$threadDir"/>
     </xsl:call-template>
+    <xsl:call-template name="check-param-ends-in-a-slash">
+      <xsl:with-param name="pname"  select="'canonicalbase'"/>
+      <xsl:with-param name="pvalue" select="$canonicalbase"/>
+    </xsl:call-template>
     <!--* end checks *-->
 
     <xsl:apply-templates select="threadindex" mode="make-index"/>

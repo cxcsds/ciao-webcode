@@ -49,12 +49,14 @@
 
     <!--* check the params are okay *-->
     <xsl:call-template name="is-site-valid"/>
-    <xsl:if test="substring($install,string-length($install))!='/'">
-      <xsl:message terminate="yes">
-  Error: install parameter must end in a / character.
-    install=<xsl:value-of select="$install"/>
-      </xsl:message>
-    </xsl:if>
+    <xsl:call-template name="check-param-ends-in-a-slash">
+      <xsl:with-param name="pname"  select="'install'"/>
+      <xsl:with-param name="pvalue" select="$install"/>
+    </xsl:call-template>
+    <xsl:call-template name="check-param-ends-in-a-slash">
+      <xsl:with-param name="pname"  select="'canonicalbase'"/>
+      <xsl:with-param name="pvalue" select="$canonicalbase"/>
+    </xsl:call-template>
 
     <!--* check there's a navbar element *-->
     <xsl:if test="boolean(dictionary/info/navbar) = false()">
@@ -167,12 +169,15 @@
 	<!--*
             * make the HTML head node
             *
-            * note: need to supply the text for the page title
-            *       since document title will be too long (in general)
-            *
             *-->
 	<xsl:call-template name="add-htmlhead">
-	  <xsl:with-param name="title">Dictionary Entry<xsl:if test="$texttitlepostfix!=''"><xsl:value-of select="concat(' - ',$texttitlepostfix)"/></xsl:if></xsl:with-param>
+	  <!-- We used to just have this as Dictionary Entry rather than the actual
+	       title, in case it was too long, but have changed this
+	       -->
+	  <xsl:with-param name="title">
+	    <xsl:value-of select="concat('Dictionary: ', normalize-space(title))"/><xsl:if test="$texttitlepostfix!=''"><xsl:value-of select="concat(' - ',$texttitlepostfix)"/></xsl:if>
+	  </xsl:with-param>
+	  <xsl:with-param name="page" select="concat(@id, '.html')"/>
 	</xsl:call-template>
 
 	<!--* add disclaimer about editing this HTML file *-->

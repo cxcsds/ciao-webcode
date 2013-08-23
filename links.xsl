@@ -18,12 +18,6 @@
   <xsl:variable name="ahelpindexfile" select="document($ahelpindex)"/>
 
     * 
-    * Thread support:
-    *   We have added support for the proglang attribute to threadlink tags, and
-    *   the /thread/info/proglang tags to thread pages. This complicates thread
-    *   linking, since we have to check the storage location for the given thread
-    *   to see if the thread has language-specific versions.
-    * 
     * Thoughts:
     * - a number of links go to the 'index' page (eg ahelp)
     *   when no attribute is given whereas some tags have a separate
@@ -36,13 +30,14 @@
     * - a number of tags are essentially the same (eg dpguide, caveat, aguide, why)
     *   so they should all be thin wrappers around a single template
     *
+    * - checks on thread/faq/dictionary can lead to repeated reads of the same
+    *   file; it is not worth optimising this away at the moment.
+    *
     * To do:
     *   We link to /ciao/... or /$site/... when we may want to go to the
     *   beta version of that page instead. How do we handle this?
     *   Perhaps we need to consider ciaobeta a new site, etc.
-    *-->
-
-<!--* 
+    *
     * handle links
     *
     * Requires:
@@ -65,7 +60,8 @@
   xmlns:exsl="http://exslt.org/common"
   xmlns:func="http://exslt.org/functions"
   xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
-  extension-element-prefixes="exsl func djb">
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="exsl func djb extfuncs">
 
   <!--* we don't like "a" tags! *-->
   <xsl:template match="a|A">
@@ -242,10 +238,11 @@
       * clean up the input documents (all part of the move to per-site
       * ahelp files in the CIAO 4 series of releases).
       *
-      * In CIAO 4 we have added the $proglang variable which, if set,
+      * In CIAO 4 we added the $proglang variable which, if set,
       * is used to determine which of the context=sl.*/py.*  files
       * to link to. If $proglang is not set and you have context=sl.*/py.*
-      * matches, we automatically link to both. 
+      * matches, we automatically link to both. This is being removed in
+      * CIAO 4.5 since it hasn't been needed since CIAO 4.2. 
       *-->
 
 
@@ -302,61 +299,27 @@
     <xsl:variable name="namematches" select="$ahelpindexfile//ahelp[key=$name]"/>
     <xsl:variable name="num" select="count($namematches)"/>
 
-    <!-- This is now handled by add-ahelp-single-context;
-         TODO - work out if needed for add-ahelp-multiple-context
-
-    <xsl:if test="$num=0">
-	<xsl:message terminate="yes">
-
- ERROR: have ahelp tag with unknown name of <xsl:value-of select="$name"/> 
-
-      </xsl:message>
-    </xsl:if>
-    -->
-
-    <!--*
-        * Hack to link to both sl.* and py.* versions of a file if they
-	* exist and $proglang is not set.
-	*-->
-    <xsl:variable name="have-sl-py-context"
-		  select="$num = 2 and
-			  (substring($namematches[1]/context,1,3) = 'sl.' or substring($namematches[1]/context,1,3) = 'py.')
-			  and
-			  (substring($namematches[2]/context,1,3) = 'sl.' or substring($namematches[2]/context,1,3) = 'py.')"/>
-
-    <xsl:choose>
-      <xsl:when test="$have-sl-py-context and $proglang = '' and boolean(@context)=false()">
-	<xsl:call-template name="add-ahelp-multiple-context">
-	  <xsl:with-param name="name" select="$name"/>
-	  <xsl:with-param name="namematches" select="$namematches"/>
-	  <xsl:with-param name="num" select="$num"/>
-	</xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:call-template name="add-ahelp-single-context">
-	  <xsl:with-param name="name" select="$name"/>
-	  <xsl:with-param name="namematches" select="$namematches"/>
-	  <xsl:with-param name="num" select="$num"/>
-	  <xsl:with-param name="have-sl-py-context" select="$have-sl-py-context"/>
-	</xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="add-ahelp-context">
+      <xsl:with-param name="name" select="$name"/>
+      <xsl:with-param name="namematches" select="$namematches"/>
+      <xsl:with-param name="num" select="$num"/>
+    </xsl:call-template>
 
   </xsl:template> <!--* ahelp *-->
 
   <!--*
-      * An ahelp link to a single file (ie not to both sl.* and py.*
-      * versions of the same ahelp file).
+      * An ahelp link to a single file (no longer need to split out from ahelp
+      * as we no longer support the "multiple" contexts for Python and S-Lang
+      * versions, but left as a separate template for now).
       *
       * For development versions we do not require that the ahelp file is present
       * (a screen message will be displayed if it is not), but for the live
       * version the ahelp file must have already been published.
       *-->
-  <xsl:template name="add-ahelp-single-context">
+  <xsl:template name="add-ahelp-context">
     <xsl:param name="name"/>
     <xsl:param name="namematches"/>
     <xsl:param name="num"/>
-    <xsl:param name="have-sl-py-context"/>
 
     <xsl:variable name="context"><xsl:choose>
 	<xsl:when test="boolean(@context)"><xsl:value-of select="@context"/></xsl:when>
@@ -365,13 +328,6 @@
 	<xsl:when test="$num=0 and $type!='live'">unknown</xsl:when>
 	
 	<xsl:when test="$num=1"><xsl:value-of select="$namematches/context"/></xsl:when>
-
-	<!--*
-	    * Handle sl/py.* versions when $proglang is set. It is a bit cumbersome.
-	    *-->
-	<xsl:when test="$proglang != '' and $have-sl-py-context">
-	  <xsl:value-of select="$namematches[substring(context,1,2)=$proglang]/context"/>
-	</xsl:when>
 
 	<xsl:otherwise>
 	  <xsl:message terminate="yes">
@@ -409,6 +365,7 @@
 
 	    </xsl:message>
 	    <xsl:apply-templates/>
+	    <!-- allow the page to be published but make it obvious a link is missing -->
 	    <xsl:value-of select="concat('{*** ahelp link to key=',$name,' context=',$context,' ***}')"/>
 	  </xsl:otherwise>
 	</xsl:choose>
@@ -521,97 +478,68 @@
       </xsl:otherwise>
     </xsl:choose>
 
-  </xsl:template> <!--* name=add-ahelp-single-context *-->
+  </xsl:template> <!--* name=add-ahelp-context *-->
 
   <!--*
-      * An ahelp link to a file with both sl.* and py.* contexts,
-      * so we link to both of them.
+      * Error out if there is no faq entry for the id value.
+      * The faq-contents parameter is the node set containing
+      * the faq/index.xml file. The sitevalue parameter is
+      * the site of the faq (used for an error message).
+      *
+      * There is a special case so that when we publish the
+      * ditionary we do not error out if the faq has not been
+      * published yet (so that we can avoid a loop as the
+      * dictionary is very likely to refer to a least one faq),
+      * so without this we couldn't publish anything.
       *-->
-  <xsl:template name="add-ahelp-multiple-context">
-    <xsl:param name="name"/>
-    <xsl:param name="namematches"/>
-    <xsl:param name="num"/>
+  <xsl:template name="validate-faq-link">
+    <xsl:param name="faq-contents"/>
+    <xsl:param name="id"/>
+    <xsl:param name="sitevalue"/>
 
-    <!--* do not allow param matches here *-->
-    <xsl:if test="boolean(@param)">
-      <xsl:message terminate="yes">
- ERROR: ahelp tag should not have param attribute (set to '<xsl:value-of select="@param"/>') for
-        name=<xsl:value-of select="$name"/>
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:variable name="slmatch" select="$namematches[substring(context,1,2)='sl']"/>
-    <xsl:variable name="pymatch" select="$namematches[substring(context,1,2)='py']"/>
-
-    <!--* what site is the ahelp page on (assume the same for both links)? *-->
-    <xsl:variable name="ahelpsite" select="$slmatch/site"/>
-
-    <!--*
-        * The ahelp page is either in this site or another one
-        *-->
-    <xsl:variable name="hrefstart"><xsl:choose>
-      <xsl:when test="$site != $ahelpsite"><xsl:value-of select="concat('/',$ahelpsite,'/ahelp/')"/></xsl:when>
-      <xsl:otherwise><xsl:call-template name="add-start-of-href">
-	<xsl:with-param name="extlink" select="0"/>
-	<xsl:with-param name="dirname" select="'ahelp/'"/>
-      </xsl:call-template></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
-    <!--* process the contents, surrounded by styles *-->
-    <xsl:call-template name="add-text-styles">
-      <xsl:with-param name="contents">
-        <xsl:attribute name="class">helplink</xsl:attribute>
-
+    <xsl:variable name="nfaq" select="count($faq-contents/faq)"/>
+    <xsl:choose>
+      <xsl:when test="$nfaq = 0">
+	
 	<xsl:choose>
-	  <xsl:when test=".!=''"><xsl:apply-templates/></xsl:when>
-
+	  <!--* This will fail if the dictionary includes a file and the
+	      * included text contains a faq link, but worry about that if
+	      * it happens -->
+	  <xsl:when test="name(//*) = 'dictionary'">
+	    <xsl:message terminate="no">
+ WARNING: the dictionary contains a FAQ link but the FAQ has not been
+  published yet. Please publish the FAQ and then re-publish the dictionary.
+            </xsl:message>
+	  </xsl:when>
 	  <xsl:otherwise>
-	    <xsl:call-template name="handle-uc">
-	      <xsl:with-param name="uc"   select="boolean(@uc) and @uc=1"/>
-	      <xsl:with-param name="text" select="@name"/>
-	    </xsl:call-template>
+	    <xsl:message terminate="yes">
+ ERROR: the FAQ (site=<xsl:value-of select="$sitevalue"/>) has not been published yet, so I can not
+  check whether the link for id=<xsl:value-of select="$id"/> is valid!
+            </xsl:message>
 	  </xsl:otherwise>
 	</xsl:choose>
+      </xsl:when>
 
-	<xsl:text> (</xsl:text>
-	<a>
-	  <xsl:attribute name="class">helplink</xsl:attribute>
-	  <xsl:if test="$slmatch/summary!=''">
-	    <xsl:attribute name="title">Ahelp (<xsl:value-of select="$slmatch/context"/>): <xsl:value-of select="$slmatch/summary"/></xsl:attribute>
-	  </xsl:if>
+      <xsl:otherwise>
+	<xsl:variable name="nid" select="count($faq-contents//faqentry[@id=$id])"/>
+	<xsl:choose>
+	  <xsl:when test="$nid = 1"/>
+	  <xsl:when test="$nid = 0">
+	    <xsl:message terminate="yes">
+ ERROR: there is no known FAQ entry with id=<xsl:value-of select="$id"/>
+            </xsl:message>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:message terminate="yes">
+ ERROR: there are *multiple* FAQ entries with id=<xsl:value-of select="$id"/>
+   this should have been caught when the FAQ was published!
+            </xsl:message>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
 
-	  <xsl:attribute name="href">
-	    <xsl:value-of select="$hrefstart"/>
-	    <xsl:value-of select="$slmatch/page"/>
-	    <xsl:text>.html</xsl:text>
-	    <xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
-	  </xsl:attribute>
-
-	  <xsl:text>S-Lang</xsl:text>
-	</a>
-	<xsl:text> or </xsl:text>
-	<a>
-	  <xsl:attribute name="class">helplink</xsl:attribute>
-	  <xsl:if test="$pymatch/summary!=''">
-	    <xsl:attribute name="title">Ahelp (<xsl:value-of select="$pymatch/context"/>): <xsl:value-of select="$pymatch/summary"/></xsl:attribute>
-	  </xsl:if>
-
-	  <xsl:attribute name="href">
-	    <xsl:value-of select="$hrefstart"/>
-	    <xsl:value-of select="$pymatch/page"/>
-	    <xsl:text>.html</xsl:text>
-	    <xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
-	  </xsl:attribute>
-
-	  <xsl:text>Python</xsl:text>
-	</a>
-	<xsl:text> help)</xsl:text>
-
-
-      </xsl:with-param>
-    </xsl:call-template> <!--* add-text-styles *-->
-    
-  </xsl:template> <!--* name=add-ahelp-multiple-context *-->
+  </xsl:template> <!--* name=validate-faq-link *-->
 
   <!--*
       * handle FAQ tags:
@@ -626,6 +554,14 @@
       *   a faq link in the ciao   pages links to the CIAO faq
       *   a faq link in the sherpa pages links to the Sherpa faq
       *   a faq link elsewhere assumes the CIAO faq
+      *
+      * The @id/@site value is checked for validity (for live site)
+      *    faq.xml not available, then error out
+      *      as long this is not the dictionary page (not 100% reliable test)
+      *      (this is to allow the dictionary to be published, then faq, then
+      *       dictionary)   
+      *    exists but not valid, then error out
+      * At the moment these are also errors for non-live sites
       *-->
 
   <xsl:template match="faq">
@@ -635,40 +571,13 @@
       <xsl:with-param name="tag" select="'id'"/>
     </xsl:call-template>
 
-    <!--* check id attribute *-->
+    <!--* check id attribute (validity check is later) *-->
     <xsl:call-template name="check-id-for-no-html"/>
 
-    <!--* TEMPORARY: throw a wobbly if an old id is supplied *-->
-    <xsl:if test="boolean(@id)">
-      <xsl:if test="starts-with(@id,'general-') or
-	starts-with(@id,'parameter-') or
-	starts-with(@id,'ce-') or
-	starts-with(@id,'firstlook-') or
-	starts-with(@id,'prism-') or
-	starts-with(@id,'filtwin-') or
-	starts-with(@id,'ds9-') or
-	starts-with(@id,'sherpa-') or
-	starts-with(@id,'acis_process_events-') or
-	starts-with(@id,'asphist-') or
-	starts-with(@id,'dmcopy-') or
-	starts-with(@id,'dmextract-') or
-	starts-with(@id,'dmgroup-') or
-	starts-with(@id,'dmhedit-') or
-	starts-with(@id,'dmstat-') or
-	starts-with(@id,'dmtcalc-') or
-	starts-with(@id,'lightcurve-') or
-	starts-with(@id,'mkrmf-') or
-	starts-with(@id,'tg_create_mask') or
-	starts-with(@id,'fullgarf-') or
-	starts-with(@id,'spectrum.sl-')">
-	<xsl:message terminate="yes">
-  Error: it appears that you are using the old style FAQ id
-  (<xsl:value-of select="@id"/>). Please convert to the new one
-  - see /data/da/Docs/ciaoweb/faq_ids
-  If you are using the new one then bug Doug about why I'm complaining.
-	</xsl:message>
-      </xsl:if>
-    </xsl:if>
+    <xsl:variable name="sitevalue"><xsl:choose>
+	<xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
+	<xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
 
     <!--*
         * complicated mess to work out where to link to
@@ -687,13 +596,42 @@
 	  </xsl:call-template></xsl:otherwise>
       </xsl:choose></xsl:variable>
 
+    <xsl:variable name="href"><xsl:value-of select="$hrefstart"/><xsl:if test="boolean(@id)"><xsl:value-of select="@id"/>.html</xsl:if></xsl:variable>
+
+    <!-- create the title for the link and where we check that the id value is
+	 valid -->
+    <xsl:variable name="title"><xsl:choose>
+	<xsl:when test="boolean(@id)">
+
+	  <!--* TODO: maybe this should just be a get-faq-title template 
+	      * which errors out if @id is invalid?
+	      *-->
+
+	  <xsl:variable name="faq-file"><xsl:value-of 
+				select="djb:get-faq-filename($sitevalue)"/></xsl:variable>
+	  <xsl:variable name="faq-contents"
+			select="extfuncs:read-file-if-exists($faq-file)"/>
+
+	  <xsl:call-template name="validate-faq-link">
+	    <xsl:with-param name="faq-contents" select="$faq-contents"/>
+	    <xsl:with-param name="id" select="@id"/>
+	    <xsl:with-param name="sitevalue" select="$sitevalue"/>
+	  </xsl:call-template>
+
+	  <!-- TODO: strip out HTML code? -->
+	  <xsl:variable name="idval" select="@id"/>
+	  <xsl:value-of select="concat('FAQ: ', normalize-space($faq-contents//faqentry[@id=$idval]/title))"/>
+	</xsl:when>
+	<xsl:otherwise>CIAO Frequently Asked Questions</xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
 	<!--* are we linking to the whole file, or a specific part of it? *-->
 	<a>
-	  <xsl:attribute name="title">CIAO Frequently Asked Questions</xsl:attribute>
-	  <xsl:attribute name="href"><xsl:value-of select="$hrefstart"/><xsl:if test="boolean(@id)"><xsl:value-of select="@id"/>.html</xsl:if></xsl:attribute>
+	  <xsl:attribute name="title"><xsl:value-of select="$title"/></xsl:attribute>
+	  <xsl:attribute name="href"><xsl:value-of select="$href"/></xsl:attribute>
 
 	  <!--* text *-->
 	  <xsl:choose>
@@ -707,6 +645,52 @@
   </xsl:template> <!--* faq *-->
 
   <!--*
+      * Error out if there is no dictionary entry for the id value.
+      * The dictionary-contents parameter is the node set containing
+      * the dictionary/index.xml file. The sitevalue parameter is
+      * the site of the dictionary (used for an error message).
+      *
+      *-->
+  <xsl:template name="validate-dictionary-link">
+    <xsl:param name="dictionary-contents"/>
+    <xsl:param name="id"/>
+    <xsl:param name="sitevalue"/>
+
+    <!-- could check on $dictionary-contents/dictionary or dictionary_onepage,
+         to match the FAQ check, but just look for the entries block instead
+         since it's the same in both forms -->
+    <xsl:variable name="ndict" select="count($dictionary-contents//entries)"/>
+    <xsl:choose>
+      <xsl:when test="$ndict = 0">
+	<xsl:message terminate="yes">
+ ERROR: the Dictionary (site=<xsl:value-of select="$sitevalue"/>) has not been published yet, so I can not
+  check whether the link for id=<xsl:value-of select="$id"/> is valid!
+	</xsl:message>
+      </xsl:when>
+
+      <xsl:otherwise>
+	<xsl:variable name="nid" select="count($dictionary-contents//entry[@id=$id])"/>
+	<xsl:choose>
+	  <xsl:when test="$nid = 1"/>
+	  <xsl:when test="$nid = 0">
+	    <xsl:message terminate="yes">
+ ERROR: there is no known Dictionary entry with id=<xsl:value-of select="$id"/>
+     (sitevalue=<xsl:value-of select="$sitevalue"/>)
+            </xsl:message>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:message terminate="yes">
+ ERROR: there are *multiple* Dictionary entries with id=<xsl:value-of select="$id"/>
+   this should have been caught when the Dictionary was published!
+            </xsl:message>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </xsl:template> <!--* name=validate-dictionary-link *-->
+
+  <!--*
       * handle dictionary tags:
       * produces different links depending on whether type=test or live
       *
@@ -717,10 +701,10 @@
       * The id attribute gives the id entry in the dictionary you want to link to
       * If you want to link to just the dictionary then don't supply an id attribute
       *
-      * CURRENTLY links to the CIAO dictionary only
-      *
       * Could make it clever so that it recognises when the root node is dictionary
       * so that we don't add the ../dictionary/ to the url - but can not be bothered
+      *
+      * CIAO dictionary has one page per term, CSC dictionary has a single page.
       *
       *-->
   
@@ -743,9 +727,13 @@
     <!--* check id attribute *-->
     <xsl:call-template name="check-id-for-no-html"/>
 
+    <xsl:variable name="sitevalue"><xsl:choose>
+	<xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
+	<xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
     <!--* are we in the ciao pages or not (ie is this an `external' link or not) *-->
     <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
-
 
     <!--// if there is an attribute, use it 
 	   otherwise, link to the "in-site" dictionary //-->
@@ -769,15 +757,36 @@
       </xsl:otherwise>
       </xsl:choose></xsl:variable>
 
+    <!-- create the title for the link and where we check that the id value is
+	 valid -->
+    <xsl:variable name="title"><xsl:choose>
+	<xsl:when test="boolean(@id)">
+
+	  <xsl:variable name="dictionary-file"><xsl:value-of 
+				select="djb:get-dictionary-filename($sitevalue)"/></xsl:variable>
+	  <xsl:variable name="dictionary-contents"
+			select="extfuncs:read-file-if-exists($dictionary-file)"/>
+
+	  <xsl:call-template name="validate-dictionary-link">
+	    <xsl:with-param name="dictionary-contents" select="$dictionary-contents"/>
+	    <xsl:with-param name="id" select="@id"/>
+	    <xsl:with-param name="sitevalue" select="$sitevalue"/>
+	  </xsl:call-template>
+
+	  <!-- Too laxy to make the 'Dictionary' part contain the site name -->
+	  <xsl:variable name="idval" select="@id"/>
+	  <xsl:value-of select="concat('Dictionary: ', normalize-space($dictionary-contents//entry[@id=$idval]/title))"/>
+	</xsl:when>
+	<xsl:when test="$site = 'csc' or @site = 'csc'">CSC Dictionary</xsl:when>
+	<xsl:otherwise>CIAO Dictionary</xsl:otherwise>
+    </xsl:choose></xsl:variable>
 
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
-	<a>
+	<a title="{$title}">
 	  <xsl:choose>
 	    <xsl:when test="($site != 'csc') or (@site = 'ciao')">
- 	      <xsl:attribute name="title">CIAO Dictionary</xsl:attribute>
-  
 	      <xsl:attribute name="href">
 	        <xsl:value-of select="$hrefstart"/>
 		<xsl:if test="boolean(@id)">
@@ -786,13 +795,18 @@
 	    </xsl:when>
 
 	    <xsl:when test="($site = 'csc') or (@site = 'csc')">
- 	      <xsl:attribute name="title">CSC Dictionary</xsl:attribute>
-  
 	      <xsl:attribute name="href">
 	        <xsl:value-of select="$hrefstart"/>
 		<xsl:if test="boolean(@id)">entries.html#<xsl:value-of select="@id"/></xsl:if>
 	      </xsl:attribute>
 	    </xsl:when>
+
+	    <xsl:otherwise>
+	      <xsl:message terminate="yes">
+ INTERNAL ERROR: when publishing dictionary link (id=<xsl:value-of select="@id"/>)
+   do not recognize $site=<xsl:value-of select="$site"/> @site=<xsl:value-of select="@site"/>
+	      </xsl:message>
+	    </xsl:otherwise>
 	  </xsl:choose>
 
 	  <!--* text *-->
@@ -1597,9 +1611,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *
       * This tag can NOT be used if $site=icxc
       *
-      * Do we need to support use in pages that have /<head>/info/proglang
-      * elements? e.g. <cxclink href="foo">...</cxclink> could link to both
-      * versions automaticallyt (or only one if within a given language page).
       *-->
 
   <xsl:template name="warn-in-cxclink">
@@ -1949,10 +1960,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *   - if the root node is thread, link to the current page
       *   - else throw a wobbly and tell the user to use threadpage (or there's an error). 
       *
-      *  we now support the proglang attribute - which says link to
-      *  a specific language - and the //thread/info/proglang values -
-      *  which indicate what language(s) the thread covers.
-      *
       *  id only is only allowed if the rootnode is thread
       *    OR dummy (ie an include file)
       *
@@ -1960,9 +1967,21 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * thread link tags, which would mean using the short/long title
       * elements for the thread as the link text.
       *
+      * Any threadlink with a proglink attribute is considered an error.
       *-->
 
   <xsl:template match="threadlink">
+
+    <!-- *
+         * NOTE: proglang support has been removed, so error out if
+	 *       any thing uses the proglang attribute.
+         *-->
+    <xsl:if test="boolean(@proglang)">
+	<xsl:message terminate="yes">
+ ERROR: threadlink tag has proglang attribute (value=<xsl:value-of select="@proglang"/>)
+    which is no longer supported; please remove and re-publish.
+	</xsl:message>
+    </xsl:if>
 
     <!--* safety checks *-->
     <xsl:call-template name="check-contents-are-not-empty"/>
@@ -1990,64 +2009,25 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:message>
     </xsl:if>
 
+    <!-- * Left in so that we check that the thread exists -->
     <xsl:variable name="threadInfo" select="djb:read-in-thread-info()"/>
+    <!--
     <xsl:variable name="tInfo" select="exsl:node-set($threadInfo)"/>
     <xsl:variable name="tname" select="$tInfo/name"/>
     <xsl:variable name="nlang" select="count($tInfo/proglang)"/>
+    -->
 
-    <!--*
-	* How do we process the link?
-	* We first handle the obvious error cases
-	*-->
-    <xsl:choose>
-
-      <xsl:when test="boolean(@proglang) and $nlang=0">
-	<xsl:message terminate="yes">
- ERROR: threadlink tag has proglang attribute (value=<xsl:value-of select="@proglang"/>)
-    but the thread (name=<xsl:value-of select="$tname"/>) has no //thread/info/proglang nodes!
-	</xsl:message>
-      </xsl:when>
-
-      <xsl:when test="$nlang = 1 and boolean(@proglang) and @proglang != $tInfo/proglang">
-	<xsl:message terminate="yes">
- ERROR: threadlink tag has proglang attribute=<xsl:value-of select="@proglang"/>
-   but the thread (name=<xsl:value-of select="$name"/>) only has
-   //thread/info/proglang=<xsl:value-of select="$tInfo/proglang"/>
-	</xsl:message>
-      </xsl:when>
-
-      <xsl:when test="$nlang &gt; 0 and (boolean(@proglang) or $proglang != '')">
-	<xsl:call-template name="threadlink-single-proglang">
-	  <xsl:with-param name="in-thread" select="$in-thread"/>
-	</xsl:call-template>
-      </xsl:when>
-
-      <xsl:when test="$nlang &gt; 1">
-	<xsl:call-template name="threadlink-multiple-proglang">
-	  <xsl:with-param name="in-thread" select="$in-thread"/>
-	</xsl:call-template>
-      </xsl:when>
-
-      <xsl:otherwise>
-
-	<xsl:if test="boolean(@proglang)">
-	  <xsl:message>
- WARNING: threadlink has @proglang=<xsl:value-of select="@proglang"/> but the thread,
-          name=<xsl:value-of select="$tname"/>, does not appear to be language-specific
-	  </xsl:message>
-	</xsl:if>
-
-	<xsl:call-template name="threadlink-simple">
-	  <xsl:with-param name="in-thread" select="$in-thread"/>
-	</xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="threadlink-simple">
+      <xsl:with-param name="in-thread" select="$in-thread"/>
+    </xsl:call-template>
 
   </xsl:template> <!--* match=threadlink *-->
 
-  <!--* XXX TODO XXX refactor the threadlink-* templates *-->
-
-  <!--* Handle a threadlink when we do not have to bother about proglang values *-->
+  <!-- *
+       * This was pulled out of threadlink when support for multiple
+       * languages (proglang) was introduced; it no longer needs to
+       * be separate but is left as is for now.
+       *-->
   <xsl:template name="threadlink-simple">
     <xsl:param name="in-thread" select="false()"/>
 
@@ -2064,7 +2044,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     
     <!--*
 	* Process the contents, surrounded by styles.
-	* I think the code below can be cleaned up; see threadlink-multiple-proglang
+	* I think the code below can be cleaned up
 	*-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
@@ -2095,93 +2075,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     </xsl:call-template>
 
   </xsl:template> <!--* name=threadlink-simple *-->
-
-  <!--*
-      * Thread has multiple languages, use
-      * @proglang or $proglang to determine which to use
-      * (check for @proglang first, then fall back to $proglang)
-      *-->
-  <xsl:template name="threadlink-single-proglang">
-    <xsl:param name="in-thread" select="false()"/>
-
-    <xsl:variable name="urlfrag"><xsl:call-template name="handle-thread-site-link">
-      <xsl:with-param name="linktype"  select="'threadlink'"/>
-      <xsl:with-param name="in-thread" select="$in-thread"/>
-    </xsl:call-template></xsl:variable>
-
-    <xsl:variable name="index">index<xsl:choose>
-    <xsl:when test="boolean(@proglang)"><xsl:value-of select="concat('.',@proglang)"/></xsl:when>
-    <xsl:when test="$proglang != ''"><xsl:value-of select="concat('.',$proglang)"/></xsl:when>
-    <xsl:otherwise>
-      <xsl:message terminate="yes">
- Internal error: neither @proglang or $proglang is available for threadlink disambiguation
-      </xsl:message>
-    </xsl:otherwise>
-    </xsl:choose>.html</xsl:variable>
-
-    <xsl:call-template name="add-text-styles">
-      <xsl:with-param name="contents">
-	<a>
-	  <xsl:attribute name="href"><xsl:value-of
-		select="$urlfrag"/><xsl:choose>
-	
-		<xsl:when test="boolean(@name)"><xsl:value-of select="concat(@name,'/',$index)"/><xsl:if
-		    test="boolean(@id)"><xsl:value-of select="concat('#',@id)"/></xsl:if></xsl:when>
-
-		<xsl:when test="boolean(@id)"><xsl:value-of select="concat($index,'#',@id)"/></xsl:when>
-
-		<xsl:otherwise><xsl:value-of select="$index"/></xsl:otherwise>
-	  </xsl:choose></xsl:attribute>
-
-	  <xsl:apply-templates/>
-	</a>
-      </xsl:with-param>
-    </xsl:call-template>
-
-  </xsl:template> <!--* name=threadlink-single-proglang *-->
-
-  <!--*
-      * We have multiple programming languages to deal with,
-      * and - at present - we assume these are always
-      * "sl" and "py". The output contains two links, one
-      * to each version.
-      *-->
-  <xsl:template name="threadlink-multiple-proglang">
-    <xsl:param name="in-thread" select="false()"/>
-
-    <xsl:variable name="urlfrag"><xsl:call-template name="handle-thread-site-link">
-      <xsl:with-param name="linktype"  select="'threadlink'"/>
-      <xsl:with-param name="in-thread" select="$in-thread"/>
-    </xsl:call-template></xsl:variable>
-
-    <!--* is this correct? *-->
-    <xsl:variable name="urlpagehead"><xsl:choose>
-      <xsl:when test="boolean(@name)"><xsl:value-of select="concat(@name,'/')"/></xsl:when>
-    </xsl:choose>index.</xsl:variable>
-
-    <xsl:variable name="urltail">.html<xsl:if
-    test="boolean(@id)"><xsl:value-of select="concat('#',@id)"/></xsl:if></xsl:variable>
-    
-    <xsl:call-template name="add-text-styles">
-      <xsl:with-param name="contents">
-	<xsl:apply-templates/>
-	<xsl:text> (</xsl:text>
-	<a>
-	  <xsl:attribute name="href"><xsl:value-of
-	  select='concat($urlfrag,$urlpagehead,"sl",$urltail)'/></xsl:attribute>
-	  <xsl:text>S-Lang</xsl:text>
-	</a>
-	<xsl:text> or </xsl:text>
-	<a>
-	  <xsl:attribute name="href"><xsl:value-of
-	  select='concat($urlfrag,$urlpagehead,"py",$urltail)'/></xsl:attribute>
-	  <xsl:text>Python</xsl:text>
-	</a>
-	<xsl:text>)</xsl:text>
-      </xsl:with-param>
-    </xsl:call-template>
-
-  </xsl:template> <!--* name=threadlink-multiple-proglang *-->
 
   <!--*
       * this mess is to allow threadlink/threadpage to
@@ -2467,25 +2360,15 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   </xsl:template>
 
   <!--*
-      * djb:get-thread-filename($name,$site)
+      * djb:get-storage-path($site)
       *
-      * Returns the full path to the given thread; it
-      * does not check that the name/site parameters
-      * are valid.
+      * Returns the full path to the storage for the site,
+      * which defaults to the global $site variable if not given.
       *
-      *   $name is the thread name (ie as used in threadlink @name)
-      *   $site is the site name (e.g. threadlink @site attribute)
-      *     and can be left out, when it defaults to the site of the page
+      * This will error out if invalid value(s) are found.
       *-->
-  <func:function name="djb:get-thread-filename">
-    <xsl:param name="name" select="''"/>
+  <func:function name="djb:get-storage-path">
     <xsl:param name="site" select="$site"/>
-
-    <xsl:if test="$name = ''">
-      <xsl:message terminate="yes">
- Internal error: djb:get-thread-filename called with an empty name argument.
-      </xsl:message>
-    </xsl:if>
 
     <!--* this only needs to be tested once but do it every time, for now *-->
     <xsl:if test="$storageloc = ''">
@@ -2517,9 +2400,88 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:when>
     </xsl:choose>
 
+    <func:result select="$head"/>
+
+  </func:function> <!--* name djb:get-storage-path *-->
+
+  <!--*
+      * djb:get-thread-filename($name,$site)
+      *
+      * Returns the full path to the given thread; it
+      * does not check that the name/site parameters
+      * are valid.
+      *
+      *   $name is the thread name (ie as used in threadlink @name)
+      *   $site is the site name (e.g. threadlink @site attribute)
+      *     and can be left out, when it defaults to the site of the page
+      *-->
+  <func:function name="djb:get-thread-filename">
+    <xsl:param name="name" select="''"/>
+    <xsl:param name="site" select="$site"/>
+
+    <xsl:if test="$name = ''">
+      <xsl:message terminate="yes">
+ Internal error: djb:get-thread-filename called with an empty name argument.
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:variable name="head" select="djb:get-storage-path($site)"/>
     <func:result select="concat($head,'threads/',$name,'/thread.xml')"/>
 
   </func:function> <!--* name djb:get-thread-filename *-->
+
+  <!--*
+      * djb:get-faq-filename($site)
+      *
+      * Returns the full path to the FAQ (stored version), unless
+      * we are currently processing the FAQ, in which case it
+      * returns the name of the file being processed (since
+      * the version in storage is not the latest).
+      *
+      *   $site is the site name (e.g. faq @site attribute)
+      *     and can be left out, when it defaults to the site of the page
+      *-->
+  <func:function name="djb:get-faq-filename">
+    <xsl:param name="site" select="$site"/>
+
+    <xsl:choose>
+      <xsl:when test="name(//*) = 'faq'">
+	<func:result select="concat($sourcedir, '/', $pagename, '.xml')"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:variable name="head" select="djb:get-storage-path($site)"/>
+	<func:result select="concat($head,'faq/index.xml')"/>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </func:function> <!--* name djb:get-faq-filename *-->
+
+  <!--*
+      * djb:get-dictionary-filename($site)
+      *
+      * Returns the full path to the Dictionary (stored version), unless
+      * we are currently processing the dictionary, in which case it
+      * returns the name of the file being processed (since
+      * the version in storage is not the latest).
+      *
+      *   $site is the site name (e.g. dictionary @site attribute)
+      *     and can be left out, when it defaults to the site of the page
+      *-->
+  <func:function name="djb:get-dictionary-filename">
+    <xsl:param name="sitevalue" select="$site"/>
+
+    <xsl:choose>
+      <!-- Need to check whether link is to dictionary in the same site or not -->
+      <xsl:when test="$site = $sitevalue and (name(//*) = 'dictionary' or name(//*) = 'dictionary_onepage')">
+	<func:result select="concat($sourcedir, '/index.xml')"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:variable name="head" select="djb:get-storage-path($sitevalue)"/>
+	<func:result select="concat($head,'dictionary/index.xml')"/>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </func:function> <!--* name djb:get-dictionary-filename *-->
 
   <!--*
       * Returns the //thread/info node for either the current document
@@ -2538,6 +2500,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * At present assumed to be called with a threadlink tag as the
       * context node. Perhaps the input values should be sent in as
       * arguments to the function?
+      *
       *-->
   <func:function name="djb:read-in-thread-info">
     <xsl:choose>

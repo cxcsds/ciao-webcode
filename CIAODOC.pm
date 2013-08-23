@@ -32,9 +32,28 @@ use XML::LibXSLT;
 my $parser = XML::LibXML->new()
   or die "Error: Unable to create XML::LibXML parser instance.\n";
 $parser->validation(0);
+# $parser->expand_xinclude(1); NOTE: don't actually use XInclude at the moment
 
 my $xslt = XML::LibXSLT->new()
   or die "Error: Unable to create XML::LibXSLT instance.\n";
+
+# Set up potentially-useful functions
+#
+XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				"read-file-if-exists",
+  sub {
+    my $filename = shift;
+    # want to differentiate between 'file does not exist' and
+    # 'file is invalid'.
+    return XML::LibXML::NodeList->new()
+	unless -e $filename;
+    my $rval;
+    eval { $rval = $parser->parse_file($filename); };
+    die "ERROR: problem parsing XML file $filename\n  $@\n"
+	if $@;
+    return $rval;
+  }
+);
 
 # default depth is 250 but this causes problems with some style sheets
 # (eg wavdetect, tg_create_mask), so increase randomly until everything
@@ -54,7 +73,6 @@ my @funcs_xslt =
      translate_file
      read_xml_file read_xml_string
      find_math_pages
-     preload_stylesheet
     );
 my @funcs_cfg  =
   qw(
@@ -355,18 +373,6 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     return $xslt_store{$filename};
   }
 
-  # An ugly hack to allow strip_proglang.xsl be referenced below
-  # without a path name. This should be solved properly.
-  #
-  sub preload_stylesheet ($$) {
-      my $filename = shift;
-      my $name = shift;
-      return if exists $xslt_store{$filename};
-      my $style = $xslt->parse_stylesheet_file ($filename) ||
-	die "ERROR: unable to parse stylesheet '$filename'\n";
-      $xslt_store{$name} = $style;
-  }
-
   # Returns the DOM for the file or dies, although it may be that this
   # method already dies and I need to improve my error handling here.
   # 
@@ -453,29 +459,6 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
 
   } # sub: translate_file()
 
-  # Return a DOM that is specialized to the given language, which
-  # should be "sl" or "py".
-  # 
-  sub specialize_lang ($$) {
-    my $dom  = shift;
-    my $lang = shift;
-
-    dbg "*** Language specialisation for lang=$lang ***";
-
-    die "Unknown language '$lang'\n" unless $lang eq "sl" or $lang eq "py";
-    die "Expect to be sent a DOM\n"
-      unless ref $dom eq "XML::LibXML::Document";
-
-    # We could trap errors, but no real need at present.
-    #
-    my $sheet = _get_stylesheet "strip_proglang.xsl";
-    my $newdom = $sheet->transform($dom, proglang => "'$lang'");
-    dbg "*** Finished language specialization (lang=$lang)";
-
-    return $newdom;
-
-  } # sub: specialize_lang()
-
 }
 
 # Returns an array of all the name nodes within math tags
@@ -484,7 +467,13 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
 #
 # Should be sent a DOM
 #
+# NOTE:
+#   always returns an empty list since moved to MathJax
+#   but want to leave code in for now in case needed
+#
 sub find_math_pages ($) {
+  return (); # DBG: MathJax
+
   my $dom = shift;
 
   # Should use a proper OO check here to allow sub-classes to match.

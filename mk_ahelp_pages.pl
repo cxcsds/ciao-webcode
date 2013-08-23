@@ -4,6 +4,7 @@
 #   mk_ahelp_pages.pl [name1 ... namen]
 #     --config=name
 #     --type=test|live|trial
+#     --localxslt
 #     --verbose
 #
 #   The default is --type=test, which sets up for test web site.
@@ -12,6 +13,10 @@
 #
 #   The --config option gives the path to the configuration file; this
 #   defaults to config.dat in the same directory as the script.
+#
+#   The --localxslt option is used for testing; it overrides the
+#   %stylesheets setting in the config file, using the location
+#   of this script instead.
 #
 #   The --verbose option is useful for testing/debugging the code.
 #
@@ -77,7 +82,7 @@ $site = "";
 my $progname = (split( m{/}, $0 ))[-1];
 my $usage = <<"EOD";
 Usage:
-  $progname --config=name --type=test|live|trial --verbose [file(s)]
+  $progname --config=name --type=test|live|trial --localxslt --verbose [file(s)]
 
 The default is --type=test, which publishes to the test web site.
 The live option publishes to the live (ie cxc.harvard.edu) site.
@@ -85,6 +90,10 @@ Don\'t use the trial option unless you know what it does.
 
 The --config option gives the path to the configuration file; this
 defaults to config.dat in the same directory as the script.
+
+The --localxslt option is used for testing; it overrides the
+\%stylesheets setting in the config file, using the location
+of this script instead.
 
 The --verbose option is useful for testing/debugging the code.
 
@@ -105,11 +114,13 @@ unless ($dirs[-1] =~ "ahelp") {
 
 # handle options
 my $type = "test";
+my $localxslt = 0;
 die $usage unless
   GetOptions
-  'config=s' => \$configfile,
-  'type=s'   => \$type,
-  'verbose!' => \$verbose;
+  'config=s'   => \$configfile,
+  'type=s'     => \$type,
+  'localxslt!' => \$localxslt,
+  'verbose!'   => \$verbose;
 
 # what OS are we running?
 #
@@ -156,6 +167,11 @@ my $ahelpfiles  = get_config_type $version_config, "ahelpfiles", $type;
 my $outdir      = get_config_type $version_config, "outdir", $type;
 my $outurl      = get_config_type $version_config, "outurl", $type;
 my $stylesheets = get_config_type $version_config, "stylesheets", $type;
+
+if ($localxslt) {
+    dbg "Overriding stylesheets setting: from $stylesheets to $FindBin::Bin/";
+    $stylesheets = "$FindBin::Bin/";
+}
 
 #$storage .= "ahelp/";
 #my $ahelpindex_xml  = "${storage}ahelpindex.xml";
@@ -274,9 +290,17 @@ my @extra = (
 
 my $cssfile      = get_config_type $version_config, "css", $type;
 my $cssprintfile = get_config_type $version_config, "cssprint", $type;
+my $favicon      = get_config_type $version_config, "favicon", $type;
 my $searchssi    = get_config_type $version_config, "searchssi", $type;
 my $googlessi    = get_config_version( $version_config, "googlessi" );
 my $urlbase      = get_config_type $version_config, "outurl", $type;
+
+my $storageloc = "";
+$storageloc = get_config_type( $version_config, "storageloc", $type )
+  if check_config_exists( $version_config, "storageloc" );
+
+die "Error: unable to find storageloc=$storageloc\n"
+  unless $storageloc eq "" or -e $storageloc;
 
 # optional "postfix" text for page headers
 my $headtitlepostfix = "";
@@ -291,7 +315,9 @@ dbg "  urlbase=$urlbase";
 dbg "  searchssi=$searchssi";
 dbg "  cssfile=$cssfile";
 dbg "  cssprintfile=$cssprintfile";
+dbg "  favicon=$favicon";
 dbg "  googlessi=$googlessi";
+dbg "  storageloc=$storageloc";
 dbg "  headtitlepostfix=$headtitlepostfix";
 dbg "  texttitlepostfix=$texttitlepostfix";
 dbg "*** CONFIG DATA (end) ***";
@@ -302,9 +328,11 @@ dbg "*** CONFIG DATA (end) ***";
    updateby     => $uname,
    cssfile      => $cssfile,
    cssprintfile => $cssprintfile,
+   favicon      => $favicon,
    searchssi    => $searchssi,
    googlessi    => $googlessi,
    urlbase      => $urlbase,
+   storageloc   => $storageloc,
    headtitlepostfix => $headtitlepostfix,
    texttitlepostfix => $texttitlepostfix,
   );
@@ -315,8 +343,9 @@ my %paramlist = @extra;
 #
 foreach my $in ( @names ) {
 
-    dbg "Processing: $in";
+    # To match publish.pl
     my $name = (split("/",$in))[-1];
+    print "Parsing [ahelp]: $name\n";
 
     # We need to convert depth from a number to a string
     # - e.g. from 2 to '../' - here

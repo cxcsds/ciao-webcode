@@ -167,26 +167,8 @@
         *   OR, do we assume that as we are in the thread index everything
         *   is in the sub-directory of this page so we needn't bother?
 	*
-	* As we now have to bother about language-specific versions it
-	* would be nice to consolidate the logic.
         *-->
-    <xsl:variable name="num" select="count($thisThreadInfo/proglang)"/>
-    <xsl:choose>
-      <xsl:when test="$num=0">
-	<a class="threadlink" href="{$thisThreadInfo/name}/"><xsl:value-of select="$thisThreadInfo/title/long"/></a>
-      </xsl:when>
-      <xsl:when test="$num=1">
-	<a class="threadlink" href="{$thisThreadInfo/name}/index.{$thisThreadInfo/proglang}.html"><xsl:value-of select="$thisThreadInfo/title/long"/></a>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:value-of select="concat($thisThreadInfo/title/long,' (')"/>
-	<a class="threadlink" href="{$thisThreadInfo/name}/index.sl.html">S-Lang</a>
-	<xsl:text> or </xsl:text>
-	<a class="threadlink" href="{$thisThreadInfo/name}/index.py.html">Python</a>
-	<xsl:text>)</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-
+    <a class="threadlink" href="{$thisThreadInfo/name}/"><xsl:value-of select="$thisThreadInfo/title/long"/></a>
 
     <!--* Is this thread new or recently updated ? *-->
     <xsl:if test="boolean($thisThreadInfo/history/@new)">
@@ -753,7 +735,7 @@
       *
       * Parameters:
       *   title - title of page (appears in head block so should be concise)
-      *   name  - name of page (w/out .html)
+      *   name  - name of page (w/out .html), used for the canonical block
       *
       * NOTE:
       *  we *NO LONGER* create a html tag but we do create a BODY tag; ugh!
@@ -762,7 +744,6 @@
     <xsl:param name="title" select="'Threads'"/>
     <xsl:param name="name"  select="''"/>
 
-    <!--* TODO: remove the name parameter when remove PDF suppport from threads *-->
     <xsl:if test="$name=''">
       <xsl:message terminate="yes">
  Error: add-threadindex-start called with no name attribute
@@ -772,6 +753,7 @@
     <!--* make the HTML head node *-->
     <xsl:call-template name="add-htmlhead">
       <xsl:with-param name="title" select="$title"/>
+      <xsl:with-param name="page" select="concat($name, '.html')"/>
     </xsl:call-template>
 
     <!--* add disclaimer about editing thie HTML file *-->

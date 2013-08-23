@@ -2,7 +2,7 @@
 <!DOCTYPE xsl:stylesheet>
 
 <!--* 
-    * Create the HTML version of the CIAO thread
+    * Create the HTML version of a thread
     *
     * To do:
     *
@@ -50,18 +50,6 @@
 </xsl:text>
   </xsl:template>
 
-  <!--* 
-      * top level
-      * if proglang == '' then create
-      *   index.html               
-      *   img<n>.html              
-      * else create
-      *   index.<proglang>.html                
-      *   img<n>.<proglang>.html               
-      *   in this case no index.html case is created
-      *
-      *-->
-
   <xsl:template match="/">
 
     <!--* check the params are okay *-->
@@ -70,10 +58,12 @@
       <xsl:with-param name="pname" select="'install'"/>
       <xsl:with-param name="pvalue" select="$install"/>
     </xsl:call-template>
-    <xsl:call-template name="is-proglang-valid"/>
+    <xsl:call-template name="check-param-ends-in-a-slash">
+      <xsl:with-param name="pname"  select="'canonicalbase'"/>
+      <xsl:with-param name="pvalue" select="$canonicalbase"/>
+    </xsl:call-template>
 
     <xsl:apply-templates select="thread" mode="html-viewable-standard"/>
-    <xsl:apply-templates select="thread/images/image" mode="list"/>
 
   </xsl:template> <!-- match="/" *-->
 

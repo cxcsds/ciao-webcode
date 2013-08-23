@@ -76,7 +76,9 @@
   xmlns:date="http://exslt.org/dates-and-times"
   xmlns:func="http://exslt.org/functions"
   xmlns:exsl="http://exslt.org/common"
-  extension-element-prefixes="date str func exsl">
+  xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="date str func exsl djb extfuncs">
 
   <!--* load in templates (_main includes _common) *-->
   <xsl:include href="ahelp_main.xsl"/>
@@ -104,6 +106,10 @@
   <xsl:param name="depth" value="''"/>
 
   <xsl:param name="searchssi"   select='"/incl/search.html"'/>
+
+  <!--* Later on we check that this parameter is set *-->
+  <xsl:param name="storageloc" select="''"/>
+  <xsl:variable name="storageInfo" select="djb:read-if-set($storageloc)"/>
 
   <!--*
       * since we need this at least once, maybe twice, cache the result
@@ -149,18 +155,23 @@
   <xsl:param name="have-example"  select="$nexample!=0"/>
   <xsl:param name="have-param"    select="$nparam!=0"/>
   <xsl:param name="have-seealso"  select="$seealso != ''"/>
-  <xsl:param name="have-bugs"     select="count(//ENTRY/BUGS)!=0"/>
-  <xsl:param name="have-relnotes">
-    <xsl:variable name="relincl"><xsl:text>../releasenotes/ciao_</xsl:text><xsl:value-of select="$version"/>.<xsl:value-of select="$outname"/>.incl.html</xsl:variable>
+  <xsl:param name="have-bugs"     select="count(//ENTRY/BUGS)!=0"/> <!-- FIX THIS as depends on the site -->
 
-    <xsl:choose>
-      <xsl:when test="boolean(document(string(concat($outdir,$relincl))))">1</xsl:when>
-      <xsl:otherwise>0</xsl:otherwise>
-    </xsl:choose>
-  </xsl:param>
+  <!-- only need to worry about this for site=ciao? -->
+  <xsl:param name="bugs-path"><xsl:value-of 
+	select="concat($storageInfo//dir[@site=$site],'bugs/',
+                       $outname, '.slug.xml')"/></xsl:param>
+  <xsl:param name="bugs-contents" select="extfuncs:read-file-if-exists($bugs-path)"/>
+  <xsl:param name="have-bugs-external" select="count($bugs-contents/slug) != 0"/>
 
+  <xsl:param name="relnotes-path"><xsl:value-of 
+	select="concat($storageInfo//dir[@site=$site],'releasenotes/ciao_',
+                       $version, '.', $outname, '.slug.xml')"/></xsl:param>
+  <xsl:param name="relnotes-contents" select="extfuncs:read-file-if-exists($relnotes-path)"/>
+  <xsl:param name="have-relnotes" select="count($relnotes-contents/slug) != 0"/>
 
-  <xsl:variable name="url"        select="concat($urlbase,$outname,'.html')"/>
+  <!-- used for the canonical link and the URL bar (hard copy) -->
+  <xsl:variable name="url" select="concat($urlbase,'ahelp/', $outname,'.html')"/>
 
   <!--*
       * Start processing here: "/"
@@ -222,6 +233,11 @@
       <xsl:with-param name="pvalue"  select="$version"/>
     </xsl:call-template>
 
+    <xsl:call-template name="check-param">
+      <xsl:with-param name="pname"   select="'storageloc'"/>
+      <xsl:with-param name="pvalue"  select="$storageloc"/>
+    </xsl:call-template>
+
     <!--* end of checks *-->
 
     <xsl:apply-templates name="cxchelptopics"/>
@@ -230,4 +246,16 @@
 
   </xsl:template> <!--* match=/ *-->
   
+  <!--*
+      * Returns the document if set - as a node set - otherwise
+      * the empty string.
+      *-->
+  <func:function name="djb:read-if-set">
+    <xsl:param name="filename" select="''"/>
+    <xsl:choose>
+      <xsl:when test="$filename != ''"><func:result select="document($filename)"/></xsl:when>
+      <xsl:otherwise><func:result/></xsl:otherwise>
+    </xsl:choose>
+  </func:function>
+
 </xsl:stylesheet> <!--* FIN *-->

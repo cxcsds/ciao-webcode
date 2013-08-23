@@ -118,7 +118,9 @@ logotext=CIAO Logo
 
 %stylesheets=live /data/da/Docs/web4/ciao45/
 %stylesheets=test /data/da/Docs/web4/ciao45/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+# HACK for testing
+#%stylesheets=test /data/da/Docs/web4/devel/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 # what's the location for the output files?
 %outdir=live /proj/web-cxc-dmz/htdocs/ciao4.5/
@@ -227,7 +229,7 @@ logotext=CIAO Logo
 
 %stylesheets=live /data/da/Docs/web4/ciao44/
 %stylesheets=test /data/da/Docs/web4/ciao44/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 # what's the location for the output files?
 %outdir=live /proj/web-cxc-dmz/htdocs/ciao4.4/
@@ -335,7 +337,7 @@ logotext=CIAO Logo
 
 %stylesheets=live /data/da/Docs/web4/ciao43/
 %stylesheets=test /data/da/Docs/web4/ciao43/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 # what's the location for the output files?
 %outdir=live /proj/web-cxc-dmz/htdocs/ciao4.3/
@@ -424,7 +426,7 @@ logoimage=imgs/ciao_logo_navbar.gif
 logotext=CIAO Logo
 
 # location of the stylesheets
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 # what's the location for the output files?
 #%outdir=trial /proj/web-icxc/htdocs/sds/ciaositedev/
@@ -478,10 +480,9 @@ ahelpindexnavbar=analysis
 @stylesheets=ahelp_index
 @stylesheets=ahelp_common
 @stylesheets=ahelp_main
-@stylesheets=strip_proglang
 @stylesheets=threadindex
 @stylesheets=threadindex_common
-@stylesheets=ciao_thread
+@stylesheets=thread
 @stylesheets=thread_common
 @stylesheets=helper
 @stylesheets=links
@@ -533,7 +534,7 @@ googlessi=/chart/analytics.ssi
 
 %stylesheets=live /data/da/Docs/web4/chart/
 %stylesheets=test /data/da/Docs/web4/chart/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc-dmz/htdocs/chart/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chart/
@@ -562,7 +563,7 @@ googlessi=/chart/analytics.ssi
 @stylesheets=page
 @stylesheets=navbar
 @stylesheets=redirect
-@stylesheets=chart_thread
+@stylesheets=thread
 @stylesheets=thread_common
 @stylesheets=helper
 @stylesheets=links
@@ -632,7 +633,7 @@ googlessi=/sherpa4.5/analytics.ssi
 
 %stylesheets=live /data/da/Docs/web4/ciao45/
 %stylesheets=test /data/da/Docs/web4/ciao45/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc-dmz/htdocs/sherpa4.5/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.5/
@@ -716,7 +717,7 @@ googlessi=/sherpa4.4/analytics.ssi
 
 %stylesheets=live /data/da/Docs/web4/ciao44/
 %stylesheets=test /data/da/Docs/web4/ciao44/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc-dmz/htdocs/sherpa4.4/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.4/
@@ -804,7 +805,7 @@ googlessi=/sherpa4.3/analytics.ssi
 
 %stylesheets=live /data/da/Docs/web4/ciao43/
 %stylesheets=test /data/da/Docs/web4/ciao43/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc-dmz/htdocs/sherpa4.3/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.3/
@@ -841,10 +842,9 @@ ahelpindexnavbar=ahelp
 @stylesheets=page
 @stylesheets=navbar
 @stylesheets=redirect
-@stylesheets=strip_proglang
 @stylesheets=threadindex
 @stylesheets=threadindex_common
-@stylesheets=sherpa_thread
+@stylesheets=thread
 @stylesheets=thread_common
 @stylesheets=helper
 @stylesheets=links
@@ -917,7 +917,7 @@ googlessi=/chips4.5/analytics.ssi
 # ciao45 uses a CSS layout
 %stylesheets=live /data/da/Docs/web4/ciao45/
 %stylesheets=test /data/da/Docs/web4/ciao45/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc-dmz/htdocs/chips4.5/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chips4.5/
@@ -1004,7 +1004,7 @@ googlessi=/chips4.4/analytics.ssi
 # ciao44 uses a CSS layout
 %stylesheets=live /data/da/Docs/web4/ciao44/
 %stylesheets=test /data/da/Docs/web4/ciao44/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc-dmz/htdocs/chips4.4/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chips4.4/
@@ -1090,7 +1090,7 @@ googlessi=/chips4.3/analytics.ssi
 # ciao43 uses a CSS layout
 %stylesheets=live /data/da/Docs/web4/ciao43/
 %stylesheets=test /data/da/Docs/web4/ciao43/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc-dmz/htdocs/chips4.3/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chips4.3/
@@ -1126,10 +1126,9 @@ ahelpindexnavbar=ahelp
 @stylesheets=page
 @stylesheets=navbar
 @stylesheets=redirect
-@stylesheets=strip_proglang
 @stylesheets=threadindex
 @stylesheets=threadindex_common
-@stylesheets=chips_thread
+@stylesheets=thread
 @stylesheets=thread_common
 @stylesheets=helper
 @stylesheets=links
@@ -1190,7 +1189,7 @@ headtitlepostfix=CALDB 4
 
 %stylesheets=live /data/da/Docs/web4/caldb/
 %stylesheets=test /data/da/Docs/web4/caldb/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 # we have a versioned directory name for the live site
 # but not the test one (since I only realised I needed a
@@ -1231,7 +1230,10 @@ headtitlepostfix=CALDB 4
 
 -site  # end of caldb
 
-
+# The CSC site options MUST be updated when there's a new CIAO release
+# (e.g. storage location/ahelp dir/...) so that links between sites
+# will work
+#
 +site csc
 
 group=cxcweb_ciao
@@ -1274,6 +1276,7 @@ texttitlepostfix=CSC
 %newsurl=test /csc/news.html
 %newsurl=trial /sds/csc_trial/news.html
 
+# I do not think these are used by CSC site
 %watchouturl=live /csc/watchout.html
 %watchouturl=test /csc/watchout.html
 %watchouturl=trial /sds/csc_trial/watchout.html
@@ -1287,7 +1290,7 @@ logotext=Chandra Source Catalog logo
 
 %stylesheets=live /data/da/Docs/web4/ciao45/
 %stylesheets=test /data/da/Docs/web4/ciao45/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc-dmz/htdocs/csc1/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/csc1/
@@ -1376,7 +1379,7 @@ googlessi=/iris/analytics.ssi
 
 %stylesheets=live /data/da/Docs/web4/ciao43/
 %stylesheets=test /data/da/Docs/web4/ciao43/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc-dmz/htdocs/iris/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/iris/
@@ -1461,7 +1464,7 @@ googlessi=/obsvis/analytics.ssi
 
 %stylesheets=live /data/da/Docs/web4/ciao43/
 %stylesheets=test /data/da/Docs/web4/ciao43/
-%stylesheets=trial /data/da/Docs/web4/hg_devel_liz/ciao-dev-css/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc-dmz/htdocs/obsvis/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/obsvis/
@@ -1624,7 +1627,7 @@ number=Cycle 15
 
 %stylesheets=live /data/da/Docs/web4/ciao45/
 %stylesheets=test /data/da/Docs/web4/ciao45/
-%stylesheets=trial /data/da/Docs/web4/ciao45/
+%stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc-dmz/htdocs/proposer/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/proposer/
@@ -1762,7 +1765,7 @@ number=Cycle 13
 @stylesheets=helper
 @stylesheets=links
 @stylesheets=myhtml
-@stylesheets=pog_thread
+@stylesheets=thread
 @stylesheets=thread_common
 
 -site  # end of pog

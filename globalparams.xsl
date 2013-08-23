@@ -13,6 +13,8 @@
     *    whether to create the test or "real" version
     *
     *  . lastmod=string to use to say when page was last modified
+    *  . lastmodiso=string to use to say when page was last modified
+    *               in format YYYY-MM-DD
     *
     *  . site=one of: ciao chart chips sherpa pog icxc
     *    tells the stylesheet what site we are working with
@@ -37,10 +39,19 @@
     *
     *  . install=full path to directory where to install file
     *
-    *  . pagename=name of page (ie without .xml or .html or any proglang additions)
+    *  . canonicalbase=URL of parent directory (including trailing hash), so the
+    *    full url is canonicalbase + pagename + '.html'. Overlaps with url/outurl
+    *    and all this mess needs to be cleaned up. Since this is used for the
+    *    canonical link header the URL should probably not be versioned, e.g.
+    *    use http://cxc.harvard.edu/ciao/ rather than http://cxc.harvard.edu/ciao4.5/
+    *
+    *  . pagename=name of page (ie without .xml or .html)
     *
     *  . url=URL of page (on live server)
     *  . outurl=This appears to be the "base" url (ie the directory containing the page)
+    *    SEE ALSO canonicalbase
+    *
+    *  . favicon=URL of the favicon for the site (optional)
     *
     *  . sourcedir=full path to directory containing navbar.xml
     *
@@ -62,7 +73,8 @@
     *    gives the location of the "storage" files - ie the copies of the
     *    published XML documents for the site/version. This is currently
     *    needed so we can access the thread pages for the threadlink tags
-    *    (proglang info). It should be sent to the top-level storage
+    *    (not really needed any more since taken out proglang support
+    *     but left in for now). It should be sent to the top-level storage
     *    location for the site/version, not the location for this particular
     *    page - EXCEPT THAT I DO NOT KNOW HOW WE ARE GOING TO HANDLE LINKS
     *    BETWEEN SITES USING THIS SCHEME ...
@@ -70,10 +82,6 @@
     *    For now we assume the threadlinking is done within the same site
     *
     *    IT IS VERY LIKELY THAT STORAGE WILL BE REMOVED RSN
-    *
-    *  . proglang - string, optional, default=''
-    *    if set - to either "sl" or "py" - then 'specialize' the document
-    *    for the given language.
     *
     *  . storageloc - string, optional, default=''
     *    points to an XML file that contains the "storage" directories
@@ -94,14 +102,17 @@
   <xsl:param name="cssprintfile" select='""'/>
   <xsl:param name="site"         select='""'/>
   <xsl:param name="install"      select='""'/>
+  <xsl:param name="canonicalbase" select='""'/>
   <xsl:param name="pagename"     select='""'/>
   <xsl:param name="navbarlink"   select='""'/>
   <xsl:param name="url"          select='""'/>
   <xsl:param name="outurl"       select='""'/>
+  <xsl:param name="favicon"      select='""'/>
   <xsl:param name="sourcedir"    select='""'/>
   <xsl:param name="updateby"     select='""'/>
   <xsl:param name="siteversion"  select='""'/>
   <xsl:param name="lastmod"      select='""'/>
+  <xsl:param name="lastmodiso"   select='""'/>
 
   <xsl:param name="newsfile"    select='""'/>
   <xsl:param name="newsfileurl" select='""'/>
@@ -117,12 +128,6 @@
 
   <xsl:param name="depth" select="1"/>
   
-  <!--*
-      * If set (not empty) to sl or py then the output document should
-      * be for the given language (S-lang or Python)
-      *-->
-  <xsl:param name="proglang" select="''"/>
-
   <!--* not sure about this; see header *-->
   <xsl:param name="storage" select="''"/>
 

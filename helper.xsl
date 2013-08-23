@@ -26,6 +26,8 @@
   xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
   extension-element-prefixes="date func djb">
 
+  <xsl:include href="common.xsl"/>
+
   <!--*
       * used to determine whether the site is valid
       *
@@ -43,9 +45,6 @@
       *-->
   <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc obsvis iris '"/>
   <xsl:variable name="allowed-download-types" select="' solaris solaris10 fc4 fc8 osx_ppc osx_intel caldb atomdb '"/>
-
-  <!--* note that '' is also allowed for proglang but this is checked for separately *-->
-  <xsl:variable name="allowed-proglang" select="' py sl '"/>
 
   <!--*
       * handle unknown tags
@@ -215,8 +214,19 @@
       * Note that for threads I have moved to using add-htmlhead-site
       * - in thread_common.xsl - which does not (currently) use the
       * headtitlepostfix parameter
+      *
+      * input variables:
+      *   title - required
+      *   css   - optional: text of css-1 rules
+      *   page  - optional: if given then the canonical link is created as
+      *              canonicalbase + page
+      *           else
+      *              canonicalbase + pagename (stylesheet variable) + '.html'
+      *           If canonicalbase is empty then no canonical link is given
+      *           (For developing also use url as a fallback)
       *-->
   <xsl:template name="add-htmlhead-standard">
+    <xsl:param name='page'/>
 
     <!--*
         * rather a mess - wanted to set a variable to info/title or
@@ -236,6 +246,7 @@
 
     <xsl:call-template name="add-htmlhead">
       <xsl:with-param name="title"><xsl:value-of select="$titlestring"/><xsl:if test="$headtitlepostfix!=''"><xsl:value-of select="concat(' - ',$headtitlepostfix)"/></xsl:if></xsl:with-param>
+      <xsl:with-param name="page" select="$page"/>
     </xsl:call-template>
   </xsl:template> <!--* name=add-htmlhead-standard *-->
 
@@ -249,14 +260,27 @@
       * and ditto for the htmlscripts/htmlscript
       * (added html prefix to separate from scripts used in threads)
       *
+      * Support for the "standard" set of metadata pages for SAO
+      * pages is included.
+      *
+      * MathJax support is added if the page contains any math tags.
+      *
       * input variables:
       *   title - required
       *   css   - optional: text of css-1 rules
+      *   page  - optional: if given then the canonical link is created as
+      *              canonicalbase + page
+      *           else
+      *              canonicalbase + pagename (stylesheet variable) + '.html'
+      *           If canonicalbase is empty then no canonical link is given
+      *           (For developing also use url as a fallback)
       *-->
   <xsl:template name="add-htmlhead">
     <xsl:param name='title'/>
     <xsl:param name='css'/>
+    <xsl:param name='page'/>
     <head>
+
       <title><xsl:value-of select="$title"/></title>
 
       <!--* any meta information to add ? *-->
@@ -265,19 +289,28 @@
       <!--* any scripts ? *-->
       <xsl:apply-templates select="info/htmlscripts"/>
 
-      <!--// CSC pages get cscview.js //-->
-      <xsl:if test="$site = 'csc'">
-	<script type="text/javascript" language="JavaScript" src="/csc/cscview.js"/>
+      <xsl:if test="count(//math) != 0">
+	<!--*
+	    * We do not use the CDN version because of HEAD/SAO policy
+	    *
+	    * Given that we do not support Ascii Math (AMS) or MathML (MML)
+	    * input, and do not need the texjax input processor, is it
+	    * worth using a "custom" config?
+	    *-->
+	<script type="text/javascript"
+		src="/ciao/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js"/>
       </xsl:if>
-
-      <!--* add the favicon *-->
-      <link rel="icon" href="{$favicon}"/>
 
       <!--* add main stylesheets *-->
       <xsl:choose>
 	<xsl:when test="$site='iris'">
 	  <link rel="stylesheet" title="Stylesheet for Iris pages" href="{$cssfile}"/>
 	  <link rel="stylesheet" title="Stylesheet for Iris pages" media="print" href="{$cssprintfile}"/>
+	</xsl:when>
+	 
+	<xsl:when test="$site='csc'">
+	  <link rel="stylesheet" title="Stylesheet for CSC pages" href="{$cssfile}"/>
+	  <link rel="stylesheet" title="Stylesheet for CSC pages" media="print" href="{$cssprintfile}"/>
 	</xsl:when>
 	 
 	<xsl:otherwise>
@@ -291,13 +324,52 @@
 	<link rel="alternate" type="application/rss+xml" title="CIAO News RSS Feed" href="{$outurl}feed.xml" />
       </xsl:if>
 
-      <!-- canonical link for search results -->
-      <xsl:if test="$type = 'live'">
-	<xsl:if test="$url != ''">
-	  <link rel="canonical" href="{$url}"/>
+      <!-- canonical link for search results
+           (include in non-live sites for better testing)
+	   The use of url as a fallback is for development only
+	   Trailing /index.html is stripped off if present,
+           replaced by /
+	-->
+      <xsl:variable name="canonicalurl"><xsl:choose>
+	<xsl:when test="$canonicalbase = ''">
+	  <xsl:message terminate="no">
+ DEVELOPMENT WARNING: no canonicalbase parameter so falling back to url=<xsl:value-of select="$url"/>
+  (if you see this warning tell Doug!)
+          </xsl:message>
+	  <xsl:choose>
+	    <xsl:when test="$url != ''"><xsl:value-of select="$url"/></xsl:when>
+	    <xsl:otherwise>
+	      <xsl:message terminate="no">
+ WARNING: page has no canonical link (missing canonicalbase/url params)
+	      </xsl:message>
+	    </xsl:otherwise>
+	  </xsl:choose>
+	</xsl:when>
+	<xsl:when test="$page != ''"><xsl:value-of select="concat($canonicalbase, $page)"/></xsl:when>
+	<xsl:when test="$pagename != ''"><xsl:value-of select="concat($canonicalbase, $pagename, '.html')"/></xsl:when>
+	<xsl:otherwise>
+	  <xsl:message terminate="no">
+ WARNING: page has no canonical link (missing page/pagename)
+	  </xsl:message>
+	</xsl:otherwise>
+      </xsl:choose></xsl:variable>
+      <xsl:if test="$canonicalurl != ''">
+	<xsl:variable name="cpos" select="string-length($canonicalurl) - 10"/>
+	<xsl:if test="$cpos &lt; 1">
+	  <xsl:message terminate="yes">
+ ERROR: canonicalurl=<xsl:value-of select="$canonicalurl"/> is too short!
+	  </xsl:message>
 	</xsl:if>
+	<xsl:choose>
+	  <xsl:when test="substring($canonicalurl, $cpos) = '/index.html'">
+	    <link rel="canonical" href="{substring($canonicalurl, 1, $cpos)}"/>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <link rel="canonical" href="{$canonicalurl}"/>
+	  </xsl:otherwise>
+	</xsl:choose>
       </xsl:if>
-	  
+
       <!--*
           * This is an okay idea - although it requires some discipline when
           * creating the navbar and the navbarlink parameter added to 
@@ -326,6 +398,11 @@
 <xsl:value-of select="$css"/>
 </style>
       </xsl:if>
+
+      <xsl:call-template name="add-sao-metadata">
+	<xsl:with-param name="title" select="normalize-space($title)"/>
+      </xsl:call-template>
+      
     </head>
     
     <xsl:call-template name="start-tag"/>body<xsl:call-template name="end-tag"/>  <!--// open html body //-->
@@ -608,20 +685,6 @@
     </xsl:if>
   </xsl:template> <!--* name=is-site-valid *-->
 
-  <xsl:template name="is-proglang-valid">
-    <xsl:choose>
-      <xsl:when test="$proglang=''"/>
-      <xsl:when test="contains($allowed-sites,concat(' ',$site,' '))=true()"/>
-      <xsl:otherwise>
-	<xsl:message terminate="yes">
-  Error:
-    proglang parameter [<xsl:value-of select="$proglang"/>] is unknown
-    allowed values: '' or <xsl:value-of select="$allowed-proglang"/>
-	</xsl:message>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template> <!--* name=is-proglang-valid *-->
-
   <!--***
       *** check parameters are okay
       ***-->
@@ -865,23 +928,5 @@ Programming error: add-ssi-include called with an empty file parameter
     </div>
 
   </xsl:template> <!--* name=add-progress-link *-->
-
-
-
-  <!--*
-      * Convert the $proglang variable into printable text.
-      * It is not expected to be called when $proglang is empty.
-      *-->
-  <func:function name="djb:get-proglang-string">
-    <func:result><xsl:choose>
-      <xsl:when test="$proglang = 'sl'">S-Lang</xsl:when>
-      <xsl:when test="$proglang = 'py'">Python</xsl:when>
-      <xsl:otherwise>
-	<xsl:message terminate="yes">
- Internal error - djb:get-proglang-string() does not recognise proglang='<xsl:value-of select="$proglang"/>
-	</xsl:message>
-      </xsl:otherwise>
-    </xsl:choose></func:result>
-  </func:function>
 
 </xsl:stylesheet>

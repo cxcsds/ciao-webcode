@@ -42,6 +42,10 @@
       <xsl:with-param name="pname"  select="'install'"/>
       <xsl:with-param name="pvalue" select="$install"/>
     </xsl:call-template>
+    <xsl:call-template name="check-param-ends-in-a-slash">
+      <xsl:with-param name="pname"  select="'canonicalbase'"/>
+      <xsl:with-param name="pvalue" select="$canonicalbase"/>
+    </xsl:call-template>
 
     <!--* what do we create *-->
     <xsl:apply-templates select="bugs" mode="page"/>
@@ -108,7 +112,6 @@
 
 		<xsl:if test="$site='ciao' and not(/bugs/info/noahelp)">
 		  <p>
-
 		  For detailed information and examples of running this tool,
 		  refer to
 		  <a>
@@ -130,7 +133,6 @@
 		 </xsl:if>
 		</div>
 	      </div>
-
 
 	      <!--* add any intro text  *-->
 	      <xsl:if test="intro/note">
@@ -424,49 +426,53 @@
 
 
   <!--* 
-      * create include page: <bugs>.incl.html
-      * for use as ahelp include
+      * create the file that ahelp processing will pick up to
+      * include this information in the ahelp page.
+      *
+      * TODO: do not write out if
+      *   just contains 'no known bugs' statement.
+      *
       *-->
-
   <xsl:template match="bugs" mode="include">
 
-    <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$pagename"/>.incl.html</xsl:variable>
-
+    <!-- write the slug to the storage area -->
+    <xsl:variable name="outloc" select="$storageInfo//dir[@site=$site]"/>
+    <xsl:variable name="filename"
+		  select="concat($outloc, 'bugs/', $pagename, '.slug.xml')"/>
+    
     <!--* output filename to stdout *-->
     <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
 
-    <xsl:document href="{$filename}" method="html" encoding="utf-8">
-
-	<!--* add disclaimer about editing this HTML file *-->
-	<xsl:call-template name="add-disclaimer"/>
-
-        <xsl:if test="not(//buglist)">
- 	  <p>There are no known bugs for this tool.</p>
+    <xsl:document href="{$filename}" method="xml" encoding="utf-8">
+      <!--* add disclaimer about editing this HTML file *-->
+      <xsl:call-template name="add-disclaimer"/>
+      <slug>
+	<xsl:if test="not(//buglist)">
+	  <p>There are no known bugs for this tool.</p>
 	</xsl:if>
-	      <xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
-	      <xsl:choose>
-	        <xsl:when test="//buglist/subbuglist">
-		  <xsl:apply-templates select="//buglist/subbuglist" mode="ahelp"/>
-	        </xsl:when>
-
-		<xsl:otherwise>
-		  <dl>
-		    <xsl:apply-templates select="//buglist/entry[not(@cav)]" mode="ahelp"/>
-		  </dl>
-		</xsl:otherwise>
-	      </xsl:choose>
-	      </xsl:if>
-	      
-	      <xsl:if test="//buglist/entry[@cav]">
-
-	        <h2><a name="caveats">Caveats</a></h2>
-
-		<dl>
-		  <xsl:apply-templates select="//buglist/entry[@cav]" mode="ahelp"/>
-		</dl>
-	      </xsl:if>
-
-
+	
+	<xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
+	  <xsl:choose>
+	    <xsl:when test="//buglist/subbuglist">
+	      <xsl:apply-templates select="//buglist/subbuglist" mode="ahelp-buglist"/>
+	    </xsl:when>
+	    
+	    <xsl:otherwise>
+	      <dl>
+		<xsl:apply-templates select="//buglist/entry[not(@cav)]" mode="ahelp-buglist"/>
+	      </dl>
+	    </xsl:otherwise>
+	  </xsl:choose>
+	</xsl:if>
+	
+	<xsl:if test="//buglist/entry[@cav]">
+	  <h2><a name="caveats">Caveats</a></h2>
+	  
+	  <dl>
+	    <xsl:apply-templates select="//buglist/entry[@cav]" mode="ahelp-buglist"/>
+	  </dl>
+	</xsl:if>
+      </slug>
     </xsl:document>
   </xsl:template> <!--* match=bugs mode=include *-->
 
@@ -695,13 +701,13 @@
 
 
   <!-- subbuglist ahelp content template -->
-  <xsl:template match="subbuglist" mode="ahelp">
+  <xsl:template match="subbuglist" mode="ahelp-buglist">
     
     <xsl:for-each select=".">
 
     <h3><xsl:value-of select="@title"/></h3>
 
-      <xsl:apply-templates select="entry" mode="ahelp"/>
+      <xsl:apply-templates select="entry" mode="ahelp-buglist"/>
 
     </xsl:for-each>
   </xsl:template> 
@@ -709,7 +715,7 @@
 
 
   <!-- ahelp bug content template -->
-  <xsl:template match="entry" mode="ahelp">
+  <xsl:template match="entry" mode="ahelp-buglist">
 
     <xsl:for-each select=".">
 

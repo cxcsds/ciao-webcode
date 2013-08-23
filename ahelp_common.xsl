@@ -29,6 +29,8 @@
   xmlns:exsl="http://exslt.org/common"
   extension-element-prefixes="date str func exsl">
 
+  <xsl:include href="common.xsl"/>
+
   <!--*
       * allowed values for these parameters (if there are any)
       * - see check-param-allowed template for why want spaces
@@ -38,6 +40,20 @@
 
   <!--* I THINK SOMETHING IS GOING WRONG .... *-->
   <xsl:param name="depth" value="''"/>
+
+  <xsl:param name="favicon" select='""'/>
+
+  <!--*
+      * The current date (for the 'last modified' date); lastmod is not used for
+      * the individual ahelp pages, but lastmodiso is.
+      *-->
+  <xsl:variable name="dt" select="date:date-time()"/>
+  <xsl:variable name="lastmod"
+    select="concat(date:day-in-month($dt),' ',date:month-name($dt),' ',date:year($dt))"/>
+  <xsl:variable name="month2"><xsl:number value="date:month-in-year($dt)" format="01"/></xsl:variable>
+  <xsl:variable name="day2"><xsl:number value="date:day-in-month($dt)" format="01"/></xsl:variable>
+  <xsl:variable name="lastmodiso"
+		select="concat(date:year($dt), '-', $month2, '-', $day2)"/>
 
   <!--*
       * Quit with an error message if:

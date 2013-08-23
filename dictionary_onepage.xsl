@@ -46,12 +46,14 @@
 
     <!--* check the params are okay *-->
     <xsl:call-template name="is-site-valid"/>
-    <xsl:if test="substring($install,string-length($install))!='/'">
-      <xsl:message terminate="yes">
-  Error: install parameter must end in a / character.
-    install=<xsl:value-of select="$install"/>
-      </xsl:message>
-    </xsl:if>
+    <xsl:call-template name="check-param-ends-in-a-slash">
+      <xsl:with-param name="pname"  select="'install'"/>
+      <xsl:with-param name="pvalue" select="$install"/>
+    </xsl:call-template>
+    <xsl:call-template name="check-param-ends-in-a-slash">
+      <xsl:with-param name="pname"  select="'canonicalbase'"/>
+      <xsl:with-param name="pvalue" select="$canonicalbase"/>
+    </xsl:call-template>
 
     <!--* check there's a navbar element *-->
     <xsl:if test="boolean(dictionary_onepage/info/navbar) = false()">
@@ -157,7 +159,6 @@
       <!--* we start processing the XML file here *-->
       <html lang="en">
 
-
 	<!--*
             * make the HTML head node
             *
@@ -169,6 +170,7 @@
 
 	<xsl:call-template name="add-htmlhead">
 	  <xsl:with-param name="title">Dictionary Entries</xsl:with-param>
+	  <xsl:with-param name="page">entries.html</xsl:with-param>
 	</xsl:call-template>
 	
 	<!--* add disclaimer about editing this HTML file *-->
