@@ -468,7 +468,7 @@ sub should_we_skip ($@) {
 # NOTE: this code is not needed when using MathJax.
 #
 sub math2image ($$) {
-    return if $CIAODOC::use_mathjax;
+    return if use_mathjax;
 
     my $head    = shift;
     my $outfile = shift;
@@ -553,7 +553,7 @@ sub check_for_page {
 #   tag are present
 #
 sub clean_up_math {
-    return if $CIAODOC::use_mathjax;
+    return if use_mathjax;
 
     my $outdir = shift;
     foreach my $page ( @_ ) {
@@ -574,7 +574,7 @@ sub clean_up_math {
 #   Creates the PNG images
 #
 sub process_math {
-    return if $CIAODOC::use_mathjax;
+    return if use_mathjax;
 
     my $outdir = shift;
     foreach my $page ( @_ ) { math2image $page, "${outdir}${page}.png"; }
@@ -1138,7 +1138,7 @@ sub xml2html_threadindex ($) {
     # (remove with use of MathJax)
     my @math = find_math_pages $dom;
     die "Error: found math blocks in $in - not allowed here\n"
-      unless $#math == -1 and $CIAODOC::use_mathjax == 0;
+      unless $#math == -1 and use_mathjax == 0;
 
     # NOTE: we always recreate the threadindex
     # (it just makes things easier, since the thread index pages

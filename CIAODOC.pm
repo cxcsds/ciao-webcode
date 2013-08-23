@@ -27,13 +27,15 @@ use IO::File;
 use XML::LibXML;
 use XML::LibXSLT;
 
-# Try to support using LaTeX ($use_mathjax=0) or MathJax
-# ($use_mathjax=1) for displaying LaTeX equations on the
+# Try to support using LaTeX (use_mathjax()=0) or MathJax
+# (use_mathjax()=1) for displaying LaTeX equations on the
 # web pages.
 # For now treat as a hard-coded constant rather than something
 # we can change by setting a flag in the publishing script.
 #
-my $use_mathjax = 0;
+# This is intended as a temporary measure; once MathJax can
+# be installed onto the web site this can be removed.
+sub use_mathjax () { return 0; }
 
 # Set up XML/XSLT processors
 #
@@ -87,6 +89,7 @@ my @funcs_cfg  =
      parse_config find_site get_config_main get_config_main_type
      get_config_site get_config_version get_config_type
      check_config_exists check_type_known check_location get_group
+     use_mathjax
     );
 
 use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
@@ -442,7 +445,7 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     my $sheet = _get_stylesheet $stylesheet;
 
     # hard code the MathJax setting
-    $$params{'use-mathjax'} = 0;
+    $$params{'use-mathjax'} = use_mathjax;
 
     dbg "  *** params (start) ***";
     my %newparams = XML::LibXSLT::xpath_to_string(%$params);
@@ -483,7 +486,7 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
 #   an empty list in this case.
 #
 sub find_math_pages ($) {
-    return () if $CIAODOC::use_mathjax;
+    return () if use_mathjax;
 
   my $dom = shift;
 
