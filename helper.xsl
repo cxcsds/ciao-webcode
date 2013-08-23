@@ -490,7 +490,7 @@
     <!--*
         * this is only going to be picked up by user agents that do not process
         * stylesheets - as long as the stylesheet has a rule
-        *    .hidmem { display: none; }
+        *    .hideme { display: none; }
         * so it's a good way of getting to lynx users
         *-->
 
@@ -499,20 +499,26 @@
 	title="Skip to the navigation links">Skip to the navigation links</a>
     </div>
 
-    <!--* we do not have a search bar on the pages for site=icxc *-->
-    <xsl:if test="$site != 'icxc'">
-      <div class="topbar">
-	<xsl:call-template name="add-search-ssi"/>
-      </div>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="lastmodbar">Last modified: <xsl:value-of select="$lastmod"/></div>
-      <xsl:if test="$url != ''">
-	<!--* this is a safety check for now *-->
-	<br class="hideme"/>
-	<div class="urlbar">URL: <xsl:value-of select="$url"/></div>
+    <!-- *
+         * Really this should be called topbar but to avoid 
+         * renaming stylesheets, use the ugly name of topbarcontainer
+	 *-->
+    <div class="topbarcontainer">
+      <!--* we do not have a search bar on the pages for site=icxc *-->
+      <xsl:if test="$site != 'icxc'">
+	<div class="topbar">
+	  <xsl:call-template name="add-search-ssi"/>
+	</div>
       </xsl:if>
+
+      <div class="topbar">
+	<div class="lastmodbar">Last modified: <xsl:value-of select="$lastmod"/></div>
+	<xsl:if test="$url != ''">
+	  <!--* this is a safety check for now *-->
+	  <br class="hideme"/>
+	  <div class="urlbar">URL: <xsl:value-of select="$url"/></div>
+	</xsl:if>
+      </div>
     </div>
   </xsl:template> <!--* name=add-header *-->
 
