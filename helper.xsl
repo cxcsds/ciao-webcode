@@ -263,7 +263,8 @@
       * Support for the "standard" set of metadata pages for SAO
       * pages is included.
       *
-      * MathJax support is added if the page contains any math tags.
+      * MathJax support is added if the page contains any math tags
+      * (if $use-mathjax is set to 1)
       *
       * input variables:
       *   title - required
@@ -289,7 +290,7 @@
       <!--* any scripts ? *-->
       <xsl:apply-templates select="info/htmlscripts"/>
 
-      <xsl:if test="count(//math) != 0">
+      <xsl:if test="$use-mathjax = 1 and count(//math) != 0">
 	<!--*
 	    * We do not use the CDN version because of HEAD/SAO policy
 	    *

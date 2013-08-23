@@ -27,6 +27,14 @@ use IO::File;
 use XML::LibXML;
 use XML::LibXSLT;
 
+# Try to support using LaTeX ($use_mathjax=0) or MathJax
+# ($use_mathjax=1) for displaying LaTeX equations on the
+# web pages.
+# For now treat as a hard-coded constant rather than something
+# we can change by setting a flag in the publishing script.
+#
+my $use_mathjax = 0;
+
 # Set up XML/XSLT processors
 #
 my $parser = XML::LibXML->new()
@@ -433,6 +441,9 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     dbg "  xslt=$stylesheet";
     my $sheet = _get_stylesheet $stylesheet;
 
+    # hard code the MathJax setting
+    $$params{'use-mathjax'} = 0;
+
     dbg "  *** params (start) ***";
     my %newparams = XML::LibXSLT::xpath_to_string(%$params);
     while (my ($parname, $parval) = each %newparams) {
@@ -468,11 +479,11 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
 # Should be sent a DOM
 #
 # NOTE:
-#   always returns an empty list since moved to MathJax
-#   but want to leave code in for now in case needed
+#   This routine is not needed for MathJax, so we return
+#   an empty list in this case.
 #
 sub find_math_pages ($) {
-  return (); # DBG: MathJax
+    return () if $CIAODOC::use_mathjax;
 
   my $dom = shift;
 

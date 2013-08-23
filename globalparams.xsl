@@ -96,6 +96,14 @@
   xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
   extension-element-prefixes="func djb">
 
+  <!--* 
+      * Temporary:
+      * Swap between using LaTeX to create PNG of equations
+      * and MathJax for in-line display with this hard-coded
+      * parameter 
+      *-->
+  <xsl:param name="use-mathjax" select='0'/>
+
   <!--* these should be over-ridden from the command line *-->
 
   <xsl:param name="cssfile"      select='""'/>

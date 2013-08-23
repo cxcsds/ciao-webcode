@@ -540,10 +540,13 @@
       * {   <mathml>...</mathml>   (MathML version)   NOT YET IMPLEMENTED    }
       *   </math>
       *
-      * We now use the MathJax javascript system - http://www.mathjax.org/ -
-      * for rendering LaTeX, rather than calling out to LaTeX to create
-      * an image (although this may be required to support users who
-      * have JavaScript turned off).
+      * If $use-mathjax = 1:
+      *   use the MathJax javascript system - http://www.mathjax.org/ -
+      *   for rendering LaTeX, rather than calling out to LaTeX to create
+      *   an image (although this may be required to support users who
+      *   have JavaScript turned off).
+      * otherwise:
+      *   PNG files are created by the publishing code
       *
       * Notes:
       * - may want to add attributes that are used to control the created formula
@@ -558,6 +561,12 @@
       </xsl:message>
     </xsl:if>
 
+    <xsl:if test="$use-mathjax = 0 and boolean(text)=false()">
+      <xsl:message terminate="yes">
+ Error: math tag is missing a text tag (since MathJax is not being used)
+      </xsl:message>
+    </xsl:if>
+
     <!--* don't allow in p blocks *-->
     <xsl:if test="ancestor::p">
       <xsl:message terminate="yes">
@@ -567,14 +576,36 @@
       </xsl:message>
     </xsl:if>
 
-    <!--*
-        * create the latex document
-        * - could allow the fg/bg colors to be set with attributes
-        * - apparently xsl:document will nest
-        * - need to remove leading/trailing whitespace so that
-        *   latex doesn't complain
+    <xsl:choose>
+      <xsl:when test="$use-mathjax = 1">
+	<!--*
+	    * how best to supply an anchor now?
+	    * MathJax does add anchors automatically; can we add this?
+	    *-->
+	<a name="{name}"/>
+	<!--* 
+	    * Could place human-readable form in a noscript tag, but this
+	    * way we get to provide something hopefully-readable whilst the
+	    * LaTeX is being rendered.
+	    *-->
+	<span class="MathJax_Preview"><xsl:choose>
+	  <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
+	  <xsl:otherwise><xsl:value-of select="latex"/></xsl:otherwise>
+	</xsl:choose></span>
+	<script type="math/tex; mode=display">
+	  <xsl:value-of select="latex"/>
+	</script>
+      </xsl:when>
 
-    <xsl:document href="{concat($sourcedir,name,'.tex')}" method="text">
+      <xsl:otherwise>
+	<!--*
+	    * create the latex document
+	    * - could allow the fg/bg colors to be set with attributes
+	    * - apparently xsl:document will nest
+	    * - need to remove leading/trailing whitespace so that
+	    *   latex doesn't complain
+	    *-->
+	<xsl:document href="{concat($sourcedir,name,'.tex')}" method="text">
 \documentclass{article}
 \usepackage{color}
 \pagestyle{empty}
@@ -586,27 +617,10 @@
 }
 \end{eqnarray*}
 \end{document}
-    </xsl:document>
-
-        *-->
-
-    <!--*
-	* how best to supply an anchor now?
-	* MathJax does add anchors automatically; can we add this?
-	*-->
-    <a name="{name}"/>
-    <!--* 
-	* Could place human-readable form in a noscript tag, but this
-	* way we get to provide something hopefully-readable whilst the
-	* LaTeX is being rendered.
-	*-->
-    <span class="MathJax_Preview"><xsl:choose>
-      <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
-      <xsl:otherwise><xsl:value-of select="latex"/></xsl:otherwise>
-    </xsl:choose></span>
-    <script type="math/tex; mode=display">
-      <xsl:value-of select="latex"/>
-    </script>
+	</xsl:document>
+	<a name="{name}"><img src="{name}.png" alt="{text}"/></a>
+      </xsl:otherwise>
+    </xsl:choose>
 
   </xsl:template> <!--* match=math *-->
 
