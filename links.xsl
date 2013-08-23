@@ -709,6 +709,7 @@
       *
       * CIAO dictionary has one page per term, CSC dictionary has a single page.
       *
+      * ChIPS and Sherpa: assumes the CIAO dictionary.
       *-->
   
   <xsl:template match="dictionary">
@@ -732,6 +733,7 @@
 
     <xsl:variable name="sitevalue"><xsl:choose>
 	<xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
+	<xsl:when test="$site = 'chips' or $site='sherpa'">ciao</xsl:when>
 	<xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
 
