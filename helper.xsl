@@ -31,10 +31,6 @@
   <!--*
       * used to determine whether the site is valid
       *
-      * used to determine whether or not to add PDF links to header/footer
-      * - see add-header/add-footer. Will be removed once we convert
-      *   threads to the new figure environment.
-      *
       * used to determine whether a download type is recognised
       * (to catch user error rather than any real need to restrict the types)
       * This should perhaps be determined by an external file (eg a list in the
@@ -449,91 +445,6 @@
   </xsl:template> <!--* match=htmlscript *-->
 
   <!--*
-      * add the header
-      *
-      * Parameters:
-      *   name - string, required
-      *
-      * Also depends on the package-wide params/variables:
-      *    $site, $type, $updateby, $url [kind of]
-      *
-      * In CIAO 3.0 changed to remove the use of tables. Use CSS instead.
-      *
-      * For now we only add a "URL:" bar if the global $url
-      * variable is not ''. We need to sort this out so that we
-      * can have one for all pages.
-      *
-      *-->
-  <xsl:template name="add-header">
-    <xsl:variable name="root" select="name(//*)"/>
-
-    <xsl:choose>
-      <xsl:when test="$site='icxc'">
-        <xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/incl/header.html'"/>
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:when test="$site='iris'">
-        <xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/iris/vaoheader.html'"/>
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/incl/cxcheader.html'"/>
-        </xsl:call-template>
-      </xsl:otherwise> 
-    </xsl:choose>
-
-    <!--* we break up into lots of different sections to try and make lynx happier *-->
-
-    <!--*
-        * this is only going to be picked up by user agents that do not process
-        * stylesheets - as long as the stylesheet has a rule
-        *    .hideme { display: none; }
-        * so it's a good way of getting to lynx users
-        *-->
-
-    <div class="hideme">
-      <a href="#navtext" accesskey="s"
-	title="Skip to the navigation links">Skip to the navigation links</a>
-    </div>
-
-    <!-- *
-         * Really this should be called topbar but to avoid 
-         * renaming stylesheets, use the ugly name of topbarcontainer
-	 *-->
-    <div class="topbarcontainer">
-      <!--* we do not have a search bar on the pages for site=icxc *-->
-      <xsl:if test="$site != 'icxc'">
-	<div class="topbar">
-	  <xsl:call-template name="add-search-ssi"/>
-	</div>
-      </xsl:if>
-
-      <div class="topbar">
-	<div class="lastmodbar">Last modified: <xsl:value-of select="$lastmod"/></div>
-	<xsl:if test="$url != ''">
-	  <!--* this is a safety check for now *-->
-	  <br class="hideme"/>
-	  <div class="urlbar">URL: <xsl:value-of select="$url"/></div>
-	</xsl:if>
-      </div>
-    </div>
-  </xsl:template> <!--* name=add-header *-->
-
-  <!--*
-      * add the necessary SSI to get the search bar
-      *-->
-  <xsl:template name="add-search-ssi">
-
-    <xsl:call-template name="add-ssi-include">
-      <xsl:with-param name="file" select="$searchssi"/>
-    </xsl:call-template>
-
-  </xsl:template> <!--* add-search-ssi *-->
-
-  <!--*
       * trial header:
       *  create here rather than use include files
       *
@@ -575,52 +486,6 @@
     <xsl:call-template name="newline"/>
     <br/>
   </xsl:template> <!--* add-header-trial *-->
-
-  <!--*
-      * add the footer
-      *
-      * Parameters:
-      *   name - string, required
-      *     passed through to add-standard-banner
-      *
-      * Also depends on the package-wide params/variables:
-      *    $site, $type
-      *
-      *-->
-  <xsl:template name="add-footer">
-    <!--* add the "standard" banner *-->
-    <xsl:variable name="root" select="name(//*)"/>
-
-    <br clear="all"/>
-    <div class="bottombar">
-      <div>Last modified: <xsl:value-of select="$lastmod"/></div>
-    </div>
-
-    <xsl:if test="($site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'chart' or $site = 'obsvis' or $site = 'iris') and $type = 'live'">
-      <xsl:call-template name="add-ssi-include">
-        <xsl:with-param name="file" select="$googlessi"/>
-      </xsl:call-template>
-    </xsl:if>
-
-    <xsl:choose>
-      <xsl:when test="$site='icxc'">
-	<xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/incl/footer.html'"/>
-	</xsl:call-template>
-      </xsl:when>
-      <xsl:when test="$site='iris'">
-	<xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/iris/vaofooter.html'"/>
-	</xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:call-template name="add-ssi-include">
-	  <xsl:with-param name="file" select="'/incl/cxcfooter.html'"/>
-	</xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
-
-  </xsl:template> <!--* name=add-footer *-->
 
   <!--* manually include the live footer: wil need updating if live footer changes *-->
   <xsl:template name="add-footer-trial">
@@ -719,33 +584,6 @@
     <!--* <hr size="3"/> *-->
     <hr size="5" noshade="0"/>
   </xsl:template>
-
-  <!--*
-      * add a ssi include statement to the output, surrounded by new lines
-      * (because we are having issues with the register CGI stuff
-      *  and I'm hoping that the carriage returns will improve
-      *  things)
-      *
-      * Parameters:
-      *  file - string, required
-      *    the file to include
-      *
-      *-->
-  <xsl:template name="add-ssi-include">
-    <xsl:param name='file'/>
-    <xsl:if test="$file = ''">
-      <xsl:message terminate="yes">
-
-Programming error: add-ssi-include called with an empty file parameter
-
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:call-template name="newline"/>
-    <xsl:comment>#include virtual="<xsl:value-of select="$file"/>"</xsl:comment>
-    <xsl:call-template name="newline"/>
-
-  </xsl:template> <!--* name=add-ssi *-->
 
   <!--* used by the test/trial headers *-->
   <xsl:template name="add-start-body-white">

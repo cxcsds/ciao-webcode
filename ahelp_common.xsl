@@ -39,7 +39,7 @@
   <xsl:variable name="allowed-sites"   select="' ciao chips sherpa '"/>
 
   <!--* I THINK SOMETHING IS GOING WRONG .... *-->
-  <xsl:param name="depth" value="''"/>
+  <xsl:param name="depth" select="''"/>
 
   <xsl:param name="favicon" select='""'/>
 
@@ -79,7 +79,7 @@
     <xsl:param name="pname"/>
     <xsl:param name="pvalue"/>
     <xsl:param name="allowed"/>
-    <xsl:param name="slashcheck" value="0"/>
+    <xsl:param name="slashcheck" select="0"/>
 
     <!--* check 'existence' *-->
     <xsl:if test="$pvalue=''">
@@ -180,34 +180,6 @@
   </xsl:template> <!--* name=add-title-anchor *-->
 
   <!--*
-      * check the input parameters are input
-      *
-      * Parameters:
-      *   name - string, required
-      *     name of parameter
-      *
-      *   value - string, required
-      *     input value of parameter
-      *
-      *   template - string, required
-      *     name of template
-      *
-      *-->
-  <xsl:template name="check-input-param">
-    <!--* we don't check these parameters! *-->
-    <xsl:param name="name"/>
-    <xsl:param name="value"/>
-    <xsl:param name="template"/>
-
-    <xsl:if test="$value = ''">
-      <xsl:message terminate="yes">
- Error: <xsl:value-of select="$template"/> called without a <xsl:value-of select="$name"/> parameter
-      </xsl:message>
-    </xsl:if>
-
-  </xsl:template> <!--* name=check-input-param *-->
-
-  <!--*
       * add a navbar and the spacer column
       *
       * Parameters:
@@ -217,265 +189,23 @@
   <xsl:template name="add-navbar">
     <xsl:param name="navbar" select="''"/>
 
-    <xsl:call-template name="check-input-param">
+    <xsl:call-template name="check-nonempty-param">
       <xsl:with-param name="name"     select="'navbar'"/>
       <xsl:with-param name="value"    select="$navbar"/>
       <xsl:with-param name="template" select="'add-navbar'"/>
     </xsl:call-template>
 
       <!--* add the navbar *-->
-      <xsl:comment>#include virtual="navbar_<xsl:value-of select="$navbar"/>.incl"</xsl:comment>
-
-      <xsl:call-template name="newline"/>
+    <xsl:call-template name="add-ssi-include">
+      <xsl:with-param name="file" select="concat('navbar_', $navbar, '.incl')"/>
+    </xsl:call-template>
     
   </xsl:template> <!--* name=add-navbar *-->
-
-  <!--*
-      * output the standard banner (head) for format=web
-      *
-      * Parameters:
-      *   lastmod - string, required
-      *     last modified date
-      *
-      *-->
-  <xsl:template name="add-standard-banner-header">
-    <xsl:param name="lastmod"  select="''"/>
-    <xsl:param name="pagename"  select="''"/>
-
-    <!--* TODO: remove me when happy stylesheets have been cleaned up *-->
-    <xsl:if test="$pagename != ''">
-      <xsl:message terminate="yes">
- ERROR: add-standard-banner-header called with pagename=<xsl:value-of select="$pagename"/>
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:call-template name="check-input-param">
-      <xsl:with-param name="name"     select="'lastmod'"/>
-      <xsl:with-param name="value"    select="$lastmod"/>
-      <xsl:with-param name="template" select="'add-standard-banner-header'"/>
-    </xsl:call-template>
-
-    <!--* we break up into lots of different sections to try and make lynx happier *-->
-
-    <!--*
-        * this is only going to be picked up by user agents that do not process
-        * stylesheets - as long as the stylesheet has a rule
-        *    .hideme { display: none; }
-        * so it's a good way of getting to lynx users
-        *-->
-    <div class="hideme">
-      <a href="#navtext" accesskey="s"
-	title="Skip to the navigation links">Skip to the navigation links</a>
-    </div>
-
-    <div class="topbar">
-      <xsl:call-template name="add-cxc-search-ssi"/>
-    </div>
-
-    <div class="topbar">
-      <div class="lastmodbar">Last modified: <xsl:value-of select="$lastmod"/></div>
-      <xsl:if test="$url != ''">
-	<!--* this is a safety check for now *-->
-	<br class="hideme"/>
-	<div class="urlbar">URL: <xsl:value-of select="$url"/></div>
-      </xsl:if>
-    </div>
-
-  </xsl:template> <!--* name=add-standard-banner-header *-->
-
-  <!--*
-      * output the standard banner (foot) for format=web
-      *
-      * Parameters:
-      *   lastmod - string, required
-      *     last modified date
-      *
-      *-->
-  <xsl:template name="add-standard-banner-footer">
-    <xsl:param name="lastmod"  select="''"/>
-    <xsl:param name="pagename"  select="''"/>
-
-    <!--* TODO: remove me when happy stylesheets have been cleaned up *-->
-    <xsl:if test="$pagename != ''">
-      <xsl:message terminate="yes">
- ERROR: add-standard-banner-footer called with pagename=<xsl:value-of select="$pagename"/>
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:call-template name="check-input-param">
-      <xsl:with-param name="name"     select="'lastmod'"/>
-      <xsl:with-param name="value"    select="$lastmod"/>
-      <xsl:with-param name="template" select="'add-standard-banner-footer'"/>
-    </xsl:call-template>
-
-    <br clear="all"/><div class="bottombar">
-      <div>Last modified: <xsl:value-of select="$lastmod"/></div>
-    </div>
-
-  </xsl:template> <!--* name=add-standard-banner-footer *-->
-
-  <xsl:template name="add-cxc-search-ssi">
-    <xsl:comment>#include virtual="<xsl:value-of select="$searchssi"/>"</xsl:comment>
-    <xsl:call-template name="newline"/>
-  </xsl:template> <!--* name=add-cxc-search-ssi *-->
-
-  <xsl:template name="add-google-analytics-ssi">
-    <xsl:comment>#include virtual="<xsl:value-of select="$googlessi"/>"</xsl:comment>
-  </xsl:template> <!--* name=add-google-analytics-ssi *-->
-
-  <!--*
-      * add the CXC header
-      * - depends on the type (live, test, trial) of the transform
-      *-->
-
-  <xsl:template name="add-cxc-header">
-
-<!--// TEMP
-    <xsl:if test='$type!="live"'>
-      <xsl:call-template name="add-start-body-white"/>
-      <xsl:call-template name="add-cxc-test-banner"/>
-    </xsl:if>
-
-    <xsl:choose>
-      <xsl:when test='$type="trial"'>
-        <xsl:call-template name="add-cxc-header-trial"/>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:call-template name="add-cxc-header-live"/>
-      </xsl:otherwise>
-    </xsl:choose>
-//-->
-
-      <xsl:call-template name="add-cxc-header-live"/>
-
-  </xsl:template> <!--* add-cxc-header *-->
-
-  <!--*
-      * add the standard header files
-      *-->
-  <xsl:template name="add-cxc-header-live">
-    <xsl:comment>#include virtual="/incl/cxcheader.html"</xsl:comment>
-    <xsl:call-template name="newline"/>
-
-  </xsl:template>
-
-  <!--*
-      * add the header for the trial site
-      *
-      * HTML is based upon the contents of the include files header.html
-      * and search.html from the live site Aug 2002
-      * (modified to point to different files/URLs when required)
-      *-->
-  <xsl:template name="add-cxc-header-trial">
-
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr>
-	<td align="left" valign="top">
-	  <map name="header_left">
-	    <area alt="Chandra Science" coords="0,4,192,72" href="http://cxc.harvard.edu/" shape="RECT"/>
-	  </map>
-	  <img src="/sds/imgs/header_left.gif" border="0" alt="Chandra Science" usemap="#header_left"/>
-	</td>
-	
-	<td align="right" valign="top">
-	  <!--* note: all but CIAO links are to the live site *-->
-	  <map name="header_right">
-	    <area alt="About Chandra" coords="0,14,107,31" href="http://cxc.harvard.edu/udocs/overview.html" shape="RECT"/>
-	    <area alt="Archive" coords="118,13,185,32" href="http://cxc.harvard.edu/cda/" shape="RECT"/>
-	    <area alt="Proposer" coords="197,12,268,31" href="http://cxc.harvard.edu/prop.html" shape="RECT"/>
-	    <area alt="Instruments &amp; Calibration" coords="283,14,453,32" href="http://cxc.harvard.edu/cal/" shape="RECT"/>
-	    <area alt="Newsletters" coords="112,33,198,51" href="http://cxc.harvard.edu/newsletters.html" shape="RECT"/>
-	    <area alt="Data Analysis" coords="1,35,97,50" href="/sds/ciao/" shape="RECT"/>
-	    <area alt="HelpDesk" coords="218,34,295,51" href="http://cxc.harvard.edu/helpdesk/" shape="RECT"/>
-	    <area alt="Calibration Database" coords="309,34,450,52" href="http://cxc.harvard.edu/caldb/" shape="RECT"/>
-	    <area alt="NASA Archives &amp; Centers" coords="295,53,452,75" href="http://cxc.harvard.edu/nasa_links.html" shape="RECT"/>
-	  </map>
-	  <img src="/sds/imgs/header_right.gif" border="0" alt="Chandra Science" usemap="#header_right"/>
-	</td>
-      </tr>
-    </table>
-    <br clear="all"/>
-    <xsl:call-template name="newline"/>
-    
-    <!--* add search button *-->
-    <form action="http://cxc.harvard.edu/cgi-gen/AT-CXCsearch.cgi" method="POST">
-      <table cellpadding="0" cellspacing="0" width="100%" border="0">
-	<tr>
-	  <td align="right">
-	    <font face="Arial,Helvetica,sans-serif">
-	      <input type="Text" name="search" size="17"/>
-	      <xsl:call-template name="add-nbsp"/>
-	      <xsl:call-template name="add-nbsp"/>
-	      <input type="image" name="SearchButton" align="middle"
-		src="/sds/imgs/search.gif"/>
-	      <input type="hidden" name="sp" value="sp"/>
-	    </font>
-	  </td>
-        </tr>
-      </table>
-    </form>
-    <br/>
-  </xsl:template> <!--* name=add-cxc-header-trial *-->
 
   <!--* used by the test/trial headers *-->
   <xsl:template name="add-start-body-white">
     <xsl:call-template name="add-start-tag"/>body bgcolor=<xsl:call-template name="add-quote"/>#FFFFFF<xsl:call-template name="add-quote"/><xsl:call-template name="add-end-tag"/>
   </xsl:template>
-
-  <!--*
-      * add the "banner" for test pages (at the very top)
-      * Lists the current time (found using EXSLT routines)
-      * and the person who did the last update.
-      *
-      * The header for the test site has (as of Dec 03) changed
-      * to make it abundantly clear that it is a test site.
-      * so we have changed the header to just give the last-updated
-      * date and editor. Might be better in a different position
-      * on the page but that would require changing too much
-      *
-      * Requires:
-      *   "global" parameter $updateby (set by stylesheet processor)
-      *
-      *-->
-  <xsl:template name="add-cxc-test-banner">
-
-    <xsl:comment> This header is for pages on the test site only </xsl:comment>
-    <xsl:call-template name="newline"/>
-
-    <!--* set up the time/date using EXSLT *-->
-    <xsl:variable name="dt"   select="date:date-time()"/>
-    <xsl:variable name="date" select="substring(date:date($dt),1,10)"/>
-    <xsl:variable name="time" select="substring(date:time($dt),1,8)"/>
-
-    <table width="100%" border="0">
-      <tr>
-	<td align="left">
-            Last published by: <xsl:value-of select="$updateby"/>
-	</td>
-	<td align="right">
-            at: <xsl:value-of select="$time"/><xsl:text> </xsl:text>
-            <xsl:value-of select="$date"/>
-	</td>
-      </tr>
-    </table>
-    <br clear="all"/>
-    <xsl:call-template name="newline"/>
-
-  </xsl:template> <!--* name=add-cxc-test-banner *-->
-
-  <!--*
-      * include google analytics; output the page "footer" 
-      *-->
-
-  <xsl:template name="add-cxc-footer">
-    <xsl:if test="$type = 'live'">
-      <xsl:call-template name="add-google-analytics-ssi"/>
-    </xsl:if>
-
-    <xsl:comment>#include virtual="/incl/cxcfooter.html"</xsl:comment>
-    <xsl:call-template name="newline"/>
-
-  </xsl:template> <!--* add-cxc-footer *-->
 
   <!--* taken from helper.xsl *-->
 

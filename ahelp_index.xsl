@@ -555,9 +555,8 @@
 	</xsl:call-template>
 
 	<!--* add header and banner *-->
-	<xsl:call-template name="add-cxc-header"/>
-	<xsl:call-template name="add-standard-banner-header">
-	  <xsl:with-param name="lastmod"  select="$lastmod"/>
+	<xsl:call-template name="add-header">
+	  <xsl:with-param name="lastmodvalue"  select="$lastmod"/>
 	</xsl:call-template>
 
 	  <!--// main div begins page layout //-->
@@ -586,10 +585,9 @@
 	    </div> <!--// close id=main  //-->
 	
 	<!--* add the banner *-->
-	<xsl:call-template name="add-standard-banner-footer">
-	  <xsl:with-param name="lastmod"  select="$lastmod"/>
+	<xsl:call-template name="add-footer">
+	  <xsl:with-param name="lastmodvalue"  select="$lastmod"/>
 	</xsl:call-template>
-	<xsl:call-template name="add-cxc-footer"/>
 	
 	<!--* add </body> tag [the <body> is included in a SSI] *-->
 	<xsl:call-template name="add-end-body"/>
@@ -759,9 +757,8 @@
 	</xsl:call-template>
 
 	<!--* add header and banner *-->
-	<xsl:call-template name="add-cxc-header"/>
-	<xsl:call-template name="add-standard-banner-header">
-	  <xsl:with-param name="lastmod"  select="$lastmod"/>
+	<xsl:call-template name="add-header">
+	  <xsl:with-param name="lastmodvalue"  select="$lastmod"/>
 	</xsl:call-template>
 
 	  <!--// main div begins page layout //-->
@@ -790,10 +787,9 @@
 	    </div> <!--// close id=main  //-->
 
 	<!--* add the banner *-->
-	<xsl:call-template name="add-standard-banner-footer">
-	  <xsl:with-param name="lastmod"  select="$lastmod"/>
+	<xsl:call-template name="add-footer">
+	  <xsl:with-param name="lastmodvalue"  select="$lastmod"/>
 	</xsl:call-template>
-	<xsl:call-template name="add-cxc-footer"/>
 
 	<!--* add </body> tag [the <body> is included in a SSI] *-->
 	<xsl:call-template name="add-end-body"/>

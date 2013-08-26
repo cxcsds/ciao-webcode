@@ -66,9 +66,8 @@
 	</head>
 
 	<!--* add header and banner *-->
-	<xsl:call-template name="add-cxc-header"/>
-	<xsl:call-template name="add-standard-banner-header">
-	  <xsl:with-param name="lastmod"  select="//LASTMODIFIED"/>
+	<xsl:call-template name="add-header">
+	  <xsl:with-param name="lastmodvalue"  select="//LASTMODIFIED"/>
 	</xsl:call-template>
 
 	  <!--// main div begins page layout //-->
@@ -96,10 +95,9 @@
 	    </div> <!--// close id=main  //-->
 	
 	<!--* add the banner *-->
-	<xsl:call-template name="add-standard-banner-footer">
-	  <xsl:with-param name="lastmod"  select="//LASTMODIFIED"/>
+	<xsl:call-template name="add-footer">
+	  <xsl:with-param name="lastmodvalue"  select="//LASTMODIFIED"/>
 	</xsl:call-template>
-	<xsl:call-template name="add-cxc-footer"/>
 
 	<!--* add </body> tag [the <body> is included in a SSI] *-->
 	<xsl:call-template name="add-end-body"/>
@@ -1166,23 +1164,5 @@
 <xsl:text>
 </xsl:text>
   </xsl:template>
-
-  <!--* taken from helper.xsl *-->
-  <xsl:template name="add-ssi-include">
-    <xsl:param name='file'/>
-    <xsl:if test="$file = ''">
-      <xsl:message terminate="yes">
-
-Programming error: add-ssi-include called with an empty file parameter
-
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:call-template name="newline"/>
-    <xsl:comment>#include virtual="<xsl:value-of select="$file"/>"</xsl:comment>
-    <xsl:call-template name="newline"/>
-
-  </xsl:template> <!--* name=add-ssi *-->
-
 
 </xsl:stylesheet> <!--* FIN *-->
