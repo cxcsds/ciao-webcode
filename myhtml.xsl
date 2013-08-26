@@ -561,12 +561,6 @@
       </xsl:message>
     </xsl:if>
 
-    <xsl:if test="$use-mathjax = 0 and boolean(text)=false()">
-      <xsl:message terminate="yes">
- Error: math tag is missing a text tag (since MathJax is not being used)
-      </xsl:message>
-    </xsl:if>
-
     <!--* don't allow in p blocks *-->
     <xsl:if test="ancestor::p">
       <xsl:message terminate="yes">
@@ -618,7 +612,10 @@
 \end{eqnarray*}
 \end{document}
 	</xsl:document>
-	<a name="{name}"><img src="{name}.png" alt="{text}"/></a>
+	<a name="{name}"><img src="{name}.png"><xsl:attribute name="alt"><xsl:choose>
+	  <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
+	  <xsl:otherwise><xsl:value-of select="text"/></xsl:otherwise>
+	</xsl:choose></xsl:attribute></img></a>
       </xsl:otherwise>
     </xsl:choose>
 
