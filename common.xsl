@@ -170,11 +170,42 @@
   </xsl:template> <!--* name=add-site-include *-->
 
   <!--*
+      * Add the last-modified bar.
+      *
+      * Parameters:
+      *   lastmodvalue - string, optional; if not given
+      *    (or empty), use the global $lastmod parameter
+      *-->
+  <xsl:template  name="add-lastmodbar">
+    <xsl:param name="lastmodvalue" select="''"/>
+
+    <div class="lastmodbar">Last modified: <xsl:choose>
+      <xsl:when test="$lastmodvalue = ''"><xsl:value-of select="$lastmod"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="$lastmodvalue"/></xsl:otherwise>
+    </xsl:choose></div>
+  </xsl:template> <!--* name=add-lastmodbar *-->
+
+  <!--*
+      * Add the URL bar (only shown for hardcopy outputs)
+      *
+      * Parameters:
+      *   uses the global $url parameter
+      *-->
+  <xsl:template  name="add-urlbar">
+    <xsl:if test="$url != ''">
+      <!--* this is a safety check for now *-->
+      <br class="hideme"/>
+      <div class="urlbar">URL: <xsl:value-of select="$url"/></div>
+    </xsl:if>
+  </xsl:template> <!--* name=add-urlbar *-->
+
+  <!--*
       * add the standard header, specialized for 
       * iCXC and IRIS sites, others use /incl/cxcheader.html.
       *
       * Parameters:
-      *   lastmodvalue - string, required
+      *   lastmodvalue - string, optional; if not given
+      *    (or empty), use the global $lastmod parameter
       *
       * Also depends on the package-wide params/variables:
       *    $site, $type, $updateby, $url [kind of]
@@ -187,11 +218,11 @@
   <xsl:template name="add-header">
     <xsl:param name="lastmodvalue"  select="''"/>
 
-    <xsl:call-template name="check-nonempty-param">
-      <xsl:with-param name="name"     select="'lastmodvalue'"/>
-      <xsl:with-param name="value"    select="$lastmodvalue"/>
-      <xsl:with-param name="template" select="'add-footer'"/>
-    </xsl:call-template>
+    <xsl:if test="$lastmodvalue = '' and $lastmod = ''">
+      <xsl:message terminate="yes">
+ ERROR: add-header has empty lastmodvalue and lastmod parameters
+      </xsl:message>
+    </xsl:if>
 
     <xsl:call-template name="add-site-include">
       <xsl:with-param name="type" select="'header'"/>
@@ -224,12 +255,10 @@
       </xsl:if>
 
       <div class="topbar">
-	<div class="lastmodbar">Last modified: <xsl:value-of select="$lastmodvalue"/></div>
-	<xsl:if test="$url != ''">
-	  <!--* this is a safety check for now *-->
-	  <br class="hideme"/>
-	  <div class="urlbar">URL: <xsl:value-of select="$url"/></div>
-	</xsl:if>
+	<xsl:call-template name="add-lastmodbar">
+	  <xsl:with-param name="lastmodvalue" select="$lastmodvalue"/>
+	</xsl:call-template>
+	<xsl:call-template name="add-urlbar"/>
       </div>
     </div>
   </xsl:template> <!--* name=add-header *-->
@@ -239,7 +268,8 @@
       * iCXC and IRIS sites, others use /incl/cxcfooter.html.
       *
       * Parameters:
-      *   lastmodvalue - string, required
+      *   lastmodvalue - string, optional; if not given
+      *    (or empty), use the global $lastmod parameter
       *
       * Also depends on the package-wide params/variables:
       *    $site, $type
@@ -248,15 +278,17 @@
   <xsl:template name="add-footer">
     <xsl:param name="lastmodvalue"  select="''"/>
 
-    <xsl:call-template name="check-nonempty-param">
-      <xsl:with-param name="name"     select="'lastmodvalue'"/>
-      <xsl:with-param name="value"    select="$lastmodvalue"/>
-      <xsl:with-param name="template" select="'add-footer'"/>
-    </xsl:call-template>
+    <xsl:if test="$lastmodvalue = '' and $lastmod = ''">
+      <xsl:message terminate="yes">
+ ERROR: add-footer has empty lastmodvalue and lastmod parameters
+      </xsl:message>
+    </xsl:if>
 
     <br clear="all"/>
     <div class="bottombar">
-      <div class="lastmodbar">Last modified: <xsl:value-of select="$lastmodvalue"/></div>
+      <xsl:call-template name="add-lastmodbar">
+	<xsl:with-param name="lastmodvalue" select="$lastmodvalue"/>
+      </xsl:call-template>
     </div>
 
     <xsl:if test="($site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'chart' or $site = 'obsvis' or $site = 'iris') and $type = 'live'">
