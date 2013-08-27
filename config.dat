@@ -516,8 +516,8 @@ number=1.0
 %cssprint=trial /sds/ciao_trial/ciao.print.css
 
 # favicon location
-%favicon=live /ciao4.3/favicon.ico
-%favicon=test /ciao4.3/favicon.ico
+%favicon=live /ciao/favicon.ico
+%favicon=test /ciao/favicon.ico
 %favicon=trial /sds/ciao_trial/favicon.ico
 
 imglinkicon=imgs/imageicon.gif
@@ -550,13 +550,13 @@ googlessi=/chart/analytics.ssi
 %storage=test /data/da/Docs/chartweb/published/internal/test/
 %storage=trial /data/da/Docs/chartweb/published/internal/trial/
 
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao43.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao43.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao43.trial.xml
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao45.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao45.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao45.trial.xml
 
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao43/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao43/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao43/trial/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao45/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao45/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao45/trial/ahelp/
 
 -version
 
