@@ -74,69 +74,52 @@
       <!--* we start processing the XML file here *-->
       <html lang="en">
 
-	<!--* make the HTML head node *-->
 	<xsl:call-template name="add-htmlhead-standard"/>
-
-	<!--* add disclaimer about editing this HTML file *-->
 	<xsl:call-template name="add-disclaimer"/>
-
 	<xsl:call-template name="add-header"/>
 
-	  <!--// main div begins page layout //-->
-	    <div id="main">
+	<div id="main">
+	  <div id="content">
+	    <div class="wrap">
+	      <h1 class="pagetitle">
+		<xsl:value-of select="/bugs/info/title/short"/>
+	      </h1>
 
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
-
-	        <h1 class="pagetitle">
-		  <xsl:value-of select="/bugs/info/title/short"/>
-		</h1>
-
-	      <div class="topbar">
-	        <div class="qlinkbar">
-
-		  Return to: <a href=".">Bug List Index</a>
-
-		  <xsl:if test="intro/altlink">
-		    <br/>
-		      <xsl:text>Related pages: </xsl:text>
-		      <xsl:apply-templates select="intro/altlink"/>
-		  </xsl:if>		  
-
-
-		<xsl:if test="$site='ciao' and not(/bugs/info/noahelp)">
+	      <div class="qlinkbar">
+		Return to: <a href=".">Bug List Index</a>
+		
+		<xsl:if test="intro/altlink">
 		  <p>
-		  For detailed information and examples of running this tool,
-		  refer to
-		  <a>
-		    <xsl:attribute name="href">
-		      <xsl:text>../ahelp/</xsl:text>
-			  <xsl:value-of select="concat($pagename,'.html')"/>
-			</xsl:attribute>
-			<xsl:text>the </xsl:text>
-			<xsl:value-of select="$pagename"/>
-			<xsl:text> ahelp file</xsl:text>
-		   </a>.  
-
-		  <xsl:if test="$site='ciao' and (/bugs/info/scripts)">
-		    <br/>
-		    This script is part of
-		    the <a href="../download/scripts">CIAO Scripts Package</a>.
-		  </xsl:if> 
+		    <xsl:text>Related pages: </xsl:text>
+		    <xsl:apply-templates select="intro/altlink"/>
 		  </p>
-		 </xsl:if>
-		</div>
+		</xsl:if>		  
+		
+		<xsl:if test="$site='ciao' and not(/bugs/info/noahelp)">
+		  <xsl:variable name="hrefval"
+				select="concat('../ahelp/', $pagename, '.html')"/>
+		  <p>
+		    For detailed information and examples of running this tool,
+		    refer to
+		    <a href="{$hrefval}"><xsl:value-of
+					     select="concat('the ', $pagename, ' ahelp file')"/></a>
+		  </p>
+		  <xsl:if test="$site='ciao' and (/bugs/info/scripts)">
+		    <p>
+		      This script is part of
+		      the <a href="../download/scripts/">CIAO Scripts Package</a>.
+		    </p>
+		  </xsl:if> 
+		</xsl:if>
 	      </div>
 
-	      <!--* add any intro text  *-->
 	      <xsl:if test="intro/note">
 	        <xsl:apply-templates select="intro/note"/>
 	      </xsl:if>
-
+	      
 	      <xsl:variable name="ctbuglist" select="count(//buglist/entry[not(@cav)])"/>
 	      <xsl:variable name="ctcavlist" select="count(//buglist/entry[@cav])"/>
-
+	      
 	      <xsl:variable name="isbuglist">
 		<xsl:choose>
 		  <xsl:when test="$ctbuglist > 0">1</xsl:when>
@@ -408,8 +391,6 @@
 	    </div> <!--// close id=main  //-->
 	    
 	<xsl:call-template name="add-footer"/>
-
-	<!--* add </body> tag [the <body> is added by the add-htmlhead template] *-->
 	<xsl:call-template name="add-end-body"/>
       </html>
 
