@@ -207,6 +207,13 @@
       *   lastmodvalue - string, optional; if not given
       *    (or empty), use the global $lastmod parameter
       *
+      *   with-navbar - 1, optional
+      *     if given it is expected to be 1, and says that
+      *     the page contains a navbar element (this should
+      *     only be used for situations like the ahelp
+      *     pages where this can not be determined by the
+      *     template itself)
+      *
       * Also depends on the package-wide params/variables:
       *    $site, $type, $updateby, $url [kind of]
       *
@@ -217,6 +224,7 @@
       *-->
   <xsl:template name="add-header">
     <xsl:param name="lastmodvalue"  select="''"/>
+    <xsl:param name="with-navbar"   select="''"/>
 
     <xsl:if test="$lastmodvalue = '' and $lastmod = ''">
       <xsl:message terminate="yes">
@@ -246,7 +254,15 @@
          * Really this should be called topbar but to avoid 
          * renaming stylesheets, use the ugly name of topbarcontainer
 	 *-->
-    <div class="topbarcontainer">
+    <div>
+      <xsl:attribute name="class"><xsl:choose>
+	<!-- It would be nice if the metadata for all pages was the same;
+             for instance threadindex pages have a top-level navbar tag
+	     rather than within an info section. -->
+	<xsl:when test="boolean(//info/navbar) or boolean (//navbar) or $with-navbar = 1">topbarcontainer withnavbar</xsl:when>
+	<xsl:otherwise>topbarcontainer</xsl:otherwise>
+      </xsl:choose></xsl:attribute>
+
       <!--* we do not have a search bar on the pages for site=icxc *-->
       <xsl:if test="$site != 'icxc'">
 	<div class="topbar">

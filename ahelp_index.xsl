@@ -555,7 +555,9 @@
 	</xsl:call-template>
 
 	<!--* add header and banner *-->
-	<xsl:call-template name="add-header"/>
+	<xsl:call-template name="add-header">
+	  <xsl:with-param name="with-navbar" select="1"/>
+	</xsl:call-template>
 
 	  <!--// main div begins page layout //-->
 	    <div id="main">
@@ -753,7 +755,9 @@
 	</xsl:call-template>
 
 	<!--* add header and banner *-->
-	<xsl:call-template name="add-header"/>
+	<xsl:call-template name="add-header">
+	  <xsl:with-param name="with-navbar" select="1"/>
+	</xsl:call-template>
 
 	  <!--// main div begins page layout //-->
 	    <div id="main">
