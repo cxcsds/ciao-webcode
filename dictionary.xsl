@@ -171,28 +171,22 @@
 	<xsl:call-template name="add-disclaimer"/>
 	<xsl:call-template name="add-header"/>
 
-	<div class="topbar">
-	  <div class="qlinkbar">
-	    Return to: <a href=".">Dictionary index</a>
-	  </div>
+	<div class="qlinkbar">
+	  Return to: <a href=".">Dictionary index</a>
 	</div>
 
 	<div class="mainbar">
 
-	  <!--* page title (and link back to index) *-->
 	  <div class="pagetitle"><h2><xsl:apply-templates select="title"/></h2></div>
 	  <hr/>
 
-	  <!--* add the explanation *-->
 	  <xsl:apply-templates select="text"/>
 	  
 	  <hr/>
 	</div>
 
-	<div class="bottombar">
-	  <div class="qlinkbar">
-	    Return to: <a href=".">Dictionary index</a>
-	  </div>
+	<div class="qlinkbar">
+	  Return to: <a href=".">Dictionary index</a>
 	</div>
 
 	<xsl:call-template name="add-footer"/>

@@ -139,13 +139,8 @@
     <xsl:document href="{$filename}" method="html" media-type="text/html"
       version="4.0" encoding="utf-8">
 
-      <!--* we start processing the XML file here *-->
       <html lang="en">
 
-	<!--*
-            * make the HTML head node
-            *
-            *-->
 	<xsl:call-template name="add-htmlhead">
 	  <!-- We used to just have this as FAQ Entry rather than the actual
 	       title, in case it was too long, but have changed this
@@ -159,31 +154,25 @@
 	<xsl:call-template name="add-disclaimer"/>
 	<xsl:call-template name="add-header"/>
 
-	<div class="topbar">
-	  <div class="qlinkbar">
-	    Return to: <a href=".">FAQ index</a>
-	  </div>
+	<div class="qlinkbar">
+	  Return to: <a href=".">FAQ index</a>
 	</div>
 
 	<div class="mainbar">
 
-	  <!--* page title *-->
 	  <div>
 	    <h2 class="pagetitle"><xsl:apply-templates select="title"/><xsl:call-template name="add-new-or-updated-info"/></h2>
 	    <xsl:apply-templates select="errmsg"/>
 	  </div>
 	  <hr/>
 
-	  <!--* add the explanation *-->
 	  <xsl:apply-templates select="text"/>
 	  
 	  <hr/>
 	</div>
 
-	<div class="bottombar">
-	  <div class="qlinkbar">
-	    Return to: <a href=".">FAQ index</a>
-	  </div>
+	<div class="qlinkbar">
+	  Return to: <a href=".">FAQ index</a>
 	</div>
 
 	<xsl:call-template name="add-footer"/>
