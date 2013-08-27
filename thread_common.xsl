@@ -38,17 +38,23 @@
       *
       * Updated for CIAO 3.0 to remove some 'excess' baggage
       *
-      * As many of these templates do the same thing we could refactor here
       *-->
   <xsl:template name="add-top-links-site-html">
     <xsl:choose>
-      <xsl:when test="$site = 'ciao'"><xsl:call-template name="add-top-links-ciao-html"/></xsl:when>
-      <xsl:when test="$site = 'chart'"><xsl:call-template name="add-top-links-chart-html"/></xsl:when>
-      <xsl:when test="$site = 'chips'"><xsl:call-template name="add-top-links-chips-html"/></xsl:when>
-      <xsl:when test="$site = 'sherpa'"><xsl:call-template name="add-top-links-sherpa-html"/></xsl:when>
-      <xsl:when test="$site = 'csc'"><xsl:call-template name="add-top-links-csc-html"/></xsl:when>
-      <xsl:when test="$site = 'iris'"><xsl:call-template name="add-top-links-iris-html"/></xsl:when>
-      <xsl:when test="$site = 'pog'"><xsl:call-template name="add-top-links-pog-html"/></xsl:when>
+      <xsl:when test="$site = 'chart'">
+	<xsl:call-template name="add-thread-qlinks-basic"/>
+      </xsl:when>
+
+      <xsl:when test="$site = 'pog'">
+	<xsl:call-template name="add-thread-qlinks-basic">
+	  <xsl:with-param name="text" select="'Proposer Threads Page'"/>
+	</xsl:call-template>
+      </xsl:when>
+
+      <xsl:when test="$site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'csc' or $site = 'iris'">
+	<xsl:call-template name="add-thread-qlinks"/>
+      </xsl:when>
+
       <xsl:otherwise>
 	<xsl:message terminate="yes">
  Internal error - add-top-links-site-html sent site='<xsl:value-of select="$site"/>'
@@ -57,193 +63,6 @@
     </xsl:choose>
 
   </xsl:template> <!--* name=add-top-links-site-html *-->
-
-  <xsl:template name="add-top-links-ciao-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'ciao'">
-      <xsl:message terminate="yes">
-  Error: template add-top-links-ciao-html called but not for a CIAO thread
-      </xsl:message>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="qlinkbar">
-	<!--* create links to threads *-->
-	<xsl:call-template name="add-thread-qlinks"/>
-      </div>
-    </div>
-
-  </xsl:template> <!--* name=add-top-links-ciao-html *-->
-
-  <!--*
-      * set up the "top level" links for the HTML page (ChaRT)
-      * [links to processing/names threads, thread index]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-top-links-chart-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'chart'">
-      <xsl:message terminate="yes">
-  Error: template add-top-links-chart-html called but not for a ChaRT thread
-      </xsl:message>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="qlinkbar">
-	<!--* create links to threads *-->
-	Return to 
-	<xsl:call-template name="mylink">
-	  <xsl:with-param name="dir">../</xsl:with-param>
-	  <xsl:with-param name="filename"></xsl:with-param>
-	  <xsl:with-param name="text">Threads Page</xsl:with-param>
-	</xsl:call-template>
-      </div>
-    </div>
-
-  </xsl:template> <!--* name=add-top-links-chart-html *-->
-
-  <!--*
-      * set up the "top level" links for the HTML page (Sherpa)
-      * [links to processing/names threads, thread index]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-top-links-sherpa-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'sherpa'">
-      <xsl:message terminate="yes">
-  Error: template add-top-links-sherpa-html called but not for a Sherpa thread
-      </xsl:message>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="qlinkbar">
-      <!--* create links to threads *-->
-	<xsl:call-template name="add-thread-qlinks"/>
-      </div>
-    </div>
-
-  </xsl:template> <!--* name=add-top-links-sherpa-html *-->
-
-  <!--*
-      * set up the "top level" links for the HTML page (ChIPS)
-      * [links to processing/names threads, thread index]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-top-links-chips-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'chips'">
-      <xsl:message terminate="yes">
-  Error: template add-top-links-chips-html called but not for a ChIPS thread
-      </xsl:message>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="qlinkbar">
-      <!--* create links to threads *-->
-	<xsl:call-template name="add-thread-qlinks"/>
-      </div>
-    </div>
-
-  </xsl:template> <!--* name=add-top-links-chips-html *-->
-
-  <!--*
-      * set up the "top level" links for the HTML page (CSC)
-      * [links to processing/names threads, thread index]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-top-links-csc-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'csc'">
-      <xsl:message terminate="yes">
-  Error: template add-top-links-csc-html called but not for a CSC thread
-      </xsl:message>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="qlinkbar">
-      <!--* create links to threads *-->
-	<xsl:call-template name="add-thread-qlinks"/>
-      </div>
-    </div>
-
-  </xsl:template> <!--* name=add-top-links-csc-html *-->
-
-  <!--*
-      * set up the "top level" links for the HTML page (iris)
-      * [links to processing/names threads, thread index]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-top-links-iris-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'iris'">
-      <xsl:message terminate="yes">
-  Error: template add-top-links-iris-html called but not for an Iris thread
-      </xsl:message>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="qlinkbar">
-      <!--* create links to threads *-->
-	<xsl:call-template name="add-thread-qlinks"/>
-      </div>
-    </div>
-
-  </xsl:template> <!--* name=add-top-links-iris-html *-->
-
-  <!--*
-      * set up the "top level" links for the HTML page (POG)
-      * [links to processing/names threads, thread index]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-top-links-pog-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'pog'">
-      <xsl:message terminate="yes">
-  Error: template add-top-links-pog-html called but not for a Proposalthread
-      </xsl:message>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="qlinkbar">
-	<!--* create links to threads *-->
-	Return to 
-	<xsl:call-template name="mylink">
-	  <xsl:with-param name="dir">../</xsl:with-param>
-	  <xsl:with-param name="filename"></xsl:with-param>
-	  <xsl:with-param name="text">
-	    <xsl:choose>
-	      <xsl:when test="$site = 'pog'">
-		Proposer Threads Page
-	      </xsl:when>
-	      <xsl:otherwise>
-		Threads Page
-	      </xsl:otherwise>
-	    </xsl:choose>
-	  </xsl:with-param>
-	</xsl:call-template>
-      </div>
-    </div>
-
-  </xsl:template> <!--* name=add-top-links-pog-html *-->
 
   <!--*
       * set up the "trailing" links for the HTML page
@@ -254,13 +73,20 @@
       *-->
   <xsl:template name="add-bottom-links-site-html">
     <xsl:choose>
-      <xsl:when test="$site = 'ciao'"><xsl:call-template name="add-bottom-links-ciao-html"/></xsl:when>
-      <xsl:when test="$site = 'chart'"><xsl:call-template name="add-bottom-links-chart-html"/></xsl:when>
-      <xsl:when test="$site = 'chips'"><xsl:call-template name="add-bottom-links-chips-html"/></xsl:when>
-      <xsl:when test="$site = 'sherpa'"><xsl:call-template name="add-bottom-links-sherpa-html"/></xsl:when>
-      <xsl:when test="$site = 'csc'"><xsl:call-template name="add-bottom-links-csc-html"/></xsl:when>
-      <xsl:when test="$site = 'iris'"><xsl:call-template name="add-bottom-links-iris-html"/></xsl:when>
-      <xsl:when test="$site = 'pog'"><xsl:call-template name="add-bottom-links-pog-html"/></xsl:when>
+      <xsl:when test="$site = 'chart'">
+	<xsl:call-template name="add-thread-qlinks-basic"/>
+      </xsl:when>
+
+      <xsl:when test="$site = 'pog'">
+	<xsl:call-template name="add-thread-qlinks-basic">
+	  <xsl:with-param name="text" select="'Proposer Threads Page'"/>
+	</xsl:call-template>
+      </xsl:when>
+
+      <xsl:when test="$site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'csc' or $site = 'iris'">
+	<xsl:call-template name="add-thread-qlinks"/>
+      </xsl:when>
+
       <xsl:otherwise>
 	<xsl:message terminate="yes">
  Internal error - add-bottom-links-site-html sent site='<xsl:value-of select="$site"/>'
@@ -269,179 +95,6 @@
     </xsl:choose>
 
   </xsl:template> <!--* name=add-bottom-links-site-html *-->
-
-  <xsl:template name="add-bottom-links-ciao-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'ciao'">
-      <xsl:message terminate="yes">
-  Error: template add-bottom-links-html called but not for a CIAO thread
-      </xsl:message>
-    </xsl:if>
-
-    <!--* create the trailing links to threads *-->
-    <div class="bottombar">
-      <!--* create links to threads *-->
-      <xsl:call-template name="add-thread-qlinks"/>
-    </div>
-
-  </xsl:template> <!--* name=add-bottom-links-html *-->
-
-  <!--*
-      * set up the "trailing" links for the HTML page (ChaRT)
-      * [links to thread indexes]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-bottom-links-chart-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'chart'">
-      <xsl:message terminate="yes">
-  Error: template add-bottom-links-chart-html called but not for a ChaRT thread
-      </xsl:message>
-    </xsl:if>
-
-    <!--* create the trailing links to threads *-->
-    <div class="bottombar">
-      <!--* create links to threads *-->
-      Return to 
-      <xsl:call-template name="mylink">
-	<xsl:with-param name="dir">../</xsl:with-param>
-	<xsl:with-param name="filename"></xsl:with-param>
-	<xsl:with-param name="text">Threads Page</xsl:with-param>
-      </xsl:call-template>
-    </div>
-
-  </xsl:template> <!--* name=add-bottom-links-chart-html *-->
-
-  <!--*
-      * set up the "trailing" links for the HTML page (Sherpa)
-      * [links to thread indexes]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-bottom-links-sherpa-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'sherpa'">
-      <xsl:message terminate="yes">
-  Error: template add-bottom-links-sherpa-html called but not for a Sherpa thread
-      </xsl:message>
-    </xsl:if>
-
-    <!--* create the trailing links to threads *-->
-    <div class="bottombar">
-      <!--* create links to threads *-->
-      <xsl:call-template name="add-thread-qlinks"/>
-    </div>
-
-  </xsl:template> <!--* name=add-bottom-links-sherpa-html *-->
-
-  <!--*
-      * set up the "trailing" links for the HTML page (ChIPS)
-      * [links to thread indexes]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-bottom-links-chips-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'chips'">
-      <xsl:message terminate="yes">
-  Error: template add-bottom-links-chips-html called but not for a ChIPS thread
-      </xsl:message>
-    </xsl:if>
-
-    <!--* create the trailing links to threads *-->
-    <div class="bottombar">
-      <!--* create links to threads *-->
-      <xsl:call-template name="add-thread-qlinks"/>
-    </div>
-
-  </xsl:template> <!--* name=add-bottom-links-chips-html *-->
-
-  <!--*
-      * set up the "trailing" links for the HTML page (CSC)
-      * [links to thread indexes]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-bottom-links-csc-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'csc'">
-      <xsl:message terminate="yes">
-  Error: template add-bottom-links-csc-html called but not for a CSC thread
-      </xsl:message>
-    </xsl:if>
-
-    <!--* create the trailing links to threads *-->
-    <div class="bottombar">
-      <!--* create links to threads *-->
-      <xsl:call-template name="add-thread-qlinks"/>
-    </div>
-
-  </xsl:template> <!--* name=add-bottom-links-csc-html *-->
-
-  <!--*
-      * set up the "trailing" links for the HTML page (iris)
-      * [links to thread indexes]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-bottom-links-iris-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'iris'">
-      <xsl:message terminate="yes">
-  Error: template add-bottom-links-iris-html called but not for an Iris thread
-      </xsl:message>
-    </xsl:if>
-
-    <!--* create the trailing links to threads *-->
-    <div class="bottombar">
-      <!--* create links to threads *-->
-      <xsl:call-template name="add-thread-qlinks"/>
-    </div>
-
-  </xsl:template> <!--* name=add-bottom-links-iris-html *-->
-
-  <!--*
-      * set up the "trailing" links for the HTML page (POG)
-      * [links to thread indexes]
-      *
-      * Parameters:
-      *
-      * At the moment this is the same as the ChaRT version
-      *
-      *-->
-  <xsl:template name="add-bottom-links-pog-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'pog'">
-      <xsl:message terminate="yes">
-  Error: template add-bottom-links-pog-html called but not for a Proposalthread
-      </xsl:message>
-    </xsl:if>
-
-    <!--* create the trailing links to threads *-->
-    <div class="bottombar">
-      <!--* create links to threads *-->
-      Return to 
-      <xsl:call-template name="mylink">
-	<xsl:with-param name="dir">../</xsl:with-param>
-	<xsl:with-param name="filename"></xsl:with-param>
-	<xsl:with-param name="text">Threads Page</xsl:with-param>
-      </xsl:call-template>
-    </div>
-    
-  </xsl:template> <!--* name=add-bottom-links-pog-html *-->
 
   <!--*
       * Add the introductory text:
@@ -1193,7 +846,8 @@ or do we, as this case is already caught in add-parameters?
   <!--* 
       * used in header/footer to provide links to thread pages:
       * include "Top", "All", and all sections from the index which
-      * contain this thread
+      * contain this thread. See add-thread-qlinks-basic for a
+      * version that does not link to the various thread sections.
       *
       * Uses the $threadDir variable to find the location of the
       * thread index (published copy)
@@ -1202,40 +856,64 @@ or do we, as this case is already caught in add-parameters?
       *
       * Parameters:
       *
-      * *****CIAO SPECIFIC*****
-      *
       *-->
   <xsl:template name="add-thread-qlinks">
 
     <!--* read in the thread index *-->
     <xsl:variable name="threadIndex" select="document(concat($threadDir,'index.xml'))"/>
 
-    Return to Threads Page: 
-    <xsl:call-template name="mylink">
-      <xsl:with-param name="dir">../</xsl:with-param>
-      <xsl:with-param name="filename"></xsl:with-param>
-      <xsl:with-param name="text">Top</xsl:with-param>
-    </xsl:call-template> | 
-    <xsl:call-template name="mylink">
-      <xsl:with-param name="dir">../</xsl:with-param>
-      <xsl:with-param name="filename">all.html</xsl:with-param>
-      <xsl:with-param name="text">All</xsl:with-param>
-    </xsl:call-template>
-
-    <!--*
-        * we want to process all the id nodes of the sections 
-        * which contain this thread 
-        *-->
-    <xsl:for-each select="$threadIndex//item[@name=$threadName]/ancestor::section/id">
-      | 
+    <div class="qlinkbar">
+      Return to Threads Page: 
       <xsl:call-template name="mylink">
 	<xsl:with-param name="dir">../</xsl:with-param>
-	<xsl:with-param name="filename"><xsl:value-of select="name"/>.html</xsl:with-param>
-	<xsl:with-param name="text" select="text"/>
-      </xsl:call-template>
-    </xsl:for-each>
+	<xsl:with-param name="filename"></xsl:with-param>
+	<xsl:with-param name="text">Top</xsl:with-param>
+	</xsl:call-template> | 
+	<xsl:call-template name="mylink">
+	  <xsl:with-param name="dir">../</xsl:with-param>
+	  <xsl:with-param name="filename">all.html</xsl:with-param>
+	  <xsl:with-param name="text">All</xsl:with-param>
+	</xsl:call-template>
+
+	<!--*
+	    * we want to process all the id nodes of the sections 
+	    * which contain this thread 
+	    *-->
+	<xsl:for-each select="$threadIndex//item[@name=$threadName]/ancestor::section/id">
+	  | 
+	  <xsl:call-template name="mylink">
+	    <xsl:with-param name="dir">../</xsl:with-param>
+	    <xsl:with-param name="filename"><xsl:value-of select="name"/>.html</xsl:with-param>
+	    <xsl:with-param name="text" select="text"/>
+	  </xsl:call-template>
+	</xsl:for-each>
+    </div>
 
   </xsl:template> <!--* name=add-thread-qlinks *-->
+
+  <!--* 
+      * used in header/footer to provide links to thread pages.
+      * See add-thread-qlinks for a version that also links to
+      * the thread sections that contain the thread.
+      *
+      * Parameters:
+      *    text, string, optional
+      *       Text to use for the link back to the index page,
+      *       defaults to 'Threads Page'.
+      *
+      *-->
+  <xsl:template name="add-thread-qlinks-basic">
+    <xsl:param name="text" select="'Threads Page'"/>
+    
+    <div class="qlinkbar">
+      Return to 
+      <xsl:call-template name="mylink">
+	<xsl:with-param name="dir">../</xsl:with-param>
+	<xsl:with-param name="filename"></xsl:with-param>
+	<xsl:with-param name="text"><xsl:value-of select="$text"/></xsl:with-param>
+      </xsl:call-template>
+    </div>
+  </xsl:template> <!--* name=add-thread-qlinks-basic *-->
 
   <!--*
       * add a separator between "sections"
