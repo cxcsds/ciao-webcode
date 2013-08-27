@@ -2194,7 +2194,8 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</xsl:message>
       </xsl:if>
 
-      <xsl:variable name="matches" select="$adoc//threadindex/section/id/name[. = @name]"/>
+      <xsl:variable name="namestr" select="@name"/>
+      <xsl:variable name="matches" select="$adoc//threadindex/section/id/name[. = $namestr]"/>
       <xsl:if test="count($matches) = 0">
 	<xsl:message terminate="yes">
  ERROR: threadpage link with site=<xsl:value-of select="$siteval"/> and @name=<xsl:value-of select="@name"/>
