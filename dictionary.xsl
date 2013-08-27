@@ -169,7 +169,9 @@
 	</xsl:call-template>
 
 	<xsl:call-template name="add-disclaimer"/>
-	<xsl:call-template name="add-header"/>
+	<xsl:call-template name="add-header">
+	  <xsl:with-param name="with-navbar" select="0"/>
+	</xsl:call-template>
 
 	<div class="qlinkbar">
 	  Return to: <a href=".">Dictionary index</a>

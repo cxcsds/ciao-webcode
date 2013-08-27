@@ -212,7 +212,10 @@
       *     the page contains a navbar element (this should
       *     only be used for situations like the ahelp
       *     pages where this can not be determined by the
-      *     template itself)
+      *     template itself), or 0 to turn off the navbar,
+      *     which is useful for multi-page templates like the
+      *     FAQ where the index has a navbar but the individual
+      *     pages do not.
       *
       * Also depends on the package-wide params/variables:
       *    $site, $type, $updateby, $url [kind of]
@@ -252,18 +255,20 @@
 
     <!-- *
          * Really this should be called topbar but to avoid 
-         * renaming stylesheets, use the ugly name of topbarcontainer
+         * renaming stylesheets, use the ugly name of topbarcontainer,
+	 * and add in an extra class, withnavbar, if a navbar is
+	 * to be displayed on the page (used for styling).
 	 *-->
-    <div>
-      <xsl:attribute name="class"><xsl:choose>
+    <xsl:variable name="classes">
+      <xsl:text>topbarcontainer</xsl:text>
 	<!-- It would be nice if the metadata for all pages was the same;
              for instance threadindex pages have a top-level navbar tag
 	     rather than within an info section. -->
-	<xsl:when test="boolean(//info/navbar) or boolean (//navbar) or $with-navbar = 1">topbarcontainer withnavbar</xsl:when>
-	<xsl:otherwise>topbarcontainer</xsl:otherwise>
-      </xsl:choose></xsl:attribute>
-
-      <!--* we do not have a search bar on the pages for site=icxc *-->
+	<xsl:if test="$with-navbar != 0 and (boolean(//info/navbar) or boolean (//navbar) or $with-navbar = 1)">
+	<xsl:text> withnavbar</xsl:text>
+      </xsl:if>
+    </xsl:variable>
+    <div class="{$classes}">
       <xsl:if test="$site != 'icxc'">
 	<div class="topbar">
 	  <xsl:call-template name="add-search-ssi"/>
