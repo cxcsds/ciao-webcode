@@ -102,14 +102,12 @@
 		    For detailed information and examples of running this tool,
 		    refer to
 		    <a href="{$hrefval}"><xsl:value-of
-					     select="concat('the ', $pagename, ' ahelp file')"/></a>
-		  </p>
-		  <xsl:if test="$site='ciao' and (/bugs/info/scripts)">
-		    <p>
+		    select="concat('the ', $pagename, ' ahelp file')"/></a>.
+		    <xsl:if test="$site='ciao' and (/bugs/info/scripts)">
 		      This script is part of
 		      the <a href="../download/scripts/">CIAO Scripts Package</a>.
-		    </p>
-		  </xsl:if> 
+		    </xsl:if> 
+		  </p>
 		</xsl:if>
 	      </div>
 
