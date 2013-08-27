@@ -1912,6 +1912,12 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <!--* since we don't have a DTD *-->
     <xsl:call-template name="page-not-allowed"/>
 
+    <!--*
+        * This could lead to circular dependencies, so perhaps
+	* just make a warning rather than error?
+	*-->
+    <xsl:call-template name="verify-thread-page-exists"/>
+
     <!--* set up the url fragment:
         *   a) handle the site/depth
         *   b) handle the file location and is there an anchor too?
@@ -2129,6 +2135,76 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <xsl:value-of select="$urlfrag"/>
 
   </xsl:template> <!--* name=handle-thread-site-link *-->
+
+  <!--*
+      * Check that the thread page exists, uses
+      * @site, @name, $site
+      *
+      * Based in part on djb:read-in-thread-info
+      *
+      * Note the special case for proposer; we assume that it
+      * does!
+      *-->
+  <xsl:template name="verify-thread-page-exists">
+    <xsl:if test="@site != 'proposer'">
+      <xsl:call-template name="verify-thread-page-exists-general"/>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="verify-thread-page-exists-general">
+
+    <xsl:variable name="siteval">
+      <xsl:choose>
+	<xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
+	<xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:variable name="filename">
+      <xsl:value-of select='concat(djb:get-storage-path($siteval), "threads/index.xml")'/>
+    </xsl:variable>
+
+    <xsl:variable name="adoc" select="document($filename)"/>
+    <xsl:if test="count($adoc) = 0">
+      <xsl:choose>
+	<xsl:when test="$type = 'live'">
+	  <xsl:message terminate="yes">
+ ERROR: there is no link for the threadpage link (for site <xsl:value-of select="$siteval"/>)
+   The thread index needs to be published or should this be a threadlink tag instead?
+	  </xsl:message>
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:message terminate="no">
+ WARNING: there is no link for the threadpage link (for site <xsl:value-of select="$siteval"/>)
+   The thread index needs to be published or should this be a threadlink tag instead?
+	  </xsl:message>
+	</xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
+
+    <xsl:if test="boolean(@name)">
+      <!-- technically I guess the page could be created manually, but
+           for now just assume that it has to be created from a threadindex
+	   document -->
+      <xsl:if test="name($adoc//*) != 'threadindex'">
+	<xsl:message terminate="yes">
+ ERROR: threadpage link with site=<xsl:value-of select="$siteval"/> and @name=<xsl:value-of select="@name"/>
+   is not to a threadindex page, which is currently not supported; see Doug or should
+   this be a threadlink tag instead?
+	</xsl:message>
+      </xsl:if>
+
+      <xsl:variable name="matches" select="$adoc//threadindex/section/id/name[. = @name]"/>
+      <xsl:if test="count($matches) = 0">
+	<xsl:message terminate="yes">
+ ERROR: threadpage link with site=<xsl:value-of select="$siteval"/> and @name=<xsl:value-of select="@name"/>
+   does not match the contents of the threadindex; is @name correct or should this 
+   be a threadlink tag instead?
+	</xsl:message>
+      </xsl:if>
+    </xsl:if>
+
+  </xsl:template> <!--* name=verify-thread-page-exists *-->
 
   <!--*
       * add a link to the bug page
