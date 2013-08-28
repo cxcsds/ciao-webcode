@@ -548,9 +548,11 @@
       * If the id attribute is supplied, link to that page (adding a trailing .html)
       * otherwise link to the FAQ index.
       *
-      * If no site attribute (new to CIAO 3.0) is available
+      * If no site attribute is given
       *   a faq link in the ciao   pages links to the CIAO faq
       *   a faq link in the sherpa pages links to the Sherpa faq
+      *   a faq link in the chips  pages links to the ChIPS faq
+      *   a faq link in the csc    pages links to the CSC faq
       *   a faq link elsewhere assumes the CIAO faq
       *
       * The @id/@site value is checked for validity (for live site)
@@ -580,14 +582,13 @@
     <!--*
         * complicated mess to work out where to link to
         * - if have a site attribute then use that
-        * - otherwise if site=ciao use that
-        * - otherwise if site=sherpa use that
+        * - otherwise if site=ciao, sherpa, chips, or CSC use that
         * - otherwise assume the CIAO site
         * 
         *-->
     <xsl:variable name="hrefstart"><xsl:choose>
 	<xsl:when test="boolean(@site)"><xsl:value-of select="concat('/',@site,'/faq/')"/></xsl:when>
-	<xsl:when test="$site != 'ciao' and $site != 'sherpa' and $site != 'chips'">/ciao/faq/</xsl:when>
+	<xsl:when test="$site != 'ciao' and $site != 'sherpa' and $site != 'chips' and $site != 'csc'">/ciao/faq/</xsl:when>
 	<xsl:otherwise><xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="0"/>
 	    <xsl:with-param name="dirname" select="'faq/'"/>
