@@ -1644,6 +1644,15 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
     <!--* warn if there's a better option *-->
     <xsl:if test="boolean(@href)">
+
+      <!-- seen this on some sites -->
+      <xsl:if test="starts-with(@href, 'http')">
+	<xsl:message terminate="yes">
+ ERROR: cxclink tags should not start with http[s]:// - found
+    &lt;cxclink href="<xsl:value-of select="@href"/>"&gt;<xsl:value-of select="."/>&lt;/cxclink&gt;
+	</xsl:message>
+      </xsl:if>
+
       <xsl:if test="contains(@href,'documents_thread') or contains(@href,'threads/')">
 	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'threadpage or threadlink'"/></xsl:call-template>
       </xsl:if>
