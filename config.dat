@@ -1161,17 +1161,17 @@ depth_offset=0
 headtitlepostfix=CALDB 4
 ##texttitlepostfix=- CALDB 4
 
-%css=live /ciao4.3/ciao.css
-%css=test /ciao4.3/ciao.css
+%css=live /ciao/ciao.css
+%css=test /ciao/ciao.css
 %css=trial /sds/ciao_trial/ciao.css
 
-%cssprint=live /ciao4.3/ciao.print.css
-%cssprint=test /ciao4.3/ciao.print.css
+%cssprint=live /ciao/ciao.print.css
+%cssprint=test /ciao/ciao.print.css
 %cssprint=trial /sds/ciao_trial/ciao.print.css
 
 # favicon location
-%favicon=live /ciao4.3/favicon.ico
-%favicon=test /ciao4.3/favicon.ico
+%favicon=live /ciao/favicon.ico
+%favicon=test /ciao/favicon.ico
 %favicon=trial /sds/ciao_trial/favicon.ico
 
 %newsfile=live /proj/web-cxc-dmz/htdocs/caldb4/news.html
@@ -1211,13 +1211,13 @@ headtitlepostfix=CALDB 4
 %storage=trial /data/da/Docs/caldbweb/published/caldb4/trial/
 
 # point to the CIAO ahelp file indexes
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao43.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao43.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao43.trial.xml
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao45.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao45.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao45.trial.xml
 
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao43/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao43/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao43/test/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao45/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao45/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao45/test/ahelp/
 
 -version
 
