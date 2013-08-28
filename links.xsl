@@ -735,33 +735,19 @@
 
     <xsl:variable name="sitevalue"><xsl:choose>
 	<xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
-	<xsl:when test="$site = 'chips' or $site='sherpa' or $site='chart'">ciao</xsl:when>
+	<!-- TODO: just check whether there is a dictionary for this site rather than this complicated check -->
+	<xsl:when test="$site = 'chips' or $site='sherpa' or $site='chart' or $site='caldb'">ciao</xsl:when>
 	<xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
 
-    <!--* are we in the ciao pages or not (ie is this an `external' link or not) *-->
-    <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
-
     <!--// if there is an attribute, use it 
 	   otherwise, link to the "in-site" dictionary //-->
-    <xsl:variable name="hrefstart"><xsl:choose>    
-      <xsl:when test="@site = 'ciao'">/ciao/dictionary/</xsl:when>
-      <xsl:when test="@site = 'csc'">/csc/dictionary/</xsl:when>
-
-      <xsl:when test="$site = 'csc'">
-        <xsl:call-template name="add-start-of-href">
-	  <xsl:with-param name="extlink" select="0"/>
-	  <xsl:with-param name="dirname" select="'dictionary/'"/>
-	</xsl:call-template>
-      </xsl:when>
-
-      <!-- ciao, chips, sherpa, etc. //-->
-      <xsl:otherwise>
-        <xsl:call-template name="add-start-of-href">
-	    <xsl:with-param name="extlink" select="$extlink"/>
-	  <xsl:with-param name="dirname" select="'dictionary/'"/>
-	</xsl:call-template>
-      </xsl:otherwise>
+    <xsl:variable name="hrefstart"><xsl:choose>
+      <xsl:when test="$sitevalue != $site"><xsl:value-of select="concat('/',$sitevalue,'/dictionary/')"/></xsl:when>
+      <xsl:otherwise><xsl:call-template name="add-start-of-href">
+	<xsl:with-param name="extlink" select="0"/>
+	<xsl:with-param name="dirname" select="'dictionary/'"/>
+      </xsl:call-template></xsl:otherwise>
       </xsl:choose></xsl:variable>
 
     <!-- create the title for the link and where we check that the id value is
