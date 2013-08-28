@@ -1983,9 +1983,8 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *  id only is only allowed if the rootnode is thread
       *    OR dummy (ie an include file)
       *
-      * As we now have to read in the thread we *could* support empty
-      * thread link tags, which would mean using the short/long title
-      * elements for the thread as the link text.
+      * If the contents of the threadlink tag is empty then we use the
+      * long title of the thread as the link text.
       *
       * Any threadlink with a proglink attribute is considered an error.
       *-->
@@ -2004,7 +2003,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     </xsl:if>
 
     <!--* safety checks *-->
-    <xsl:call-template name="check-contents-are-not-empty"/>
     <xsl:call-template name="page-not-allowed"/>
 
     <!--* are we within a thread (or an included file)? *-->
@@ -2029,16 +2027,10 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:message>
     </xsl:if>
 
-    <!-- * Left in so that we check that the thread exists -->
     <xsl:variable name="threadInfo" select="djb:read-in-thread-info()"/>
-    <!--
-    <xsl:variable name="tInfo" select="exsl:node-set($threadInfo)"/>
-    <xsl:variable name="tname" select="$tInfo/name"/>
-    <xsl:variable name="nlang" select="count($tInfo/proglang)"/>
-    -->
-
     <xsl:call-template name="threadlink-simple">
       <xsl:with-param name="in-thread" select="$in-thread"/>
+      <xsl:with-param name="threadinfo" select="$threadInfo"/>
     </xsl:call-template>
 
   </xsl:template> <!--* match=threadlink *-->
@@ -2047,9 +2039,13 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
        * This was pulled out of threadlink when support for multiple
        * languages (proglang) was introduced; it no longer needs to
        * be separate but is left as is for now.
+       *
+       * The threadinfo parameter should be the return value from
+       * djb:read-in-thread-info()
        *-->
   <xsl:template name="threadlink-simple">
     <xsl:param name="in-thread" select="false()"/>
+    <xsl:param name="threadinfo"/>
 
     <!--* set up the url fragment:
 	*   a) handle the site/depth
@@ -2089,12 +2085,45 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	  </xsl:choose></xsl:attribute>
 
 	  <!--* process the contents of the tag *-->
-	  <xsl:apply-templates/>
+	  <xsl:choose>
+            <xsl:when test="count(child::*) = 0 and normalize-space(.) = ''">
+	      <xsl:call-template name="find-thread-title">
+		<xsl:with-param name="threadinfo" select="$threadinfo"/>
+	      </xsl:call-template>
+	    </xsl:when>	    
+	    <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
+	  </xsl:choose>
 	</a>
       </xsl:with-param>
     </xsl:call-template>
 
   </xsl:template> <!--* name=threadlink-simple *-->
+
+  <!--*
+      * Given the contents of the thread return the
+      * thread title (preference is long then short
+      * version).
+      *-->
+  <xsl:template name="find-thread-title">
+    <xsl:param name="threadinfo"/>
+
+    <xsl:variable name="nodeset" select="exsl:node-set($threadinfo)"/>
+    <xsl:choose>
+      <xsl:when test="count($nodeset//title/long) = 1">
+	<xsl:value-of select="$nodeset//title/long"/>
+      </xsl:when>
+      <xsl:when test="count($nodeset//title/short) = 1">
+	<xsl:value-of select="$nodeset//title/short"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:message terminate="yes">
+ ERROR: unable to find a title (long or short) in the thread
+   thread=<xsl:value-of select="$thread"/>
+        </xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </xsl:template> <!--* name=find-thread-title *-->
 
   <!--*
       * this mess is to allow threadlink/threadpage to
