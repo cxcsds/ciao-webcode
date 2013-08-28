@@ -1866,7 +1866,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *     if true set the link text to upper case [***not used***]
       *
       * similar to the ahelp tag, except that we are linking to the help desk.
-      * If no value is given, use the text link "Helpdesk". 
+      * If no value is given, use the text link "CXC Helpdesk". 
       *
       * as with cxclink, depth tag is used only for the extlink image
       *-->
@@ -1881,7 +1881,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	  <xsl:attribute name="title">CXC Helpdesk</xsl:attribute>
 	  <xsl:attribute name="href">/helpdesk/</xsl:attribute>
 	  <xsl:choose>
-	    <xsl:when test=".=''">Helpdesk</xsl:when>
+	    <xsl:when test=".=''">CXC Helpdesk</xsl:when>
 	    <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
 	  </xsl:choose>
 	</a>
