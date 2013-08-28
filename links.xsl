@@ -574,11 +574,6 @@
     <!--* check id attribute (validity check is later) *-->
     <xsl:call-template name="check-id-for-no-html"/>
 
-    <xsl:variable name="sitevalue"><xsl:choose>
-	<xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
-	<xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
     <!--*
         * complicated mess to work out where to link to
         * - if have a site attribute then use that
@@ -586,14 +581,20 @@
         * - otherwise assume the CIAO site
         * 
         *-->
+    <xsl:variable name="sitevalue"><xsl:choose>
+	<xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
+	<!-- TODO: just check whether there is a faq for this site rather than this complicated check -->
+	<xsl:when test="$site != 'ciao' and $site != 'sherpa' and $site != 'chips' and $site != 'csc'">ciao</xsl:when>
+	<xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
     <xsl:variable name="hrefstart"><xsl:choose>
-	<xsl:when test="boolean(@site)"><xsl:value-of select="concat('/',@site,'/faq/')"/></xsl:when>
-	<xsl:when test="$site != 'ciao' and $site != 'sherpa' and $site != 'chips' and $site != 'csc'">/ciao/faq/</xsl:when>
-	<xsl:otherwise><xsl:call-template name="add-start-of-href">
-	    <xsl:with-param name="extlink" select="0"/>
-	    <xsl:with-param name="dirname" select="'faq/'"/>
-	  </xsl:call-template></xsl:otherwise>
-      </xsl:choose></xsl:variable>
+      <xsl:when test="$sitevalue != $site"><xsl:value-of select="concat('/',$sitevalue,'/faq/')"/></xsl:when>
+      <xsl:otherwise><xsl:call-template name="add-start-of-href">
+	<xsl:with-param name="extlink" select="0"/>
+	<xsl:with-param name="dirname" select="'faq/'"/>
+      </xsl:call-template></xsl:otherwise>
+    </xsl:choose></xsl:variable>
 
     <xsl:variable name="href"><xsl:value-of select="$hrefstart"/><xsl:if test="boolean(@id)"><xsl:value-of select="@id"/>.html</xsl:if></xsl:variable>
 
