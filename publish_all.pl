@@ -158,10 +158,14 @@ if ( $excludedirs ne "" ) {
 
     # need at least one comma for the split
     $excludedirs .= ",null";  
-    my %excludedirs = map { ($_,1); } split( /,/, $excludedirs );
+    %excludedirs = map { ($_,1); } split( /,/, $excludedirs );
 
+    print "Excluding directories:\n";
+    foreach my $dname (keys %excludedirs) {
+      print "  $dname\n" if $dname ne "null";
+    }
+    print "\n";
 }
-
 
 # find all the files
 # - exclude SCCS and RCS directories
