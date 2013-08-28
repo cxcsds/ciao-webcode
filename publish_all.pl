@@ -5,6 +5,7 @@
 #     --config=<location of config file>
 #     --type=live|test
 #     --force
+#     --forceforce
 #     --excludedir=<dir1 to ignore>,...,<dirN to ignore> - ie comma-separated list
 #     --xmlonly
 #     --yes
@@ -20,7 +21,7 @@
 #
 # Options:
 #    --config - used to find perl executable and passed through to publish.pl
-#    --type, and --force are passed through to the publish script
+#    --type, --force and --forceforce are passed through to the publish script
 #      but the config variable is also used to get the perl/os value
 #    --localxslt is passed through to the publish script
 #    --yes means that the program will not ask you whether to process
@@ -88,12 +89,13 @@ my @prefixes =
 
 my %_types = map { ($_,1); } qw( test live trial );
 
-my $usage = "Usage: $0 --config=filename --type=live|test --force --xmlonly --localxslt --excludedir=one,two,.. --yes --verbose\n";
+my $usage = "Usage: $0 --config=filename --type=live|test --force --forceforce --xmlonly --localxslt --excludedir=one,two,.. --yes --verbose\n";
 
 ## Code
 #
 my $type = "test";
 my $force = 0;
+my $forceforce = 0;
 my $xmlonly = 0;
 my $localxslt = 0;
 my $excludedirs = "";
@@ -101,9 +103,12 @@ my $yes = 0;
 my $verbose = 0;
 
 die $usage unless
-  GetOptions 'config=s' => \$configfile, 'type=s' => \$type, 'force!' => \$force,
+  GetOptions 'config=s' => \$configfile, 'type=s' => \$type, 
+  'force!' => \$force, 'forceforce!' => \$forceforce,
   'excludedir=s' => \$excludedirs, 'xmlonly!' => \$xmlonly, 'yes!' => \$yes,
   'localxslt!' => \$localxslt, 'verbose!' => \$verbose;
+
+$force = 1 if $forceforce;
 
 # Get the name of the perl executable
 #
@@ -330,6 +335,7 @@ unless ( $yes ) {
 my $cfg_opt = "--config=$configfile";
 my $type_opt = "--type=$type";
 my $force_opt = $force ? "--force" : "--noforce";
+my $forceforce_opt = $forceforce ? "--forceforce" : "--noforceforce";
 my $localxslt_opt = $localxslt ? "--localxslt" : "--nolocalxslt";
 my $verbose_opt = $verbose ? "--verbose" : "--noverbose";
 
@@ -341,7 +347,7 @@ foreach my $href ( \%images, \%files ) {
 
 	# and do the actual publishing
 	system @pexe, $script,
-	  $cfg_opt, $type_opt, $force_opt, $localxslt_opt, $verbose_opt,
+	  $cfg_opt, $type_opt, $force_opt, $forceforce_opt, $localxslt_opt, $verbose_opt,
 	  @files
 	    and die "\nerror in\n dir=$dir\n with files=" . join(" ",@files) . "\n\n";
     }
@@ -358,7 +364,7 @@ if ( defined $threadindex ) {
 
     # and do the actual publishing
     system @pexe, $script,
-      $cfg_opt, $type_opt, $force_opt, $localxslt_opt, $verbose_opt,
+      $cfg_opt, $type_opt, $force_opt, $forceforce_opt, $localxslt_opt, $verbose_opt,
       @files
 	and die "\nerror in\n dir=$dir\n with files=" . join(" ",@files) . "\n\n";
 }

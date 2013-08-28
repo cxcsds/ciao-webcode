@@ -11,6 +11,9 @@
 #     --force
 #     Optional.
 #
+#     --forceforce
+#     Optional.
+#
 #     --verbose
 #     Turn on screen output that's only useful for testing/debugging
 #
@@ -23,6 +26,8 @@
 #   associated files and the created PDF files).
 #   Use the --force option to force the creation of the HTML files.
 #   [note: the thread index pages are currently ALWAYS created].
+#   Use --forceforce to force the copying on non XML files
+#   [note: implies --force]
 #
 # Aim:
 #   Convert the specified files into SSI/web pages.
@@ -111,7 +116,12 @@ defaults to config.dat in the same directory as the script.
 The --force option should be used to force the generation of the
 HTML files (by default the program won't publish a file if the HTML,
 PDF, and associated files already exist and are newer than the XML
-file).
+file). Non XML files are *not* copied when --force is given if
+they have not changed.
+
+The --forceforce option is used to also force the copying of
+non XML files, even if they have not changed. Setting this also
+sets --force.
 
 The --verbose option is useful for testing/debugging the code.
 
@@ -126,14 +136,18 @@ my $dname = cwd();
 # handle options
 my $type = "test";
 my $force = 0;
+my $forceforce = 0;
 my $localxslt = 0;
 die $usage unless
   GetOptions
   'config=s' => \$configfile,
   'type=s'   => \$type,
   'force!'   => \$force,
+  'forceforce!'   => \$forceforce,
   'localxslt!' => \$localxslt,
   'verbose!' => \$verbose;
+
+$force = 1 if $forceforce;
 
 # what OS are we running?
 #
@@ -1519,6 +1533,9 @@ sub process_xml ($$) {
 # NOTE: we no longer copy the files over to the storage site
 # to save space
 #
+# To force a copy of a non XML file even if it has not changed
+# requires the $forceforce global variable to be set.
+#
 sub process_files ($$) {
     my $type = shift;
     my $aref = shift;
@@ -1540,7 +1557,7 @@ sub process_files ($$) {
 	# we only print messages if not the published directory
 	foreach my $odir ( @dirs ) {
 	    my $out = "${odir}$in";
-	    if ( $force or ! -e $out or -M "$in" < -M "$out" ) {
+	    if ( $forceforce or ! -e $out or -M "$in" < -M "$out" ) {
 		mycp $in, $out;
 		print "Created: $out\n" if $odir ne $published;
 	    } else {
