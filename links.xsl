@@ -1668,8 +1668,13 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'download'"/></xsl:call-template>
       </xsl:if>
       
+      <!--* QUS: how best to add site-specific knowledge here? For now just
+          *      hard code the annoyances
+	  *-->
       <xsl:if test="contains(@href,'caveats/')">
-	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'caveat'"/></xsl:call-template>
+	<xsl:if test="$site != 'caldb'">
+	  <xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'caveat'"/></xsl:call-template>
+	</xsl:if>
       </xsl:if>
       <xsl:if test="contains(@href,'why/')">
 	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'why'"/></xsl:call-template>
