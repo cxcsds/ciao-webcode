@@ -358,13 +358,20 @@
 	  <xsl:otherwise>
 	    <xsl:message terminate="no">
  WARNING: unable to find a ahelp match for
-   name=<xsl:value-of select="$name"/> context=<xsl:value-of select="$context"/>
+   name=<xsl:value-of select="$name"/> param=<xsl:value-of select="@param"/> context=<xsl:value-of select="$context"/>
    This ahelp file must be published before this page will display on the live site!
 
 	    </xsl:message>
 	    <xsl:apply-templates/>
 	    <!-- allow the page to be published but make it obvious a link is missing -->
-	    <xsl:value-of select="concat('{*** ahelp link to key=',$name,' context=',$context,' ***}')"/>
+	    <xsl:choose>
+	      <xsl:when test="boolean(@param)">
+		<xsl:value-of select="concat('{*** will be an ahelp link to key=',$name,' param=',@param,' context=',$context,' ***}')"/>
+	      </xsl:when>
+	      <xsl:otherwise>
+		<xsl:value-of select="concat('{*** will be an ahelp link to key=',$name,' context=',$context,' ***}')"/>
+	      </xsl:otherwise>
+	    </xsl:choose>
 	  </xsl:otherwise>
 	</xsl:choose>
       </xsl:when>
