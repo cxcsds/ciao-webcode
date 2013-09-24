@@ -571,6 +571,21 @@
       <xsl:with-param name="tag" select="'id'"/>
     </xsl:call-template>
 
+    <xsl:if test="boolean(@item)">
+      <xsl:message terminate="yes">
+ Error:
+   a faq tag contains item=<xsl:value-of select="@item"/> when
+   it should (almost certainly) be id=...
+      </xsl:message>
+    </xsl:if>
+    <xsl:if test="boolean(@page)">
+      <xsl:message terminate="yes">
+ Error:
+   a faq tag contains page=<xsl:value-of select="@page"/> when
+   it should (almost certainly) be id=...
+      </xsl:message>
+    </xsl:if>
+
     <!--* check id attribute (validity check is later) *-->
     <xsl:call-template name="check-id-for-no-html"/>
 
@@ -726,6 +741,13 @@
       <xsl:message terminate="yes">
  Error:
    a dictionary tag contains item=<xsl:value-of select="@item"/> when
+   it should (almost certainly) be id=...
+      </xsl:message>
+    </xsl:if>
+    <xsl:if test="boolean(@page)">
+      <xsl:message terminate="yes">
+ Error:
+   a dictionary tag contains page=<xsl:value-of select="@page"/> when
    it should (almost certainly) be id=...
       </xsl:message>
     </xsl:if>
