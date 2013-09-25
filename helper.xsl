@@ -262,6 +262,9 @@
       * MathJax support is added if the page contains any math tags
       * (if $use-mathjax is set to 1)
       *
+      * CSS can be added either via the css attribute or from the
+      * info/css block in the input file.
+      *
       * input variables:
       *   title - required
       *   css   - optional: text of css-1 rules
@@ -396,6 +399,8 @@
 </style>
       </xsl:if>
 
+      <xsl:apply-templates select="info/css" mode="header"/>
+
       <xsl:call-template name="add-sao-metadata">
 	<xsl:with-param name="title" select="normalize-space($title)"/>
       </xsl:call-template>
@@ -404,6 +409,13 @@
     
     <xsl:call-template name="start-tag"/>body<xsl:call-template name="end-tag"/>  <!--// open html body //-->
   </xsl:template> <!--* add-htmlhead *-->
+
+  <!--* test out trying to allow CSS in header blocks, hence the mode=header -->
+  <xsl:template match="css" mode="header">
+    <style type="text/css">
+      <xsl:apply-templates/>
+    </style>
+  </xsl:template>
 
   <!--* metalist/meta are a hacky way of setting meta comments in
       * the head block of a HTML page.
