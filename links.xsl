@@ -2049,6 +2049,13 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:message>
     </xsl:if>
 
+    <xsl:if test="boolean(@id) and normalize-space(@id) = ''">
+      <xsl:message terminate="yes">
+ ERROR: the id parameter of a threadlink can not be empty if given!<xsl:text>
+</xsl:text>
+      </xsl:message>
+    </xsl:if>
+
     <xsl:variable name="threadInfo" select="djb:read-in-thread-info()"/>
     <xsl:call-template name="threadlink-simple">
       <xsl:with-param name="in-thread" select="$in-thread"/>
