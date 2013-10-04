@@ -846,6 +846,9 @@
       *   - contents and no @nonumber attribute -> append " (Figure <num>)"
       *   - otherwise -> contents
       *
+      *   Actually, only include the figure number for threads, even if
+      *   the @nonumber tag is not given.
+      *
       * NOTE:
       *    check on empty contents as normalize-space(.)='' is not ideal
       *    but should work (would probably only fail if we used an empty tag like
@@ -858,7 +861,7 @@
     </xsl:message>
   </xsl:template>
 
-  <xsl:template match="figlink[boolean(@nonumber) and normalize-space(.)!='']">
+  <xsl:template match="figlink[(boolean(@nonumber) or name(//*) != 'thread') and normalize-space(.)!='']">
     <xsl:call-template name="check-fig-id-exists">
       <xsl:with-param name="id" select="@id"/>
     </xsl:call-template>
@@ -869,6 +872,11 @@
     <xsl:call-template name="check-fig-id-exists">
       <xsl:with-param name="id" select="@id"/>
     </xsl:call-template>
+    <xsl:if test="name(//*) != 'thread'">
+      <xsl:message terminate="yes">
+ ERROR: figlink element can not be empty in a non-thread page.
+      </xsl:message>
+    </xsl:if>
     <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
     <a href="{concat('#',@id)}"><xsl:value-of select="concat('Figure ',$pos)"/></a>
   </xsl:template>
