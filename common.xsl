@@ -44,7 +44,11 @@
   </xsl:template> <!--* name=check-nonempty-param *-->
 
   <!--*
-      * SAO/SI mandated header items.
+      * SAO/SI mandated header items and attempts to stop
+      * cross-frame scripting attacks, taken from Gary Galstian
+      * and http://securestate.blogspot.com/2010/08/xfs-101-cross-frame-scripting-explained.html
+      * in particulat the presentation at 
+      * https://www.owasp.org/images/0/0e/OWASP_AppSec_Research_2010_Busting_Frame_Busting_by_Rydstedt.pdf
       *
       * Also add in the favicon here to make things simpler,
       * if not cleaner/semantically sensible.
@@ -102,6 +106,20 @@
     <meta name="keywords" content="SI,Smithsonian,Smithsonian Institute"/>
     <meta name="keywords" content="CfA,SAO,Harvard-Smithsonian,Center for Astrophysics"/>
     <meta name="keywords" content="HEA,HEAD,High Energy Astrophysics Division"/>
+
+    <!--* cross-frame scripting 'protection' *-->
+    <xsl:comment>Frame busting from http://securestate.blogspot.com/2010/08/xfs-101-cross-frame-scripting-explained.html</xsl:comment>
+    <xsl:text>
+</xsl:text>
+    <meta http-equiv="X-Frame-Options" content="Deny"/>
+    <style type="text/css">html { display: none; }</style>
+    <script type="text/javascript">
+if (self == top) {
+  document.documentElement.style.display = 'block';
+} else {
+  top.location = self.location;
+}
+    </script>
 
   </xsl:template> <!-- name=add-sao-metadata -->
 
