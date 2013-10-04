@@ -2261,18 +2261,21 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</xsl:message>
       </xsl:if>
 
+      <!-- the 'all' option is auto-generated, so no point checking for it -->
       <xsl:variable name="namestr" select="@name"/>
-      <xsl:variable name="matches" select="$adoc//threadindex/section/id/name[. = $namestr]"/>
-      <xsl:if test="count($matches) = 0">
-	<xsl:message terminate="yes">
+      <xsl:if test="$namestr != 'all'">
+	<xsl:variable name="matches" select="$adoc//threadindex/section/id/name[. = $namestr]"/>
+	<xsl:if test="count($matches) = 0">
+	  <xsl:message terminate="yes">
  ERROR: threadpage link with site=<xsl:value-of select="$siteval"/> and @name=<xsl:value-of select="@name"/>
    does not match the contents of the threadindex; is @name correct or should this 
    be a threadlink tag instead?
-	</xsl:message>
-      </xsl:if>
-    </xsl:if>
+	  </xsl:message>
+	</xsl:if>
+      </xsl:if> <!-- $namestr != 'all' -->
+    </xsl:if> <!-- boolean(@name) -->
 
-  </xsl:template> <!--* name=verify-thread-page-exists *-->
+  </xsl:template> <!--* name=verify-thread-page-exists-general *-->
 
   <!--*
       * add a link to the bug page
