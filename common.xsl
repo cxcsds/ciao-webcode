@@ -47,8 +47,16 @@
       * SAO/SI mandated header items and attempts to stop
       * cross-frame scripting attacks, taken from Gary Galstian
       * and http://securestate.blogspot.com/2010/08/xfs-101-cross-frame-scripting-explained.html
-      * in particulat the presentation at 
+      * in particular the presentation at 
       * https://www.owasp.org/images/0/0e/OWASP_AppSec_Research_2010_Busting_Frame_Busting_by_Rydstedt.pdf
+      *
+      * Similar information is at http://javascript.info/tutorial/clickjacking
+      * which seems to suggest the X-Frames-Origin should be added by the web server
+      * rather than as a meta tag. Also, we place the javascript within the head
+      * block out of convenience (not having to add info to too many places)
+      * but should it be in the body (as this page suggests); this just affects
+      * the download/rendering speed of the page as far as I can tell. For
+      * now leave as is.
       *
       * Also add in the favicon here to make things simpler,
       * if not cleaner/semantically sensible.
