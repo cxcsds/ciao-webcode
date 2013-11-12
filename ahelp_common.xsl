@@ -50,8 +50,23 @@
   <xsl:variable name="dt" select="date:date-time()"/>
   <xsl:variable name="lastmod"
     select="concat(date:day-in-month($dt),' ',date:month-name($dt),' ',date:year($dt))"/>
+
+  <!--*
+      * On Lenin using XSLT version 1.1.28 the following fails with:
+      * xmlXPathCompOpEval: function month-in-year bound to undefined prefix date
+      * xmlXPathCompOpEval: function day-in-month bound to undefined prefix date
+      * so separating out the call to the date function and its use in xsl:number,
+      * as this seems to work
   <xsl:variable name="month2"><xsl:number value="date:month-in-year($dt)" format="01"/></xsl:variable>
   <xsl:variable name="day2"><xsl:number value="date:day-in-month($dt)" format="01"/></xsl:variable>
+      *
+      *-->
+
+  <xsl:variable name="hack-month2"><xsl:value-of select="date:month-in-year($dt)"/></xsl:variable>
+  <xsl:variable name="hack-day2"><xsl:value-of select="date:day-in-month($dt)"/></xsl:variable>
+  <xsl:variable name="month2"><xsl:number value="$hack-month2" format="01"/></xsl:variable>
+  <xsl:variable name="day2"><xsl:number value="$hack-day2" format="01"/></xsl:variable>
+
   <xsl:variable name="lastmodiso"
 		select="concat(date:year($dt), '-', $month2, '-', $day2)"/>
 
