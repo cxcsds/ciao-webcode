@@ -65,6 +65,18 @@ XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs
   }
 );
 
+# ideally would not be a function
+XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				"delete-file-if-exists",
+  sub {
+    my $filename = shift;
+    eval { CIAODOC::myrm($filename); };
+    die "ERROR: unable to delete $filename (requested by stylesheet)\n  $@\n"
+	if $@;
+    return 1;
+  }
+);
+
 # default depth is 250 but this causes problems with some style sheets
 # (eg wavdetect, tg_create_mask), so increase randomly until everything
 # compiles. Why did we not see this in the xsltproc command-line tool?
@@ -467,6 +479,9 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     my $retval  = $sheet->output_string($results);
 #    };
 #    die "ERROR from transformation: $@\n" if $@;
+
+    dbg "*** results = [$results]";
+    dbg "*** as string =\n$retval";
 
     dbg "*** XSLT (end) ***";
     return $retval;

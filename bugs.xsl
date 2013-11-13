@@ -8,7 +8,8 @@
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:exsl="http://exslt.org/common"
-  extension-element-prefixes="exsl">
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="exsl extfuncs">
 
   <xsl:output method="text"/>
 
@@ -413,7 +414,9 @@
     
     <!--* output filename to stdout *-->
     <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
-
+    <xsl:variable name="should-not-be-a-function"
+		  select="extfuncs:delete-file-if-exists($filename)"/>
+    
     <xsl:document href="{$filename}" method="xml" encoding="utf-8">
       <!--* add disclaimer about editing this HTML file *-->
       <xsl:call-template name="add-disclaimer"/>

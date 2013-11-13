@@ -606,6 +606,36 @@ sub count_slash_in_string ($) {
   return length ($str);
 } # count_slash_in_string
 
+# Given an array of file names we expect the stylesheet to produce
+# and the string output of the stylesheet, which contains the names
+# it did produce, return an array with the merged set of names.
+#
+# Errors out if any of the expected names are not in the actual names,
+# so it isn't really a merge as the expected values should be in the
+# return of the stylesheet.
+#
+# Order is not preserved.
+#
+sub merge_filenames (@$) {
+  my @exp = shift;
+  my $rval = shift;
+
+  my %created;
+  foreach my $line (split /\n/, $rval) {
+    $line =~ s/^\s+|\s+$//g;
+    next if $line eq "";
+    $created{$line} = 1;
+  }
+
+  foreach my $efile (@exp) {
+    die "ERROR: expected file $efile but not created by stylesheet\n"
+      unless exists $created{$efile};
+  }
+
+  return keys %created;
+
+} # merge_filenames
+
 # QUESTION:
 #
 # How best to extend this to support multiple output files?;
@@ -679,7 +709,11 @@ sub xml2html_basic ($$$) {
 
     print "Parsing [${pagelabel}]: $in";
 
-    # we 'hardcode' the output of the transformation
+    # We 'hardcode' the output of the transformation.
+    # Note: for 'ancillary' files, such as the slug files created by
+    # the bugs and relnotes pages, we rely on calling a perl routine
+    # from within the stylesheet to handle the deletion of the pages.
+    #
     my @pages = ( "${outdir}${in}.html" );
 
     # how about math pages?
@@ -697,10 +731,12 @@ sub xml2html_basic ($$$) {
     my $url = "${outurl}${in}.html";
     my $params = basic_params $opts;
 
-    translate_file "$$opts{xslt}${stylesheethead}.xsl", $dom, $params;
+    my $retval = translate_file "$$opts{xslt}${stylesheethead}.xsl", $dom, $params;
+
+    my @outfiles = merge_filenames(@pages, $retval);
 
     # success or failure?
-    check_for_page( @pages );
+    check_for_page( @outfiles );
 
     # math?
     process_math( $outdir, @math );
