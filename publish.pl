@@ -1194,11 +1194,12 @@ sub xml2html_threadindex ($) {
       if $rnode->findvalue("boolean(datatable)") eq "true";
     @soft = map { "${outdir}$_"; } @soft;
 
-    # do not allow math in the threadindex (for now)
-    # (remove with use of MathJax)
+    # do not allow math in the threadindex (when using images, since too
+    # lazy to handle them); not a problem for MathJax since no external
+    # files needed.
     my @math = find_math_pages $dom;
     die "Error: found math blocks in $in - not allowed here\n"
-      unless $#math == -1 and use_mathjax == 0;
+      unless $#math == -1 or use_mathjax == 1;
 
     # NOTE: we always recreate the threadindex
     # (it just makes things easier, since the thread index pages
