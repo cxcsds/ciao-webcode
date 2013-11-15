@@ -588,10 +588,23 @@
 	    *-->
 	<span class="MathJax_Preview"><xsl:choose>
 	  <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
-	  <xsl:otherwise><xsl:value-of select="latex"/></xsl:otherwise>
+	  <xsl:otherwise><xsl:value-of select="normalize-space(latex)"/></xsl:otherwise>
 	</xsl:choose></span>
+	<!--*
+	    * TODO: worried about &lt; being converted to <, as seen in the example
+	    * thread (possibly some oddities in how expansion happens, since libXSLT
+	    * seems to have expanded it in x&lt;y but not x &lt; y ...
+	    * Unfortunately, if stick in CDATA then it gets interpreted by the script
+	    * tag. From simple tests it doesn't seem to be a problem.
+	    *-->
 	<script type="math/tex; mode=display">
 	  <xsl:value-of select="latex"/>
+	  <!--
+          <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
+	  <xsl:value-of select="latex"/>
+	  <xsl:text disable-output-escaping="yes">]]</xsl:text>
+	  <xsl:text disable-output-escaping="yes">></xsl:text>
+	  -->
 	</script>
       </xsl:when>
 
@@ -618,7 +631,7 @@
 	</xsl:document>
 	<a name="{name}"><img src="{name}.png"><xsl:attribute name="alt"><xsl:choose>
 	  <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
-	  <xsl:otherwise><xsl:value-of select="text"/></xsl:otherwise>
+	  <xsl:otherwise><xsl:value-of select="normalize-space(latex)"/></xsl:otherwise>
 	</xsl:choose></xsl:attribute></img></a>
       </xsl:otherwise>
     </xsl:choose>

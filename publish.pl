@@ -245,6 +245,10 @@ my $googlessi = "";
 $googlessi = get_config_version( $version_config, "googlessi" )
   if check_config_exists( $version_config, "googlessi" );
 
+# MathJax
+my $mathjaxpath = "";
+$mathjaxpath = get_config_type( $version_config, "mathjaxpath", $type )
+  if check_config_exists( $version_config, "mathjaxpath" );
 
 # storage/published is optional [sort of, depends on the site]
 # Moving towards using storageloc but have not completed the move
@@ -330,6 +334,7 @@ dbg "  newsfile=$newsfile";
 dbg "  newsfileurl=$newsfileurl";
 dbg "  watchouturl=$watchouturl";
 dbg "  searchssi=$searchssi";
+dbg "  mathjaxpath=$mathjaxpath";
 dbg "  logoimage=$logoimage";
 dbg "  logotext=$logotext";
 dbg "  imglinkicon=$imglinkicon [$imglinkiconwidth x $imglinkiconheight]";
@@ -566,6 +571,8 @@ sub check_for_page {
 #   ensures none of the files that will be needed to support the math
 #   tag are present
 #
+# NOTE: this code is not needed when using MathJax.
+#
 sub clean_up_math {
     return if use_mathjax;
 
@@ -586,6 +593,8 @@ sub clean_up_math {
 #
 # Aim:
 #   Creates the PNG images
+#
+# NOTE: this code is not needed when using MathJax.
 #
 sub process_math {
     return if use_mathjax;
@@ -680,6 +689,7 @@ sub basic_params ($) {
 	    watchouturl => $watchouturl,
 	    searchssi => $searchssi,
 	    googlessi => $googlessi,
+	    mathjaxpath => $mathjaxpath,
 	    headtitlepostfix => $headtitlepostfix,
 	    texttitlepostfix => $texttitlepostfix,
 	    

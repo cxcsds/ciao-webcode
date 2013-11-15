@@ -260,7 +260,8 @@
       * pages is included.
       *
       * MathJax support is added if the page contains any math tags
-      * (if $use-mathjax is set to 1)
+      * (if $use-mathjax is set to 1); in this case it is an error
+      * to have mathjaxpath unset.
       *
       * CSS can be added either via the css attribute or from the
       * info/css block in the input file.
@@ -290,6 +291,12 @@
       <xsl:apply-templates select="info/htmlscripts"/>
 
       <xsl:if test="$use-mathjax = 1 and count(//math) != 0">
+	<xsl:if test="$mathjaxpath = ''">
+	  <xsl:message terminate="yes">
+ ERROR: use-mathjax=1 but mathjaxpath is unset and the page contains math tags!
+          </xsl:message>
+	</xsl:if>
+
 	<!--*
 	    * We do not use the CDN version because of HEAD/SAO policy
 	    *
@@ -297,8 +304,7 @@
 	    * input, and do not need the texjax input processor, is it
 	    * worth using a "custom" config?
 	    *-->
-	<script type="text/javascript"
-		src="/ciao/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js"/>
+	<script type="text/javascript" src="{$mathjaxpath}"/>
       </xsl:if>
 
       <!--* add main stylesheets *-->

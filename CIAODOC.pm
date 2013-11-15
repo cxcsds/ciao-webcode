@@ -34,8 +34,9 @@ use XML::LibXSLT;
 # we can change by setting a flag in the publishing script.
 #
 # This is intended as a temporary measure; once MathJax can
-# be installed onto the web site this can be removed.
-sub use_mathjax () { return 0; }
+# be installed onto the web site this can be removed, or
+# it may become a per-site setting?
+sub use_mathjax () { return 1; }
 
 # Set up XML/XSLT processors
 #

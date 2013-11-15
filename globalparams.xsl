@@ -100,9 +100,11 @@
       * Temporary:
       * Swap between using LaTeX to create PNG of equations
       * and MathJax for in-line display with this hard-coded
-      * parameter 
+      * parameter. Could combine use-mathjax and mathjax-path
+      * (ie use-mathjax=1 is the same as mathjaxpath != '').
       *-->
   <xsl:param name="use-mathjax" select='0'/>
+  <xsl:param name="mathjaxpath" select='""'/>
 
   <!--* these should be over-ridden from the command line *-->
 
