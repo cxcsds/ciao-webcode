@@ -1039,19 +1039,20 @@
 
 
   <!--*
-      * 
-      * add a release notes block, if it exists
-      *
-      * TODO: convert to using XInclude to add the data rather than a SSI
-      * 
+      * Add a release notes block, if it exists
+      * Try and avoid repeated ADESC section titles.
       *-->
 
   <xsl:template name="add-relnotes">
     <!-- include the release note text -->
     <xsl:if test="$have-relnotes">
-
-      <h3><a name="relnotes">Changes in CIAO <xsl:value-of select="$version"/></a></h3>
-
+      <xsl:variable name="title" select="concat('Changes in CIAO ', $version)"/>
+      <xsl:choose>
+	<xsl:when test="count(//ADESC[@title=$title]) != 0"><a name="relnotes"/></xsl:when>
+	<xsl:otherwise>
+	  <h3><a name="relnotes"><xsl:value-of select="$title"/></a></h3>
+	</xsl:otherwise>
+      </xsl:choose>
       <xsl:copy-of select="$relnotes-contents/slug/*"/>
     </xsl:if>
   </xsl:template> <!--* relnotes *-->
