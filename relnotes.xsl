@@ -38,6 +38,8 @@
   <xsl:include href="links.xsl"/>
   <xsl:include href="myhtml.xsl"/>
 
+  <xsl:variable name="is-current-release" select="$site = 'ciao' and starts-with(//relnotes/@release, $siteversion)"/>
+
   <!--*
       * top level: create
       *   $pagename.html
@@ -58,7 +60,7 @@
     </xsl:call-template>
 
     <xsl:apply-templates select="relnotes" mode="page"/>
-    <xsl:if test="$site = 'ciao' and starts-with(//relnotes/@release, $siteversion)">
+    <xsl:if test="$is-current-release">
       <xsl:apply-templates select="//relnotes/text/category[@name='Tools']" mode="ahelp-relnotes"/>
     </xsl:if>
 
@@ -183,6 +185,11 @@
 
   <!--*
       * Should the title include a link to the ahelp page?
+      * This is *only* done for the current release, since
+      * - prior to the 4.6 release - the necessary ahelpskip/ahelpkey
+      * attributes were not used. The links could be added only
+      * if the ahelp page exists in this case, but that is going
+      * to be messy given how the code is written, so leave for now.
       *
       * This code needs refactoring since there are multiple
       * places with similar/the same code to access the ahelp
@@ -190,7 +197,7 @@
       * -->
   <xsl:template name="add-section-title">
     <xsl:choose>
-      <xsl:when test="@ahelpskip = '1'">
+      <xsl:when test="@ahelpskip = '1' or not($is-current-release)">
 	<h3><xsl:value-of select="@name"/></h3>
       </xsl:when>
       <xsl:otherwise>
