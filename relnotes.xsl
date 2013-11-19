@@ -144,8 +144,8 @@
 		<xsl:apply-templates select="intro"/>
 		
 		<xsl:for-each select="section">
-		  <h3><xsl:value-of select="@name"/></h3>
-		  
+		  <!-- TODO: should this force the name attribute to be non-empty? -->
+		  <xsl:call-template name="add-section-title"/>
 		  <ul>
 		    <xsl:for-each select="note">
 		      <li>
@@ -180,6 +180,94 @@
       
     </xsl:document>
   </xsl:template> <!--* match=relnotes, mode=page *-->
+
+  <!--*
+      * Should the title include a link to the ahelp page?
+      *
+      * This code needs refactoring since there are multiple
+      * places with similar/the same code to access the ahelp
+      * information.
+      * -->
+  <xsl:template name="add-section-title">
+    <xsl:choose>
+      <xsl:when test="@ahelpskip = '1'">
+	<h3><xsl:value-of select="@name"/></h3>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:variable name="pagename"><xsl:choose>
+	  <xsl:when test="boolean(@ahelpkey)"><xsl:value-of select="@ahelpkey"/></xsl:when>
+	  <xsl:otherwise><xsl:value-of select="@name"/></xsl:otherwise>
+	</xsl:choose></xsl:variable>
+	
+	<xsl:variable name="namematches" select="$ahelpindexfile//ahelp[key=$pagename]"/>
+	<xsl:variable name="num" select="count($namematches)"/>
+	
+	<xsl:variable name="context"><xsl:choose>
+	  <xsl:when test="boolean(@context)"><xsl:value-of select="@context"/></xsl:when>
+	  <!-- special case when num=0 (ie ahelp is unknown) -->
+	  <xsl:when test="$num=0 and $type!='live'">unknown</xsl:when>
+	  <xsl:when test="$num=1"><xsl:value-of select="$namematches/context"/></xsl:when>
+	  <xsl:otherwise>
+	    <xsl:message terminate="yes">
+
+ ERROR: have relnotes section for <xsl:value-of select="$pagename"/>
+   that matches <xsl:value-of select="$num"/> contexts.
+   You need to add a context attribute to distinguish between them.
+
+	    </xsl:message>
+	  </xsl:otherwise>
+	</xsl:choose></xsl:variable>
+
+	<xsl:variable name="matches" select="$namematches[context=$context]"/>
+	<xsl:choose>
+	  <xsl:when test="count($matches) = 0">
+	    <xsl:choose>
+	      <xsl:when test="$site = 'live'">
+		<xsl:message terminate="yes">
+ ERROR: release notes has a section for [ahelp]name=<xsl:value-of select="$pagename"/> but can
+        find no matching ahelp file! Has it not been published yet?
+		</xsl:message>
+	      </xsl:when>
+	      <xsl:otherwise>
+		<h3><xsl:value-of select="concat('{*** will be ahelp link to ', @name, ' ***}')"/></h3>
+	      </xsl:otherwise>
+	    </xsl:choose>
+	  </xsl:when>
+
+	  <xsl:when test="count($matches) = 1">
+	    <xsl:variable name="ahelpsite" select="$matches/site"/>
+	    <xsl:variable name="hrefstart"><xsl:choose>
+	      <xsl:when test="$site != $ahelpsite">
+		<xsl:value-of select="concat('/',$ahelpsite,'/ahelp/')"/>
+	      </xsl:when>
+	      <xsl:otherwise>
+		<xsl:call-template name="add-start-of-href">
+		  <xsl:with-param name="extlink" select="0"/>
+		  <xsl:with-param name="dirname" select="'ahelp/'"/>
+	      </xsl:call-template></xsl:otherwise>
+	    </xsl:choose></xsl:variable>
+
+
+	    <h3><a class="helplink">
+	      <xsl:if test="$matches/summary != ''">
+		<xsl:attribute name="title">Ahelp (<xsl:value-of select="$context"/>): <xsl:value-of select="$matches/summary"/></xsl:attribute>
+	      </xsl:if>
+	      <xsl:attribute name="href"><xsl:value-of select="concat($hrefstart, $matches/page, '.html')"/></xsl:attribute>
+	      <xsl:value-of select="@name"/>
+	    </a></h3>
+	  </xsl:when>
+
+	  <xsl:otherwise>
+	    <xsl:message terminate="yes">
+ ERROR: tool release notes for [ahelp]name=<xsl:value-of select="$pagename"/> context=<xsl:value-of select="$context"/>
+   matches multiple (<xsl:value-of select="$num"/>) ahelp files; see Doug
+	    </xsl:message>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </xsl:template> <!--* name=add-section-title *-->
 
   <!--*
       * create the includes for the ahelp webpages; we assume
