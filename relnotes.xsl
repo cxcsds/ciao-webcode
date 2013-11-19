@@ -209,9 +209,7 @@
       *    if this attribute does not exist then use
       *    @name (which should exist).
       *-->
-  <xsl:template match="section[@ahelpskip='1']" mode="ahelp-relnotes">
-    <xsl:message terminate="no">DBG: skipping relnotes name=<xsl:value-of select="@name"/></xsl:message>
-  </xsl:template>
+  <xsl:template match="section[@ahelpskip='1']" mode="ahelp-relnotes"/>
 
   <xsl:template match="section" mode="ahelp-relnotes">
 
