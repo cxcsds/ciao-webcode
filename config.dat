@@ -21,21 +21,25 @@
 #
 # %perl is currently only used by publish_all.pl
 #
-# OS type values can be sun, lin, or osx
+# OS type values can be lin or osx
+#   (sun is also allowed but not expected to be used)
 #
-%listseealso=sun /data/da/Docs/web4/utilities/list_seealso.ciao4.sun
-%perl=sun /data/da/Docs/local/perl/bin/perl
 
 # Linux values tailored to Liz's machine (rory). I had tried
 # building on a 32-bit Linux machine but it didn't seem to run
 # on rory, so go back to the 64-bit versions
 #
-%listseealso=lin ciaorun /data/da/Docs/web4/utilities/binexe/list_seealso.ciao43.lin64
-%perl=lin /usr/bin/env PERL5LIB=/data/da/Docs/local/linux_x86_64/lib64/perl5/site_perl:/data/da/Docs/local/linux_x86_64/lib64/perl5:/data/da/Docs/local/linux_x86_64/lib/perl5/site_perl perl
-
-# OS-X: specific to Doug's laptop, should be changed to more general values
+# Note that as of CIAO 4.6 the LD_LIBRARY_PATH needs to be set
+# when calling list_seealso because it is no-longer set in the
+# ciaorun script.
 #
-%listseealso=osx /Users/doug/doc/ahelp/list_seealso
+%listseealso=lin /usr/bin/env LD_LIBRARY_PATH=${ASCDS_INSTALL}/lib:${ASCDS_INSTALL}/ots/lib ciaorun /data/da/Docs/web4/utilities/binexe/list_seealso.ciao43.lin64
+%perl=lin perl
+#%perl=lin /usr/bin/env PERL5LIB=/data/da/Docs/local/linux_x86_64/lib64/perl5/site_perl:/data/da/Docs/local/linux_x86_64/lib64/perl5:/data/da/Docs/local/linux_x86_64/lib/perl5/site_perl perl
+
+# OS-X, built on OS-X 10.6.8
+#
+%listseealso=osx ciaorun /data/da/Docs/web4/utilities/binexe/list_seealso.ciao46.osx64
 %perl=osx perl
 
 # what "site" (ie part of the web pages) are we creating?
