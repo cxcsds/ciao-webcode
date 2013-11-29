@@ -389,12 +389,22 @@
 	
 	<xsl:if test="boolean(@param)">
 	  <xsl:if test="count($parammatch)!=1">
-	    <xsl:message terminate="yes">
-	      
+	    <xsl:choose>
+	      <xsl:when test="$type='live'">
+		<xsl:message terminate="yes">
  ERROR: ahelp unable to find parameter=<xsl:value-of select="@param"/> for
    name=<xsl:value-of select="$name"/> context=<xsl:value-of select="$context"/>
-
-	    </xsl:message>
+		</xsl:message>
+	      </xsl:when>
+	      <xsl:otherwise>
+		<xsl:message terminate="no">
+ WARNING: ahelp unable to find parameter=<xsl:value-of select="@param"/> for
+   name=<xsl:value-of select="$name"/> context=<xsl:value-of select="$context"/>
+   This must be resolved before publishing to the live site (is the parameter
+     name wrong or perhaps an updated ahelp file needs to be published)
+		</xsl:message>
+	      </xsl:otherwise>
+	    </xsl:choose>
 	  </xsl:if>
 	</xsl:if>
 
