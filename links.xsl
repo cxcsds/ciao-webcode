@@ -1727,6 +1727,13 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:if>
     </xsl:if>
 
+    <!--* TODO: validate the id as we can (at least in certain cases) -->
+    <xsl:if test="boolean(@id) and @id = ''">
+      <xsl:message terminate="no">
+ WARNING: a cxlink tag has id="" - this is ALMOST-CERTAINLY not what you meant!
+      </xsl:message>
+    </xsl:if>
+
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
