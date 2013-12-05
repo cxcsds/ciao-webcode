@@ -903,9 +903,7 @@
   </xsl:template>
 
   <!--*
-      * This is called when processing both figlink and figure tags,
-      * which results in excess checks, but we will live with the
-      * extra work.
+      * This is called when processing figlink tags.
       *-->
   <xsl:template name="check-fig-id-exists">
     <xsl:param name="id" select="''"/>
@@ -994,7 +992,56 @@
   </func:function>
 
   <!--*
-`     * This is ugly; do we handle this better in other parts of the system?
+      * Warn if any other element in the document has an id element that
+      * matches. This is intended to catch those cases where a figure
+      * environment has inadvertently used the same id as a section,
+      * but could be made more general.
+      *
+      * At present this is not an error because
+      *   - it is being added at releasre time and so I do not
+      *     want to slow down the documentation effort
+      *   - it may have unintended consequences (i.e. false positives)
+      *     so it needs to be evaluated first
+      *
+      * Aha, one probelm with this approach is that the system uses id
+      * as an attribute both to name an anchor and to refer to it - e.g.
+      *   figure id=... and then figlink id=...
+      * which means that this has to become specialized to only those
+      * elements for which it is used as an anchor. This is not ideal
+      * since I don't have such a list easily at hand!
+      *-->
+  <xsl:template name="ensure-unique-id">
+    <xsl:param name="id" select="''"/>
+    <xsl:if test="$id = ''">
+      <xsl:message terminate="yes">
+ ERROR: check-fig-id-exists called with an empty id argument.
+      </xsl:message>
+    </xsl:if>
+
+    <!-- <xsl:variable name="nmatches" select="count(//*[@id=$id])"/> -->
+    <xsl:variable name="nfig" select="count(//figure[@id=$id])"/>
+    <xsl:variable name="nsec" select="count(//section[@id=$id])"/>
+    <xsl:variable name="nsub" select="count(//subsection[@id=$id])"/>
+    <xsl:variable name="nmatches" select="$nfig + $nsec + $nsub"/>
+    <xsl:choose>
+      <xsl:when test="$nmatches=1"/>
+      <xsl:when test="$nmatches>1">
+        <xsl:message terminate="no">
+ WARNING: there are <xsl:value-of select="$nmatches"/> elements with id=<xsl:value-of select="$id"/>
+   Please check, since Doug believes they should be unique (or this check is wrong)
+        </xsl:message>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message terminate="no">
+ WARNING: ensure-unique-id has found no matches for elements with id=<xsl:value-of select="$id"/>
+   which suggests Doug's code is wrong. Please tell him.
+        </xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template> <!--* name=ensure-unique-id *-->
+
+  <!--*
+      * This is ugly; do we handle this better in other parts of the system?
       * (we need a different mode since there must be an explicit title template
       * somewhere that ignores the content, presumably to handle section/subsection
       * title elements).
@@ -1044,6 +1091,11 @@
  ERROR: figure block does not contain an id attribute
       </xsl:message>
     </xsl:if>
+
+    <xsl:call-template name="ensure-unique-id">
+      <xsl:with-param name="id" select="@id"/>
+    </xsl:call-template>   
+
     <xsl:if test="boolean(description)=false()">
       <xsl:message terminate="yes">
  ERROR: figure (id=<xsl:value-of select="@id"/>) does not contain a description tag
