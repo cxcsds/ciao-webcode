@@ -274,6 +274,23 @@
     </xsl:if>
 
     <!--*
+        * Since Doug just got caught out by this, ensure there are no spaces
+	* in the name field.
+	*-->
+    <xsl:choose>
+      <xsl:when test="@name=''">
+	<xsl:message terminate="yes">
+ ERROR: ahelp tag found with an empty name attribute!
+	</xsl:message>
+      </xsl:when>
+      <xsl:when test="contains(@name, ' ')">
+	<xsl:message terminate="yes">
+ ERROR: name='<xsl:value-of select="@name"/>' for ahelp tag contains a space!
+	</xsl:message>
+      </xsl:when>
+    </xsl:choose>
+
+    <!--*
         * find the matching entry:
         *   search on either
         *     name
