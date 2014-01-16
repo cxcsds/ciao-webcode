@@ -15,24 +15,16 @@
 
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:exsl="http://exslt.org/common"
   xmlns:func="http://exslt.org/functions"
   xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
   xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
-  extension-element-prefixes="exsl func djb extfuncs">
+  extension-element-prefixes="func djb extfuncs">
 
   <!--* Change this if the filename changes *-->
   <xsl:variable name="hack-import-thread_common" select="extfuncs:register-import-dependency('thread_common.xsl')"/>
 
   <!--* we create the HTML files using xsl:document statements *-->
   <xsl:output method="text"/>
-
-  <!--* This is used to map from @id to figure number *-->
-  <xsl:variable name="figlist">
-    <xsl:for-each select="//figure">
-      <figure id="{@id}" pos="{position()}"/>
-    </xsl:for-each>
-  </xsl:variable>
 
   <!--*
       * set up the "top level" links for the HTML page
@@ -42,17 +34,23 @@
       *
       * Updated for CIAO 3.0 to remove some 'excess' baggage
       *
-      * As many of these templates do the same thing we could refactor here
       *-->
   <xsl:template name="add-top-links-site-html">
     <xsl:choose>
-      <xsl:when test="$site = 'ciao'"><xsl:call-template name="add-top-links-ciao-html"/></xsl:when>
-      <xsl:when test="$site = 'chart'"><xsl:call-template name="add-top-links-chart-html"/></xsl:when>
-      <xsl:when test="$site = 'chips'"><xsl:call-template name="add-top-links-chips-html"/></xsl:when>
-      <xsl:when test="$site = 'sherpa'"><xsl:call-template name="add-top-links-sherpa-html"/></xsl:when>
-      <xsl:when test="$site = 'csc'"><xsl:call-template name="add-top-links-csc-html"/></xsl:when>
-      <xsl:when test="$site = 'iris'"><xsl:call-template name="add-top-links-iris-html"/></xsl:when>
-      <xsl:when test="$site = 'pog'"><xsl:call-template name="add-top-links-pog-html"/></xsl:when>
+      <xsl:when test="$site = 'chart'">
+	<xsl:call-template name="add-thread-qlinks-basic"/>
+      </xsl:when>
+
+      <xsl:when test="$site = 'pog'">
+	<xsl:call-template name="add-thread-qlinks-basic">
+	  <xsl:with-param name="text" select="'Proposer Threads Page'"/>
+	</xsl:call-template>
+      </xsl:when>
+
+      <xsl:when test="$site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'csc' or $site = 'iris'">
+	<xsl:call-template name="add-thread-qlinks"/>
+      </xsl:when>
+
       <xsl:otherwise>
 	<xsl:message terminate="yes">
  Internal error - add-top-links-site-html sent site='<xsl:value-of select="$site"/>'
@@ -61,193 +59,6 @@
     </xsl:choose>
 
   </xsl:template> <!--* name=add-top-links-site-html *-->
-
-  <xsl:template name="add-top-links-ciao-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'ciao'">
-      <xsl:message terminate="yes">
-  Error: template add-top-links-ciao-html called but not for a CIAO thread
-      </xsl:message>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="qlinkbar">
-	<!--* create links to threads *-->
-	<xsl:call-template name="add-thread-qlinks"/>
-      </div>
-    </div>
-
-  </xsl:template> <!--* name=add-top-links-ciao-html *-->
-
-  <!--*
-      * set up the "top level" links for the HTML page (ChaRT)
-      * [links to processing/names threads, thread index]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-top-links-chart-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'chart'">
-      <xsl:message terminate="yes">
-  Error: template add-top-links-chart-html called but not for a ChaRT thread
-      </xsl:message>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="qlinkbar">
-	<!--* create links to threads *-->
-	Return to 
-	<xsl:call-template name="mylink">
-	  <xsl:with-param name="dir">../</xsl:with-param>
-	  <xsl:with-param name="filename"></xsl:with-param>
-	  <xsl:with-param name="text">Threads Page</xsl:with-param>
-	</xsl:call-template>
-      </div>
-    </div>
-
-  </xsl:template> <!--* name=add-top-links-chart-html *-->
-
-  <!--*
-      * set up the "top level" links for the HTML page (Sherpa)
-      * [links to processing/names threads, thread index]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-top-links-sherpa-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'sherpa'">
-      <xsl:message terminate="yes">
-  Error: template add-top-links-sherpa-html called but not for a Sherpa thread
-      </xsl:message>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="qlinkbar">
-      <!--* create links to threads *-->
-	<xsl:call-template name="add-thread-qlinks"/>
-      </div>
-    </div>
-
-  </xsl:template> <!--* name=add-top-links-sherpa-html *-->
-
-  <!--*
-      * set up the "top level" links for the HTML page (ChIPS)
-      * [links to processing/names threads, thread index]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-top-links-chips-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'chips'">
-      <xsl:message terminate="yes">
-  Error: template add-top-links-chips-html called but not for a ChIPS thread
-      </xsl:message>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="qlinkbar">
-      <!--* create links to threads *-->
-	<xsl:call-template name="add-thread-qlinks"/>
-      </div>
-    </div>
-
-  </xsl:template> <!--* name=add-top-links-chips-html *-->
-
-  <!--*
-      * set up the "top level" links for the HTML page (CSC)
-      * [links to processing/names threads, thread index]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-top-links-csc-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'csc'">
-      <xsl:message terminate="yes">
-  Error: template add-top-links-csc-html called but not for a CSC thread
-      </xsl:message>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="qlinkbar">
-      <!--* create links to threads *-->
-	<xsl:call-template name="add-thread-qlinks"/>
-      </div>
-    </div>
-
-  </xsl:template> <!--* name=add-top-links-csc-html *-->
-
-  <!--*
-      * set up the "top level" links for the HTML page (iris)
-      * [links to processing/names threads, thread index]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-top-links-iris-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'iris'">
-      <xsl:message terminate="yes">
-  Error: template add-top-links-iris-html called but not for an Iris thread
-      </xsl:message>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="qlinkbar">
-      <!--* create links to threads *-->
-	<xsl:call-template name="add-thread-qlinks"/>
-      </div>
-    </div>
-
-  </xsl:template> <!--* name=add-top-links-iris-html *-->
-
-  <!--*
-      * set up the "top level" links for the HTML page (POG)
-      * [links to processing/names threads, thread index]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-top-links-pog-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'pog'">
-      <xsl:message terminate="yes">
-  Error: template add-top-links-pog-html called but not for a Proposalthread
-      </xsl:message>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="qlinkbar">
-	<!--* create links to threads *-->
-	Return to 
-	<xsl:call-template name="mylink">
-	  <xsl:with-param name="dir">../</xsl:with-param>
-	  <xsl:with-param name="filename"></xsl:with-param>
-	  <xsl:with-param name="text">
-	    <xsl:choose>
-	      <xsl:when test="$site = 'pog'">
-		Proposer Threads Page
-	      </xsl:when>
-	      <xsl:otherwise>
-		Threads Page
-	      </xsl:otherwise>
-	    </xsl:choose>
-	  </xsl:with-param>
-	</xsl:call-template>
-      </div>
-    </div>
-
-  </xsl:template> <!--* name=add-top-links-pog-html *-->
 
   <!--*
       * set up the "trailing" links for the HTML page
@@ -258,13 +69,20 @@
       *-->
   <xsl:template name="add-bottom-links-site-html">
     <xsl:choose>
-      <xsl:when test="$site = 'ciao'"><xsl:call-template name="add-bottom-links-ciao-html"/></xsl:when>
-      <xsl:when test="$site = 'chart'"><xsl:call-template name="add-bottom-links-chart-html"/></xsl:when>
-      <xsl:when test="$site = 'chips'"><xsl:call-template name="add-bottom-links-chips-html"/></xsl:when>
-      <xsl:when test="$site = 'sherpa'"><xsl:call-template name="add-bottom-links-sherpa-html"/></xsl:when>
-      <xsl:when test="$site = 'csc'"><xsl:call-template name="add-bottom-links-csc-html"/></xsl:when>
-      <xsl:when test="$site = 'iris'"><xsl:call-template name="add-bottom-links-iris-html"/></xsl:when>
-      <xsl:when test="$site = 'pog'"><xsl:call-template name="add-bottom-links-pog-html"/></xsl:when>
+      <xsl:when test="$site = 'chart'">
+	<xsl:call-template name="add-thread-qlinks-basic"/>
+      </xsl:when>
+
+      <xsl:when test="$site = 'pog'">
+	<xsl:call-template name="add-thread-qlinks-basic">
+	  <xsl:with-param name="text" select="'Proposer Threads Page'"/>
+	</xsl:call-template>
+      </xsl:when>
+
+      <xsl:when test="$site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'csc' or $site = 'iris'">
+	<xsl:call-template name="add-thread-qlinks"/>
+      </xsl:when>
+
       <xsl:otherwise>
 	<xsl:message terminate="yes">
  Internal error - add-bottom-links-site-html sent site='<xsl:value-of select="$site"/>'
@@ -273,179 +91,6 @@
     </xsl:choose>
 
   </xsl:template> <!--* name=add-bottom-links-site-html *-->
-
-  <xsl:template name="add-bottom-links-ciao-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'ciao'">
-      <xsl:message terminate="yes">
-  Error: template add-bottom-links-html called but not for a CIAO thread
-      </xsl:message>
-    </xsl:if>
-
-    <!--* create the trailing links to threads *-->
-    <div class="bottombar">
-      <!--* create links to threads *-->
-      <xsl:call-template name="add-thread-qlinks"/>
-    </div>
-
-  </xsl:template> <!--* name=add-bottom-links-html *-->
-
-  <!--*
-      * set up the "trailing" links for the HTML page (ChaRT)
-      * [links to thread indexes]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-bottom-links-chart-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'chart'">
-      <xsl:message terminate="yes">
-  Error: template add-bottom-links-chart-html called but not for a ChaRT thread
-      </xsl:message>
-    </xsl:if>
-
-    <!--* create the trailing links to threads *-->
-    <div class="bottombar">
-      <!--* create links to threads *-->
-      Return to 
-      <xsl:call-template name="mylink">
-	<xsl:with-param name="dir">../</xsl:with-param>
-	<xsl:with-param name="filename"></xsl:with-param>
-	<xsl:with-param name="text">Threads Page</xsl:with-param>
-      </xsl:call-template>
-    </div>
-
-  </xsl:template> <!--* name=add-bottom-links-chart-html *-->
-
-  <!--*
-      * set up the "trailing" links for the HTML page (Sherpa)
-      * [links to thread indexes]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-bottom-links-sherpa-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'sherpa'">
-      <xsl:message terminate="yes">
-  Error: template add-bottom-links-sherpa-html called but not for a Sherpa thread
-      </xsl:message>
-    </xsl:if>
-
-    <!--* create the trailing links to threads *-->
-    <div class="bottombar">
-      <!--* create links to threads *-->
-      <xsl:call-template name="add-thread-qlinks"/>
-    </div>
-
-  </xsl:template> <!--* name=add-bottom-links-sherpa-html *-->
-
-  <!--*
-      * set up the "trailing" links for the HTML page (ChIPS)
-      * [links to thread indexes]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-bottom-links-chips-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'chips'">
-      <xsl:message terminate="yes">
-  Error: template add-bottom-links-chips-html called but not for a ChIPS thread
-      </xsl:message>
-    </xsl:if>
-
-    <!--* create the trailing links to threads *-->
-    <div class="bottombar">
-      <!--* create links to threads *-->
-      <xsl:call-template name="add-thread-qlinks"/>
-    </div>
-
-  </xsl:template> <!--* name=add-bottom-links-chips-html *-->
-
-  <!--*
-      * set up the "trailing" links for the HTML page (CSC)
-      * [links to thread indexes]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-bottom-links-csc-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'csc'">
-      <xsl:message terminate="yes">
-  Error: template add-bottom-links-csc-html called but not for a CSC thread
-      </xsl:message>
-    </xsl:if>
-
-    <!--* create the trailing links to threads *-->
-    <div class="bottombar">
-      <!--* create links to threads *-->
-      <xsl:call-template name="add-thread-qlinks"/>
-    </div>
-
-  </xsl:template> <!--* name=add-bottom-links-csc-html *-->
-
-  <!--*
-      * set up the "trailing" links for the HTML page (iris)
-      * [links to thread indexes]
-      *
-      * Parameters:
-      *
-      *-->
-  <xsl:template name="add-bottom-links-iris-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'iris'">
-      <xsl:message terminate="yes">
-  Error: template add-bottom-links-iris-html called but not for an Iris thread
-      </xsl:message>
-    </xsl:if>
-
-    <!--* create the trailing links to threads *-->
-    <div class="bottombar">
-      <!--* create links to threads *-->
-      <xsl:call-template name="add-thread-qlinks"/>
-    </div>
-
-  </xsl:template> <!--* name=add-bottom-links-iris-html *-->
-
-  <!--*
-      * set up the "trailing" links for the HTML page (POG)
-      * [links to thread indexes]
-      *
-      * Parameters:
-      *
-      * At the moment this is the same as the ChaRT version
-      *
-      *-->
-  <xsl:template name="add-bottom-links-pog-html">
-
-    <!--* safety check *-->
-    <xsl:if test="$site != 'pog'">
-      <xsl:message terminate="yes">
-  Error: template add-bottom-links-pog-html called but not for a Proposalthread
-      </xsl:message>
-    </xsl:if>
-
-    <!--* create the trailing links to threads *-->
-    <div class="bottombar">
-      <!--* create links to threads *-->
-      Return to 
-      <xsl:call-template name="mylink">
-	<xsl:with-param name="dir">../</xsl:with-param>
-	<xsl:with-param name="filename"></xsl:with-param>
-	<xsl:with-param name="text">Threads Page</xsl:with-param>
-      </xsl:call-template>
-    </div>
-    
-  </xsl:template> <!--* name=add-bottom-links-pog-html *-->
 
   <!--*
       * Add the introductory text:
@@ -1197,7 +842,8 @@ or do we, as this case is already caught in add-parameters?
   <!--* 
       * used in header/footer to provide links to thread pages:
       * include "Top", "All", and all sections from the index which
-      * contain this thread
+      * contain this thread. See add-thread-qlinks-basic for a
+      * version that does not link to the various thread sections.
       *
       * Uses the $threadDir variable to find the location of the
       * thread index (published copy)
@@ -1206,40 +852,64 @@ or do we, as this case is already caught in add-parameters?
       *
       * Parameters:
       *
-      * *****CIAO SPECIFIC*****
-      *
       *-->
   <xsl:template name="add-thread-qlinks">
 
     <!--* read in the thread index *-->
     <xsl:variable name="threadIndex" select="document(concat($threadDir,'index.xml'))"/>
 
-    Return to Threads Page: 
-    <xsl:call-template name="mylink">
-      <xsl:with-param name="dir">../</xsl:with-param>
-      <xsl:with-param name="filename"></xsl:with-param>
-      <xsl:with-param name="text">Top</xsl:with-param>
-    </xsl:call-template> | 
-    <xsl:call-template name="mylink">
-      <xsl:with-param name="dir">../</xsl:with-param>
-      <xsl:with-param name="filename">all.html</xsl:with-param>
-      <xsl:with-param name="text">All</xsl:with-param>
-    </xsl:call-template>
-
-    <!--*
-        * we want to process all the id nodes of the sections 
-        * which contain this thread 
-        *-->
-    <xsl:for-each select="$threadIndex//item[@name=$threadName]/ancestor::section/id">
-      | 
+    <div class="qlinkbar">
+      Return to Threads Page: 
       <xsl:call-template name="mylink">
 	<xsl:with-param name="dir">../</xsl:with-param>
-	<xsl:with-param name="filename"><xsl:value-of select="name"/>.html</xsl:with-param>
-	<xsl:with-param name="text" select="text"/>
-      </xsl:call-template>
-    </xsl:for-each>
+	<xsl:with-param name="filename"></xsl:with-param>
+	<xsl:with-param name="text">Top</xsl:with-param>
+	</xsl:call-template> | 
+	<xsl:call-template name="mylink">
+	  <xsl:with-param name="dir">../</xsl:with-param>
+	  <xsl:with-param name="filename">all.html</xsl:with-param>
+	  <xsl:with-param name="text">All</xsl:with-param>
+	</xsl:call-template>
+
+	<!--*
+	    * we want to process all the id nodes of the sections 
+	    * which contain this thread 
+	    *-->
+	<xsl:for-each select="$threadIndex//item[@name=$threadName]/ancestor::section/id">
+	  | 
+	  <xsl:call-template name="mylink">
+	    <xsl:with-param name="dir">../</xsl:with-param>
+	    <xsl:with-param name="filename"><xsl:value-of select="name"/>.html</xsl:with-param>
+	    <xsl:with-param name="text" select="text"/>
+	  </xsl:call-template>
+	</xsl:for-each>
+    </div>
 
   </xsl:template> <!--* name=add-thread-qlinks *-->
+
+  <!--* 
+      * used in header/footer to provide links to thread pages.
+      * See add-thread-qlinks for a version that also links to
+      * the thread sections that contain the thread.
+      *
+      * Parameters:
+      *    text, string, optional
+      *       Text to use for the link back to the index page,
+      *       defaults to 'Threads Page'.
+      *
+      *-->
+  <xsl:template name="add-thread-qlinks-basic">
+    <xsl:param name="text" select="'Threads Page'"/>
+    
+    <div class="qlinkbar">
+      Return to 
+      <xsl:call-template name="mylink">
+	<xsl:with-param name="dir">../</xsl:with-param>
+	<xsl:with-param name="filename"></xsl:with-param>
+	<xsl:with-param name="text"><xsl:value-of select="$text"/></xsl:with-param>
+      </xsl:call-template>
+    </div>
+  </xsl:template> <!--* name=add-thread-qlinks-basic *-->
 
   <!--*
       * add a separator between "sections"
@@ -1632,400 +1302,8 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
   </xsl:template> <!--* match=thread mode=html-viewable-standard *-->
 
   <!--*
-      * Figure support
-      *
-      *  
-      *  <figure id="foo">
-      *    <title>blah blah blah</title>
-      *    <caption>
-      *      <p>Yay a caption.</p>
-      *      <p>With more text.</p>
-      *    </caption>
-      *  
-      *    <description>Short alt text</description>
-      *    <bitmap format="png">foo.grab.png</bitmap>
-      *    <bitmap format="png" thumbnail="1">foo.grab.png</bitmap>
-      *    <bitmap format="png" hardcopy="1">foo.png</bitmap>
-      *    <vector format="pdf">foo.pdf</bitmap>
-      *  </figure> 
-      *
-      *
-      * In the XPath expressions below I am not 100% convinced I need
-      *    a[boolean(@b)]
-      * rather than
-      *    a[@b]
-      * but I think I have seen issues with this in libxslt (ie changes in
-      * behavior) so trying to be more explicit.
-      *
-      *-->
-  <xsl:template match="figure">
-
-    <!--* simple validation *-->
-    <xsl:if test="boolean(@id)=false()">
-      <xsl:message terminate="yes">
- ERROR: figure block does not contain an id attribute
-      </xsl:message>
-    </xsl:if>
-    <xsl:if test="boolean(description)=false()">
-      <xsl:message terminate="yes">
- ERROR: figure (id=<xsl:value-of select="@id"/>) does not contain a description tag
-      </xsl:message>
-    </xsl:if>
-    <xsl:if test="boolean(title)=false()">
-      <xsl:message terminate="yes">
- ERROR: figure (id=<xsl:value-of select="@id"/>) does not contain a title tag
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:variable name="bmap-simple" select="bitmap[(boolean(@thumbnail)=false() or @thumbnail='0')
-					     and (boolean(@hardcopy)=false() or @hardcopy='0')]"/>
-    <xsl:variable name="bmap-thumb"  select="bitmap[boolean(@thumbnail)=true() and @thumbnail='1']"/>
-    <xsl:variable name="bmap-hard"   select="bitmap[boolean(@hardcopy)=true() and @hardcopy='1']"/>
-
-    <xsl:variable name="num-bmap-simple" select="count($bmap-simple)"/>
-    <xsl:variable name="num-bmap-thumb"  select="count($bmap-thumb)"/>
-    <xsl:variable name="num-bmap-hard"   select="count($bmap-hard)"/>
-
-    <!--* safety checks as do not have a scheme for this environment *-->
-    <xsl:if test="$num-bmap-thumb > 1">
-      <xsl:message terminate="yes">
- ERROR: expected 0 or 1 bitmap nodes with a thumbnail attribute set to 1,
-   but found <xsl:value-of select="$num-bmap-thumb"/> for figure id=<xsl:value-of select="@id"/>
-      </xsl:message>
-    </xsl:if>
-    <xsl:if test="$num-bmap-hard > 1">
-      <xsl:message terminate="yes">
- ERROR: expected 0 or 1 bitmap nodes with a hardcopy attribute set to 1,
-   but found <xsl:value-of select="$num-bmap-hard"/> for figure id=<xsl:value-of select="@id"/>
-      </xsl:message>
-    </xsl:if>
-    <xsl:if test="$num-bmap-simple > 1">
-      <xsl:message terminate="yes">
- ERROR: expected 0 or 1 bitmap nodes with either no thumbnail and hardcopy attributes
-   or with them set to 0 but found <xsl:value-of select="$num-bmap-simple"/> for figure id=<xsl:value-of select="@id"/>
-      </xsl:message>
-    </xsl:if>
-    <xsl:if test="$num-bmap-simple = 0 and $num-bmap-hard = 0">
-      <xsl:message terminate="yes">
- ERROR: no "basic" bitmap node found for display for figure id=<xsl:value-of select="@id"/>
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:variable name="has-bmap-simple" select="$num-bmap-simple = 1"/>
-    <xsl:variable name="has-bmap-thumb" select="$num-bmap-thumb = 1"/>
-    <xsl:variable name="has-bmap-hard" select="$num-bmap-hard = 1"/>
-
-    <!--* work out the figure number/title *-->
-    <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
-    <xsl:variable name="title" select="djb:make-figure-title($pos)"/>
-
-    <!--*
-        * Display the HTML figure caption?
-	*-->
-
-	<div class="figure">
-	  <div class="caption screenmedia">
-	    <h3><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
-	  </div>
-
-	  <div>
-	    <!--* do we need this class attribute, as it is only meaningful for screen media? *-->
-	    <xsl:attribute name="class"><xsl:choose>
-	      <xsl:when test="$has-bmap-thumb">thumbnail</xsl:when>
-	      <xsl:otherwise>nothumbnail</xsl:otherwise>
-	    </xsl:choose></xsl:attribute>
-
-	    <xsl:variable name="img-code">
-	      <img>
-
-		<xsl:attribute name="alt"><xsl:choose>
-		  <xsl:when test="$has-bmap-thumb">
-		    <xsl:value-of select="concat('[Thumbnail image: ',normalize-space(description),']')"/>
-		  </xsl:when>
-		  <xsl:otherwise>
-		    <xsl:value-of select="concat('[',normalize-space(description),']')"/>
-		  </xsl:otherwise>
-		</xsl:choose></xsl:attribute>
-
-		<xsl:attribute name="src"><xsl:choose>
-		  <xsl:when test="$has-bmap-thumb"><xsl:value-of select="$bmap-thumb"/></xsl:when>
-		  <xsl:when test="$has-bmap-simple"><xsl:value-of select="$bmap-simple"/></xsl:when>
-		  <xsl:when test="$has-bmap-hard"><xsl:value-of select="$bmap-hard"/></xsl:when>
-		  <xsl:otherwise>
-		    <xsl:message terminate="yes">
- ERROR: internal error choosing image; apparently no images to use (img-code)
-		    </xsl:message>
-		  </xsl:otherwise>
-		</xsl:choose></xsl:attribute>
-	      </img>
-	    </xsl:variable>
-
-	    <div class="screenmedia">
-	      <xsl:choose>
-		<xsl:when test="$has-bmap-thumb">
-		  <a>
-		    <xsl:attribute name="href"><xsl:choose>
-		      <xsl:when test="$has-bmap-simple"><xsl:value-of select="$bmap-simple"/></xsl:when>
-		      <xsl:when test="$has-bmap-hard"><xsl:value-of select="$bmap-hard"/></xsl:when>
-		      <xsl:otherwise>
-			<xsl:message terminate="yes">
- ERROR: internal error choosing image; apparently no images to use (screenmedia)
-			</xsl:message>
-		      </xsl:otherwise>
-		    </xsl:choose></xsl:attribute>
-		    <xsl:copy-of select="$img-code"/>
-		  </a>
-		</xsl:when>
-		<xsl:otherwise>
-		  <xsl:copy-of select="$img-code"/>
-		</xsl:otherwise>
-	      </xsl:choose>
-
-	      <!--*
-		  * Process the images to create a set of nodes that detail the
-		  * available versions, then process that. Only useful in the
-		  * screen media version.
-		  *-->
-	      <xsl:variable name="versions">
-		<flinks>
-		  <xsl:apply-templates select="bitmap" mode="list-figure-versions"/>
-		  <xsl:apply-templates select="vector" mode="list-figure-versions"/>
-		</flinks>
-	      </xsl:variable>
-	      <xsl:apply-templates select="exsl:node-set($versions)" mode="add-figure-versions"/>
-	    </div>
-
-	    <div class="printmedia">
-	      <img alt="{concat('[Print media version: ',normalize-space(description),']')}">
-		<xsl:attribute name="src"><xsl:choose>
-		  <xsl:when test="$has-bmap-hard"><xsl:value-of select="$bmap-hard"/></xsl:when>
-		  <xsl:otherwise><xsl:value-of select="$bmap-simple"/></xsl:otherwise>
-		</xsl:choose></xsl:attribute>
-	      </img>
-
-<!--* unfortunately neither the img tag or the object tag works for ps/pdf output,
-    * at least on Firefox 2.0.0.14 on OS-X Intel
-    * (seeing some bizarre issues so not 100% convinced about this, but not implementing
-    *  it for now as I doubt it works reliably)
-    *
-	      <xsl:if test="vector[@format='ps']">
-		<img alt="POSTSCRIPT HACK" src="{normalize-space(vector[@format='ps'])}"/>
-		<object data="{normalize-space(vector[@format='ps'])}" type="application/ps">
-		  POSTSCRIPT HACK VIA OBJECT
-		</object>
-	      </xsl:if>
-	      <xsl:if test="vector[@format='pdf']">
-		<img alt="PDF HACK" src="{normalize-space(vector[@format='pdf'])}"/>
-		<object data="{normalize-space(vector[@format='pdf'])}" type="application/pdf">
-		  PDF HACK VIA OBJECT
-		</object>
-	      </xsl:if>
-*-->
-
-	    </div>
-
-	  </div>
-
-	  <!--// Figure title placement depends on mediatype //-->
-	  <h3 class="caption printmedia"><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
-
-	  <xsl:if test="caption">
-	  <div class="caption">
-	    <xsl:apply-templates select="caption" mode="figure"/>
-	  </div>
-	  </xsl:if>
-	</div> <!--* class=figure *-->
-
-	<!--* I want to remove the float behavior, so I add in an ugly empty div *-->
-	<xsl:if test="$has-bmap-thumb">
-	  <div class="clearfloat"/>
-	</xsl:if>
-
-  </xsl:template> <!--* match=figure *-->
-
-  <!--*
-      * process the contents of a figure environment to return a list
-      * of versions of the figure for use in the on-screen/HTML
-      * display - ie the "[versions: full-size, postscript, pdf]"
-      * link.
-      *
-      * We want the bitmap images if:
-      *   - hardcopy = 1
-      *   - no hardcopy or thumbnail attributes but only when
-      *     there is also a bitmap[@thumbnail=1] version
-      *
-      * The checks should be enforced by a schema, but we do not
-      * do this yet (if we are ever going to do it). They could/should
-      * be done elsewhere, but we do them here as it is easy to do
-      * so.
-      *
-      * TODO:
-      *    we should really re-order items so that we can
-      *    ensure the "full-size bitmap" link is first
-      *-->
-  <xsl:template match="bitmap[boolean(@hard)]" mode="list-figure-versions">
-    <xsl:message terminate="yes">
- ERROR: bitmap node found with attribute name of hard rather than hardcopy
-   value=<xsl:value-of select="normalize-space(.)"/>
-    </xsl:message>
-  </xsl:template>
-  <xsl:template match="bitmap[boolean(@thumb)]" mode="list-figure-versions">
-    <xsl:message terminate="yes">
- ERROR: bitmap node found with attribute name of thumb rather than thumbnail
-   value=<xsl:value-of select="normalize-space(.)"/>
-    </xsl:message>
-  </xsl:template>
-  <xsl:template match="vector[boolean(@hard) or boolean(@hardcopy)]" mode="list-figure-versions">
-    <xsl:message terminate="yes">
- ERROR: vector node found with hardcopy (or hard) attribute. Not needed here!
-   value=<xsl:value-of select="normalize-space(.)"/>
-    </xsl:message>
-  </xsl:template>
-  <xsl:template match="vector[boolean(@thumbnail) or boolean(@thumb)]" mode="list-figure-versions">
-    <xsl:message terminate="yes">
- ERROR: vector node found with thumbnail (or thumb) attribute. Not needed here!
-   value=<xsl:value-of select="normalize-space(.)"/>
-    </xsl:message>
-  </xsl:template>
-
-  <xsl:template match="bitmap[@thumbnail=1 and @hardcopy=1]" mode="list-figure-versions">
-    <xsl:message terminate="yes">
- ERROR: bitmap nodes must not have both thumbail and hardcopy attributes set to 1
-   value=<xsl:value-of select="normalize-space(.)"/>
-    </xsl:message>
-  </xsl:template>
-  <xsl:template match="bitmap[boolean(@format)=false()]" mode="list-figure-versions">
-    <xsl:message terminate="yes">
- ERROR: bitmap nodes must contain a format attribute
-   value=<xsl:value-of select="normalize-space(.)"/>
-    </xsl:message>
-  </xsl:template>
-  <xsl:template match="vector[boolean(@format)=false()]" mode="list-figure-versions">
-    <xsl:message terminate="yes">
- ERROR: vector nodes must contain a format attribute
-   value=<xsl:value-of select="normalize-space(.)"/>
-    </xsl:message>
-  </xsl:template>
-
-  <xsl:template match="bitmap[@thumbnail=1]" mode="list-figure-versions"/>
-  <xsl:template match="bitmap[@hardcopy=1]" mode="list-figure-versions">
-    <flink>
-      <text><xsl:value-of select="translate(@format,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/></text>
-      <image><xsl:value-of select="normalize-space(.)"/></image>
-    </flink>
-  </xsl:template>
-  <xsl:template match="bitmap[(@thumbnail=0 or (boolean(@thumbnail)=false() and boolean(@hardcopy)=false())) and
-		       (count(preceding-sibling::bitmap[@thumbnail=1]) != 0 or
-		       count(following-sibling::bitmap[@thumbnail=1]) != 0)]" mode="list-figure-versions">
-    <flink><text>full-size</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
-  </xsl:template>
-  <xsl:template match="vector[@format='ps']" mode="list-figure-versions">
-    <flink><text>postscript</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
-  </xsl:template>
-  <xsl:template match="vector[@format='eps']" mode="list-figure-versions">
-    <flink><text>encapsulated postscript</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
-  </xsl:template>
-  <xsl:template match="vector[@format='pdf']" mode="list-figure-versions">
-    <flink><text>PDF</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
-  </xsl:template>
-  <xsl:template match="*|text()" mode="list-figure-versions">
-<!--
-    <xsl:message terminate="yes">
- ERROR: match=*|text() mode=list-figure-versions template has been called!
-        node=<xsl:value-of select="name()"/> contents=<xsl:value-of select="."/>
-    </xsl:message>
--->
-  </xsl:template>
-
-  <xsl:template match="flinks[count(flink)=0]" mode="add-figure-versions"/>
-  <xsl:template match="flinks" mode="add-figure-versions">
-    <p class="figures"><xsl:text>[Version: </xsl:text>
-    <xsl:for-each select="flink">
-      <a href="{image}"><xsl:value-of select="text"/></a>
-      <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>
-    </xsl:for-each>
-    <xsl:text>]</xsl:text></p>
-  </xsl:template>
-
-  <!--*
-      * Create the caption for a figure; may not need the mode, but leave in for now
-      *-->
-  <xsl:template match="caption" mode="figure">
-    <xsl:apply-templates/>
-  </xsl:template> <!--* match=caption mode=figure *-->
-
-  <!--*
-      * Handle figlink tags.
-      *   - no contents -> use "Figure <num>" (even if have @nonumber tag)
-      *   - contents and no @nonumber attribute -> append " (Figure <num>)"
-      *   - otherwise -> contents
-      *
-      * NOTE:
-      *    check on empty contents as normalize-space(.)='' is not ideal
-      *    but should work (would probably only fail if we used an empty tag like
-      *     <figlink><foo/></figlink> which is unlikely to happen)
-      *-->
-  <xsl:template match="figlink[boolean(@id)=false]">
-    <xsl:message terminate="yes">
- ERROR: figlink tag found with no id attribute
-    contents=<xsl:value-of select="."/>
-    </xsl:message>
-  </xsl:template>
-
-  <xsl:template match="figlink[boolean(@nonumber) and normalize-space(.)!='']">
-    <xsl:call-template name="check-fig-id-exists">
-      <xsl:with-param name="id" select="@id"/>
-    </xsl:call-template>
-    <a href="{concat('#',@id)}"><xsl:apply-templates/></a>
-  </xsl:template>
-
-  <xsl:template match="figlink[normalize-space(.)='']">
-    <xsl:call-template name="check-fig-id-exists">
-      <xsl:with-param name="id" select="@id"/>
-    </xsl:call-template>
-    <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
-    <a href="{concat('#',@id)}"><xsl:value-of select="concat('Figure ',$pos)"/></a>
-  </xsl:template>
-
-  <xsl:template match="figlink">
-    <xsl:call-template name="check-fig-id-exists">
-      <xsl:with-param name="id" select="@id"/>
-    </xsl:call-template>
-    <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
-    <a href="{concat('#',@id)}"><xsl:apply-templates/><xsl:value-of select="concat(' (Figure ',$pos,')')"/></a>
-  </xsl:template>
-
-  <!--*
-      * This is called when processing both figlink and figure tags,
-      * which results in excess checks, but we will live with the
-      * extra work.
-      *-->
-  <xsl:template name="check-fig-id-exists">
-    <xsl:param name="id" select="''"/>
-    <xsl:if test="$id = ''">
-      <xsl:message terminate="yes">
- ERROR: check-fig-id-exists called with an empty id argument.
-      </xsl:message>
-    </xsl:if>
-
-    <xsl:variable name="nmatches" select="count(//figure[@id=$id])"/>
-    <xsl:choose>
-      <xsl:when test="$nmatches=1"/>
-      <xsl:when test="$nmatches=0">
-	<xsl:message terminate="yes">
- ERROR: there is no figure with an id of '<xsl:value-of select="$id"/>'.
-	</xsl:message>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:message terminate="yes">
- ERROR: there are multiple (<xsl:value-of select="$nmatches"/>) figures with an id of '<xsl:value-of select="$id"/>'.
-	</xsl:message>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template> <!--* name=check-fig-id-exists *-->
-
-  <!--*
-      * Link to a figure in the TOC
+      * Link to a figure in the TOC. The other figure-handling code is in
+      * myhtml.xsl.
       *
       * Parameters:
       *
@@ -2039,53 +1317,5 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
     <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
     <li><a href="{concat('#',@id)}"><xsl:value-of select="djb:make-figure-title($pos)"/></a></li>
   </xsl:template> <!--* match=figure mode=toc *-->
-
-  <!--*
-      * helper routine to get the number of the figure
-      *-->
-  <func:function name="djb:get-figure-number">
-    <xsl:param name="id" select="''"/>
-    <xsl:if test="$id=''">
-      <xsl:message terminate="yes">
- ERROR: djb:get-figure-number called with no argument
-      </xsl:message>
-    </xsl:if>
-    <func:result><xsl:value-of select="exsl:node-set($figlist)/figure[@id=$id]/@pos"/></func:result>
-  </func:function>
-
-  <!--*
-      * helper routine to create the figure title. It must be
-      * called with the figure block as the context node.
-      *-->
-  <func:function name="djb:make-figure-title">
-    <xsl:param name="pos" select="''"/>
-    <xsl:if test="$pos=''">
-      <xsl:message terminate="yes">
- ERROR: djb:make-figure-title called with no argument
-      </xsl:message>
-    </xsl:if>
-    <xsl:if test="name()!='figure'">
-      <xsl:message terminate="yes">
- ERROR: djb:make-figure-title must be called with a figure node as the context node
-      </xsl:message>
-    </xsl:if>
-    <func:result><xsl:value-of select="concat('Figure ',$pos)"/><xsl:if test="boolean(title)">
-    <xsl:text>: </xsl:text>
-    <xsl:apply-templates select="title" mode="title-parsing"/>
-    </xsl:if></func:result>
-  </func:function>
-
-  <!--*
-`     * This is ugly; do we handle this better in other parts of the system?
-      * (we need a different mode since there must be an explicit title template
-      * somewhere that ignores the content, presumably to handle section/subsection
-      * title elements).
-      *
-      * I added this so that we could include some mark up in the title element of
-      * figures, but so far it does not seem to actually do this.
-      *-->
-  <xsl:template match="title" mode="title-parsing">
-    <xsl:apply-templates/>
-  </xsl:template>
 
 </xsl:stylesheet>

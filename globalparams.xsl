@@ -100,6 +100,16 @@
   <!--* Change this if the filename changes *-->
   <xsl:variable name="hack-import-globalparams" select="extfuncs:register-import-dependency('globalparams.xsl')"/>
 
+  <!--* 
+      * Temporary:
+      * Swap between using LaTeX to create PNG of equations
+      * and MathJax for in-line display with this hard-coded
+      * parameter. Could combine use-mathjax and mathjax-path
+      * (ie use-mathjax=1 is the same as mathjaxpath != '').
+      *-->
+  <xsl:param name="use-mathjax" select='0'/>
+  <xsl:param name="mathjaxpath" select='""'/>
+
   <!--* these should be over-ridden from the command line *-->
 
   <xsl:param name="cssfile"      select='""'/>

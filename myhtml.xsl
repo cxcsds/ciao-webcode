@@ -13,8 +13,11 @@
 
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:exsl="http://exslt.org/common"
+  xmlns:func="http://exslt.org/functions"
+  xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
   xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
-  extension-element-prefixes="extfuncs">
+  extension-element-prefixes="exsl func djb extfuncs">
 
   <!--* Change this if the filename changes *-->
   <xsl:variable name="hack-import-myhtml" select="extfuncs:register-import-dependency('myhtml.xsl')"/>
@@ -545,10 +548,13 @@
       * {   <mathml>...</mathml>   (MathML version)   NOT YET IMPLEMENTED    }
       *   </math>
       *
-      * We now use the MathJax javascript system - http://www.mathjax.org/ -
-      * for rendering LaTeX, rather than calling out to LaTeX to create
-      * an image (although this may be required to support users who
-      * have JavaScript turned off).
+      * If $use-mathjax = 1:
+      *   use the MathJax javascript system - http://www.mathjax.org/ -
+      *   for rendering LaTeX, rather than calling out to LaTeX to create
+      *   an image (although this may be required to support users who
+      *   have JavaScript turned off).
+      * otherwise:
+      *   PNG files are created by the publishing code
       *
       * Notes:
       * - may want to add attributes that are used to control the created formula
@@ -572,14 +578,49 @@
       </xsl:message>
     </xsl:if>
 
-    <!--*
-        * create the latex document
-        * - could allow the fg/bg colors to be set with attributes
-        * - apparently xsl:document will nest
-        * - need to remove leading/trailing whitespace so that
-        *   latex doesn't complain
+    <xsl:choose>
+      <xsl:when test="$use-mathjax = 1">
+	<!--*
+	    * how best to supply an anchor now?
+	    * MathJax does add anchors automatically; can we add this?
+	    *-->
+	<a name="{name}"/>
+	<!--* 
+	    * Could place human-readable form in a noscript tag, but this
+	    * way we get to provide something hopefully-readable whilst the
+	    * LaTeX is being rendered.
+	    *-->
+	<span class="MathJax_Preview"><xsl:choose>
+	  <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
+	  <xsl:otherwise><xsl:value-of select="normalize-space(latex)"/></xsl:otherwise>
+	</xsl:choose></span>
+	<!--*
+	    * TODO: worried about &lt; being converted to <, as seen in the example
+	    * thread (possibly some oddities in how expansion happens, since libXSLT
+	    * seems to have expanded it in x&lt;y but not x &lt; y ...
+	    * Unfortunately, if stick in CDATA then it gets interpreted by the script
+	    * tag. From simple tests it doesn't seem to be a problem.
+	    *-->
+	<script type="math/tex; mode=display">
+	  <xsl:value-of select="latex"/>
+	  <!--
+          <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
+	  <xsl:value-of select="latex"/>
+	  <xsl:text disable-output-escaping="yes">]]</xsl:text>
+	  <xsl:text disable-output-escaping="yes">></xsl:text>
+	  -->
+	</script>
+      </xsl:when>
 
-    <xsl:document href="{concat($sourcedir,name,'.tex')}" method="text">
+      <xsl:otherwise>
+	<!--*
+	    * create the latex document
+	    * - could allow the fg/bg colors to be set with attributes
+	    * - apparently xsl:document will nest
+	    * - need to remove leading/trailing whitespace so that
+	    *   latex doesn't complain
+	    *-->
+	<xsl:document href="{concat($sourcedir,name,'.tex')}" method="text">
 \documentclass{article}
 \usepackage{color}
 \pagestyle{empty}
@@ -591,27 +632,13 @@
 }
 \end{eqnarray*}
 \end{document}
-    </xsl:document>
-
-        *-->
-
-    <!--*
-	* how best to supply an anchor now?
-	* MathJax does add anchors automatically; can we add this?
-	*-->
-    <a name="{name}"/>
-    <!--* 
-	* Could place human-readable form in a noscript tag, but this
-	* way we get to provide something hopefully-readable whilst the
-	* LaTeX is being rendered.
-	*-->
-    <span class="MathJax_Preview"><xsl:choose>
-      <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
-      <xsl:otherwise><xsl:value-of select="latex"/></xsl:otherwise>
-    </xsl:choose></span>
-    <script type="math/tex; mode=display">
-      <xsl:value-of select="latex"/>
-    </script>
+	</xsl:document>
+	<a name="{name}"><img src="{name}.png"><xsl:attribute name="alt"><xsl:choose>
+	  <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
+	  <xsl:otherwise><xsl:value-of select="normalize-space(latex)"/></xsl:otherwise>
+	</xsl:choose></xsl:attribute></img></a>
+      </xsl:otherwise>
+    </xsl:choose>
 
   </xsl:template> <!--* match=math *-->
 
@@ -822,5 +849,543 @@
       </xsl:call-template>
     </xsl:if>
   </xsl:template> <!-- name=add-admonition-image -->
+
+  <!--* 
+      * The figure environment, moved from threads.
+      *
+      * Since there is no support for auto-generating a table-of-contents
+      * for the general-purpose pages, the TOC code is left in thread_common.xsl.
+      *-->
+
+  <!--*
+      * Handle figlink tags.
+      *   - no contents -> use "Figure <num>" (even if have @nonumber tag)
+      *   - contents and no @nonumber attribute -> append " (Figure <num>)"
+      *   - otherwise -> contents
+      *
+      *   Actually, only include the figure number for threads, even if
+      *   the @nonumber tag is not given.
+      *
+      * NOTE:
+      *    check on empty contents as normalize-space(.)='' is not ideal
+      *    but should work (would probably only fail if we used an empty tag like
+      *     <figlink><foo/></figlink> which is unlikely to happen)
+      *-->
+  <xsl:template match="figlink[boolean(@id)=false]">
+    <xsl:message terminate="yes">
+ ERROR: figlink tag found with no id attribute
+    contents=<xsl:value-of select="."/>
+    </xsl:message>
+  </xsl:template>
+
+  <xsl:template match="figlink[(boolean(@nonumber) or name(//*) != 'thread') and normalize-space(.)!='']">
+    <xsl:call-template name="check-fig-id-exists">
+      <xsl:with-param name="id" select="@id"/>
+    </xsl:call-template>
+    <a href="{concat('#',@id)}"><xsl:apply-templates/></a>
+  </xsl:template>
+
+  <xsl:template match="figlink[normalize-space(.)='']">
+    <xsl:call-template name="check-fig-id-exists">
+      <xsl:with-param name="id" select="@id"/>
+    </xsl:call-template>
+    <xsl:if test="name(//*) != 'thread'">
+      <xsl:message terminate="yes">
+ ERROR: figlink element can not be empty in a non-thread page.
+      </xsl:message>
+    </xsl:if>
+    <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
+    <a href="{concat('#',@id)}"><xsl:value-of select="concat('Figure ',$pos)"/></a>
+  </xsl:template>
+
+  <xsl:template match="figlink">
+    <xsl:call-template name="check-fig-id-exists">
+      <xsl:with-param name="id" select="@id"/>
+    </xsl:call-template>
+    <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
+    <a href="{concat('#',@id)}"><xsl:apply-templates/><xsl:value-of select="concat(' (Figure ',$pos,')')"/></a>
+  </xsl:template>
+
+  <!--*
+      * This is called when processing figlink tags.
+      *-->
+  <xsl:template name="check-fig-id-exists">
+    <xsl:param name="id" select="''"/>
+    <xsl:if test="$id = ''">
+      <xsl:message terminate="yes">
+ ERROR: check-fig-id-exists called with an empty id argument.
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:variable name="nmatches" select="count(//figure[@id=$id])"/>
+    <xsl:choose>
+      <xsl:when test="$nmatches=1"/>
+      <xsl:when test="$nmatches=0">
+	<xsl:message terminate="yes">
+ ERROR: there is no figure with an id of '<xsl:value-of select="$id"/>'.
+	</xsl:message>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:message terminate="yes">
+ ERROR: there are multiple (<xsl:value-of select="$nmatches"/>) figures with an id of '<xsl:value-of select="$id"/>'.
+	</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template> <!--* name=check-fig-id-exists *-->
+
+  <!--*
+      * helper routine to get the number of the figure.
+      * TODO: this only really works for single-page
+      * documents, like the thread environment where it
+      * originated, and not multi-page ones like
+      * dictionaries
+      *-->
+  <func:function name="djb:get-figure-number">
+    <xsl:param name="id" select="''"/>
+    <xsl:if test="$id=''">
+      <xsl:message terminate="yes">
+ ERROR: djb:get-figure-number called with no argument
+      </xsl:message>
+    </xsl:if>
+    <func:result><xsl:value-of select="exsl:node-set($figlist)/figure[@id=$id]/@pos"/></func:result>
+  </func:function>
+
+  <!--* This is used to map from @id to figure number *-->
+  <xsl:variable name="figlist">
+    <xsl:for-each select="//figure">
+      <figure id="{@id}" pos="{position()}"/>
+    </xsl:for-each>
+  </xsl:variable>
+
+  <!--*
+      * helper routine to create the figure title. It must be
+      * called with the figure block as the context node.
+      *
+      * NOTE:
+      *   automatic figure numbering only happens for threads.
+      *-->
+  <func:function name="djb:make-figure-title">
+    <xsl:param name="pos" select="''"/>
+    <xsl:if test="$pos=''">
+      <xsl:message terminate="yes">
+ ERROR: djb:make-figure-title called with no argument
+      </xsl:message>
+    </xsl:if>
+    <xsl:if test="name()!='figure'">
+      <xsl:message terminate="yes">
+ ERROR: djb:make-figure-title must be called with a figure node as the context node
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:choose>
+      <xsl:when test="name(//*) = 'thread'">
+	<func:result><xsl:value-of select="concat('Figure ',$pos)"/><xsl:if test="boolean(title)">
+	<xsl:text>: </xsl:text>
+	<xsl:apply-templates select="title" mode="title-parsing"/>
+	</xsl:if></func:result>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:if test="not(boolean(title))">
+	  <xsl:message terminate="yes">
+ ERROR: title block can not be empty in a figure for non-thread pages
+	  </xsl:message>
+	</xsl:if>
+	<func:result><xsl:apply-templates select="title" mode="title-parsing"/></func:result>
+      </xsl:otherwise>
+    </xsl:choose>
+  </func:function>
+
+  <!--*
+      * Warn if any other element in the document has an id element that
+      * matches. This is intended to catch those cases where a figure
+      * environment has inadvertently used the same id as a section,
+      * but could be made more general.
+      *
+      * At present this is not an error because
+      *   - it is being added at releasre time and so I do not
+      *     want to slow down the documentation effort
+      *   - it may have unintended consequences (i.e. false positives)
+      *     so it needs to be evaluated first
+      *
+      * Aha, one probelm with this approach is that the system uses id
+      * as an attribute both to name an anchor and to refer to it - e.g.
+      *   figure id=... and then figlink id=...
+      * which means that this has to become specialized to only those
+      * elements for which it is used as an anchor. This is not ideal
+      * since I don't have such a list easily at hand!
+      *-->
+  <xsl:template name="ensure-unique-id">
+    <xsl:param name="id" select="''"/>
+    <xsl:if test="$id = ''">
+      <xsl:message terminate="yes">
+ ERROR: check-fig-id-exists called with an empty id argument.
+      </xsl:message>
+    </xsl:if>
+
+    <!-- <xsl:variable name="nmatches" select="count(//*[@id=$id])"/> -->
+    <xsl:variable name="nfig" select="count(//figure[@id=$id])"/>
+    <xsl:variable name="nsec" select="count(//section[@id=$id])"/>
+    <xsl:variable name="nsub" select="count(//subsection[@id=$id])"/>
+    <xsl:variable name="nmatches" select="$nfig + $nsec + $nsub"/>
+    <xsl:choose>
+      <xsl:when test="$nmatches=1"/>
+      <xsl:when test="$nmatches>1">
+        <xsl:message terminate="no">
+ WARNING: there are <xsl:value-of select="$nmatches"/> elements with id=<xsl:value-of select="$id"/>
+   Please check, since Doug believes they should be unique (or this check is wrong)
+        </xsl:message>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message terminate="no">
+ WARNING: ensure-unique-id has found no matches for elements with id=<xsl:value-of select="$id"/>
+   which suggests Doug's code is wrong. Please tell him.
+        </xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template> <!--* name=ensure-unique-id *-->
+
+  <!--*
+      * This is ugly; do we handle this better in other parts of the system?
+      * (we need a different mode since there must be an explicit title template
+      * somewhere that ignores the content, presumably to handle section/subsection
+      * title elements).
+      *
+      * I added this so that we could include some mark up in the title element of
+      * figures, but so far it does not seem to actually do this.
+      *-->
+  <xsl:template match="title" mode="title-parsing">
+    <xsl:apply-templates/>
+  </xsl:template>
+
+  <!--*
+      * Figure support
+      *
+      *  
+      *  <figure id="foo">
+      *    <title>blah blah blah</title>
+      *    <caption>
+      *      <p>Yay a caption.</p>
+      *      <p>With more text.</p>
+      *    </caption>
+      *  
+      *    <description>Short alt text</description>
+      *    <bitmap format="png">foo.grab.png</bitmap>
+      *    <bitmap format="png" thumbnail="1">foo.grab.png</bitmap>
+      *    <bitmap format="png" hardcopy="1">foo.png</bitmap>
+      *    <vector format="pdf">foo.pdf</bitmap>
+      *  </figure> 
+      *
+      *
+      * In the XPath expressions below I am not 100% convinced I need
+      *    a[boolean(@b)]
+      * rather than
+      *    a[@b]
+      * but I think I have seen issues with this in libxslt (ie changes in
+      * behavior) so trying to be more explicit.
+      *
+      * NOTE:
+      *   automatic numbering of figures, and inclusion in the TOC, is only
+      *   for threads (i.e. documents with a root node of 'thread').
+      *-->
+  <xsl:template match="figure">
+
+    <!--* simple validation *-->
+    <xsl:if test="boolean(@id)=false()">
+      <xsl:message terminate="yes">
+ ERROR: figure block does not contain an id attribute
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:call-template name="ensure-unique-id">
+      <xsl:with-param name="id" select="@id"/>
+    </xsl:call-template>   
+
+    <xsl:if test="boolean(description)=false()">
+      <xsl:message terminate="yes">
+ ERROR: figure (id=<xsl:value-of select="@id"/>) does not contain a description tag
+      </xsl:message>
+    </xsl:if>
+    <xsl:if test="boolean(title)=false()">
+      <xsl:message terminate="yes">
+ ERROR: figure (id=<xsl:value-of select="@id"/>) does not contain a title tag
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:variable name="bmap-simple" select="bitmap[(boolean(@thumbnail)=false() or @thumbnail='0')
+					     and (boolean(@hardcopy)=false() or @hardcopy='0')]"/>
+    <xsl:variable name="bmap-thumb"  select="bitmap[boolean(@thumbnail)=true() and @thumbnail='1']"/>
+    <xsl:variable name="bmap-hard"   select="bitmap[boolean(@hardcopy)=true() and @hardcopy='1']"/>
+
+    <xsl:variable name="num-bmap-simple" select="count($bmap-simple)"/>
+    <xsl:variable name="num-bmap-thumb"  select="count($bmap-thumb)"/>
+    <xsl:variable name="num-bmap-hard"   select="count($bmap-hard)"/>
+
+    <!--* safety checks as do not have a scheme for this environment *-->
+    <xsl:if test="$num-bmap-thumb > 1">
+      <xsl:message terminate="yes">
+ ERROR: expected 0 or 1 bitmap nodes with a thumbnail attribute set to 1,
+   but found <xsl:value-of select="$num-bmap-thumb"/> for figure id=<xsl:value-of select="@id"/>
+      </xsl:message>
+    </xsl:if>
+    <xsl:if test="$num-bmap-hard > 1">
+      <xsl:message terminate="yes">
+ ERROR: expected 0 or 1 bitmap nodes with a hardcopy attribute set to 1,
+   but found <xsl:value-of select="$num-bmap-hard"/> for figure id=<xsl:value-of select="@id"/>
+      </xsl:message>
+    </xsl:if>
+    <xsl:if test="$num-bmap-simple > 1">
+      <xsl:message terminate="yes">
+ ERROR: expected 0 or 1 bitmap nodes with either no thumbnail and hardcopy attributes
+   or with them set to 0 but found <xsl:value-of select="$num-bmap-simple"/> for figure id=<xsl:value-of select="@id"/>
+      </xsl:message>
+    </xsl:if>
+    <xsl:if test="$num-bmap-simple = 0 and $num-bmap-hard = 0">
+      <xsl:message terminate="yes">
+ ERROR: no "basic" bitmap node found for display for figure id=<xsl:value-of select="@id"/>
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:variable name="has-bmap-simple" select="$num-bmap-simple = 1"/>
+    <xsl:variable name="has-bmap-thumb" select="$num-bmap-thumb = 1"/>
+    <xsl:variable name="has-bmap-hard" select="$num-bmap-hard = 1"/>
+
+    <!--* work out the figure number/title *-->
+    <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
+    <xsl:variable name="title" select="djb:make-figure-title($pos)"/>
+
+    <!--*
+        * Display the HTML figure caption?
+	*-->
+
+	<div class="figure">
+	  <div class="caption screenmedia">
+	    <h3><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
+	  </div>
+
+	  <div>
+	    <!--* do we need this class attribute, as it is only meaningful for screen media? *-->
+	    <xsl:attribute name="class"><xsl:choose>
+	      <xsl:when test="$has-bmap-thumb">thumbnail</xsl:when>
+	      <xsl:otherwise>nothumbnail</xsl:otherwise>
+	    </xsl:choose></xsl:attribute>
+
+	    <xsl:variable name="img-code">
+	      <img>
+
+		<xsl:attribute name="alt"><xsl:choose>
+		  <xsl:when test="$has-bmap-thumb">
+		    <xsl:value-of select="concat('[Thumbnail image: ',normalize-space(description),']')"/>
+		  </xsl:when>
+		  <xsl:otherwise>
+		    <xsl:value-of select="concat('[',normalize-space(description),']')"/>
+		  </xsl:otherwise>
+		</xsl:choose></xsl:attribute>
+
+		<xsl:attribute name="src"><xsl:choose>
+		  <xsl:when test="$has-bmap-thumb"><xsl:value-of select="$bmap-thumb"/></xsl:when>
+		  <xsl:when test="$has-bmap-simple"><xsl:value-of select="$bmap-simple"/></xsl:when>
+		  <xsl:when test="$has-bmap-hard"><xsl:value-of select="$bmap-hard"/></xsl:when>
+		  <xsl:otherwise>
+		    <xsl:message terminate="yes">
+ ERROR: internal error choosing image; apparently no images to use (img-code)
+		    </xsl:message>
+		  </xsl:otherwise>
+		</xsl:choose></xsl:attribute>
+	      </img>
+	    </xsl:variable>
+
+	    <div class="screenmedia">
+	      <xsl:choose>
+		<xsl:when test="$has-bmap-thumb">
+		  <a>
+		    <xsl:attribute name="href"><xsl:choose>
+		      <xsl:when test="$has-bmap-simple"><xsl:value-of select="$bmap-simple"/></xsl:when>
+		      <xsl:when test="$has-bmap-hard"><xsl:value-of select="$bmap-hard"/></xsl:when>
+		      <xsl:otherwise>
+			<xsl:message terminate="yes">
+ ERROR: internal error choosing image; apparently no images to use (screenmedia)
+			</xsl:message>
+		      </xsl:otherwise>
+		    </xsl:choose></xsl:attribute>
+		    <xsl:copy-of select="$img-code"/>
+		  </a>
+		</xsl:when>
+		<xsl:otherwise>
+		  <xsl:copy-of select="$img-code"/>
+		</xsl:otherwise>
+	      </xsl:choose>
+
+	      <!--*
+		  * Process the images to create a set of nodes that detail the
+		  * available versions, then process that. Only useful in the
+		  * screen media version.
+		  *-->
+	      <xsl:variable name="versions">
+		<flinks>
+		  <xsl:apply-templates select="bitmap" mode="list-figure-versions"/>
+		  <xsl:apply-templates select="vector" mode="list-figure-versions"/>
+		</flinks>
+	      </xsl:variable>
+	      <xsl:apply-templates select="exsl:node-set($versions)" mode="add-figure-versions"/>
+	    </div>
+
+	    <div class="printmedia">
+	      <img alt="{concat('[Print media version: ',normalize-space(description),']')}">
+		<xsl:attribute name="src"><xsl:choose>
+		  <xsl:when test="$has-bmap-hard"><xsl:value-of select="$bmap-hard"/></xsl:when>
+		  <xsl:otherwise><xsl:value-of select="$bmap-simple"/></xsl:otherwise>
+		</xsl:choose></xsl:attribute>
+	      </img>
+
+<!--* unfortunately neither the img tag or the object tag works for ps/pdf output,
+    * at least on Firefox 2.0.0.14 on OS-X Intel
+    * (seeing some bizarre issues so not 100% convinced about this, but not implementing
+    *  it for now as I doubt it works reliably)
+    *
+	      <xsl:if test="vector[@format='ps']">
+		<img alt="POSTSCRIPT HACK" src="{normalize-space(vector[@format='ps'])}"/>
+		<object data="{normalize-space(vector[@format='ps'])}" type="application/ps">
+		  POSTSCRIPT HACK VIA OBJECT
+		</object>
+	      </xsl:if>
+	      <xsl:if test="vector[@format='pdf']">
+		<img alt="PDF HACK" src="{normalize-space(vector[@format='pdf'])}"/>
+		<object data="{normalize-space(vector[@format='pdf'])}" type="application/pdf">
+		  PDF HACK VIA OBJECT
+		</object>
+	      </xsl:if>
+*-->
+
+	    </div>
+
+	  </div>
+
+	  <!--// Figure title placement depends on mediatype //-->
+	  <h3 class="caption printmedia"><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
+
+	  <xsl:if test="caption">
+	  <div class="caption">
+	    <xsl:apply-templates select="caption" mode="figure"/>
+	  </div>
+	  </xsl:if>
+	</div> <!--* class=figure *-->
+
+	<!--* I want to remove the float behavior, so I add in an ugly empty div *-->
+	<xsl:if test="$has-bmap-thumb">
+	  <div class="clearfloat"/>
+	</xsl:if>
+
+  </xsl:template> <!--* match=figure *-->
+
+  <!--*
+      * process the contents of a figure environment to return a list
+      * of versions of the figure for use in the on-screen/HTML
+      * display - ie the "[versions: full-size, postscript, pdf]"
+      * link.
+      *
+      * We want the bitmap images if:
+      *   - hardcopy = 1
+      *   - no hardcopy or thumbnail attributes but only when
+      *     there is also a bitmap[@thumbnail=1] version
+      *
+      * The checks should be enforced by a schema, but we do not
+      * do this yet (if we are ever going to do it). They could/should
+      * be done elsewhere, but we do them here as it is easy to do
+      * so.
+      *
+      * TODO:
+      *    we should really re-order items so that we can
+      *    ensure the "full-size bitmap" link is first
+      *-->
+  <xsl:template match="bitmap[boolean(@hard)]" mode="list-figure-versions">
+    <xsl:message terminate="yes">
+ ERROR: bitmap node found with attribute name of hard rather than hardcopy
+   value=<xsl:value-of select="normalize-space(.)"/>
+    </xsl:message>
+  </xsl:template>
+  <xsl:template match="bitmap[boolean(@thumb)]" mode="list-figure-versions">
+    <xsl:message terminate="yes">
+ ERROR: bitmap node found with attribute name of thumb rather than thumbnail
+   value=<xsl:value-of select="normalize-space(.)"/>
+    </xsl:message>
+  </xsl:template>
+  <xsl:template match="vector[boolean(@hard) or boolean(@hardcopy)]" mode="list-figure-versions">
+    <xsl:message terminate="yes">
+ ERROR: vector node found with hardcopy (or hard) attribute. Not needed here!
+   value=<xsl:value-of select="normalize-space(.)"/>
+    </xsl:message>
+  </xsl:template>
+  <xsl:template match="vector[boolean(@thumbnail) or boolean(@thumb)]" mode="list-figure-versions">
+    <xsl:message terminate="yes">
+ ERROR: vector node found with thumbnail (or thumb) attribute. Not needed here!
+   value=<xsl:value-of select="normalize-space(.)"/>
+    </xsl:message>
+  </xsl:template>
+
+  <xsl:template match="bitmap[@thumbnail=1 and @hardcopy=1]" mode="list-figure-versions">
+    <xsl:message terminate="yes">
+ ERROR: bitmap nodes must not have both thumbail and hardcopy attributes set to 1
+   value=<xsl:value-of select="normalize-space(.)"/>
+    </xsl:message>
+  </xsl:template>
+  <xsl:template match="bitmap[boolean(@format)=false()]" mode="list-figure-versions">
+    <xsl:message terminate="yes">
+ ERROR: bitmap nodes must contain a format attribute
+   value=<xsl:value-of select="normalize-space(.)"/>
+    </xsl:message>
+  </xsl:template>
+  <xsl:template match="vector[boolean(@format)=false()]" mode="list-figure-versions">
+    <xsl:message terminate="yes">
+ ERROR: vector nodes must contain a format attribute
+   value=<xsl:value-of select="normalize-space(.)"/>
+    </xsl:message>
+  </xsl:template>
+
+  <xsl:template match="bitmap[@thumbnail=1]" mode="list-figure-versions"/>
+  <xsl:template match="bitmap[@hardcopy=1]" mode="list-figure-versions">
+    <flink>
+      <text><xsl:value-of select="translate(@format,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/></text>
+      <image><xsl:value-of select="normalize-space(.)"/></image>
+    </flink>
+  </xsl:template>
+  <xsl:template match="bitmap[(@thumbnail=0 or (boolean(@thumbnail)=false() and boolean(@hardcopy)=false())) and
+		       (count(preceding-sibling::bitmap[@thumbnail=1]) != 0 or
+		       count(following-sibling::bitmap[@thumbnail=1]) != 0)]" mode="list-figure-versions">
+    <flink><text>full-size</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
+  </xsl:template>
+  <xsl:template match="vector[@format='ps']" mode="list-figure-versions">
+    <flink><text>postscript</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
+  </xsl:template>
+  <xsl:template match="vector[@format='eps']" mode="list-figure-versions">
+    <flink><text>encapsulated postscript</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
+  </xsl:template>
+  <xsl:template match="vector[@format='pdf']" mode="list-figure-versions">
+    <flink><text>PDF</text><image><xsl:value-of select="normalize-space(.)"/></image></flink>
+  </xsl:template>
+  <xsl:template match="*|text()" mode="list-figure-versions">
+<!--
+    <xsl:message terminate="yes">
+ ERROR: match=*|text() mode=list-figure-versions template has been called!
+        node=<xsl:value-of select="name()"/> contents=<xsl:value-of select="."/>
+    </xsl:message>
+-->
+  </xsl:template>
+
+  <xsl:template match="flinks[count(flink)=0]" mode="add-figure-versions"/>
+  <xsl:template match="flinks" mode="add-figure-versions">
+    <p class="figures"><xsl:text>[Version: </xsl:text>
+    <xsl:for-each select="flink">
+      <a href="{image}"><xsl:value-of select="text"/></a>
+      <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>
+    </xsl:for-each>
+    <xsl:text>]</xsl:text></p>
+  </xsl:template>
+
+  <!--*
+      * Create the caption for a figure; may not need the mode, but leave in for now
+      *-->
+  <xsl:template match="caption" mode="figure">
+    <xsl:apply-templates/>
+  </xsl:template> <!--* match=caption mode=figure *-->
 
 </xsl:stylesheet>

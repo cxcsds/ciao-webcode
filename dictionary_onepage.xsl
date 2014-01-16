@@ -96,15 +96,8 @@
 	<!--* make the HTML head node *-->
 	<xsl:call-template name="add-htmlhead-standard"/>
 
-	<!--* add disclaimer about editing this HTML file *-->
 	<xsl:call-template name="add-disclaimer"/>
-
-	<!--* make the header - it's different depending on whether this is
-	    * a test version or the actual production HTML 
-            *-->
-	<xsl:call-template name="add-header">
-	  <xsl:with-param name="name"  select="'index'"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-header"/>
 	
 	  <!--// main div begins page layout //-->
 	    <div id="main">
@@ -134,12 +127,7 @@
 		
 	    </div> <!--// close id=main  //-->
 
-	<!--* add the footer text *-->
-	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="name"  select="'index'"/>
-	</xsl:call-template>
-
-	<!--* add </body> tag [the <body> is added by the add-htmlhead template] *-->
+	<xsl:call-template name="add-footer"/>
 	<xsl:call-template name="add-end-body"/>
       </html>
 
@@ -178,15 +166,8 @@
 	  <xsl:with-param name="page">entries.html</xsl:with-param>
 	</xsl:call-template>
 	
-	<!--* add disclaimer about editing this HTML file *-->
 	<xsl:call-template name="add-disclaimer"/>
-
-	<!--* make the header - it's different depending on whether this is
-	    * a test version or the actual production HTML 
-            *-->
-	<xsl:call-template name="add-header">
-	  <xsl:with-param name="name"  select="'entries'"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-header"/>
 	
 	  <!--// main div begins page layout //-->
 	    <div id="main">
@@ -231,12 +212,7 @@
 		
 	    </div> <!--// close id=main  //-->
 
-	<!--* add the footer text *-->
-	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="name"  select="'entries'"/>
-	</xsl:call-template>
-
-	<!--* add </body> tag [the <body> is added by the add-htmlhead template] *-->
+	<xsl:call-template name="add-footer"/>
 	<xsl:call-template name="add-end-body"/>
       </html>
 

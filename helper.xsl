@@ -35,10 +35,6 @@
   <!--*
       * used to determine whether the site is valid
       *
-      * used to determine whether or not to add PDF links to header/footer
-      * - see add-header/add-footer. Will be removed once we convert
-      *   threads to the new figure environment.
-      *
       * used to determine whether a download type is recognised
       * (to catch user error rather than any real need to restrict the types)
       * This should perhaps be determined by an external file (eg a list in the
@@ -267,7 +263,12 @@
       * Support for the "standard" set of metadata pages for SAO
       * pages is included.
       *
-      * MathJax support is added if the page contains any math tags.
+      * MathJax support is added if the page contains any math tags
+      * (if $use-mathjax is set to 1); in this case it is an error
+      * to have mathjaxpath unset.
+      *
+      * CSS can be added either via the css attribute or from the
+      * info/css block in the input file.
       *
       * input variables:
       *   title - required
@@ -293,7 +294,13 @@
       <!--* any scripts ? *-->
       <xsl:apply-templates select="info/htmlscripts"/>
 
-      <xsl:if test="count(//math) != 0">
+      <xsl:if test="$use-mathjax = 1 and count(//math) != 0">
+	<xsl:if test="$mathjaxpath = ''">
+	  <xsl:message terminate="yes">
+ ERROR: use-mathjax=1 but mathjaxpath is unset and the page contains math tags!
+          </xsl:message>
+	</xsl:if>
+
 	<!--*
 	    * We do not use the CDN version because of HEAD/SAO policy
 	    *
@@ -301,8 +308,7 @@
 	    * input, and do not need the texjax input processor, is it
 	    * worth using a "custom" config?
 	    *-->
-	<script type="text/javascript"
-		src="/ciao/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js"/>
+	<script type="text/javascript" src="{$mathjaxpath}"/>
       </xsl:if>
 
       <!--* add main stylesheets *-->
@@ -403,6 +409,8 @@
 </style>
       </xsl:if>
 
+      <xsl:apply-templates select="info/css" mode="header"/>
+
       <xsl:call-template name="add-sao-metadata">
 	<xsl:with-param name="title" select="normalize-space($title)"/>
       </xsl:call-template>
@@ -411,6 +419,13 @@
     
     <xsl:call-template name="start-tag"/>body<xsl:call-template name="end-tag"/>  <!--// open html body //-->
   </xsl:template> <!--* add-htmlhead *-->
+
+  <!--* test out trying to allow CSS in header blocks, hence the mode=header -->
+  <xsl:template match="css" mode="header">
+    <style type="text/css">
+      <xsl:apply-templates/>
+    </style>
+  </xsl:template>
 
   <!--* metalist/meta are a hacky way of setting meta comments in
       * the head block of a HTML page.
@@ -450,212 +465,6 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template> <!--* match=htmlscript *-->
-
-  <!--*
-      * add the header
-      *
-      * Parameters:
-      *   name - string, required
-      *
-      * Also depends on the package-wide params/variables:
-      *    $site, $type, $updateby, $url [kind of]
-      *
-      * In CIAO 3.0 changed to remove the use of tables. Use CSS instead.
-      *
-      * For now we only add a "URL:" bar if the global $url
-      * variable is not ''. We need to sort this out so that we
-      * can have one for all pages.
-      *
-      *-->
-  <xsl:template name="add-header">
-    <xsl:variable name="root" select="name(//*)"/>
-
-    <xsl:choose>
-      <xsl:when test="$site='icxc'">
-        <xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/incl/header.html'"/>
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:when test="$site='iris'">
-        <xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/iris/vaoheader.html'"/>
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/incl/cxcheader.html'"/>
-        </xsl:call-template>
-      </xsl:otherwise> 
-    </xsl:choose>
-
-    <!--* we break up into lots of different sections to try and make lynx happier *-->
-
-    <!--*
-        * this is only going to be picked up by user agents that do not process
-        * stylesheets - as long as the stylesheet has a rule
-        *    .hidmem { display: none; }
-        * so it's a good way of getting to lynx users
-        *-->
-
-    <div class="hideme">
-      <a href="#navtext" accesskey="s"
-	title="Skip to the navigation links">Skip to the navigation links</a>
-    </div>
-
-    <!--* we do not have a search bar on the pages for site=icxc *-->
-    <xsl:if test="$site != 'icxc'">
-      <div class="topbar">
-	<xsl:call-template name="add-search-ssi"/>
-      </div>
-    </xsl:if>
-
-    <div class="topbar">
-      <div class="lastmodbar">Last modified: <xsl:value-of select="$lastmod"/></div>
-      <xsl:if test="$url != ''">
-	<!--* this is a safety check for now *-->
-	<br class="hideme"/>
-	<div class="urlbar">URL: <xsl:value-of select="$url"/></div>
-      </xsl:if>
-    </div>
-  </xsl:template> <!--* name=add-header *-->
-
-  <!--*
-      * add the necessary SSI to get the search bar
-      *-->
-  <xsl:template name="add-search-ssi">
-
-    <xsl:call-template name="add-ssi-include">
-      <xsl:with-param name="file" select="$searchssi"/>
-    </xsl:call-template>
-
-  </xsl:template> <!--* add-search-ssi *-->
-
-  <!--*
-      * trial header:
-      *  create here rather than use include files
-      *
-      *  added 'fake' search button to make it look 'more' real
-      *  use EXSLT date function to get the 'last published' time
-      *
-      * only used for trial version: the test version can use the
-      * incl/header|search.html file on that site
-      *
-      *-->
-  <xsl:template name="add-header-trial">
-
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr>
-        <td align="left" valign="top">
-	  <map name="header_left">
-	    <area alt="Chandra Science" coords="0,4,192,72" href="http://cxc.harvard.edu/" shape="RECT"/>
-	  </map>
-	  <img src="/sds/imgs/header_left.gif" border="0" alt="Chandra Science" usemap="#header_left"/>
-	</td>
-
-	<td align="right" valign="top">
-	  <map name="header_right">
-	    <area alt="About Chandra" coords="0,14,107,31" href="http://cxc.harvard.edu/udocs/overview.html" shape="RECT"/>
-	    <area alt="Archive" coords="118,13,185,32" href="http://cxc.harvard.edu/cda/" shape="RECT"/>
-	    <area alt="Proposer" coords="197,12,268,31" href="http://cxc.harvard.edu/prop.html" shape="RECT"/>
-	    <area alt="Instruments &amp; Calibration" coords="283,14,453,32" href="http://cxc.harvard.edu/cal/" shape="RECT"/>
-	    <area alt="Newsletters" coords="112,33,198,51" href="http://cxc.harvard.edu/newsletters.html" shape="RECT"/>
-	    <area alt="Data Analysis" coords="1,35,97,50" href="http://cxc.harvard.edu/ciao/" shape="RECT"/>
-	    <area alt="HelpDesk" coords="218,34,295,51" href="http://cxc.harvard.edu/helpdesk/" shape="RECT"/>
-	    <area alt="Calibration Database" coords="309,34,450,52" href="http://cxc.harvard.edu/caldb/" shape="RECT"/>
-	    <area alt="NASA Archives &amp; Centers" coords="295,53,452,75" href="http://cxc.harvard.edu/nasa_links.html" shape="RECT"/>
-	  </map>
-	  <img src="/sds/imgs/header_right.gif" border="0" alt="Chandra Science" usemap="#header_right"/>
-	</td>
-      </tr>
-    </table>
-    <br clear="all"/> 
-    <xsl:call-template name="newline"/>
-    <br/>
-  </xsl:template> <!--* add-header-trial *-->
-
-  <!--*
-      * add the footer
-      *
-      * Parameters:
-      *   name - string, required
-      *     passed through to add-standard-banner
-      *
-      * Also depends on the package-wide params/variables:
-      *    $site, $type
-      *
-      *-->
-  <xsl:template name="add-footer">
-    <!--* add the "standard" banner *-->
-    <xsl:variable name="root" select="name(//*)"/>
-
-    <br clear="all"/>
-    <div class="bottombar">
-      <div>Last modified: <xsl:value-of select="$lastmod"/></div>
-    </div>
-
-    <xsl:if test="($site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'chart' or $site = 'obsvis' or $site = 'iris') and $type = 'live'">
-      <xsl:call-template name="add-ssi-include">
-        <xsl:with-param name="file" select="$googlessi"/>
-      </xsl:call-template>
-    </xsl:if>
-
-    <xsl:choose>
-      <xsl:when test="$site='icxc'">
-	<xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/incl/footer.html'"/>
-	</xsl:call-template>
-      </xsl:when>
-      <xsl:when test="$site='iris'">
-	<xsl:call-template name="add-ssi-include">
-          <xsl:with-param name="file" select="'/iris/vaofooter.html'"/>
-	</xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:call-template name="add-ssi-include">
-	  <xsl:with-param name="file" select="'/incl/cxcfooter.html'"/>
-	</xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
-
-  </xsl:template> <!--* name=add-footer *-->
-
-  <!--* manually include the live footer: wil need updating if live footer changes *-->
-  <xsl:template name="add-footer-trial">
-
-    <br clear="all"/>
-      <font face="Arial,Helvetica,sans-serif">
-	<a href="http://cxc.harvard.edu/">Chandra Science</a>
-	<xsl:call-template name="add-nbsp"/>|<xsl:call-template name="add-nbsp"/>
-	<a href="http://chandra.harvard.edu/">Chandra Home</a>
-	<xsl:call-template name="add-nbsp"/>|<xsl:call-template name="add-nbsp"/>
-	<a href="http://cxc.harvard.edu/udocs/www.html">Astronomy links</a>
-	<xsl:call-template name="add-nbsp"/>|<xsl:call-template name="add-nbsp"/>
-	<a href="http://icxc.harvard.edu/">iCXC (CXC only)</a>
-	<xsl:call-template name="add-nbsp"/>|<xsl:call-template name="add-nbsp"/>
-	<a href="http://cxc.harvard.edu/AT-CXCquery.html">Search</a>
-      </font>
-    <br clear="all"/><br/>
-    <table align="left" cellpadding="3" cellspacing="3">
-      <tr>
-	<td align="left" valign="middle"><img src="/sds/imgs/cxc-logo_sm45.jpg" border="0" alt="CXC Logo"/></td>
-	<td align="left" valign="top">
-	  <font face="Arial,Helvetica,sans-serif">
-	    <em>The Chandra X-Ray
-	      Center (CXC) is operated for NASA by the Smithsonian Astrophysical Observatory.</em>
-	    <br/>
-	    60 Garden Street, Cambridge, MA 02138 USA.
-	    <xsl:call-template name="add-nbsp"/><xsl:call-template name="add-nbsp"/><xsl:call-template name="add-nbsp"/>
-	    Email: <a href="mailto:cxcweb@head-cfa.harvard.edu">cxcweb@head-cfa.harvard.edu</a>
-	    <br/>
-	    Smithsonian Institution, Copyright 
-	    <xsl:text disable-output-escaping="yes">&amp;copy; </xsl:text>
-	    1998-2008. All rights reserved.
-	  </font>
-	</td>
-      </tr>
-    </table>
-    
-  </xsl:template> <!--* name=add-footer-trial *-->
 
   <!--*
       * add the navbar: depends on the parameter $type

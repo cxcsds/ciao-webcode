@@ -1,4 +1,4 @@
-#!/data/da/Docs/local/perl/bin/perl -w
+#!/usr/bin/env perl -w
 #
 # Usage:
 #   publish.pl --type=test|live|trial <filename(s)>
@@ -9,6 +9,9 @@
 #     Defaults to <path to this script>/config.dat
 #
 #     --force
+#     Optional.
+#
+#     --forceforce
 #     Optional.
 #
 #     --verbose
@@ -23,6 +26,8 @@
 #   associated files and the created PDF files).
 #   Use the --force option to force the creation of the HTML files.
 #   [note: the thread index pages are currently ALWAYS created].
+#   Use --forceforce to force the copying on non XML files
+#   [note: implies --force]
 #
 # Aim:
 #   Convert the specified files into SSI/web pages.
@@ -111,7 +116,12 @@ defaults to config.dat in the same directory as the script.
 The --force option should be used to force the generation of the
 HTML files (by default the program won't publish a file if the HTML,
 PDF, and associated files already exist and are newer than the XML
-file).
+file). Non XML files are *not* copied when --force is given if
+they have not changed.
+
+The --forceforce option is used to also force the copying of
+non XML files, even if they have not changed. Setting this also
+sets --force.
 
 The --verbose option is useful for testing/debugging the code.
 
@@ -126,14 +136,18 @@ my $dname = cwd();
 # handle options
 my $type = "test";
 my $force = 0;
+my $forceforce = 0;
 my $localxslt = 0;
 die $usage unless
   GetOptions
   'config=s' => \$configfile,
   'type=s'   => \$type,
   'force!'   => \$force,
+  'forceforce!'   => \$forceforce,
   'localxslt!' => \$localxslt,
   'verbose!' => \$verbose;
+
+$force = 1 if $forceforce;
 
 # what OS are we running?
 #
@@ -231,6 +245,11 @@ my $googlessi = "";
 $googlessi = get_config_version( $version_config, "googlessi" )
   if check_config_exists( $version_config, "googlessi" );
 
+# MathJax
+my $mathjaxpath = "";
+$mathjaxpath = get_config_type( $version_config, "mathjaxpath", $type )
+  if check_config_exists( $version_config, "mathjaxpath" );
+
 # storage/published is optional [sort of, depends on the site]
 # Moving towards using storageloc but have not completed the move
 #
@@ -322,6 +341,7 @@ dbg "  newsfile=$newsfile";
 dbg "  newsfileurl=$newsfileurl";
 dbg "  watchouturl=$watchouturl";
 dbg "  searchssi=$searchssi";
+dbg "  mathjaxpath=$mathjaxpath";
 dbg "  logoimage=$logoimage";
 dbg "  logotext=$logotext";
 dbg "  imglinkicon=$imglinkicon [$imglinkiconwidth x $imglinkiconheight]";
@@ -471,11 +491,11 @@ sub should_we_skip ($@) {
 #
 # NOTE: this is based on text2im v1.5
 #
-# NOTE: the code has been left in although, now using
-#       MathJax, it is currently not used (may want to
-#       create an image for non-JavaScript users?)
+# NOTE: this code is not needed when using MathJax.
 #
 sub math2image ($$) {
+    return if use_mathjax;
+
     my $head    = shift;
     my $outfile = shift;
     my $tex     = $head . ".tex";
@@ -558,11 +578,10 @@ sub check_for_page {
 #   ensures none of the files that will be needed to support the math
 #   tag are present
 #
-# NOTE:
-#   does nothing at the moment sinceusing MathJax
-#   code left in for now
+# NOTE: this code is not needed when using MathJax.
+#
 sub clean_up_math {
-    return; # DBG: MathJax
+    return if use_mathjax;
 
     my $outdir = shift;
     foreach my $page ( @_ ) {
@@ -582,12 +601,10 @@ sub clean_up_math {
 # Aim:
 #   Creates the PNG images
 #
-# NOTE:
-#   Currently does nothing since we now use MathJax to
-#   render the LaTeX within the browser.
+# NOTE: this code is not needed when using MathJax.
 #
 sub process_math {
-    return; # DBG: MathJax
+    return if use_mathjax;
 
     my $outdir = shift;
     foreach my $page ( @_ ) { math2image $page, "${outdir}${page}.png"; }
@@ -604,6 +621,36 @@ sub count_slash_in_string ($) {
   $str =~ s/[^\/]//g;
   return length ($str);
 } # count_slash_in_string
+
+# Given an array of file names we expect the stylesheet to produce
+# and the string output of the stylesheet, which contains the names
+# it did produce, return an array with the merged set of names.
+#
+# Errors out if any of the expected names are not in the actual names,
+# so it isn't really a merge as the expected values should be in the
+# return of the stylesheet.
+#
+# Order is not preserved.
+#
+sub merge_filenames (@$) {
+  my @exp = shift;
+  my $rval = shift;
+
+  my %created;
+  foreach my $line (split /\n/, $rval) {
+    $line =~ s/^\s+|\s+$//g;
+    next if $line eq "";
+    $created{$line} = 1;
+  }
+
+  foreach my $efile (@exp) {
+    die "ERROR: expected file $efile but not created by stylesheet\n"
+      unless exists $created{$efile};
+  }
+
+  return keys %created;
+
+} # merge_filenames
 
 # QUESTION:
 #
@@ -649,6 +696,7 @@ sub basic_params ($) {
 	    watchouturl => $watchouturl,
 	    searchssi => $searchssi,
 	    googlessi => $googlessi,
+	    mathjaxpath => $mathjaxpath,
 	    headtitlepostfix => $headtitlepostfix,
 	    texttitlepostfix => $texttitlepostfix,
 	    
@@ -678,7 +726,11 @@ sub xml2html_basic ($$$) {
 
     print "Parsing [${pagelabel}]: $in";
 
-    # we 'hardcode' the output of the transformation
+    # We 'hardcode' the output of the transformation.
+    # Note: for 'ancillary' files, such as the slug files created by
+    # the bugs and relnotes pages, we rely on calling a perl routine
+    # from within the stylesheet to handle the deletion of the pages.
+    #
     my @pages = ( "${outdir}${in}.html" );
 
     # how about math pages?
@@ -696,10 +748,12 @@ sub xml2html_basic ($$$) {
     my $url = "${outurl}${in}.html";
     my $params = basic_params $opts;
 
-    translate_file "$$opts{xslt}${stylesheethead}.xsl", $dom, $params;
+    my $retval = translate_file "$$opts{xslt}${stylesheethead}.xsl", $dom, $params;
+
+    my @outfiles = merge_filenames(@pages, $retval);
 
     # success or failure?
-    check_for_page( @pages );
+    check_for_page( @outfiles );
 
     # math?
     process_math( $outdir, @math );
@@ -1147,11 +1201,12 @@ sub xml2html_threadindex ($) {
       if $rnode->findvalue("boolean(datatable)") eq "true";
     @soft = map { "${outdir}$_"; } @soft;
 
-    # do not allow math in the threadindex (for now)
-    # (remove with use of MathJax)
+    # do not allow math in the threadindex (when using images, since too
+    # lazy to handle them); not a problem for MathJax since no external
+    # files needed.
     my @math = find_math_pages $dom;
-    #die "Error: found math blocks in $in - not allowed here\n"
-    #  unless $#math == -1;   # DBG: MathJax
+    die "Error: found math blocks in $in - not allowed here\n"
+      unless $#math == -1 or use_mathjax == 1;
 
     # NOTE: we always recreate the threadindex
     # (it just makes things easier, since the thread index pages
@@ -1587,6 +1642,9 @@ sub process_xml ($$) {
 # NOTE: we no longer copy the files over to the storage site
 # to save space
 #
+# To force a copy of a non XML file even if it has not changed
+# requires the $forceforce global variable to be set.
+#
 sub process_files ($$) {
     my $type = shift;
     my $aref = shift;
@@ -1608,7 +1666,7 @@ sub process_files ($$) {
 	# we only print messages if not the published directory
 	foreach my $odir ( @dirs ) {
 	    my $out = "${odir}$in";
-	    if ( $force or ! -e $out or -M "$in" < -M "$out" ) {
+	    if ( $forceforce or ! -e $out or -M "$in" < -M "$out" ) {
 		mycp $in, $out;
 		print "Created: $out\n" if $odir ne $published;
 	    } else {

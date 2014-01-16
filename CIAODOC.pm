@@ -29,6 +29,17 @@ use File::Basename;
 use XML::LibXML;
 use XML::LibXSLT;
 
+# Try to support using LaTeX (use_mathjax()=0) or MathJax
+# (use_mathjax()=1) for displaying LaTeX equations on the
+# web pages.
+# For now treat as a hard-coded constant rather than something
+# we can change by setting a flag in the publishing script.
+#
+# This is intended as a temporary measure; once MathJax can
+# be installed onto the web site this can be removed, or
+# it may become a per-site setting?
+sub use_mathjax () { return 1; }
+
 # Set up XML/XSLT processors
 # (registration of functions happens later)
 my $parser = XML::LibXML->new()
@@ -38,6 +49,39 @@ $parser->validation(0);
 
 my $xslt = XML::LibXSLT->new()
   or die "Error: Unable to create XML::LibXSLT instance.\n";
+
+# Set up potentially-useful functions. Ideally we would use
+# register_element but this is not available using the 
+# installed version of XML::LibXSLT
+#
+# TODO: should read-file-if-exists report this information
+#       as part of the dependency tracking?
+XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				"read-file-if-exists",
+  sub {
+    my $filename = shift;
+    # want to differentiate between 'file does not exist' and
+    # 'file is invalid'.
+    return XML::LibXML::NodeList->new()
+	unless -e $filename;
+    my $rval;
+    eval { $rval = $parser->parse_file($filename); };
+    die "ERROR: problem parsing XML file $filename\n  $@\n"
+	if $@;
+    return $rval;
+  }
+);
+
+XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				"delete-file-if-exists",
+  sub {
+    my $filename = shift;
+    eval { CIAODOC::myrm($filename); };
+    die "ERROR: unable to delete $filename (requested by stylesheet)\n  $@\n"
+	if $@;
+    return 1;
+  }
+);
 
 # default depth is 250 but this causes problems with some style sheets
 # (eg wavdetect, tg_create_mask), so increase randomly until everything
@@ -70,6 +114,7 @@ my @funcs_deps =
      clear_dependencies get_dependencies have_dependencies 
      dump_dependencies write_dependencies
      identify_files_to_republish
+     use_mathjax
     );
 
 use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
@@ -429,6 +474,9 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     dbg "  xslt=$stylesheet";
     my $sheet = _get_stylesheet $stylesheet;
 
+    # hard code the MathJax setting
+    $$params{'use-mathjax'} = use_mathjax;
+
     dbg "  *** params (start) ***";
     my %newparams = XML::LibXSLT::xpath_to_string(%$params);
     while (my ($parname, $parval) = each %newparams) {
@@ -450,6 +498,9 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
 #    };
 #    die "ERROR from transformation: $@\n" if $@;
 
+    dbg "*** results = [$results]";
+    dbg "*** as string =\n$retval";
+
     dbg "*** XSLT (end) ***";
     return $retval;
 
@@ -464,11 +515,11 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
 # Should be sent a DOM
 #
 # NOTE:
-#   always returns an empty list since moved to MathJax
-#   but want to leave code in for now in case needed
+#   This routine is not needed for MathJax, so we return
+#   an empty list in this case.
 #
 sub find_math_pages ($) {
-  return (); # DBG: MathJax
+    return () if use_mathjax;
 
   my $dom = shift;
 
@@ -1624,28 +1675,6 @@ sub identify_files_to_republish ($$) {
   return \@out;
   
 } # identify_files_to_republish
-
-
-# Set up routines callable from XSLT; at present only want
-# to rely on register_function even though for some of these
-# - e.g. the dependency tracking - it would be better using
-# register_element.
-#
-XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
-				"read-file-if-exists",
-  sub {
-    my $filename = shift;
-    # want to differentiate between 'file does not exist' and
-    # 'file is invalid'.
-    return XML::LibXML::NodeList->new()
-	unless -e $filename;
-    my $rval;
-    eval { $rval = $parser->parse_file($filename); };
-    die "ERROR: problem parsing XML file $filename\n  $@\n"
-	if $@;
-    return $rval;
-  }
-);
 
 ## End
 1;

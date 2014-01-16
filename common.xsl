@@ -21,7 +21,46 @@
   <xsl:variable name="hack-import-common" select="extfuncs:register-import-dependency('common.xsl')"/>
 
   <!--*
-      * SAO/SI mandated header items.
+      * check that a parameter is not empty, exiting if it is.
+      *
+      * Parameters:
+      *   name - string, required
+      *     name of parameter
+      *
+      *   value - string, required
+      *     input value of parameter
+      *
+      *   template - string, required
+      *     name of template
+      *
+      *-->
+  <xsl:template name="check-nonempty-param">
+    <xsl:param name="name"/>
+    <xsl:param name="value"/>
+    <xsl:param name="template"/>
+
+    <xsl:if test="$value = ''">
+      <xsl:message terminate="yes">
+ Error: <xsl:value-of select="$template"/> called without a <xsl:value-of select="$name"/> parameter
+      </xsl:message>
+    </xsl:if>
+
+  </xsl:template> <!--* name=check-nonempty-param *-->
+
+  <!--*
+      * SAO/SI mandated header items and attempts to stop
+      * cross-frame scripting attacks, taken from Gary Galstian
+      * and http://securestate.blogspot.com/2010/08/xfs-101-cross-frame-scripting-explained.html
+      * in particular the presentation at 
+      * https://www.owasp.org/images/0/0e/OWASP_AppSec_Research_2010_Busting_Frame_Busting_by_Rydstedt.pdf
+      *
+      * Similar information is at http://javascript.info/tutorial/clickjacking
+      * which seems to suggest the X-Frames-Origin should be added by the web server
+      * rather than as a meta tag. Also, we place the javascript within the head
+      * block out of convenience (not having to add info to too many places)
+      * but should it be in the body (as this page suggests); this just affects
+      * the download/rendering speed of the page as far as I can tell. For
+      * now leave as is.
       *
       * Also add in the favicon here to make things simpler,
       * if not cleaner/semantically sensible.
@@ -80,11 +119,26 @@
     <meta name="keywords" content="CfA,SAO,Harvard-Smithsonian,Center for Astrophysics"/>
     <meta name="keywords" content="HEA,HEAD,High Energy Astrophysics Division"/>
 
+    <!--* cross-frame scripting 'protection' *-->
+    <xsl:comment>Frame busting from http://securestate.blogspot.com/2010/08/xfs-101-cross-frame-scripting-explained.html</xsl:comment>
+    <xsl:text>
+</xsl:text>
+    <meta http-equiv="X-Frame-Options" content="Deny"/>
+    <style type="text/css">html { display: none; }</style>
+    <script type="text/javascript">
+if (self == top) {
+  document.documentElement.style.display = 'block';
+} else {
+  top.location = self.location;
+}
+    </script>
   </xsl:template> <!--* name=add-sao-metadata *-->
 
   <!--*
       * add a ssi include statement to the output, surrounded by new lines
-      * (hopefully obselete, but leave in)
+      * (because we are having issues with the register CGI stuff
+      *  and I'm hoping that the carriage returns will improve
+      *  things; it also lets us track the depency information)
       *
       * Parameters:
       *  file - string, required
@@ -92,14 +146,13 @@
       *
       *-->
   <xsl:template name="add-ssi-include">
-    <xsl:param name='file'/>
-    <xsl:if test="$file = ''">
-      <xsl:message terminate="yes">
+    <xsl:param name='file' select="''"/>
 
-Programming error: add-ssi-include called with an empty file parameter
-
-      </xsl:message>
-    </xsl:if>
+    <xsl:call-template name="check-nonempty-param">
+      <xsl:with-param name="name"     select="'file'"/>
+      <xsl:with-param name="value"    select="$file"/>
+      <xsl:with-param name="template" select="'add-ssi-include'"/>
+    </xsl:call-template>
 
     <xsl:variable name="hack-register-ssi"
 		  select="extfuncs:register-ssi-file($file)"/>
@@ -108,6 +161,208 @@ Programming error: add-ssi-include called with an empty file parameter
     <xsl:comment>#include virtual="<xsl:value-of select="$file"/>"</xsl:comment>
     <xsl:call-template name="newline"/>
 
-  </xsl:template> <!--* name=add-ssi-include *-->
+  </xsl:template> <!--* name=add-ssi *-->
+
+  <!--*
+      * Add a site-specific include file, specialised for
+      * iCXC and IRIS sites, others use /incl/[type].html.
+      *
+      * Parameters:
+      *   type - string, required
+      *      gives the filename (without trailing .html);
+      *      should also be vao[type].html and cxc[type].html
+      *      variants.
+      *-->
+  <xsl:template name="add-site-include">
+    <xsl:param name="type" select="''"/>
+
+    <xsl:call-template name="check-nonempty-param">
+      <xsl:with-param name="name"     select="'type'"/>
+      <xsl:with-param name="value"    select="$type"/>
+      <xsl:with-param name="template" select="'add-site-include'"/>
+    </xsl:call-template>
+
+    <xsl:choose>
+      <xsl:when test="$site='icxc'">
+        <xsl:call-template name="add-ssi-include">
+          <xsl:with-param name="file" select="concat('/incl/', $type, '.html')"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="$site='iris'">
+        <xsl:call-template name="add-ssi-include">
+          <xsl:with-param name="file" select="concat('/iris/vao', $type, '.html')"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="add-ssi-include">
+          <xsl:with-param name="file" select="concat('/incl/cxc', $type, '.html')"/>
+        </xsl:call-template>
+      </xsl:otherwise> 
+    </xsl:choose>
+  </xsl:template> <!--* name=add-site-include *-->
+
+  <!--*
+      * Add the last-modified bar.
+      *
+      * Parameters:
+      *   lastmodvalue - string, optional; if not given
+      *    (or empty), use the global $lastmod parameter
+      *-->
+  <xsl:template  name="add-lastmodbar">
+    <xsl:param name="lastmodvalue" select="''"/>
+
+    <div class="lastmodbar">Last modified: <xsl:choose>
+      <xsl:when test="$lastmodvalue = ''"><xsl:value-of select="$lastmod"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="$lastmodvalue"/></xsl:otherwise>
+    </xsl:choose></div>
+  </xsl:template> <!--* name=add-lastmodbar *-->
+
+  <!--*
+      * Add the URL bar (only shown for hardcopy outputs)
+      *
+      * Parameters:
+      *   uses the global $url parameter
+      *-->
+  <xsl:template  name="add-urlbar">
+    <xsl:if test="$url != ''">
+      <!--* this is a safety check for now *-->
+      <br class="hideme"/>
+      <div class="urlbar">URL: <xsl:value-of select="$url"/></div>
+    </xsl:if>
+  </xsl:template> <!--* name=add-urlbar *-->
+
+  <!--*
+      * add the standard header, specialized for 
+      * iCXC and IRIS sites, others use /incl/cxcheader.html.
+      *
+      * Parameters:
+      *   lastmodvalue - string, optional; if not given
+      *    (or empty), use the global $lastmod parameter
+      *
+      *   with-navbar - 1, optional
+      *     if given it is expected to be 1, and says that
+      *     the page contains a navbar element (this should
+      *     only be used for situations like the ahelp
+      *     pages where this can not be determined by the
+      *     template itself), or 0 to turn off the navbar,
+      *     which is useful for multi-page templates like the
+      *     FAQ where the index has a navbar but the individual
+      *     pages do not.
+      *
+      * Also depends on the package-wide params/variables:
+      *    $site, $type, $updateby, $url [kind of]
+      *
+      * For now we only add a "URL:" bar if the global $url
+      * variable is not ''. We need to sort this out so that we
+      * can have one for all pages.
+      *
+      *-->
+  <xsl:template name="add-header">
+    <xsl:param name="lastmodvalue"  select="''"/>
+    <xsl:param name="with-navbar"   select="''"/>
+
+    <xsl:if test="$lastmodvalue = '' and $lastmod = ''">
+      <xsl:message terminate="yes">
+ ERROR: add-header has empty lastmodvalue and lastmod parameters
+      </xsl:message>
+    </xsl:if>
+
+    <xsl:call-template name="add-site-include">
+      <xsl:with-param name="type" select="'header'"/>
+    </xsl:call-template>
+
+   <!--* we break up into lots of different sections to try and make lynx happier *-->
+
+    <!--*
+        * this is only going to be picked up by user agents that do not process
+        * stylesheets - as long as the stylesheet has a rule
+        *    .hideme { display: none; }
+        * so it's a good way of getting to lynx users
+        *-->
+
+    <div class="hideme">
+      <a href="#navtext" accesskey="s"
+	title="Skip to the navigation links">Skip to the navigation links</a>
+    </div>
+
+    <!-- *
+         * Really this should be called topbar but to avoid 
+         * renaming stylesheets, use the ugly name of topbarcontainer,
+	 * and add in an extra class, withnavbar, if a navbar is
+	 * to be displayed on the page (used for styling).
+	 *-->
+    <xsl:variable name="classes">
+      <xsl:text>topbarcontainer</xsl:text>
+	<!-- It would be nice if the metadata for all pages was the same;
+             for instance threadindex pages have a top-level navbar tag
+	     rather than within an info section. -->
+	<xsl:if test="$with-navbar != 0 and (boolean(//info/navbar) or boolean (//navbar) or $with-navbar = 1)">
+	<xsl:text> withnavbar</xsl:text>
+      </xsl:if>
+    </xsl:variable>
+    <div class="{$classes}">
+      <xsl:if test="$site != 'icxc'">
+	<div class="topbar">
+	  <xsl:call-template name="add-search-ssi"/>
+	</div>
+      </xsl:if>
+
+      <div class="topbar">
+	<xsl:call-template name="add-lastmodbar">
+	  <xsl:with-param name="lastmodvalue" select="$lastmodvalue"/>
+	</xsl:call-template>
+	<xsl:call-template name="add-urlbar"/>
+      </div>
+    </div>
+  </xsl:template> <!--* name=add-header *-->
+
+  <!--*
+      * add the standard footer, specialized for 
+      * iCXC and IRIS sites, others use /incl/cxcfooter.html.
+      *
+      * Parameters:
+      *   lastmodvalue - string, optional; if not given
+      *    (or empty), use the global $lastmod parameter
+      *
+      * Also depends on the package-wide params/variables:
+      *    $site, $type
+      *
+      *-->
+  <xsl:template name="add-footer">
+    <xsl:param name="lastmodvalue"  select="''"/>
+
+    <xsl:if test="$lastmodvalue = '' and $lastmod = ''">
+      <xsl:message terminate="yes">
+ ERROR: add-footer has empty lastmodvalue and lastmod parameters
+      </xsl:message>
+    </xsl:if>
+
+    <br clear="all"/>
+    <div class="bottombar">
+      <xsl:call-template name="add-lastmodbar">
+	<xsl:with-param name="lastmodvalue" select="$lastmodvalue"/>
+      </xsl:call-template>
+    </div>
+
+    <xsl:if test="($site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'chart' or $site = 'obsvis' or $site = 'iris') and $type = 'live'">
+      <xsl:call-template name="add-ssi-include">
+        <xsl:with-param name="file" select="$googlessi"/>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:call-template name="add-site-include">
+      <xsl:with-param name="type" select="'footer'"/>
+    </xsl:call-template>
+
+  </xsl:template> <!--* name=add-footer *-->
+
+  <!--*
+      * add the necessary SSI to get the search bar
+      *-->
+  <xsl:template name="add-search-ssi">
+    <xsl:call-template name="add-ssi-include">
+      <xsl:with-param name="file" select="$searchssi"/>
+    </xsl:call-template>
+  </xsl:template> <!--* add-search-ssi *-->
 
 </xsl:stylesheet>

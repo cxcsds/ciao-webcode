@@ -496,9 +496,7 @@
 	    </div> <!--// close id=main  //-->
 
 	<!--* add the footer text *-->
-	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="name"  select="id/name"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-footer"/>
       
 	<!--* add end body/html tags *-->
 	<xsl:call-template name="add-end-body"/>
@@ -564,9 +562,7 @@
 	    </div> <!--// close id=main  //-->
 
 	<!--* add the footer text *-->
-	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="name"  select="'table'"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-footer"/>
       
 	<!--* add end body/html tags *-->
 	<xsl:call-template name="add-end-body"/>
@@ -654,9 +650,7 @@
 	    </div> <!--// close id=main  //-->
 
 	<!--* add the footer text *-->
-	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="name"  select="'index'"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-footer"/>
 
 	<!--* add end body/html tags *-->
 	<xsl:call-template name="add-end-body"/>
@@ -724,9 +718,7 @@
 	    </div> <!--// close id=main  //-->
 
 	<!--* add the footer text *-->
-	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="name"  select="'all'"/>
-	</xsl:call-template>
+	<xsl:call-template name="add-footer"/>
       
 	<!--* add end body/html tags *-->
 	<xsl:call-template name="add-end-body"/>
@@ -765,9 +757,7 @@
     <xsl:call-template name="add-disclaimer"/>
 
     <!--* make the header *-->
-    <xsl:call-template name="add-header">
-      <xsl:with-param name="name" select="$name"/>
-    </xsl:call-template>
+    <xsl:call-template name="add-header"/>
 
   </xsl:template> <!--* name=add-threadindex-start *-->
 
