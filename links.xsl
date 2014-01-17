@@ -856,7 +856,10 @@
 	    <xsl:with-param name="sitevalue" select="$sitevalue"/>
 	  </xsl:call-template>
 
-	  <!-- note: record the storage version -->
+	  <!-- *
+	       * note: record the storage version; why do we not record $dictionary-file?
+	       *
+	       * -->
 	  <xsl:variable name="label" select="concat('dictionary-', $sitevalue)"/>
 	  <xsl:variable name="hack-depends-on-dictionary"
 			select="extfuncs:register-included-file($label,
