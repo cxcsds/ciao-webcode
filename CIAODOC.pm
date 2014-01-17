@@ -25,6 +25,7 @@ use Cwd;
 use IO::File;
 use File::stat;
 use File::Basename;
+use Fcntl qw(:DEFAULT :flock);
 
 use XML::LibXML;
 use XML::LibXSLT;
@@ -137,6 +138,7 @@ sub mymkdir   ($);
 sub mycp      ($$);
 sub myrm      ($);
 sub mysetmods ($);
+sub create_lockfile ($);
 
 sub check_paths (@);
 sub check_executables (@);
@@ -332,6 +334,49 @@ sub mysetmods ($) {
     call_chgrp $main::group, $name;
 
 } # sub: mysetmods()
+
+# It looks like this lock works over NFS on Linux/OS-X. We use a
+# separate file as the lock file to make it easier to clean up
+# on error.
+#
+# A simple watchdog timer is used to catch cases where a file can
+# not be unlocked; may need to tweak the time out.
+#
+# [1] http://www.perlmonks.org/?node_id=14139
+# [2] http://stackoverflow.com/questions/34920/how-do-i-lock-a-file-in-perl
+# [3] http://www.perlmonks.org/?node_id=7058
+#
+# NOTE:
+#   this routine clobbers $SIG{ALRM} and too lazy to reset it
+#
+sub create_lockfile ($) {
+  my $lfile = shift;
+
+  dbg("Creating lock file with PID=$$: $lfile");
+
+  # Hard code time out
+  $SIG{ALRM} = sub { die "Error: unable to read lock file $lfile\n"; };
+  alarm 10;  
+    
+  my $fh;
+  sysopen($fh, $lfile, O_WRONLY | O_CREAT)
+    or die "can't open lock file $lfile: $!\n";
+
+  flock($fh, LOCK_EX)
+    or die "can't lock the lock file $lfile: $!\n";
+
+  # remove timer
+  alarm 0;
+  undef $SIG{ALRM};
+
+  truncate($fh, 0)
+    or die "can't truncate lock file $lfile: $!\n";
+
+  print $fh "$$\n";
+
+  return $fh;
+
+} # sub: create_lockfile
 
 # check_paths( $path1, $path2, ... )
 #
@@ -1302,8 +1347,20 @@ sub check_ahelp_site_valid ($) {
   # $revdepfile (e.g. a releasenotes file) to ahelpindex,
   # but rather we want to mention the ahelp file.
   #
+  # A very simple locking scheme is used - a file called
+  # <revdepfilename>.revdep.lock - is created to ensure
+  # that multiple users opublishing at the same time do
+  # not clobber each others chanegs. This is fragile
+  # - e.g. leaving stale lock files around - and needs
+  # some real-world experience to see if it is a sensible
+  # solution. An alternative would be to check the md5sum
+  # of the file to see if it has been changed between
+  # reading and writing, but this has its own issues.
+  # 
 
 =pod HELP
+
+TODO: review this
 
 Argh: ahelp reverse dependencies are generally complicated because
 (for example, processing dmextract)
@@ -1370,13 +1427,21 @@ Argh: ahelp reverse dependencies are generally complicated because
       unless -e $sfile;
 
     my $fname = substr($revdepfile, 0, length($revdepfile)-4) . ".revdep";
+
+    my $lockfile = $fname . ".lock";
+
+    # because of the user group check, lock file creation is moved into the
+    # following code
+    #
     my $dom;
     my $root;
+    my $lfh;
     if (-e $fname) {
       if (not grp_matches $fname) {
 	dbg "NOTE: unable to write to dependency file $fname as group differs";
 	return;
       }
+      $lfh = create_lockfile $lockfile;
       dbg "Reading in revdep file: $fname";
       $dom = $parser->parse_file($fname);
       $root = $dom->documentElement();
@@ -1386,6 +1451,7 @@ Argh: ahelp reverse dependencies are generally complicated because
 	dbg "NOTE: unable to create dependency file $fname as group differs";
 	return;
       }
+      $lfh = create_lockfile $lockfile;
       dbg "Creating new revdep file: $fname";
       $dom = XML::LibXML::Document->new();
       $root = $dom->createElement("reversedependencies");
@@ -1404,6 +1470,10 @@ Argh: ahelp reverse dependencies are generally complicated because
       myrm $fname;
       $dom->toFile($fname, 0);
       mysetmods $fname;
+      close $lfh;
+      # would like to delete the lock file, but can not guarantee that it
+      # does not now belong to another process!
+      #myrm $lockfile;
 
     } elsif ($count > 1) {
       # could clean up, but shouldn't happen so error out
