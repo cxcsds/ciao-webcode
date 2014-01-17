@@ -1723,13 +1723,11 @@ sub process_dep_file ($) {
 # If there's no revdep file, then nothing.
 # If there is, then need to do something....
 #
-sub identify_files_to_republish ($$) {
-  my $storage = shift;
-  my $name = shift;
-  my $fname = "${storage}${name}.revdep";
-  return unless -e $fname;
-
+sub identify_files_to_republish ($) {
+  my $fname = shift;
   dbg "Looking for reverse dependencies in $fname";
+
+  return unless -e $fname;
 
   my $dom = $parser->parse_file($fname);
   my $root = $dom->documentElement();
@@ -1742,6 +1740,7 @@ sub identify_files_to_republish ($$) {
     push @out, $user if process_dep_file $store;
   }
 
+  dbg " .. found " . (1 + $#out) . " files to republish";
   return \@out;
   
 } # identify_files_to_republish

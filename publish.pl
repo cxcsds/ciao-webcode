@@ -1450,7 +1450,7 @@ sub process_changed ($$$) {
   
   my @todo = ();
   foreach my $in ( @$changed ) {
-    my $c = identify_files_to_republish $storage, $in;
+    my $c = identify_files_to_republish "${storage}${in}.revdep";
     for my $fname ( @$c ) {
       push @todo, $fname;
     }
