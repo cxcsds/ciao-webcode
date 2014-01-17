@@ -169,12 +169,6 @@ my $ahelpfiles  = get_config_type $config_version, "ahelpfiles", $type;
 my $storageloc = get_config_type $config_version, "storageloc", $type;
 my $storage    = get_storage_location $storageloc, $site;
 
-# Moving to use storageloc, but not complete, so leave this check in
-my $storage_old = get_config_type $config_version, "storage", $type;
-
-die "Internal error: deprecated storage setting does not match value in storageloc file\n  storage (old)=${storage_old}\n  storageloc  =${storage}\n"
-  unless $storage eq $storage_old;
-
 # check we can find the needed stylesheets
 #
 foreach my $name ( qw( ahelp ahelp_index ahelp_common ahelp_main ) ) {

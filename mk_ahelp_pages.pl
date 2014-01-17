@@ -174,9 +174,6 @@ if ($localxslt) {
     $stylesheets = "$FindBin::Bin/";
 }
 
-#$storage .= "ahelp/";
-#my $ahelpindex_xml  = "${storage}ahelpindex.xml";
-#my $ahelpindex_dat  = "${storage}ahelpindex.dat";
 my $ahelpstore     = get_config_type $version_config, "ahelpindexdir", $type;
 my $ahelpindex_xml = "${ahelpstore}ahelpindex.xml";
 my $ahelpindex_dat = "${ahelpstore}ahelpindex.dat";

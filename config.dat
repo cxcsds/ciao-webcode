@@ -139,16 +139,8 @@ logotext=CIAO Logo
 #%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
 %outurl=trial http://icxc1.cfa.harvard.edu/sds/ciao_trial/
 
-# location of the "storage" space
-%storage=live /data/da/Docs/ciaoweb/published/ciao46/live/
-%storage=test /data/da/Docs/ciaoweb/published/ciao46/test/
-%storage=trial /data/da/Docs/ciaoweb/published/ciao46/trial/
-
-# We are moving away from the use of %storage and towards
-# %storageloc, which gives the location of an XML file,
-# format
-#   <storage><dir site="ciao">/data/da/Docs/ciaoweb/published/ciao40/live/</dir>...</storage>
-# but we have not converted everything yet
+# The location of the XML file governing the storage location
+# (not just of this site)
 #
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao46.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao46.test.xml
@@ -224,15 +216,6 @@ logotext=CIAO Logo
 #%outurl=trial http://icxc.harvard.edu/sds/ciaositedev/
 %outurl=trial http://icxc1.cfa.harvard.edu/sds/ciaositedev/
 
-# location of the "storage" space
-%storage=trial /data/da/Docs/ciaoweb/published/ciaositedev/trial/
-
-# We are moving away from the use of %storage and towards
-# %storageloc, which gives the location of an XML file,
-# format
-#   <storage><dir site="ciao">/data/da/Docs/ciaoweb/published/ciao40/live/</dir>...</storage>
-# but we have not converted everything yet
-#
 %storageloc=trial /data/da/Docs/ciaoweb/storage.ciao43.trial.xml
 
 ## ahelp section
@@ -339,10 +322,6 @@ googlessi=/chart/analytics.ssi
 #%outurl=trial http://icxc.harvard.edu/sds/chart_trial/
 %outurl=trial http://icxc1.cfa.harvard.edu/sds/chart_trial/
 
-%storage=live /data/da/Docs/chartweb/published/internal/live/
-%storage=test /data/da/Docs/chartweb/published/internal/test/
-%storage=trial /data/da/Docs/chartweb/published/internal/trial/
-
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao46.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao46.test.xml
 %storageloc=trial /data/da/Docs/ciaoweb/storage.ciao46.trial.xml
@@ -440,10 +419,6 @@ googlessi=/sherpa4.6/analytics.ssi
 %outurl=live http://cxc.harvard.edu/sherpa/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/sherpa4.6/
 %outurl=trial http://icxc1.cfa.harvard.edu/sds/sherpa_trial/
-
-%storage=live /data/da/Docs/sherpaweb/published/ciao46/live/
-%storage=test /data/da/Docs/sherpaweb/published/ciao46/test/
-%storage=trial /data/da/Docs/sherpaweb/published/ciao46/trial/
 
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao46.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao46.test.xml
@@ -552,10 +527,6 @@ googlessi=/chips4.6/analytics.ssi
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/chips4.6/
 %outurl=trial http://icxc1.cfa.harvard.edu/sds/chips_trial/
 
-%storage=live /data/da/Docs/chipsweb/published/ciao46/live/
-%storage=test /data/da/Docs/chipsweb/published/ciao46/test/
-%storage=trial /data/da/Docs/chipsweb/published/ciao46/trial/
-
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao46.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao46.test.xml
 %storageloc=trial /data/da/Docs/ciaoweb/storage.ciao46.trial.xml
@@ -652,11 +623,7 @@ headtitlepostfix=CALDB 4
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/caldb4/
 %outurl=trial http://icxc1.cfa.harvard.edu/sds/caldb4_trial/
 
-%storage=live /data/da/Docs/caldbweb/published/caldb4/live/
-%storage=test /data/da/Docs/caldbweb/published/caldb4/test/
-%storage=trial /data/da/Docs/caldbweb/published/caldb4/trial/
-
-# point to the CIAO ahelp file indexes
+# point to the CIAO 4.6 files
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao46.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao46.test.xml
 %storageloc=trial /data/da/Docs/ciaoweb/storage.ciao46.trial.xml
@@ -746,9 +713,9 @@ logotext=Chandra Source Catalog logo
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/csc1/
 %outurl=trial http://icxc1.cfa.harvard.edu/sds/csc_trial/
 
-%storage=live /data/da/Docs/cscweb/published/csc1/live/
-%storage=test /data/da/Docs/cscweb/published/csc1/test/
-%storage=trial /data/da/Docs/cscweb/published/csc1/trial/
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao46.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao46.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao46.trial.xml
 
 # where does the ahelp 'index' file live
 # use CIAO versions
@@ -759,10 +726,6 @@ logotext=Chandra Source Catalog logo
 %ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.6/
 %ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.6/
 %ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.6/
-
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao46.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao46.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao46.trial.xml
 
 -version
 
@@ -840,10 +803,7 @@ googlessi=/iris/analytics.ssi
 #%outurl=trial http://icxc.harvard.edu/sds/site_iris/
 %outurl=trial http://icxc1.cfa.harvard.edu/sds/site_iris/
 
-%storage=live /data/da/Docs/irisweb/published/iris/live/
-%storage=test /data/da/Docs/irisweb/published/iris/test/
-%storage=trial /data/da/Docs/irisweb/published/iris/trial/
-
+# TODO: do we need this for IRIS? make it optional?
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao43.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao43.test.xml
 %storageloc=trial /data/da/Docs/ciaoweb/storage.ciao43.trial.xml
@@ -928,23 +888,15 @@ googlessi=/obsvis/analytics.ssi
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/obsvis/
 %outurl=trial http://icxc1.cfa.harvard.edu/sds/obsvis_trial/
 
-%storage=live /data/da/Docs/obsvisweb/published/obsvis/live/
-%storage=test /data/da/Docs/obsvisweb/published/obsvis/test/
-%storage=trial /data/da/Docs/obsvisweb/published/obsvis/trial/
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao46.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao46.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao46.trial.xml
 
 # where does the ahelp 'index' file live
 # use CIAO versions
 %ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao46/live/ahelp/
 %ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao46/test/ahelp/
 %ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao46/test/ahelp/
-
-%storage=live /data/da/Docs/ciaoweb/published/ciao46/live/
-%storage=test /data/da/Docs/ciaoweb/published/ciao46/test/
-%storage=trial /data/da/Docs/ciaoweb/published/ciao46/trial/
-
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao46.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao46.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao46.trial.xml
 
 -version
 
@@ -1091,12 +1043,7 @@ number=Cycle 16
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/proposer/
 %outurl=trial http://cxc-dmz-prev.cfa.harvard.edu/proposer_dev/
 
-# both need to be defined
-%storage=live /data/cdo1/threads/storage/live/
-%storage=test /data/cdo1/threads/storage/test/
-%storage=trial /data/da/Docs/proposal_dev/published/cyc16/trial/
-
-# TODO: change to CIAO 4.6
+# TODO: change to CIAO 4.6?
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao45.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao45.test.xml
 %storageloc=trial /data/da/Docs/ciaoweb/storage.ciao45.trial.xml
@@ -1144,10 +1091,6 @@ number=Cycle 15
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/proposer/
 %outurl=trial http://cxc-dmz-prev.cfa.harvard.edu/proposer_dev/
 
-# both need to be defined
-%storage=live /data/cdo1/threads/storage/live/
-%storage=test /data/cdo1/threads/storage/test/
-%storage=trial /data/da/Docs/proposal_dev/published/cyc15/trial/
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao45.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao45.test.xml
 %storageloc=trial /data/da/Docs/ciaoweb/storage.ciao45.trial.xml
@@ -1195,10 +1138,6 @@ number=Cycle 14
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/proposer/
 %outurl=trial http://cxc-dmz-prev.cfa.harvard.edu/proposer_dev/
 
-# both need to be defined
-%storage=live /data/cdo1/threads/storage/live/
-%storage=test /data/cdo1/threads/storage/test/
-%storage=trial /data/da/Docs/proposal_dev/published/cyc14/trial/
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao44.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao44.test.xml
 %storageloc=trial /data/da/Docs/ciaoweb/storage.ciao44.trial.xml
@@ -1246,10 +1185,6 @@ number=Cycle 13
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/proposer/
 %outurl=trial http://cxc-dmz-prev.cfa.harvard.edu/proposer_dev/
 
-# both need to be defined
-%storage=live /data/cdo1/threads/storage/live/
-%storage=test /data/cdo1/threads/storage/test/
-%storage=trial /data/da/Docs/proposal_dev/published/cyc13/trial/
 %storageloc=live /data/da/Docs/ciaoweb/storage.ciao43.live.xml
 %storageloc=test /data/da/Docs/ciaoweb/storage.ciao43.test.xml
 %storageloc=trial /data/da/Docs/ciaoweb/storage.ciao43.trial.xml

@@ -149,8 +149,6 @@ my ( $version, $version_config, $dhead, $depth ) = check_location $site_config, 
 #
 $version = get_config_version $version_config, "version_string";
 
-#my $storage     = get_config_type $version_config, "storage", $type;
-
 my $outdir      = get_config_type $version_config, "outdir", $type;
 my $outurl      = get_config_type $version_config, "outurl", $type;
 my $stylesheets = get_config_type $version_config, "stylesheets", $type;
@@ -160,10 +158,6 @@ if ($localxslt) {
     $stylesheets = "$FindBin::Bin/";
 }
 
-# We did have the following, but that did not work, and I do not understand
-# why I did not bother with the get_config_type call anyway...
-#
-# my $ahelpindex  = "${storage}ahelp/ahelpindex.xml";
 my $ahelpindex  = get_config_type $version_config, "ahelpindexdir", $type;
 $ahelpindex .= "ahelpindex.xml";
 

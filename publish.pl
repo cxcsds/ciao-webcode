@@ -251,22 +251,14 @@ $mathjaxpath = get_config_type( $version_config, "mathjaxpath", $type )
   if check_config_exists( $version_config, "mathjaxpath" );
 
 # storage/published is optional [sort of, depends on the site]
-# Moving towards using storageloc but have not completed the move
 #
 my $storageloc = "";
 $storageloc = get_config_type( $version_config, "storageloc", $type )
   if check_config_exists( $version_config, "storageloc" );
 
-my $published_old = "";
-$published_old = get_config_type( $version_config, "storage", $type )
-  if check_config_exists( $version_config, "storage" );
-
 my $published = "";
 $published = get_storage_location($storageloc, $site)
   unless $storageloc eq "";
-
-die "Internal error: deprecated storage setting does not match value in storageloc file\n  storage (old)=${published_old}\n  storageloc  =${published}\n"
-  unless $published eq $published_old;
 
 # set up the ahelp index file based on the storeage location
 #
