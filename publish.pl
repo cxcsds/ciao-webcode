@@ -1509,7 +1509,13 @@ sub process_xml ($$) {
 
 	# what transformation do we apply?
 	#
-	if ( $root eq "navbar" ) {
+	if ( $root eq "xinclude" ) {
+	    # NOTE: use a root of xinclude since the threads support an include
+	    # tag so wanted to differentiate between them (include could be
+	    # retired and XInclude processing used instead in threads).
+	    print "Skipping xinclude file: $in\n";
+	    next;
+	} elsif ( $root eq "navbar" ) {
 	    xml2html_navbar $opts;
 	} elsif ( $root eq "page" ) {
 	    xml2html_basic 'page', 'page', $opts;

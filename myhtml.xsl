@@ -1384,4 +1384,13 @@
     <xsl:apply-templates/>
   </xsl:template> <!--* match=caption mode=figure *-->
 
+  <!--*
+         * Handle XInclude files when the whole text is included, not
+	 * a fragment. The idea is that the contents are within an
+	 * xinclude tag, so we can just process the contents.
+         * -->
+  <xsl:template match="xinclude">
+    <xsl:apply-templates/>
+  </xsl:template>
+
 </xsl:stylesheet>

@@ -816,12 +816,13 @@ or do we, as this case is already caught in add-parameters?
       *
       * see also the dummy tag (in helper.xsl)
       *
+      * NOTE/TODO:
+      *   this should probably be replaced by explicit use of
+      XInclude;
+      * e.g. see the xinclude handling in myhtml.xsl
       * -->
-
   <xsl:template match="include">
-
     <xsl:apply-templates select="document(concat($includeDir,.,'.xml'))" mode="include"/>
-
   </xsl:template>
 
   <!--*

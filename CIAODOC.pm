@@ -43,7 +43,7 @@ sub use_mathjax () { return 1; }
 my $parser = XML::LibXML->new()
   or die "Error: Unable to create XML::LibXML parser instance.\n";
 $parser->validation(0);
-# $parser->expand_xinclude(1); NOTE: don't actually use XInclude at the moment
+$parser->expand_xinclude(1); # NOTE: don't actually use XInclude at the moment
 
 my $xslt = XML::LibXSLT->new()
   or die "Error: Unable to create XML::LibXSLT instance.\n";
