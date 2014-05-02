@@ -1393,4 +1393,267 @@
     <xsl:apply-templates/>
   </xsl:template>
 
+  <!--*
+         * Handle section/subsections
+	 *
+	 * This used to be in threads, but has now been moved here so
+	 * that it can be used in any document.
+	 *
+	 *-->
+
+  <!--*
+      * Create the text from the sectionlist contents
+      * Sections are given a H2 title - ie not included
+      * in a list.
+      *
+      * see the amazing hack to find out when we're in the last
+      * section, and so do not draw a HR...
+      * It works like this: we define a parameter whose name matches
+      * the id of the last section. This is passed to the
+      * section template, which only prints out a HR if the id's
+      * don't match.
+      *
+      * We add numbers to the labels IF /*/text/@number=1
+      * the "thing" used to denote separation between the sections is controlled
+      * by /*/text/@separator: default = "bar", can be "none"
+      *
+      * See the note at the top of the file: the text/@number
+      * attribute should be removed and handled by @type attribute
+      * on the sectionlist
+      *-->
+
+  <xsl:template match="sectionlist">
+
+    <xsl:if test="boolean(@type)">
+      <xsl:message>
+ WARNING: sectionlist has type attribute set to <xsl:value-of select="@type"/>
+    WE NEED TO UPDATE THE CODE TO HANDLE THIS
+      </xsl:message>
+    </xsl:if>
+
+    <div class="sectionlist">
+      <!--* anchor linked to from the overview section *-->
+      <xsl:if test="boolean(/thread/text/overview)"><a name="start-thread"/></xsl:if>
+
+      <xsl:variable name="last" select="section[position()=count(../section)]/@id"/>
+      <xsl:call-template name="add-sections">
+	<xsl:with-param name="last-section-id" select="$last"/>
+      </xsl:call-template>
+    </div>
+
+  </xsl:template> <!--* match=sectionlist *-->
+
+  <!--*
+      * Find the label for each section: used by both the TOC
+      * and main part of the context.
+      *-->
+  <xsl:template name="find-section-label">
+    <xsl:if test="/*/text/@number=1"><xsl:value-of select="position()"/><xsl:text> - </xsl:text></xsl:if>
+    <xsl:value-of select="title"/>
+  </xsl:template>
+
+  <!--*
+      * Process all the sections: being updated to be generic rather
+      * than assume that the page is a thread.
+      *
+      * if threadlink attribute exists then we create a little
+      * section
+      *
+      * we only draw a horizontal bar after the last section
+      * if there's a summary. This is getting hacky/complicated
+      * and needs a redesign. It's really complicated since
+      * we only now draw HR's if
+      *   /*/text/@separator = "bar" (the default value),
+      *   it can also be "none"
+      *
+      * We add numbers to the labels IF /*/text/@number=1
+      *
+      *-->
+  <xsl:template name="add-sections">
+    <xsl:param name="last-section-id" select='""'/>
+
+    <xsl:for-each select="section">
+      <xsl:variable name="titlestring"><xsl:call-template name="find-section-label"/></xsl:variable>
+
+      <div class="section">
+      <xsl:choose>
+	<xsl:when test="boolean(@threadlink)">
+	  <xsl:call-template name="add-section-threadlink">
+	    <xsl:with-param name="threadlink" select="@threadlink"/>
+	    <xsl:with-param name="titlestring" select="$titlestring"/>
+	  </xsl:call-template>
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:if test="@id = ''">
+	    <xsl:message terminate="yes">
+ERROR: section tag has an empty id attribute.
+	    </xsl:message>
+	  </xsl:if>
+         
+	  <h2><a name="{@id}"><xsl:value-of select="$titlestring"/></a></h2>
+	  <xsl:apply-templates/>
+	  
+	</xsl:otherwise>
+      </xsl:choose>
+
+      <xsl:call-template name="add-section-separator">
+	<xsl:with-param name="titlestring" select="$titlestring"/>
+      </xsl:call-template>
+      
+    </div> <!--* class=section *-->
+    </xsl:for-each>
+    
+  </xsl:template> <!--* name=add-sections *-->
+
+  <!-- add in a section that links to the given thread -->
+  <xsl:template name="add-section-threadlink">
+    <xsl:param name="threadlink"/>
+    <xsl:param name="titlestring" select="''"/>
+
+    <xsl:variable name="linkThread" select="document(concat($threadDir,'/',$threadlink,'/thread.xml'))"/>
+    <xsl:variable name="linkTitle"><xsl:choose>
+      <xsl:when test="boolean($linkThread//thread/info/title/long)">
+	<xsl:value-of select="$linkThread//thread/info/title/long"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:value-of select="$linkThread//thread/info/title/short"/>
+      </xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
+    <!--* warning message *-->
+    <!--* TODO: dependency tracking should be used here -->
+    <xsl:if test="$linkTitle = ''">
+      <xsl:message>
+
+ WARNING: The "<xsl:value-of select="$titlestring"/>" section will be
+   missing the link text since the <xsl:value-of select="$threadlink"/> thread
+   has not been published.
+
+      </xsl:message>
+    </xsl:if>
+
+    <h2><a name="{$threadlink}"><xsl:value-of select="$titlestring"/></a></h2>
+    <p>
+      Please follow the
+      "<a href="{concat('../',@threadlink,'/')}"><xsl:value-of select="$linkTitle"/></a>"
+      thread.
+    </p>
+  </xsl:template> <!--* add-section-threadlink *-->
+
+  <!--*
+         * Are the sections separated by a horizontal rule/other
+	 * separator?
+	 *
+	 * Requires:
+	 *   the context node to have an id attribute.
+	 *-->
+  <xsl:template name="add-section-separator">
+    <xsl:param name="titlestring" select="''"/>
+
+    <xsl:choose>
+      <xsl:when test="not(/*/text/@separator) or /*/text/@separator = 'bar'">
+	<xsl:if test="@id != $last-section-id">
+	  <hr/>
+	</xsl:if>
+      </xsl:when>
+      <xsl:when test="/*/text/@separator = 'none'"/>
+      <xsl:otherwise>
+	<xsl:message terminate="yes">
+
+ ERROR: separator attribute of /*/text is set to
+          <xsl:value-of select="/*/text/@separator"/>
+        when it must either not be set or be either bar or none
+
+	</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+    </xsl:template> <!--* name=add-section-seaparator *-->
+
+  <!--*
+      * "fake" the numbered/alphabetical lists
+      *
+      * use the $type parameter to work out what sort of list
+      * and then calculate the position
+      * [we use a parameter rather than access the context node as
+      *  we can not guarantee what the context node is]
+      *
+      * Also handles a missing @type attribute (which does nothing)
+      *
+      *-->
+  <xsl:template name="position-to-label">
+    <xsl:param name="type" select="''"/>
+
+    <xsl:variable name="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="not($type) or $type = ''"/> <!--* do nothing *-->
+      <xsl:when test="$type = '1'">
+	<xsl:value-of select="concat(position(),'. ')"/>
+      </xsl:when>
+      <xsl:when test="$type = 'A'">
+	<xsl:if test="position() > string-length($alphabet)">
+	  <xsl:message terminate="yes">
+ ERROR: too many items in the list for @type=A
+	  </xsl:message>
+	</xsl:if>
+	<xsl:value-of select="concat(substring($alphabet,position(),1),'. ')"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:message terminate="yes">
+ ERROR:
+   unrecognised @type=<xsl:value-of select="$type"/>
+   in node=<xsl:value-of select="name()"/>
+   contents=
+<xsl:value-of select="."/>
+	</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template> <!--* name=position-to-label *-->
+
+  <!--*
+      * process a subsectionlist
+      * 
+      * Parameters:
+      * 
+      *-->
+  <xsl:template match="subsectionlist">
+
+    <!--*
+        * need to store as a variable since we have changed
+        * context node by the time we come to use it
+        *-->
+    <xsl:variable name="type" select="@type"/>
+
+    <div class="subsectionlist">
+
+      <!--* use a pull-style approach *-->
+      <xsl:for-each select="subsection">
+
+	<!--* process each subsection *-->
+	<div class="subsection">
+	  <h3><a name="{@id}"><xsl:call-template name="position-to-label">
+		<xsl:with-param name="type" select="$type"/>
+	      </xsl:call-template><xsl:value-of select="title"/></a></h3>
+	  <xsl:apply-templates/>
+      
+	  <!--* we only add a hr if we are NOT the last subsection
+	      (and hr's are allowed) *-->
+	  <xsl:if test="position() != last() and (not(/*/text/@separator) or /*/text/@separator = 'bar')">
+	    <xsl:call-template name="add-mid-sep"/>
+	  </xsl:if>
+      
+	</div> <!--* class=subsection *-->
+      </xsl:for-each>
+
+    </div> <!--* class=subsectionlist *-->
+
+  </xsl:template> <!--* match=subsectionlist *-->
+
+  <!--*
+      * add a separator between "sections"
+      *-->
+  <xsl:template name="add-mid-sep">
+    <hr class="midsep"/>
+  </xsl:template>
+
 </xsl:stylesheet>
