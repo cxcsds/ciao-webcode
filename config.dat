@@ -379,8 +379,8 @@ depth_offset=0
 +version ciao46
 number=4.6
 
-headtitlepostfix=CIAO 4.6 Sherpa v1
-texttitlepostfix=CIAO 4.6 Sherpa v1
+headtitlepostfix=CIAO 4.6 Sherpa v2
+texttitlepostfix=CIAO 4.6 Sherpa v2
 
 version_string=4.6
 
