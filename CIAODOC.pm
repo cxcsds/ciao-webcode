@@ -408,7 +408,7 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     my $filename = shift;
     $filename .= ".xml" unless $filename =~ /\.xml$/;
     dbg " - about to read XML file '$filename'";
-    $parser->parse_file ($filename)
+    $parser->parse_file($filename)
       or die "ERROR: unable to parse XML file '$filename'\n";
   }
 
@@ -419,7 +419,7 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     my $str = shift;
     my $firstline = (split(/\n/,$str))[0];
     dbg " - about to parse XML chunk, first line='$firstline'";
-    $parser->parse_string ($str)
+    $parser->parse_string($str)
       or die "ERROR: unable to parse XML string, start='$firstline'\n";
   }
 
