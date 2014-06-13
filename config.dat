@@ -635,6 +635,14 @@ headtitlepostfix=CALDB 4
 %searchssi=test /caldb4/caldb_search.ssi
 %searchssi=trial /sds/caldb4_trial/caldb_search.ssi
 
+# MathJax location; it should include any configuration variables
+# We use the CIAO 4.6 version here even though CALDB releases are decoupled from
+# the CIAO one, since I do not want to have multiple copies of MathJax lying
+# around.
+%mathjaxpath=live /ciao4.6/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=test /ciao4.6/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+
 %stylesheets=live /data/da/Docs/web4/caldb/
 %stylesheets=test /data/da/Docs/web4/caldb/
 %stylesheets=trial /data/da/Docs/web4/devel/
@@ -732,6 +740,14 @@ logotext=Chandra Source Catalog logo
 %searchssi=live /csc1/csc_search.ssi
 %searchssi=test /csc1/csc_search.ssi
 %searchssi=trial /sds/csc_trial/csc_search.ssi
+
+# MathJax location; it should include any configuration variables
+# We use the CIAO 4.6 version here even though CSC releases are decoupled from
+# the CIAO one, since I do not want to have multiple copies of MathJax lying
+# around.
+%mathjaxpath=live /ciao4.6/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=test /ciao4.6/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
 
 %stylesheets=live /data/da/Docs/web4/ciao46/
 %stylesheets=test /data/da/Docs/web4/ciao46/
@@ -1076,6 +1092,14 @@ number=Cycle 16
 %searchssi=live /incl/search.html
 %searchssi=test /incl/search.html
 %searchssi=trial /incl/search.html
+
+# MathJax location; it should include any configuration variables
+# We use the CIAO 4.6 version here even though proposal releases are decoupled from
+# the CIAO one, since I do not want to have multiple copies of MathJax lying
+# around.
+%mathjaxpath=live /ciao4.6/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=test /ciao4.6/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
 
 # TODO: change to CIAO 4.6
 %stylesheets=live /data/da/Docs/web4/ciao45/
