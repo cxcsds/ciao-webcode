@@ -625,7 +625,9 @@ sub count_slash_in_string ($) {
 #
 # Order is not preserved.
 #
-sub merge_filenames (@$) {
+# This prototype is obviously not correct, so comment out
+#sub merge_filenames (@$) {
+sub merge_filenames {
   my @exp = shift;
   my $rval = shift;
 
