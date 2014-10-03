@@ -1054,6 +1054,11 @@ logotext=Science Data Systems
 
 +site pog
 
+# TODO:
+#   are all the versions useful here since they all use the
+#   same directory: is it only to change the version header?
+#
+
 group=cxcweb_cdo
 # TRIAL group=cxcweb_ciao
 
@@ -1069,6 +1074,67 @@ prefix=/data/cdo1/threads
 # depth calculation
 #
 depth_offset=1
+
++version cyc17
+
+number=Cycle 17
+
+# main CSS location
+%css=live /proposer/threads/proposer.css
+%css=test /proposer/threads/proposer.css
+%css=trial /proposer_dev/threads/proposer.css
+
+%cssprint=live /proposer/threads/proposer.print.css
+%cssprint=test /proposer/threads/proposer.print.css
+%cssprint=trial /proposer_dev/threads/proposer.print.css
+
+# favicon location
+%favicon=live /ciao/favicon.ico
+%favicon=test /ciao/favicon.ico
+%favicon=trial /ciao/favicon.ico
+
+## location of the search ssi
+%searchssi=live /incl/search.html
+%searchssi=test /incl/search.html
+%searchssi=trial /incl/search.html
+
+# MathJax location; it should include any configuration variables
+# We use the CIAO 4.6 version here even though proposal releases are decoupled from
+# the CIAO one, since I do not want to have multiple copies of MathJax lying
+# around.
+%mathjaxpath=live /ciao4.6/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=test /ciao4.6/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+
+%stylesheets=live /data/da/Docs/web4/ciao46/
+%stylesheets=test /data/da/Docs/web4/ciao46/
+%stylesheets=trial /data/da/Docs/web4/devel/
+
+%outdir=live /proj/web-cxc-dmz/htdocs/proposer/
+%outdir=test /proj/web-cxc-dmz-prev/htdocs/proposer/
+%outdir=trial /proj/web-cxc-prev/htdocs/proposer_dev/
+
+# what is the test URL?
+%outurl=live http://cxc.harvard.edu/proposer/
+%outurl=test http://cxc-dmz-prev.cfa.harvard.edu/proposer/
+%outurl=trial http://cxc-dmz-prev.cfa.harvard.edu/proposer_dev/
+
+# both need to be defined
+%storage=live /data/cdo1/threads/storage/live/
+%storage=test /data/cdo1/threads/storage/test/
+%storage=trial /data/da/Docs/proposal_dev/published/cyc17/trial/
+
+# TODO: change to CIAO 4.6
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao46.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao46.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao46.trial.xml
+
+# access ahelp files
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao46/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao46/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao46/trial/ahelp/
+
+-version
 
 +version cyc16
 
