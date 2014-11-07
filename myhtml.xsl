@@ -1498,6 +1498,7 @@ ERROR: section tag has an empty id attribute.
 
       <xsl:call-template name="add-section-separator">
 	<xsl:with-param name="titlestring" select="$titlestring"/>
+	<xsl:with-param name="last-section-id" select="$last-section-id"/>
       </xsl:call-template>
       
     </div> <!--* class=section *-->
@@ -1548,6 +1549,8 @@ ERROR: section tag has an empty id attribute.
 	 *   the context node to have an id attribute.
 	 *-->
   <xsl:template name="add-section-separator">
+    <xsl:param name="last-section-id" select='""'/>
+
     <xsl:param name="titlestring" select="''"/>
 
     <xsl:choose>
