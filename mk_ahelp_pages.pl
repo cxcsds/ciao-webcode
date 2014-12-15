@@ -1,4 +1,4 @@
-#!/data/da/Docs/local/perl/bin/perl -w
+#!/usr/bin/env perl -w
 #
 # Usage:
 #   mk_ahelp_pages.pl [name1 ... namen]
