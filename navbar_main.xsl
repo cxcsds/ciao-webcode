@@ -170,6 +170,29 @@
 	  <span class="{$classname}"><xsl:value-of select="title"/></span>
 	</xsl:otherwise>
       </xsl:choose>
+
+      <!-- add in a new/updated logo if type=new/updated attribute exists -->
+      <xsl:choose>
+	  <xsl:when test="boolean(@type) = false()"/>
+	  <xsl:when test="@type = 'new'">
+	    <xsl:call-template name="add-image">
+	      <xsl:with-param name="src"   select="'imgs/new.gif'"/>
+	      <xsl:with-param name="alt"   select="'New'"/>
+	    </xsl:call-template>
+	  </xsl:when>
+	  <xsl:when test="@type = 'updated'">
+	    <xsl:call-template name="add-image">
+	      <xsl:with-param name="src"   select="'imgs/updated.gif'"/>
+	      <xsl:with-param name="alt"   select="'Updated'"/>
+	    </xsl:call-template>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:message terminate="yes">
+ ERROR: section tag found in navbar with unrecognised type attribute
+   of type=<xsl:value-of select="@type"/>
+	    </xsl:message>
+	  </xsl:otherwise>
+      </xsl:choose>
     </dt>
 	
     <!--* any contents? *-->
