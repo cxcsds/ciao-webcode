@@ -21,6 +21,11 @@
 #     Replace the %stylesheets directive in the config file with
 #     the location of this script (for testing purposes)
 #
+#     --ignore-missing
+#     Ignore missing links (i.e. let the page publish with a warning
+#     rather than error out). The contents of the link may contain
+#     place-holder text.
+#
 #   by default will not create HTML files if they already exist
 #   and are newer than the XML file (also checks for other
 #   associated files and the created PDF files).
@@ -128,6 +133,12 @@ The --verbose option is useful for testing/debugging the code.
 The --localxslt option overides the \%stylesheets directive in the
 config file to use the location of $progname instead.
 
+The --ignore-missing option is used to avoid circular dependencies
+when publishing pages: i.e. if page a needs info from page b, but
+page b needs info from page a. This is experimental and should be
+carefully, and rarely, used. One consequence is that the output may
+contain place-holder text.
+
 EOD
 
 # this will be mangled later
@@ -138,6 +149,7 @@ my $type = "test";
 my $force = 0;
 my $forceforce = 0;
 my $localxslt = 0;
+my $ignoremissinglink = 0;
 die $usage unless
   GetOptions
   'config=s' => \$configfile,
@@ -145,9 +157,12 @@ die $usage unless
   'force!'   => \$force,
   'forceforce!'   => \$forceforce,
   'localxslt!' => \$localxslt,
+  'ignore-missing!' => \$ignoremissinglink,
   'verbose!' => \$verbose;
 
 $force = 1 if $forceforce;
+
+$ignoremissinglink = $ignoremissinglink ? "yes" : "no";
 
 # what OS are we running?
 #
@@ -200,6 +215,10 @@ my $favicon     = get_config_type $version_config, "favicon", $type;
 if ($localxslt) {
     dbg "Overriding stylesheets setting: from $stylesheets to $FindBin::Bin/";
     $stylesheets = "$FindBin::Bin/";
+}
+
+if ($ignoremissinglink) {
+    dbg "Stylesheets will not error out if missing links/info are found.";
 }
 
 # get the site version
@@ -323,6 +342,7 @@ dbg "  uname=$uname";
 dbg "  dname=$dname";
 dbg "  dhead=$dhead";
 dbg "  depth=$depth";
+dbg "  ignoremissinglink=$ignoremissinglink";
 dbg "  outdir=$outdir";
 dbg "  outurl=$outurl";
 dbg "  published=$published";
@@ -696,6 +716,9 @@ sub basic_params ($) {
 	    texttitlepostfix => $texttitlepostfix,
 	    
 	    storageloc => $$opts{storageloc},
+
+	    ignoremissinglink => $ignoremissinglink,
+
 
 	   };
 

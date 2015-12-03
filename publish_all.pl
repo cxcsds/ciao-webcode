@@ -12,6 +12,9 @@
 #     --localxslt
 #     --verbose
 #
+#     There is *no* suppot for --ignore-missing at the moement as it is
+#     meant to be done on a file by file case; this can be changed.
+#
 # Aim:
 #  This script provides a way to publish all the files in the current
 #  directory and in any subdirectories. It essentially just finds all

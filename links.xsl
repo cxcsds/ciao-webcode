@@ -715,6 +715,13 @@
          since it's the same in both forms -->
     <xsl:variable name="ndict" select="count($dictionary-contents//entries)"/>
     <xsl:choose>
+      <xsl:when test="$ndict = 0 and $ignoremissinglink='yes'">
+	<xsl:message terminate="no">
+ WARNING: the Dictionary (site=<xsl:value-of select="$sitevalue"/>) has not been published yet, so I can not
+  check whether the link for id=<xsl:value-of select="$id"/> is valid!
+	</xsl:message>
+      </xsl:when>
+
       <xsl:when test="$ndict = 0">
 	<xsl:message terminate="yes">
  ERROR: the Dictionary (site=<xsl:value-of select="$sitevalue"/>) has not been published yet, so I can not
@@ -2178,10 +2185,18 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:when test="count($nodeset//title/short) = 1">
 	<xsl:value-of select="$nodeset//title/short"/>
       </xsl:when>
+      <xsl:when test="$ignoremissinglink = 'yes'">
+	<xsl:message terminate="no">
+ WARNING: unable to find a title (long or short) in a thread
+   thread={unfortunately I can not tell you which thread}
+   Using placeholder text (thread title); re-publish both
+        </xsl:message>
+	thread title
+      </xsl:when>
       <xsl:otherwise>
 	<xsl:message terminate="yes">
  ERROR: unable to find a title (long or short) in the thread
-   thread=<xsl:value-of select="$thread"/>
+   thread={unfortunately I can not tell you which thread}
         </xsl:message>
       </xsl:otherwise>
     </xsl:choose>
