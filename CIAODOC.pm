@@ -269,7 +269,7 @@ sub mymkdir ($) {
     my @dirs = split "/", $dname;
     my $dhead = "";
 
-quit    foreach my $d ( @dirs ) {
+    foreach my $d ( @dirs ) {
 	 $dhead .= $d;
 	 unless ( $dhead eq "" or -d $dhead ) {
 	     call_mkdir $dhead;
