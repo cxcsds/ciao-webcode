@@ -226,6 +226,10 @@
       * of the navbar to hide the contents from the ht://Dig search
       * engine used by the CXC (since this navbar contains all the
       * ahelp names then it messes up the search)
+      *
+      * This is different to the main navbar page, since it retains
+      * the pre-CIAO 4.8 approach of using a dl to organise the
+      * contents (CIAO 4.8 main navbars now use a list)
       *-->
   <xsl:template name="make-navbar">
 
@@ -460,8 +464,9 @@
 
   <!--*
       * create the "quick links" section of the navbar
-      * - try to match the "look" of the navbars in CIAO 3.0
       * - add a link to the main site "home page"
+      * - this no-longer looks like the main navbar (as of CIAO 4.8)
+      *   since that uses a ul rather than li
       *-->
   <xsl:template name="add-navbar-qlinks">
 

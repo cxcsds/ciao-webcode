@@ -80,12 +80,16 @@
         <xsl:apply-templates select="//links" mode="create"/>
       </xsl:if>
 
-      <!--* create the various sections *-->
-      <dl>
+      <!--*
+          * create the various sections
+	  * Note: use an id rather than a class mainly to support
+	  *       overriding CSS rules from the dt approach.
+	  *-->
+      <ul id="navlist">
 	<xsl:apply-templates select="//section" mode="create">
 	  <xsl:with-param name="matchid" select="$matchid"/>
 	</xsl:apply-templates>
-      </dl>
+      </ul>
 
       <!--*
 	  * anything else? (site-specific)
@@ -155,7 +159,7 @@
 	<xsl:otherwise>heading</xsl:otherwise>
       </xsl:choose></xsl:variable>
 
-    <dt>
+    <li>
       <xsl:choose>
 	<xsl:when test="boolean(@link)">
 	  <!--* section has a link attribute *-->
@@ -198,11 +202,19 @@
 	    </xsl:message>
 	  </xsl:otherwise>
       </xsl:choose>
-    </dt>
 	
-    <!--* any contents? *-->
-    <xsl:apply-templates select="list" mode="navbar"/>
-    <!--* <br clear="all"/> *-->
+      <!--*
+	  * any contents?
+	  * The primary contents is expected to be a list, but there
+          * is also the block element, added for CIAO 4.8, which is
+          * a bit of a hack. Perhaps the contents should be processed
+          * in the order they are specified, but for now use block then
+          * list. 
+	  *-->
+      <xsl:apply-templates select="block" mode="navbar"/>
+      <xsl:apply-templates select="list" mode="navbar"/>
+
+    </li>
 
   </xsl:template> <!--* match=section mode="create" *-->
 
@@ -293,19 +305,33 @@
       * we use a mode to disambiguate ourselves from the
       * standard list-handling code in myhtml.xsl so that
       * lists as elements of this main list will be processed as
-      * a list, and not as a section list in the navbar
+      * a list, and not as a section list in the navbar.
+      * As of CIAO 4.8 this is not needed as much, but I
+      * am not going to redesign things just yet.
       *
       * css code is made available via add-htmlhead (helper.xsl)
       *-->
   <xsl:template match="list" mode="navbar">
-    <xsl:apply-templates mode="navbar"/>
+    <span class="hassubmenu">➤</span>
+    <ul>
+      <xsl:apply-templates mode="navbar"/>
+    </ul>
   </xsl:template> <!--* match=list mode=navbar *-->
 
   <xsl:template match="li" mode="navbar">
-    <dd>
+    <li>
       <xsl:apply-templates/>
-    </dd>
+    </li>
   </xsl:template> <!--* match=li mode=navbar *-->
+
+  <!--*
+      * A hack to pass through "anything"; intended for the
+      * CIAO social-media section
+      *-->
+  <xsl:template match="block" mode="navbar">
+    <br/>
+    <xsl:apply-templates/>
+  </xsl:template> <!--* match=block mode=navbar *-->
 
   <xsl:template name="add-logo-section">
     <xsl:choose>
