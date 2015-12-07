@@ -1,4 +1,4 @@
-#!/data/da/Docs/local/perl/bin/perl -w
+#!/usr/bin/env perl -w
 #
 # Usage:
 #   mk_ahelp_pages.pl [name1 ... namen]
@@ -221,14 +221,25 @@ if ( $#ARGV == -1 ) {
 
   # We only check on the file name, not the path, for these files.
   # This could lead to problems but let's not bother with that for
-  # now.
+  # now. We do need the full path to the data files, so have to
+  # "add that back in" *ONLY IF* there is no path component to the
+  # input name.
   #
-  my %check_names = map { my $f = (split "/",$_)[-1]; ($f,1); } @allowed_names;
-  foreach my $name (@names) {
+  my %check_names = map { my $f = (split "/",$_)[-1]; ($f,$_); } @allowed_names;
+  @names = ();
+  foreach my $name (@ARGV) {
     my $t = (split "/", $name)[-1];
     die "Error: file not known for site=$site: $t\n"
       unless exists $check_names{$t};
+    if (index($name, "/") == -1) {
+      push @names, $check_names{$t};
+    } else {
+      push @names, $name;
+    }
   }
+
+  dbg "Converted input file names to";
+  dbg "@names";
 }
 @names = map { s/\.xml$//; $_; }
   grep { !/onapplication/ } @names;
@@ -263,6 +274,7 @@ dbg " ---";
 # when we changed to picking up files from the ahelpfiles directory
 # rather than the local directory)
 #
+dbg "Reading in ahelp index from $ahelpindex_dat";
 my $html_mapping = read_ahelpindex $ahelpindex_dat;
 foreach my $fullname ( @names ) {
     my $name = (split("/",$fullname))[-1];
@@ -452,12 +464,14 @@ sub read_ahelpindex ($) {
 #   @filelist = find_ahelpfiles $site, $ahelpindex_xml;
 #
 # Returns a reference to a list of all the ahelp files to process
-# for the given site.
+# for the given site. This MUST include the full path to the
+# file.
 #
 sub find_ahelpfiles ($$) {
   my $site    = shift;
   my $xmlfile = shift;
 
+  dbg "Reading ahelp file info from: $xmlfile";
   my $dom = read_xml_file $xmlfile;
   my $root = $dom->documentElement();
   my @out;

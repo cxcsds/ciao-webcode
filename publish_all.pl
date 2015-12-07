@@ -1,4 +1,4 @@
-#!/data/da/Docs/local/perl/bin/perl -w
+#!/usr/bin/env perl -w
 #
 # Usage:
 #  publish_all.pl
@@ -11,6 +11,9 @@
 #     --yes
 #     --localxslt
 #     --verbose
+#
+#     There is *no* suppot for --ignore-missing at the moement as it is
+#     meant to be done on a file by file case; this can be changed.
 #
 # Aim:
 #  This script provides a way to publish all the files in the current
@@ -69,6 +72,7 @@ my @prefixes =
   (
    "/data/da/Docs/irisweb/iris",
    "/data/da/Docs/cscweb/csc1",
+   "/data/da/Docs/cscweb/csc2",
    "/data/da/Docs/chartweb/internal",
    "/data/da/Docs/obsvisweb/website",
 
@@ -86,6 +90,12 @@ my @prefixes =
    "/data/da/Docs/ciaoweb/ciao46",
    "/data/da/Docs/sherpaweb/ciao46",
    "/data/da/Docs/chipsweb/ciao46",
+   "/data/da/Docs/ciaoweb/ciao47",
+   "/data/da/Docs/sherpaweb/ciao47",
+   "/data/da/Docs/chipsweb/ciao47",
+   "/data/da/Docs/ciaoweb/ciao48",
+   "/data/da/Docs/sherpaweb/ciao48",
+   "/data/da/Docs/chipsweb/ciao48",
 
    "/data/da/Docs/icxcweb/sds",
 

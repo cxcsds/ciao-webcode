@@ -420,7 +420,25 @@
     <xsl:call-template name="start-tag"/>body<xsl:call-template name="end-tag"/>  <!--// open html body //-->
   </xsl:template> <!--* add-htmlhead *-->
 
-  <!--* test out trying to allow CSS in header blocks, hence the mode=header -->
+  <!--*
+      * test out trying to allow CSS in header blocks, hence the mode=header
+      *
+      * there are two forms: bare css tag, where the contents are processed,
+      * or an empty css block with a src tag. The latter case should be
+      * updated to support optional media and title attributes
+    -->
+  <xsl:template match="css[@src]" mode="header">
+    <xsl:if test="normalize-space(.)!=''">
+      <xsl:message terminate="yes">
+ ERROR: css tag with src attribute is not empty:
+   tag=<xsl:value-of select="@src"/>
+   contents=<xsl:value-of select="."/>
+      </xsl:message>
+    </xsl:if>
+	
+    <link rel="stylesheet" href="{@src}"/>
+  </xsl:template>
+
   <xsl:template match="css" mode="header">
     <style type="text/css">
       <xsl:apply-templates/>

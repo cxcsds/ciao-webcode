@@ -12,6 +12,13 @@
     *  . type="test"|"live"
     *    whether to create the test or "real" version
     *
+    *  . ignoremissinglink="yes"|"no" ("no" is the default)
+    *    by default the code will complain and error out if *some* links
+    *    are missing (e.g. if there is an invalid dictionary link). However,
+    *    this can lead to circular dependencies, so set this to yes to
+    *    turn it into a warning rather than an error. Very likely
+    *    incomplete - i.e. not added to all places it should be
+    *
     *  . lastmod=string to use to say when page was last modified
     *  . lastmodiso=string to use to say when page was last modified
     *               in format YYYY-MM-DD
@@ -120,6 +127,8 @@
 
   <xsl:param name="headtitlepostfix" select='""'/>
   <xsl:param name="texttitlepostfix" select='""'/>
+
+  <xsl:param name="ignoremissinglink" select='"no"'/>
 
   <!--* load in the ahelp index file *-->
   <xsl:param name="ahelpindex"  select='""'/>

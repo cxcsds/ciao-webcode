@@ -397,29 +397,6 @@
 
   </xsl:template> <!--* name-add-parameters *-->
 
-  <!--*
-      * this is called from the "Table of contents" part of the thread template 
-      * We wrap each element in a link - checking to see if we have
-      * to parse a subsectionlist
-      *
-      * Prior to CIAO 3.0 the threadlink attribute used to link directly to the
-      * thread. We now include a section in the main text just to make things
-      * clearer.
-      *
-      * many "id" nodes are created automatically - you can
-      * add extra ones into a document using the id tag
-      *
-      * We add numbers to the labels IF /thread/text/@number=1
-      * THIS SHOULD PROBABLY BE DEPRECATED AND ADDED TO THE
-      * sectionlist TAG AS A TYPE ATTRIBUTE (as done for
-      * subsectionlist), unless there's some reason why
-      * we can not do it?
-      *-->
-  <xsl:template name="find-section-label">
-    <xsl:if test="/thread/text/@number=1"><xsl:value-of select="position()"/><xsl:text> - </xsl:text></xsl:if>
-    <xsl:value-of select="title"/>
-  </xsl:template> <!--* name=find-section-label *-->
-
   <!--* what use is @threadlink here over id? *-->
   <xsl:template match="section" mode="toc">
     <xsl:param name="pageName" select="'index.html'"/>
@@ -447,152 +424,6 @@
     </li>
 
   </xsl:template> <!--* match=section mode=toc *-->
-
-  <!--*
-      * Create the text from the sectionlist contents
-      * Sections are given a H2 title - ie not included
-      * in a list. As of CIAO 3.1 (v1.28 of thread_common.xsl)
-      * we no longer use a UL to process sub-sections AND
-      * we add a div around elements
-      *
-      * see the amazing hack to find out when we're in the last
-      * section, and so do not draw a HR...
-      * It works like this: we define a parameter whose name matches
-      * the id of the last section. This is passed to the
-      * section template, which only prints out a HR if the id's
-      * don't match.
-      *
-      * We add numbers to the labels IF /thread/text/@number=1
-      * the "thing" used to denote separation between the sections is controlled
-      * by /thread/text/@separator: default = "bar", can be "none"
-      *
-      * See the note at the top of the file: the text/@number
-      * attribute should be removed and handled by @type attribute
-      * on the sectionlist
-      *-->
-
-  <xsl:template match="sectionlist">
-
-    <xsl:if test="boolean(@type)">
-      <xsl:message>
- WARNING: sectionlist has type attribute set to <xsl:value-of select="@type"/>
-    WE NEED TO UPDATE THE CODE TO HANDLE THIS
-      </xsl:message>
-    </xsl:if>
-
-    <div class="sectionlist">
-      <!--* anchor linked to from the overview section *-->
-      <xsl:if test="boolean(/thread/text/overview)"><a name="start-thread"/></xsl:if>
-
-      <xsl:variable name="last" select="section[position()=count(../section)]/@id"/>
-      <xsl:call-template name="add-sections">
-	<xsl:with-param name="last-section-id" select="$last"/>
-      </xsl:call-template>
-    </div>
-
-  </xsl:template> <!--* match=sectionlist *-->
-
-  <!--*
-      * if threadlink attribute exists then we create a little
-      * section
-      *
-      * we only draw a horizontal bar after the last section
-      * if there's a summary. This is getting hacky/complicated
-      * and needs a redesign. It's really complicated since
-      * we only now draw HR's if
-      *   /thread/text/@separator = "bar" (the default value),
-      *   it can also be "none"
-      *
-      * We add numbers to the labels IF /thread/text/@number=1
-      *
-      *-->
-  <xsl:template name="add-sections">
-    <xsl:param name="last-section-id" select='""'/>
-
-    <!--*
-        * need to store as a variable since we have changed
-        * context node by the time we come to use it
-        *
-        * DOES THIS WORK
-        *
-        *-->
-<!--*
-    <xsl:variable name="type" select="@type"/>
-*-->
-
-    <xsl:for-each select="section">
-      <xsl:variable name="titlestring"><xsl:call-template name="find-section-label"/></xsl:variable>
-
-      <div class="section">
-      <xsl:choose>
-	<xsl:when test="boolean(@threadlink)">
-	  <xsl:variable name="linkThread" select="document(concat($threadDir,'/',@threadlink,'/thread.xml'))"/>
-	  <xsl:variable name="linkTitle"><xsl:choose>
-	      <xsl:when test="boolean($linkThread//thread/info/title/long)">
-		<xsl:value-of select="$linkThread//thread/info/title/long"/>
-	      </xsl:when>
-	      <xsl:otherwise>
-		<xsl:value-of select="$linkThread//thread/info/title/short"/>
-	      </xsl:otherwise>
-	    </xsl:choose></xsl:variable>
-
-	  <!--* warning message *-->
-	  <xsl:if test="$linkTitle = ''">
-	    <xsl:message>
-
- WARNING: The "<xsl:value-of select="$titlestring"/>" section will be
-   missing the link text since the <xsl:value-of select="@threadlink"/> thread
-   has not been published.
-
-	    </xsl:message>
-	  </xsl:if>
-
-	  <h2><a name="{@threadlink}"><xsl:value-of select="$titlestring"/></a></h2>
-	  <p>
-	    Please follow the
-	    "<a href="{concat('../',@threadlink,'/')}"><xsl:value-of select="$linkTitle"/></a>"
-	    thread.
-	  </p>
-
-	</xsl:when>
-
-
-	<xsl:otherwise>
-	  
-	  <xsl:if test="@id = ''">
-	    <xsl:message terminate="yes">
-ERROR: section tag has an empty id attribute.
-	    </xsl:message>
-	  </xsl:if>
-         
-	  <h2><a name="{@id}"><xsl:value-of select="$titlestring"/></a></h2>
-	  <xsl:apply-templates/>
-	  
-	</xsl:otherwise>
-      </xsl:choose>
-
-      <!--* do we "separate" the sections? (note: really should enforce atribute values with DTD not here) *-->
-      <xsl:choose>
-	<xsl:when test="not(/thread/text/@separator) or /thread/text/@separator = 'bar'">
-	  <xsl:if test="@id != $last-section-id">
-	    <hr/>
-	  </xsl:if>
-	</xsl:when>
-	<xsl:when test="/thread/text/@separator = 'none'"/>
-	<xsl:otherwise>
-	  <xsl:message terminate="yes">
-
- ERROR: separator attribute of /thread/text is set to
-          <xsl:value-of select="/thread/text/@separator"/>
-        when it must eiher not be set or be either bar or none
-
-	  </xsl:message>
-	</xsl:otherwise>
-      </xsl:choose>
-      </div> <!--* class=section *-->
-    </xsl:for-each>
-    
-  </xsl:template> <!--* name=add-sections *-->
 
   <!--*
       * ensure that no title blocks ever cause any direct output
@@ -638,90 +469,6 @@ ERROR: section tag has an empty id attribute.
       <a href="{$pageName}#{@id}"><xsl:value-of select="title"/></a>
     </li>
   </xsl:template> <!--* subsection mode=toc *-->
-
-  <!--*
-      * "fake" the numbered/alphabetical lists
-      *
-      * use the $type parameter to work out what sort of list
-      * and then calculate the position
-      * [we use a parameter rather than access the context node as
-      *  we can not guarantee what the context node is]
-      *
-      * Also handles a missing @type attribute (which does nothing)
-      *
-      *-->
-  <xsl:template name="position-to-label">
-    <xsl:param name="type" select="''"/>
-
-    <xsl:variable name="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
-
-    <xsl:choose>
-      <xsl:when test="not($type) or $type = ''"/> <!--* do nothing *-->
-      <xsl:when test="$type = '1'">
-	<xsl:value-of select="concat(position(),'. ')"/>
-      </xsl:when>
-      <xsl:when test="$type = 'A'">
-	<xsl:if test="position() > string-length($alphabet)">
-	  <xsl:message terminate="yes">
- ERROR: too many items in the list for @type=A
-	  </xsl:message>
-	</xsl:if>
-	<xsl:value-of select="concat(substring($alphabet,position(),1),'. ')"/>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:message terminate="yes">
- ERROR:
-   unrecognised @type=<xsl:value-of select="$type"/>
-   in node=<xsl:value-of select="name()"/>
-   contents=
-<xsl:value-of select="."/>
-	</xsl:message>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template> <!--* name=position-to-label *-->
-
-  <!--*
-      * process a subsectionlist
-      * - we draw HR's after each list item (except the last one)
-      * - as of CIAO 3.1 (v1.28 of thread_common.xsl) we do not use a
-      *   UL/LI for the subsectionlist, and we surround things in div
-      *   blocks
-      * 
-      * Parameters:
-      * 
-      *-->
-  <xsl:template match="subsectionlist">
-
-    <!--*
-        * need to store as a variable since we have changed
-        * context node by the time we come to use it
-        *-->
-    <xsl:variable name="type" select="@type"/>
-
-    <div class="subsectionlist">
-
-      <!--* use a pull-style approach *-->
-      <xsl:for-each select="subsection">
-
-	<!--* process each subsection *-->
-	<div class="subsection">
-	  <h3><a name="{@id}"><xsl:call-template name="position-to-label">
-		<xsl:with-param name="type" select="$type"/>
-	      </xsl:call-template><xsl:value-of select="title"/></a></h3>
-	  <xsl:apply-templates/>
-      
-	  <!--* we only add a hr if we are NOT the last subsection (and hr's are allowed) *-->
-	  <xsl:if test="(not(/thread/text/@separator) or /thread/text/@separator = 'bar')
-	    and (position() != last())">
-	    <xsl:call-template name="add-mid-sep"/>
-	  </xsl:if>
-      
-	</div> <!--* class=subsection *-->
-      </xsl:for-each>
-
-    </div> <!--* class=subsectionlist *-->
-
-  </xsl:template> <!--* match=subsectionlist *-->
 
   <!--*
       * handle the history block
@@ -820,12 +567,13 @@ or do we, as this case is already caught in add-parameters?
       *
       * see also the dummy tag (in helper.xsl)
       *
+      * NOTE/TODO:
+      *   this should probably be replaced by explicit use of
+      XInclude;
+      * e.g. see the xinclude handling in myhtml.xsl
       * -->
-
   <xsl:template match="include">
-
     <xsl:apply-templates select="document(concat($includeDir,.,'.xml'))" mode="include"/>
-
   </xsl:template>
 
   <!--*
@@ -910,13 +658,6 @@ or do we, as this case is already caught in add-parameters?
       </xsl:call-template>
     </div>
   </xsl:template> <!--* name=add-thread-qlinks-basic *-->
-
-  <!--*
-      * add a separator between "sections"
-      *-->
-  <xsl:template name="add-mid-sep">
-    <hr class="midsep"/>
-  </xsl:template>
 
   <!--*** handle parameters ***-->
 
