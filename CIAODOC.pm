@@ -1054,6 +1054,15 @@ sub get_filehash ($) {
   my $file = shift;
   my $os = get_ostype;
   my $hash;
+
+  # This is a stop gap whilst tracking down why ahelp processing
+  # leads to attempts to access a releasenotes-related revdep
+  # file (Dec 7 2015), but it may be left in as a general check.
+  unless ( -e $file ) {
+      print "WARNING: file does not exist - no md5 sum: ${file}\n";
+      return undef;
+  }
+
   # do not want to rely on an external module for this
   if ($os eq "osx") {
     $hash = `/sbin/md5 $file`;
@@ -1349,8 +1358,8 @@ sub check_ahelp_site_valid ($) {
   #
   # A very simple locking scheme is used - a file called
   # <revdepfilename>.revdep.lock - is created to ensure
-  # that multiple users opublishing at the same time do
-  # not clobber each others chanegs. This is fragile
+  # that multiple users publishing at the same time do
+  # not clobber each others changes. This is fragile
   # - e.g. leaving stale lock files around - and needs
   # some real-world experience to see if it is a sensible
   # solution. An alternative would be to check the md5sum
