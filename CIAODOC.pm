@@ -269,7 +269,7 @@ sub mymkdir ($) {
     my @dirs = split "/", $dname;
     my $dhead = "";
 
-    foreach my $d ( @dirs ) {
+quit    foreach my $d ( @dirs ) {
 	 $dhead .= $d;
 	 unless ( $dhead eq "" or -d $dhead ) {
 	     call_mkdir $dhead;
@@ -1307,6 +1307,11 @@ sub check_ahelp_site_valid ($) {
     my $name = shift;
 
     my $stat = stat($name);
+    unless (defined $stat) {
+	print "Warning: stat of non existant file/directory $name\n";
+	return 0;
+    }
+
     my @groupinfo = getgrgid($stat->gid);
     dbg "Checking group for $name = " . $stat->gid . " / ${groupinfo[0]} against $main::group";
     return $groupinfo[0] eq $main::group;
@@ -1462,6 +1467,10 @@ Argh: ahelp reverse dependencies are generally complicated because
       $root = $dom->documentElement();
     } else {
       my $dname = dirname($fname);
+
+      # should we create this directory if it does not exist?
+      mymkdir $dname unless -d $dname;
+
       if (not grp_matches $dname) {
 	dbg "NOTE: unable to create dependency file $fname as group differs";
 	return;
