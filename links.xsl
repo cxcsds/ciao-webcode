@@ -2243,7 +2243,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:when test="$ignoremissinglink = 'yes'">
 	<xsl:message terminate="no">
  WARNING: unable to find a title (long or short) in a thread
-   thread={unfortunately I can not tell you which thread}
+   @name=<xsl:value-of select="@name"/>
    Using placeholder text (thread title); re-publish both
         </xsl:message>
 	thread title
@@ -2251,7 +2251,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:otherwise>
 	<xsl:message terminate="yes">
  ERROR: unable to find a title (long or short) in the thread
-   thread={unfortunately I can not tell you which thread}
+   @name=<xsl:value-of select="@name"/>
         </xsl:message>
       </xsl:otherwise>
     </xsl:choose>
