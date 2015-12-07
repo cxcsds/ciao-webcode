@@ -17,7 +17,11 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:func="http://exslt.org/functions"
   xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
-  extension-element-prefixes="func djb">
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="func djb extfuncs">
+
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-thread_common" select="extfuncs:register-import-dependency('thread_common.xsl')"/>
 
   <!--* we create the HTML files using xsl:document statements *-->
   <xsl:output method="text"/>

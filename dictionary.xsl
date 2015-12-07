@@ -6,7 +6,12 @@
     *-->
 
 <xsl:stylesheet version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="extfuncs">
+
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-dictionary" select="extfuncs:register-import-dependency('dictionary.xsl')"/>
 
   <!--*
       * this is an attempt to make some of the code below less onerous

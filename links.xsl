@@ -63,6 +63,9 @@
   xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
   extension-element-prefixes="exsl func djb extfuncs">
 
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-links" select="extfuncs:register-import-dependency('links.xsl')"/>
+
   <!--* we don't like "a" tags! *-->
   <xsl:template match="a|A">
     <xsl:message terminate="yes">
@@ -310,6 +313,8 @@
 	* XPATH statement is evaluated), hence the introduction of the
 	* $name variable
         *-->
+    <xsl:variable name="hack-depends-on-ahelpindex"
+		  select="extfuncs:register-included-file('ahelpindex', $ahelpindex)"/>
     <xsl:variable name="name" select="@name"/>
     <xsl:variable name="namematches" select="$ahelpindexfile//ahelp[key=$name]"/>
     <xsl:variable name="num" select="count($namematches)"/>
@@ -362,6 +367,9 @@
 	* refactored
 	*-->
     <xsl:variable name="matches" select="$namematches[context=$context]"/>
+    <xsl:variable name="matches-xpath"
+		  select="concat('//ahelp[key=', $quot, $name, $quot, '][context=', $quot, $context, $quot, ']')"/>
+
     <xsl:choose>
       <xsl:when test="count($matches)!=1">
 	<xsl:choose>
@@ -381,6 +389,9 @@
 	    </xsl:message>
 	    <xsl:apply-templates/>
 	    <!-- allow the page to be published but make it obvious a link is missing -->
+	    <xsl:variable name="hack-register-ahelp-missing"
+			  select="extfuncs:register-xpath('ahelpindex',
+				  $matches-xpath, '')"/>
 	    <xsl:choose>
 	      <xsl:when test="boolean(@param)">
 		<xsl:value-of select="concat('{*** will be an ahelp link to key=',$name,' param=',@param,' context=',$context,' ***}')"/>
@@ -455,21 +466,31 @@
 		  *
 		  * NOTE: add the context if including summary 
 		  *-->
-	      
-	      <xsl:choose>
+
+              <xsl:variable name="titleval"><xsl:choose>
 		<xsl:when test="count($parammatch)=1">
-		  <xsl:attribute name="title">Ahelp (<xsl:value-of select="@name"/><xsl:text> </xsl:text><xsl:value-of select="$paramname"/><xsl:text> parameter)</xsl:text>
-		<xsl:if test="$parammatch/synopsis != ''">
-		  <xsl:text>: </xsl:text><xsl:value-of select="$parammatch/synopsis"/>
-		</xsl:if>
-		  </xsl:attribute>
+		  Ahelp (<xsl:value-of select="@name"/><xsl:text> </xsl:text><xsl:value-of select="$paramname"/><xsl:text> parameter)</xsl:text>
+		  <xsl:if test="$parammatch/synopsis != ''">
+		    <xsl:variable name="hack-register-ahelp-param"
+				  select="extfuncs:register-xpath('ahelpindex',
+					  concat($matches-xpath, '/parameters/parameter[name=', $quot, $paramname, $quot, ']/synopsis'),
+					  normalize-space($parammatch/synopsis))"/>
+		    <xsl:text>: </xsl:text><xsl:value-of select="normalize-space($parammatch/synopsis)"/>
+		  </xsl:if>
 		</xsl:when>
 
 		<xsl:when test="$matches/summary!=''">
-		  <xsl:attribute name="title">Ahelp (<xsl:value-of select="$context"/>): <xsl:value-of select="$matches/summary"/></xsl:attribute>
+		  <xsl:variable name="hack-register-ahelp-summary"
+				select="extfuncs:register-xpath('ahelpindex',
+					concat($matches-xpath, '/summary'),
+					normalize-space($matches/summary))"/>
+		  Ahelp (<xsl:value-of select="$context"/>): <xsl:value-of select="$matches/summary"/>
 		</xsl:when>
-	      </xsl:choose>
-	      
+	      </xsl:choose></xsl:variable>
+	      <xsl:if test="$titleval!=''">
+		<xsl:attribute name="title"><xsl:value-of select="normalize-space($titleval)"/></xsl:attribute>
+	      </xsl:if>
+
 	      <xsl:attribute name="href">
 		<xsl:value-of select="$hrefstart"/>
 		<xsl:value-of select="$matches/page"/>
@@ -667,9 +688,22 @@
 	    <xsl:with-param name="sitevalue" select="$sitevalue"/>
 	  </xsl:call-template>
 
+	  <!-- note: record the storage version -->
+	  <xsl:variable name="label" select="concat('faq-', $sitevalue)"/>
+	  <xsl:variable name="hack-depends-on-faq"
+			select="extfuncs:register-included-file($label,
+				djb:get-faq-filename-storage($sitevalue))"/>
+
 	  <!-- TODO: strip out HTML code? -->
 	  <xsl:variable name="idval" select="@id"/>
-	  <xsl:value-of select="concat('FAQ: ', normalize-space($faq-contents//faqentry[@id=$idval]/title))"/>
+	  <xsl:variable name="titlestr" select="normalize-space($faq-contents//faqentry[@id=$idval]/title)"/>
+
+	  <xsl:variable name="hack-register-faq-link"
+			select="extfuncs:register-xpath($label,
+				concat('//faqentry[@id=', $quot, $idval, $quot, ']/title'),
+				$titlestr)"/>
+
+	  <xsl:value-of select="concat('FAQ: ', $titlestr)"/>
 	</xsl:when>
 	<xsl:otherwise><xsl:choose>
 	    <xsl:when test="$sitevalue = 'chips'">ChIPS Frequently Asked Questions</xsl:when>
@@ -829,9 +863,24 @@
 	    <xsl:with-param name="sitevalue" select="$sitevalue"/>
 	  </xsl:call-template>
 
+	  <!-- *
+	       * note: record the storage version; why do we not record $dictionary-file?
+	       *
+	       * -->
+	  <xsl:variable name="label" select="concat('dictionary-', $sitevalue)"/>
+	  <xsl:variable name="hack-depends-on-dictionary"
+			select="extfuncs:register-included-file($label,
+				djb:get-dictionary-filename-storage($sitevalue))"/>
+
 	  <!-- Too laxy to make the 'Dictionary' part contain the site name -->
 	  <xsl:variable name="idval" select="@id"/>
-	  <xsl:value-of select="concat('Dictionary: ', normalize-space($dictionary-contents//entry[@id=$idval]/title))"/>
+	  <xsl:variable name="titlestr" select="normalize-space($dictionary-contents//entry[@id=$idval]/title)"/>
+	  <xsl:variable name="hack-register-dictionary-link"
+			select="extfuncs:register-xpath($label,
+				concat('//entry[@id=', $quot, $idval, $quot, ']/title'),
+				$titlestr)"/>
+
+	  <xsl:value-of select="concat('Dictionary: ', $titlestr)"/>
 	</xsl:when>
 	<xsl:when test="$site = 'csc' or @site = 'csc'">CSC Dictionary</xsl:when>
 	<xsl:otherwise>CIAO Dictionary</xsl:otherwise>
@@ -1068,6 +1117,9 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * if no name is supplied we link to the index page
       *
       * if the tag is empty, use the text "Data Products guide"
+      *
+      * TODO:
+      *    verify that the @id value is valid
       *-->
   <xsl:template match="dpguide">
 
@@ -2131,6 +2183,9 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <!--*
 	* Process the contents, surrounded by styles.
 	* I think the code below can be cleaned up
+	*
+	* TODO: add in a title attribute with the Thread title (perhaps section
+	* title if @id is given)
 	*-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
@@ -2643,19 +2698,24 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *     and can be left out, when it defaults to the site of the page
       *-->
   <func:function name="djb:get-faq-filename">
-    <xsl:param name="site" select="$site"/>
+    <xsl:param name="sitevalue" select="$site"/>
 
     <xsl:choose>
       <xsl:when test="name(//*) = 'faq'">
 	<func:result select="concat($sourcedir, '/', $pagename, '.xml')"/>
       </xsl:when>
       <xsl:otherwise>
-	<xsl:variable name="head" select="djb:get-storage-path($site)"/>
-	<func:result select="concat($head,'faq/index.xml')"/>
+	<func:result select="djb:get-faq-filename-storage($sitevalue)"/>
       </xsl:otherwise>
     </xsl:choose>
 
   </func:function> <!--* name djb:get-faq-filename *-->
+
+  <!-- return the location of the faq in the storage location -->
+  <func:function name="djb:get-faq-filename-storage"> 
+    <xsl:param name="sitevalue" select="$site"/>
+    <func:result select="concat(djb:get-storage-path($sitevalue),'faq/index.xml')"/>
+  </func:function>
 
   <!--*
       * djb:get-dictionary-filename($site)
@@ -2677,12 +2737,17 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	<func:result select="concat($sourcedir, '/index.xml')"/>
       </xsl:when>
       <xsl:otherwise>
-	<xsl:variable name="head" select="djb:get-storage-path($sitevalue)"/>
-	<func:result select="concat($head,'dictionary/index.xml')"/>
+	<func:result select="djb:get-dictionary-filename-storage($sitevalue)"/>
       </xsl:otherwise>
     </xsl:choose>
 
   </func:function> <!--* name djb:get-dictionary-filename *-->
+
+  <!-- return the location of the dictionary in the storage location -->
+  <func:function name="djb:get-dictionary-filename-storage"> 
+    <xsl:param name="sitevalue" select="$site"/>
+    <func:result select="concat(djb:get-storage-path($sitevalue),'dictionary/index.xml')"/>
+  </func:function>
 
   <!--*
       * Returns the //thread/info node for either the current document

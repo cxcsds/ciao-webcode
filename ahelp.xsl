@@ -80,6 +80,9 @@
   xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
   extension-element-prefixes="date str func exsl djb extfuncs">
 
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-ahelp" select="extfuncs:register-import-dependency('ahelp.xsl')"/>
+
   <!--* load in templates (_main includes _common) *-->
   <xsl:include href="ahelp_main.xsl"/>
 
@@ -169,6 +172,13 @@
                        $version, '.', $outname, '.slug.xml')"/></xsl:param>
   <xsl:param name="relnotes-contents" select="extfuncs:read-file-if-exists($relnotes-path)"/>
   <xsl:param name="have-relnotes" select="count($relnotes-contents/slug) != 0"/>
+
+  <!-- the normalize-space is just to convert to a string value (could be done within
+       register-included-file() -->
+  <xsl:variable name="hack-depends-on-bugs"
+		select="extfuncs:register-included-file('bugs', normalize-space($bugs-path))"/>
+  <xsl:variable name="hack-depends-on-relnotes"
+		select="extfuncs:register-included-file('relnotes', normalize-space($relnotes-path))"/>
 
   <!-- used for the canonical link and the URL bar (hard copy) -->
   <xsl:variable name="url" select="concat($urlbase,'ahelp/', $outname,'.html')"/>

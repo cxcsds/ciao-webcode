@@ -11,7 +11,11 @@
   xmlns:date="http://exslt.org/dates-and-times"
   xmlns:func="http://exslt.org/functions"
   xmlns:exsl="http://exslt.org/common"
-  extension-element-prefixes="date str func exsl"> 
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="date str func exsl extfuncs"> 
+
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-news" select="extfuncs:register-import-dependency('news.xsl')"/>
 
   <xsl:output method="text"/>
 

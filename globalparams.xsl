@@ -76,24 +76,9 @@
     *    THIS PARAMETER IS BEING PHASED OUT AND IS CURRENTLY ONLY SUPPORTED
     *    FOR THREADS
     *
-    *  . storage - string, optional, default=''
-    *    gives the location of the "storage" files - ie the copies of the
-    *    published XML documents for the site/version. This is currently
-    *    needed so we can access the thread pages for the threadlink tags
-    *    (not really needed any more since taken out proglang support
-    *     but left in for now). It should be sent to the top-level storage
-    *    location for the site/version, not the location for this particular
-    *    page - EXCEPT THAT I DO NOT KNOW HOW WE ARE GOING TO HANDLE LINKS
-    *    BETWEEN SITES USING THIS SCHEME ...
-    *
-    *    For now we assume the threadlinking is done within the same site
-    *
-    *    IT IS VERY LIKELY THAT STORAGE WILL BE REMOVED RSN
-    *
     *  . storageloc - string, optional, default=''
     *    points to an XML file that contains the "storage" directories
     *    for the different sites for this version and type (live,...).
-    *    Currently used by threads to access stored thread information.
     *
     *-->
 
@@ -101,7 +86,11 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:func="http://exslt.org/functions"
   xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
-  extension-element-prefixes="func djb">
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="func djb extfuncs">
+
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-globalparams" select="extfuncs:register-import-dependency('globalparams.xsl')"/>
 
   <!--* 
       * Temporary:
@@ -147,9 +136,6 @@
 
   <xsl:param name="depth" select="1"/>
   
-  <!--* not sure about this; see header *-->
-  <xsl:param name="storage" select="''"/>
-
   <xsl:param name="storageloc" select="''"/>
   <xsl:variable name="storageInfo" select="djb:read-if-set($storageloc)"/>
 
@@ -168,5 +154,7 @@
   <!--* easily add a new line to a concat(...) statement *-->
   <xsl:variable name="nl"><xsl:text>
 </xsl:text></xsl:variable>
+
+  <xsl:variable name="quot">"</xsl:variable>
 
 </xsl:stylesheet>

@@ -14,7 +14,11 @@
   xmlns:date="http://exslt.org/dates-and-times"
   xmlns:func="http://exslt.org/functions"
   xmlns:exsl="http://exslt.org/common"
-  extension-element-prefixes="date str func exsl">
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="date str func exsl extfuncs">
+
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-ahelp_main" select="extfuncs:register-import-dependency('ahelp_main.xsl')"/>
 
   <!--* load in templates *-->
   <xsl:include href="ahelp_common.xsl"/>

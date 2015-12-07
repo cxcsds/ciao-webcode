@@ -19,6 +19,9 @@
   xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
   extension-element-prefixes="exsl extfuncs">
 
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-relnotes" select="extfuncs:register-import-dependency('relnotes.xsl')"/>
+
   <xsl:output method="text"/>
 
   <!--* we place this here to see if it works (was in header.xsl and wasn't working

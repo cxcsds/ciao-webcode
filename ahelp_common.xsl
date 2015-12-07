@@ -27,7 +27,11 @@
   xmlns:str="http://exslt.org/strings"
   xmlns:func="http://exslt.org/functions"
   xmlns:exsl="http://exslt.org/common"
-  extension-element-prefixes="date str func exsl">
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="date str func exsl extfuncs">
+
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-ahelp_common" select="extfuncs:register-import-dependency('ahelp_common.xsl')"/>
 
   <xsl:include href="common.xsl"/>
 
@@ -210,7 +214,7 @@
       <xsl:with-param name="template" select="'add-navbar'"/>
     </xsl:call-template>
 
-      <!--* add the navbar *-->
+    <!--* add the navbar *-->
     <xsl:call-template name="add-ssi-include">
       <xsl:with-param name="file" select="concat('navbar_', $navbar, '.incl')"/>
     </xsl:call-template>

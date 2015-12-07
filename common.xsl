@@ -14,7 +14,11 @@
   xmlns:date="http://exslt.org/dates-and-times"
   xmlns:func="http://exslt.org/functions"
   xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
-  extension-element-prefixes="date func djb">
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="date func djb extfuncs">
+
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-common" select="extfuncs:register-import-dependency('common.xsl')"/>
 
   <!--*
       * check that a parameter is not empty, exiting if it is.
@@ -128,14 +132,13 @@ if (self == top) {
   top.location = self.location;
 }
     </script>
-
-  </xsl:template> <!-- name=add-sao-metadata -->
+  </xsl:template> <!--* name=add-sao-metadata *-->
 
   <!--*
       * add a ssi include statement to the output, surrounded by new lines
       * (because we are having issues with the register CGI stuff
       *  and I'm hoping that the carriage returns will improve
-      *  things)
+      *  things; it also lets us track the depency information)
       *
       * Parameters:
       *  file - string, required
@@ -150,6 +153,9 @@ if (self == top) {
       <xsl:with-param name="value"    select="$file"/>
       <xsl:with-param name="template" select="'add-ssi-include'"/>
     </xsl:call-template>
+
+    <xsl:variable name="hack-register-ssi"
+		  select="extfuncs:register-ssi-file($file)"/>
 
     <xsl:call-template name="newline"/>
     <xsl:comment>#include virtual="<xsl:value-of select="$file"/>"</xsl:comment>

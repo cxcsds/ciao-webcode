@@ -14,7 +14,12 @@
     *-->
 
 <xsl:stylesheet version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="extfuncs">
+
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-redirect" select="extfuncs:register-import-dependency('redirect.xsl')"/>
 
   <xsl:output method="text"/>
 

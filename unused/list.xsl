@@ -3,6 +3,7 @@
 
 <!--*
     * lists contents of cxchelp tags
+    * - used for testing only
     *-->
 
 <xsl:stylesheet version="1.0"

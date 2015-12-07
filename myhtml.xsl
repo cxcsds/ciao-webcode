@@ -16,7 +16,11 @@
   xmlns:exsl="http://exslt.org/common"
   xmlns:func="http://exslt.org/functions"
   xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
-  extension-element-prefixes="exsl func djb">
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="exsl func djb extfuncs">
+
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-myhtml" select="extfuncs:register-import-dependency('myhtml.xsl')"/>
 
   <!--*
       * unwanted HTML tags

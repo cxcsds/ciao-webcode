@@ -164,8 +164,10 @@ $group = get_group $site_config;
 my ( $version, $config_version, $dhead, $depth ) = check_location $site_config, $dname;
 
 my $stylesheets = get_config_type $config_version, "stylesheets", $type;
-my $storage     = get_config_type $config_version, "storage", $type;
 my $ahelpfiles  = get_config_type $config_version, "ahelpfiles", $type;
+
+my $storageloc = get_config_type $config_version, "storageloc", $type;
+my $storage    = get_storage_location $storageloc, $site;
 
 # check we can find the needed stylesheets
 #

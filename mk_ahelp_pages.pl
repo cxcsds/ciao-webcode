@@ -57,11 +57,12 @@ use Carp;
 use Getopt::Long;
 use Cwd;
 use IO::File;
+use File::Basename;
 
 use FindBin;
 
 use lib $FindBin::Bin;
-use CIAODOC qw( :util :xslt :cfg );
+use CIAODOC qw( :util :xslt :cfg :deps );
 
 ## Subroutines (see end of file)
 #
@@ -173,9 +174,6 @@ if ($localxslt) {
     $stylesheets = "$FindBin::Bin/";
 }
 
-#$storage .= "ahelp/";
-#my $ahelpindex_xml  = "${storage}ahelpindex.xml";
-#my $ahelpindex_dat  = "${storage}ahelpindex.dat";
 my $ahelpstore     = get_config_type $version_config, "ahelpindexdir", $type;
 my $ahelpindex_xml = "${ahelpstore}ahelpindex.xml";
 my $ahelpindex_dat = "${ahelpstore}ahelpindex.dat";
@@ -314,6 +312,15 @@ $storageloc = get_config_type( $version_config, "storageloc", $type )
 die "Error: unable to find storageloc=$storageloc\n"
   unless $storageloc eq "" or -e $storageloc;
 
+my $published = "";
+$published = get_storage_location($storageloc, $site)
+  unless $storageloc eq "";
+
+unless ($published eq "") {
+    $published .= $dhead;
+    mymkdir $published;
+}
+
 # optional "postfix" text for page headers
 my $headtitlepostfix = "";
 my $texttitlepostfix = "";
@@ -356,7 +363,8 @@ my %paramlist = @extra;
 foreach my $in ( @names ) {
 
     # To match publish.pl
-    my $name = (split("/",$in))[-1];
+    my @ans = fileparse $in;
+    my $name = $ans[0];
     print "Parsing [ahelp]: $name\n";
 
     # We need to convert depth from a number to a string
@@ -380,27 +388,26 @@ foreach my $in ( @names ) {
     $paramlist{depth} = '../' x ($depth-1);
 	$paramlist{dname} = $dname;
 
+    clear_dependencies;
+
     my $flag = translate_file "${stylesheets}ahelp.xsl",
       "${in}.xml", \%paramlist;
 
     # we skip further processing on error
     #
-    unless ( defined $flag ) {
-	print "-> problem generating HTML for $in\n";
-	next;
-    }
-
+    die "-> problem generating HTML for $in\n"
+	unless defined $flag;
+	
     # success or failure?
     foreach my $page ( @pages ) {
-	#die "Error: transformation did not create $page\n"
-	#  unless -e $page;
-	unless ( -e $page ) {
-	    print "Error: transformation did not create $page\n";
-	    next;
-	}
+	die "Error: transformation did not create $page\n"
+	  unless -e $page;
 	mysetmods( $page );
 	dbg("Created: $page");
     }
+
+    dump_dependencies;
+    write_dependencies $name, $published, cwd() . "/", $stylesheets;
 
 } # foreach: $in
 

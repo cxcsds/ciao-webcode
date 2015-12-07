@@ -23,6 +23,9 @@ $|++;
 use Carp;
 use Cwd;
 use IO::File;
+use File::stat;
+use File::Basename;
+use Fcntl qw(:DEFAULT :flock);
 
 use XML::LibXML;
 use XML::LibXSLT;
@@ -39,7 +42,7 @@ use XML::LibXSLT;
 sub use_mathjax () { return 1; }
 
 # Set up XML/XSLT processors
-#
+# (registration of functions happens later)
 my $parser = XML::LibXML->new()
   or die "Error: Unable to create XML::LibXML parser instance.\n";
 $parser->validation(0);
@@ -48,8 +51,12 @@ $parser->expand_xinclude(1); # NOTE: don't actually use XInclude at the moment
 my $xslt = XML::LibXSLT->new()
   or die "Error: Unable to create XML::LibXSLT instance.\n";
 
-# Set up potentially-useful functions
+# Set up potentially-useful functions. Ideally we would use
+# register_element but this is not available using the 
+# installed version of XML::LibXSLT
 #
+# TODO: should read-file-if-exists report this information
+#       as part of the dependency tracking?
 XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
 				"read-file-if-exists",
   sub {
@@ -66,7 +73,6 @@ XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs
   }
 );
 
-# ideally would not be a function
 XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
 				"delete-file-if-exists",
   sub {
@@ -102,6 +108,13 @@ my @funcs_cfg  =
      parse_config find_site get_config_main get_config_main_type
      get_config_site get_config_version get_config_type
      check_config_exists check_type_known check_location get_group
+     get_storage_location
+    );
+my @funcs_deps =
+  qw(
+     clear_dependencies get_dependencies have_dependencies 
+     dump_dependencies write_dependencies
+     identify_files_to_republish
      use_mathjax
     );
 
@@ -109,10 +122,11 @@ use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
 
 @ISA    = qw ( Exporter );
 @EXPORT = ();
-@EXPORT_OK = ( @funcs_util, @funcs_xslt, @funcs_cfg );
+@EXPORT_OK = ( @funcs_util, @funcs_xslt, @funcs_cfg, @funcs_deps );
 %EXPORT_TAGS =
   (
    util => \@funcs_util, xslt => \@funcs_xslt, cfg => \@funcs_cfg,
+   deps => \@funcs_deps
   );
 
 ## Subroutines (see end of file)
@@ -124,6 +138,7 @@ sub mymkdir   ($);
 sub mycp      ($$);
 sub myrm      ($);
 sub mysetmods ($);
+sub create_lockfile ($);
 
 sub check_paths (@);
 sub check_executables (@);
@@ -144,6 +159,7 @@ sub get_config_version ($@);
 sub get_config_type ($$$);
 sub check_config_exists ($$);
 sub check_type_known ($$);
+sub get_storage_location ($$);
 
 sub check_location ($$);
 sub get_group ($);
@@ -151,6 +167,9 @@ sub get_group ($);
 sub get_ostype ();
 sub list_ahelp_sites ();
 sub find_ahelp_site ($$);
+
+sub clear_dependencies ();
+sub get_dependencies ();
 
 ## Subroutines
 #
@@ -315,6 +334,49 @@ sub mysetmods ($) {
     call_chgrp $main::group, $name;
 
 } # sub: mysetmods()
+
+# It looks like this lock works over NFS on Linux/OS-X. We use a
+# separate file as the lock file to make it easier to clean up
+# on error.
+#
+# A simple watchdog timer is used to catch cases where a file can
+# not be unlocked; may need to tweak the time out.
+#
+# [1] http://www.perlmonks.org/?node_id=14139
+# [2] http://stackoverflow.com/questions/34920/how-do-i-lock-a-file-in-perl
+# [3] http://www.perlmonks.org/?node_id=7058
+#
+# NOTE:
+#   this routine clobbers $SIG{ALRM} and too lazy to reset it
+#
+sub create_lockfile ($) {
+  my $lfile = shift;
+
+  dbg("Creating lock file with PID=$$: $lfile");
+
+  # Hard code time out
+  $SIG{ALRM} = sub { die "Error: unable to read lock file $lfile\n"; };
+  alarm 10;  
+    
+  my $fh;
+  sysopen($fh, $lfile, O_WRONLY | O_CREAT)
+    or die "can't open lock file $lfile: $!\n";
+
+  flock($fh, LOCK_EX)
+    or die "can't lock the lock file $lfile: $!\n";
+
+  # remove timer
+  alarm 0;
+  undef $SIG{ALRM};
+
+  truncate($fh, 0)
+    or die "can't truncate lock file $lfile: $!\n";
+
+  print $fh "$$\n";
+
+  return $fh;
+
+} # sub: create_lockfile
 
 # check_paths( $path1, $path2, ... )
 #
@@ -939,6 +1001,24 @@ sub get_group ($) {
 
 } # sub: get_group()
 
+# Returns the location of the storage area (ie where we store the
+# published version of a page + metadata) for a given site.
+#
+# $storageloc  - location of the storage file
+# $site        - site name
+#
+sub get_storage_location ($$) {
+  my $storageloc = shift;
+  my $site = shift;
+
+  my $dom = $parser->parse_file($storageloc);
+  my $root = $dom->getDocumentElement();
+  my $loc = $root->findvalue('/storage/dir[@site="' . $site . '"]');
+  die "Unable to find site='$site' in $storageloc\n"
+    if $loc eq "";
+  return $loc;
+
+} # sub: get_storage_location
 
 # $ostype = get_ostype;
 #
@@ -955,11 +1035,61 @@ sub get_group ($) {
 sub get_ostype () {
   if ($^O eq "darwin")     { return "osx"; }
   elsif ($^O eq "linux")   { return "lin"; }
-  elsif ($^O eq "solaris") { return "sun"; }
+  elsif ($^O eq "solaris") { die "ERROR: Doug did not expect this to be run on a Solaris box; please contact him\n"; return "sun"; }
   else {
     die "Unrecognized OS: $^O\n";
   }
 } # sub: get_ostype()
+
+# $hash = get_filehash $filename;
+#
+# Returns a hash of the file contents. This is only used for
+# identifying when a file has changed. We could cache results,
+# which would imply that the file is not expected to change whilst
+# the code is running, but this may be problematic if publishing
+# many files at once and so some do change! See get_filehash_cache()
+# for explicit cacheing.
+#
+sub get_filehash ($) {
+  my $file = shift;
+  my $os = get_ostype;
+  my $hash;
+  # do not want to rely on an external module for this
+  if ($os eq "osx") {
+    $hash = `/sbin/md5 $file`;
+    $hash = (split / /, $hash)[-1];
+  } elsif ($os eq "lin") {
+    $hash = `/usr/bin/md5sum $file`;
+    $hash = (split / /, $hash)[0];
+  } else {
+    die "Internal error: ostype=${os} not handled by get_filehash\n";
+  }
+  chomp $hash;
+  return $hash;
+
+} # sub: get_filehash()
+
+{
+  my %filehash_cache = ();
+  
+  sub clear_filehash_cache () {
+    %filehash_cache = ();
+  }
+
+  # get_filehash but caching the results
+  # (see clear_filehash_cache)
+  sub get_filehash_cache ($) {
+    my $file = shift;
+    if (exists $filehash_cache{$file}) {
+      return $filehash_cache{$file};
+    } else {
+      my $hash = get_filehash $file;
+      $filehash_cache{$file} = $hash;
+      return $hash;
+    }
+  } # sub: get_filehash_cache
+
+}
 
 # @sitelist = list_ahelp_sites();
 #
@@ -1005,6 +1135,615 @@ sub check_ahelp_site_valid ($) {
     join (" ", list_ahelp_sites) . "\n"
       unless exists $asites{$site};
 } # sub: check_ahelp_site_valid()
+
+# Dependency tracking
+
+{
+  my %dependencies;
+
+  # Clear the dependency information
+  sub clear_dependencies () {
+    if (scalar (keys %dependencies) == 0) {
+      dbg "Clearing dependencies: already empty";
+    } else {
+      # Was going to dump the previous values but decided against it.
+      dbg "Clearing dependencies:";
+    }
+    %dependencies = ();
+  }
+
+  # Return all the recorded dependencies as a hash reference
+  sub get_dependencies () {
+    return \%dependencies; # TODO: copy the hash
+  }
+  
+  # returns 1 if there are any dependencies (ie page has not been skipped)
+  # and 0 otherwise.
+  sub have_dependencies () {
+    return scalar (keys %dependencies) > 0;
+  }
+
+  # Display the dependency information via dbg messages
+  sub dump_dependencies() {
+    dbg "dependencies:";
+    
+    #while ( my ($key,$value) = each %dependencies ) {
+    #  if (ref($value) eq "ARRAY") {
+    #	dbg " key=$key vals=[@$value]";
+    #  } elsif (ref($value) eq "HASH") {
+    #	my @ans = map { $_ . "=>" . $$value{$_}; } keys(%$value);
+    #	dbg " key=$key vals={" . join(" ", @ans) . "}";
+    #  } else {
+    #	dbg " key=$key vals=$value";
+    #  }
+    # }
+
+    use Data::Dumper;
+    dbg Dumper(\%dependencies);
+
+  }
+
+  # Take the current set of dependencies and
+  # add in the hash values of files.
+  #
+  # Send in
+  #   path to the stylesheet directory
+  #   path to the parent directory of the output files (not supported)
+  sub hash_dependencies($) {
+    my $stylesheetdir = shift;
+    #my $outdir = shift;
+    my %out;
+
+    while (my ($key, $vals) = each %dependencies) {
+      if ($key eq "import") {
+	# stylesheets used to process the file
+	$out{$key} = {};
+	foreach my $filename (@$vals) {
+	  my $fullpath = $stylesheetdir . $filename;
+	  $out{$key}{$filename} =
+	    { hash => get_filehash_cache $fullpath,
+	      filename => $fullpath };
+	}
+      } elsif ($key eq "ssi") {
+	# For now we do not hash these values (it is
+	# more complicated since need to cross sites)
+	#
+	$out{$key} = $vals;
+      } elsif ($key eq "include") {
+	# files that are read in and (potentially) used
+	# in xpath; we do NOT cache these hash values
+	$out{$key} = {};
+	while (my ($ilabel, $ifilename) = each %$vals) {
+	  $out{$key}{$ilabel} = { hash => get_filehash $ifilename,
+				  filename => $ifilename };
+	}
+      } else {
+	$out{$key} = $vals;
+      }
+    }
+    return \%out;
+  } # sub: hash_dependencies
+
+  sub add_node ($$$);
+
+  sub add_text_node ($$$) {
+    my $parent = shift;
+    my $name = shift;
+    my $text = shift;
+    my $node = XML::LibXML::Element->new($name);
+    $node->appendText($text);
+    $parent->appendChild($node);
+  }
+
+  sub add_array_node ($$) {
+    my $parent = shift;
+    my $values = shift;
+
+    my $el = XML::LibXML::Element->new("array");
+    $parent->appendChild($el);
+    foreach my $aval (@$values) {
+      add_text_node $el, "item", $aval;
+    }
+  }
+
+  sub add_hash_node ($$) {
+    my $parent = shift;
+    my $values = shift;
+
+    my $el = XML::LibXML::Element->new("hash");
+    $parent->appendChild($el);
+    while (my ($key, $value) = each %$values) {
+      my $hel = XML::LibXML::Element->new("hitem");
+      add_text_node $hel, "key", $key;
+      add_node $hel, "value", $value;
+      $el->appendChild($hel);
+    }
+  }
+
+  sub add_node ($$$) {
+    my $parent = shift;
+    my $name   = shift;
+    my $value  = shift;
+
+    my $el = XML::LibXML::Element->new($name);
+    $parent->appendChild($el);
+    if (ref($value) eq "ARRAY") {
+      add_array_node $el, $value;
+    } elsif (ref ($value) eq "HASH") {
+      add_hash_node $el, $value;
+    } else {
+      # assume a text node
+      $el->appendText($value);
+    }
+    
+  } # sub: add_node
+
+  # Given a file/directory name, return 1 if its group
+  # name matches $main::group.
+  #
+  # It might be nice to use stat(..)->cando
+  # but can not guarantee that we have that.
+  #
+  # This may not be sufficient, but hopefully the
+  # publishing code enforces a sensible group value
+  # for each file/directory.
+  #
+  sub grp_matches($) {
+    my $name = shift;
+
+    my $stat = stat($name);
+    my @groupinfo = getgrgid($stat->gid);
+    dbg "Checking group for $name = " . $stat->gid . " / ${groupinfo[0]} against $main::group";
+    return $groupinfo[0] eq $main::group;
+
+  } # sub: grp_matches
+
+  # Add the dependency information.
+  #
+  sub add_dep_file ($$$) {
+    my $storage = shift;
+    my $name = shift;
+    my $hdeps = shift;
+    my $outfile = "${storage}${name}.dep";
+    
+    my $doc = XML::LibXML::Document->new();
+    my $root = $doc->createElement("dependencies");
+    $doc->setDocumentElement($root);
+    
+    add_text_node($root, "base", "${name}.xml");
+    
+    while (my ($key,$val) = each %$hdeps) {
+      add_node $root, $key, $val;
+    }
+    
+    myrm $outfile;
+    $doc->toFile($outfile, 0); # do not bother with indention
+    mysetmods $outfile;
+    dbg("Created dependency file: $outfile");
+
+  } # sub: add_dep_file
+
+  # Add the reverse dependency information. We do not
+  # look for "deletions" here (since would need to process
+  # all the revdep files), instead these get cleaned up
+  # when actually checking the dependency information.
+  #
+  # $revdepfile is the file on which the current page
+  # $name.xml stored in $storage and user-editable found in
+  # $userdir
+  # ($revdepfile should end in xml and be a full path).
+  #
+  # We only do this IF the $main::group variable matches
+  # the group of the file/directory. This is to avoid
+  # permission problems such as CDO proposals which link
+  # to ahelp files. This does lose a lot of functionality
+  # but worry about that at a later date.
+  #
+  # ahelp files do not fit in nicely since we dont store the
+  # ahelp XML file in the storage location, which means the
+  # checks below fail (in particular the first sfile check).
+  # Instead, we would want to check ahelpindex.xml, but we
+  # do not want to then link the reverse dependency of
+  # $revdepfile (e.g. a releasenotes file) to ahelpindex,
+  # but rather we want to mention the ahelp file.
+  #
+  # A very simple locking scheme is used - a file called
+  # <revdepfilename>.revdep.lock - is created to ensure
+  # that multiple users opublishing at the same time do
+  # not clobber each others chanegs. This is fragile
+  # - e.g. leaving stale lock files around - and needs
+  # some real-world experience to see if it is a sensible
+  # solution. An alternative would be to check the md5sum
+  # of the file to see if it has been changed between
+  # reading and writing, but this has its own issues.
+  # 
+
+=pod HELP
+
+TODO: review this
+
+Argh: ahelp reverse dependencies are generally complicated because
+(for example, processing dmextract)
+
+ a) we don't store a version the ahelp XML file in the normal
+    location -> we *could* change this
+
+ b) ahelp links use ahelpindex.xml rather than the stored ahelp
+    file -> the processing code could avoid using the ahelpindex
+    route OR we cheat and use the ahelpindex file but then
+    store the xpath/value from the actual ahelp file *which seems
+    pointless, unless there's a big gain in using ahelpindex [which
+    we could access via perl if necessary]
+
+  NOTE: would need some sort of index to go from key/key+context
+  to file name.
+
+ c) each page includes bugs/release notes, and these are generated
+    from a single page, but at this point we have the individual
+    file names (i.e. *.slug.xml), but these don't exist as a user-visible
+    entity.
+
+    Perhaps want to deal with include vs extract via xpath as
+    different?
+
+=cut
+
+  sub add_revdep_file ($$$$) {
+    my $revdepfile = shift;
+    my $name = shift;
+    my $storage = shift;
+    my $userdir = shift;
+
+    die "Expected revdepfile=$revdepfile to end in .xml\n"
+      unless $revdepfile =~ /\.xml$/;
+
+    # print "HACK: add_revdep_file\n  revdepfile=$revdepfile\n  name=$name  storage=$storage  userdir=$userdir\n"; # TODO checking processing ahelp files
+
+    my $sfile = "${storage}${name}.xml";
+    my $ufile = "${userdir}${name}.xml";
+
+    # For now skip checks if processing an ahelp file
+    if ($name ne "index" and $userdir =~ /\/ahelp\/$/) {
+      dbg "Skipping check for storage/user-editable version as ahelp page: $name";
+    } else {
+      die "Unable to find storage version: $sfile\n"
+        unless -e $sfile;
+      die "Unable to find original/user-editable version: $ufile\n"
+        unless -e $ufile;
+    }
+
+    # It's important not to refer to yourself in the revdep
+    # file, as don't want infinite loops and am too lazy to
+    # set up a proper graph system to process the data.
+    #
+    return if $revdepfile eq $sfile;
+
+    # Above we needed to check the .xml for the storage version of
+    # the file, but we actually want to store the '.dep' version of
+    # the file, so
+    #
+    $sfile = "${storage}${name}.dep";
+    die "Unable to find dependency file $sfile\n"
+      unless -e $sfile;
+
+    my $fname = substr($revdepfile, 0, length($revdepfile)-4) . ".revdep";
+
+    my $lockfile = $fname . ".lock";
+
+    # because of the user group check, lock file creation is moved into the
+    # following code
+    #
+    my $dom;
+    my $root;
+    my $lfh;
+    if (-e $fname) {
+      if (not grp_matches $fname) {
+	dbg "NOTE: unable to write to dependency file $fname as group differs";
+	return;
+      }
+      $lfh = create_lockfile $lockfile;
+      dbg "Reading in revdep file: $fname";
+      $dom = $parser->parse_file($fname);
+      $root = $dom->documentElement();
+    } else {
+      my $dname = dirname($fname);
+      if (not grp_matches $dname) {
+	dbg "NOTE: unable to create dependency file $fname as group differs";
+	return;
+      }
+      $lfh = create_lockfile $lockfile;
+      dbg "Creating new revdep file: $fname";
+      $dom = XML::LibXML::Document->new();
+      $root = $dom->createElement("reversedependencies");
+      $dom->setDocumentElement($root);
+    }
+
+    my $count = $dom->find("count(//revdep/store[normalize-space(.)='" . $sfile . "'])");
+    if ($count == 0) {
+      dbg "Adding revdep $sfile";
+      my $revdep = XML::LibXML::Element->new("revdep");
+      $root->appendChild($revdep);
+
+      add_text_node $revdep, "store", $sfile;
+      add_text_node $revdep, "user", $ufile;
+      
+      myrm $fname;
+      $dom->toFile($fname, 0);
+      mysetmods $fname;
+      close $lfh;
+      # would like to delete the lock file, but can not guarantee that it
+      # does not now belong to another process!
+      #myrm $lockfile;
+
+    } elsif ($count > 1) {
+      # could clean up, but shouldn't happen so error out
+      die "Internal error: multiple ($count) revdep store=$sfile in $fname\n";
+    }
+
+  } # sub: add_revdep_file
+
+  # Write out the dependency information
+  #
+  # Doesn't need to be XML, but don't want to
+  # either write my own format or require another
+  # perl package be installed.
+  #
+  sub write_dependencies ($$$$) {
+    my $name = shift;
+    my $storage = shift;
+    my $userdir = shift;
+    my $stylesheetdir = shift;
+
+    my $hdeps = hash_dependencies $stylesheetdir;
+
+    add_dep_file $storage, $name, $hdeps;
+
+    # Now for the reverse dependencies:
+    #
+    # At present, hdeps contains
+    #    include
+    #    ssi
+    #    import
+    #    xpath
+    #
+    # As xpath does not contiain file names (it uses include
+    # to identify that), we are not interested in this here.
+    #
+    # Both ssi and import could be tracked - but for now
+    # not tracking this, so just interested in the include
+    # section.
+    #
+    dbg "Now creating reverse dependencies";
+    while ( my ($label, $vals) = each %{$$hdeps{include}}) {
+      dbg "Rev dep for label=$label";
+      add_revdep_file $$vals{filename}, $name, $storage, $userdir;
+    }
+
+  } # sub: write_dependencies
+
+  # TODO: probably going to need to change how things are stored
+  # TODO: do we need to store the site along with things like
+  #       faq/dictionary (for reverse dependency tracking?)
+  #
+  # add_dependency is for arrays/sets (ie we only add the value
+  # if it isn't already included).
+  #
+  # Theproblem of multiple entries comes about when handling
+  # stylesheets that produce multiple pages.
+  #
+  sub add_dependency ($$) {
+    my $label = shift;
+    my $value = shift;
+    dbg "add_dependency: label=$label value=$value";
+    $dependencies{$label} = []
+      unless exists $dependencies{$label};
+    
+    return if grep /^$value$/, @{$dependencies{$label}};
+    push @{$dependencies{$label}}, $value;
+  }
+
+  # add as a key/value pair
+  sub add_dependency_key ($$$) {
+    my $label = shift;
+    my $key = shift;
+    my $value = shift;
+    $dependencies{$label} = {}
+      unless exists $dependencies{$label};
+    if (exists $dependencies{$label}{$key}) {
+      my $cval = $dependencies{$label}{$key};
+      die "Error: add_dependency_key label=$label key=$key sent both $cval and $value\n"
+	if $cval ne $value;
+    } else {
+      dbg "add_dependency_key: label=$label key=$key value=$value";
+      $dependencies{$label}{$key} = $value;
+    }
+  }
+
+  # add as a key/key/value setup
+  sub add_dependency_key2 ($$$$) {
+    my $label = shift;
+    my $key1 = shift;
+    my $key = shift;
+    my $value = shift;
+    $dependencies{$label} = {}
+      unless exists $dependencies{$label};
+    $dependencies{$label}{$key1} = {}
+      unless exists $dependencies{$label}{$key1};
+    my $href = $dependencies{$label}{$key1};
+
+    if (exists $$href{$key}) {
+      my $cval = $$href{$key};
+      die "Error: add_dependency_key2 label=$label key1=$key key=$key sent both $cval and $value\n"
+	if $cval ne $value;
+    } else {
+      dbg "add_dependency_key2: label=$label key1=$key1 key=$key value=$value";
+      $$href{$key} = $value;
+    }
+  }
+
+  sub add_import_dependency ($) {
+    my $name = shift;
+    add_dependency "import", $name;
+  }
+  
+  sub add_included_file_dependency ($$) {
+    my $label = shift;
+    my $filename = shift;
+    add_dependency_key "include", $label, $filename;
+  }
+
+  # only allow this if $label has been recorded via
+  # add_included_file_dependency
+  #
+  sub add_xpath_dependency ($$$) {
+    my $label = shift;
+    my $xpath = shift;
+    my $value = shift;
+    die "ERROR: $label has not been included via register-included-file\n"
+      unless exists $dependencies{"include"}{$label};
+    add_dependency_key2 "xpath", $label, $xpath, $value;
+  }
+
+  # Ideally would not be a function but not convinced that the
+  # libXSLT version is modern enough to have register_element.
+  #
+  # The assumption is that this is processed for a single file,
+  # and we know what that is, so we can identify these dependencies
+  # with the file.
+  #
+  # The functions all return "", a dummy value.
+  XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				  "register-import-dependency",
+				  sub {
+				    my $filename = shift;
+				    add_import_dependency $filename;
+				    return "";
+				  }
+				 );
+
+  XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				  "register-xpath",
+				  sub {
+				    my $label = shift;
+				    my $xpath = shift;
+				    my $value = shift;
+				    add_xpath_dependency $label, $xpath, $value;
+				    return "";
+				  }
+				 );
+
+  # The contents of this file are incorporated into the document
+  # The file may not exists.
+  XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				  "register-included-file",
+				  sub {
+				    my $label = shift;
+				    my $filename = shift;
+				    add_included_file_dependency $label, $filename;
+				    return "";
+				  }
+				 );
+
+  # The contents of this file are incorporated into the document
+  # via SSI.
+  XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				  "register-ssi-file",
+				  sub {
+				    my $filename = shift;
+				    add_dependency "ssi", $filename;
+				    return "";
+				  }
+				 );
+
+}
+
+
+# Read in the dependencies from the input file
+# and see if any of them have changed.
+#
+# The return value is 0 (unchanged/no need to re-publish)
+# or 1 (need to re-publish)
+#
+# TODO: how to deal with include files that do not have
+# xpath matches, since they are straight-forward includes.
+# ie relnotes and bugs in ahelp .dep files?
+#
+sub process_dep_file ($) {
+  my $depfile = shift;
+  dbg "Processing dependency file: $depfile";
+
+  my $dom = $parser->parse_file($depfile);
+  my $root = $dom->documentElement();
+
+  # First identify all the files that we need to check
+  # and see if any of them have changed.
+  #
+  my %changed;
+  foreach my $node ( $root->findnodes('//include/hash/hitem') ) {
+    my $label = $node->findvalue('key');
+    my $fname = $node->findvalue('value/hash/hitem[key="filename"]/value');
+    my $ohash = $node->findvalue('value/hash/hitem[key="hash"]/value');
+    
+    # As outside the publishing loop here we can, and should, cache the
+    # hash calculation.
+    #
+    my $nhash = get_filehash_cache $fname;
+    dbg "Has label=$label changed hash (" . ($ohash ne $nhash) . ")";
+    $changed{$label} = $fname unless $ohash eq $nhash;
+    
+  }
+
+  # Now loop through all the xpath elements for those labels that
+  # have changed.
+  #
+  while ( my ($label, $filename) = each %changed ) {
+    dbg "Reading in from $filename";
+    my $xdom = $parser->parse_file($filename);
+    my $xroot = $xdom->documentElement();
+
+    foreach my $node ( $root->findnodes('//xpath/hash/hitem[key="' . $label . '"]/value/hash/hitem') ) {
+      my $xpath = $node->findvalue('key');
+      my $ovalue = $node->findvalue('value');
+
+      # query filename using xpath and compare to value
+      my $nvalue = $xroot->findvalue("normalize-space(${xpath})");
+      ###dbg "Comparing $ovalue to $nvalue";
+      return 1 if $ovalue ne $nvalue;
+    }
+  }
+
+  # if got to here then there's been no change
+  return 0;
+
+} # sub: process_dep_file
+
+# Identify the files that need to be re-processed because a
+# file has changed.
+#
+# If there's no revdep file, then nothing.
+# If there is, then need to do something....
+#
+sub identify_files_to_republish ($) {
+  my $fname = shift;
+  dbg "Looking for reverse dependencies in $fname";
+
+  return unless -e $fname;
+
+  my $dom = $parser->parse_file($fname);
+  my $root = $dom->documentElement();
+  my @out;
+  clear_filehash_cache;
+  foreach my $node ( $root->findnodes("//revdep") ) {
+    my $store = $node->findvalue('store');
+    my $user = $node->findvalue('user');
+
+    push @out, $user if process_dep_file $store;
+  }
+
+  dbg " .. found " . (1 + $#out) . " files to republish";
+  return \@out;
+  
+} # identify_files_to_republish
 
 ## End
 1;

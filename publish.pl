@@ -80,7 +80,7 @@ use IO::File;
 use IO::Pipe;
 
 use lib $FindBin::Bin;
-use CIAODOC qw( :util :xslt :cfg );
+use CIAODOC qw( :util :xslt :cfg :deps );
 
 ## Subroutines (see end of file)
 #
@@ -270,15 +270,14 @@ $mathjaxpath = get_config_type( $version_config, "mathjaxpath", $type )
   if check_config_exists( $version_config, "mathjaxpath" );
 
 # storage/published is optional [sort of, depends on the site]
-# Moving towards using storageloc but have not completed the move
 #
-my $published = "";
-$published = get_config_type( $version_config, "storage", $type )
-  if check_config_exists( $version_config, "storage" );
-
 my $storageloc = "";
 $storageloc = get_config_type( $version_config, "storageloc", $type )
   if check_config_exists( $version_config, "storageloc" );
+
+my $published = "";
+$published = get_storage_location($storageloc, $site)
+  unless $storageloc eq "";
 
 # set up the ahelp index file based on the storeage location
 #
@@ -1463,6 +1462,37 @@ sub die_if_icxc ($) {
 
 } # sub: die_if_icxc()
 
+# Given the files that have been changed, work out
+# if any other files need to be re-published.
+#
+sub process_changed ($$$) {
+  my $type = shift;
+  my $storage = shift;
+  my $changed = shift;
+
+  return if $#$changed < 0;
+  dbg "Do we need to republish anything?";
+  
+  my @todo = ();
+  foreach my $in ( @$changed ) {
+    my $c = identify_files_to_republish "${storage}${in}.revdep";
+    for my $fname ( @$c ) {
+      push @todo, $fname;
+    }
+  }
+
+  if ($#todo == -1) {
+    dbg "No files need to be republished";
+    return;
+  }
+
+  print "The following files need re-publishing:\n";
+  foreach my $fname ( @todo ) {
+    print "   $fname\n";
+  }
+
+} # sub: process_changed
+
 # handle non-ahelp XML files
 #
 # uses lots of global variables...
@@ -1482,6 +1512,7 @@ sub process_xml ($$) {
     #   system to use, and then farms it off. It does this on the
     #   basis of the name of the root node of the document
     #
+    my @changed = ();
     foreach my $in ( @$aref ) {
 
 	die "Error: unable to find the output directory '$outdir'\n"
@@ -1531,6 +1562,8 @@ sub process_xml ($$) {
 	    $$opts{lastmodiso} = sprintf "%4d-%02d-%02d",
 	      1900 + $tm[5], $tm[4] + 1, $tm[3];
 	}
+
+	clear_dependencies;
 
 	# what transformation do we apply?
 	#
@@ -1594,13 +1627,34 @@ sub process_xml ($$) {
 	  }
 	}
 
-	# copy file over to storage space and sort out protection/group
-	# - we need to be more clever than this because some files will need multiple
-	#   files copied over [eg the threads have images, screen, and include files]
+	# Can we handle dependencies globally (ie not within xml2html_xxx)?
+	# I would think so, but may not be possible.
+	# Since we track the stylesheets then deps will only be empty
+	# if the file was skipped.
 	#
-	mycp "${in}.xml", "${published}/${in}.xml" if $published ne "";
+	if ($published ne "" and have_dependencies) {
+	  push @changed, $in;
+
+	  # copy file over to storage space and sort out protection/group
+	  # - we need to be more clever than this because some files will need multiple
+	  #   files copied over [eg the threads have images, screen, and include files]
+ 	  #
+	  # TODO: Is there ever a case when we have no dependencies but want to publish?
+	  #       Should *not* be
+	  mycp "${in}.xml", "${published}/${in}.xml";
+
+	  # Write the dependencies out after copying the file to the storage directory
+	  # since we check on the published copy existing when writing out the reverse
+	  # dependencies.
+	  dump_dependencies;
+	  write_dependencies $in, $published, cwd() . "/", $stylesheets;
+
+	}
 
     } # foreach: my $in
+
+    # TODO: send in more information
+    process_changed $type, $published, \@changed;
 
 } # sub: process_xml()
 

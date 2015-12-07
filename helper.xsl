@@ -24,7 +24,11 @@
   xmlns:date="http://exslt.org/dates-and-times"
   xmlns:func="http://exslt.org/functions"
   xmlns:djb="http://hea-www.harvard.edu/~dburke/xsl/"
-  extension-element-prefixes="date func djb">
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="date func djb extfuncs">
+
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-helper" select="extfuncs:register-import-dependency('helper.xsl')"/>
 
   <xsl:include href="common.xsl"/>
 
@@ -492,9 +496,10 @@
   <xsl:template name="add-navbar">
     <xsl:param name='name'/>
 
-      <xsl:call-template name="add-ssi-include">
-        <xsl:with-param name="file" select="concat('navbar_',$name,'.incl')"/>
-      </xsl:call-template>
+    <xsl:variable name="filename" select="concat('navbar_',$name,'.incl')"/>
+    <xsl:call-template name="add-ssi-include">
+      <xsl:with-param name="file" select="$filename"/>
+    </xsl:call-template>
     <xsl:call-template name="newline"/>
 
   </xsl:template> <!--* name= add-navbar *-->

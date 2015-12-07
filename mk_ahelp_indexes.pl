@@ -26,6 +26,7 @@
 #
 # Creates:
 #   Files in the storage location given in the config file
+#   (Actually, we don't at present).
 #
 # Requires:
 #   in styledir
@@ -53,7 +54,7 @@ use IO::File;
 use FindBin;
 
 use lib $FindBin::Bin;
-use CIAODOC qw( :util :xslt :cfg );
+use CIAODOC qw( :util :xslt :cfg :deps );
 
 ## Subroutines (see end of file)
 #
@@ -148,8 +149,6 @@ my ( $version, $version_config, $dhead, $depth ) = check_location $site_config, 
 #
 $version = get_config_version $version_config, "version_string";
 
-#my $storage     = get_config_type $version_config, "storage", $type;
-
 my $outdir      = get_config_type $version_config, "outdir", $type;
 my $outurl      = get_config_type $version_config, "outurl", $type;
 my $stylesheets = get_config_type $version_config, "stylesheets", $type;
@@ -159,10 +158,6 @@ if ($localxslt) {
     $stylesheets = "$FindBin::Bin/";
 }
 
-# We did have the following, but that did not work, and I do not understand
-# why I did not bother with the get_config_type call anyway...
-#
-# my $ahelpindex  = "${storage}ahelp/ahelpindex.xml";
 my $ahelpindex  = get_config_type $version_config, "ahelpindexdir", $type;
 $ahelpindex .= "ahelpindex.xml";
 
@@ -267,6 +262,8 @@ push @extra, ( logotext  => $logotext )
 # and ensure that any old files have been deleted
 #
 
+# TODO: take out @h version
+
 my @s;
 my @h;
 
@@ -289,7 +286,11 @@ my %paramlist = (
 		 @extra
 		);
 
+clear_dependencies;
+
 translate_file "${stylesheets}ahelp_index.xsl", $ahelpindex, \%paramlist;
+
+dump_dependencies;
 
 # success or failure?
 foreach my $page ( @soft ) {

@@ -8,7 +8,11 @@
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:exsl="http://exslt.org/common"
-  extension-element-prefixes="exsl">
+  xmlns:extfuncs="http://hea-www.harvard.edu/~dburke/xsl/extfuncs"
+  extension-element-prefixes="exsl extfuncs">
+
+  <!--* Change this if the filename changes *-->
+  <xsl:variable name="hack-import-cscdb" select="extfuncs:register-import-dependency('cscdb.xsl')"/>
 
   <xsl:output method="text"/>
 
