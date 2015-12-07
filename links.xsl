@@ -2338,7 +2338,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <xsl:variable name="adoc" select="document($filename)"/>
     <xsl:if test="count($adoc) = 0">
       <xsl:choose>
-	<xsl:when test="$type = 'live'">
+	<xsl:when test="$type = 'live' and $ignoremissinglink='no'">
 	  <xsl:message terminate="yes">
  ERROR: there is no link for the threadpage link (for site <xsl:value-of select="$siteval"/>)
    The thread index needs to be published or should this be a threadlink tag instead?
