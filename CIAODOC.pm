@@ -1281,7 +1281,13 @@ sub check_ahelp_site_valid ($) {
     } elsif (ref ($value) eq "HASH") {
       add_hash_node $el, $value;
     } else {
-      # assume a text node
+      # assume a text node; guard against an undef (ideally they should
+      # be caught before being sent here, but add this in as a check:
+      # this was added to catch the ahelp-processing issue, when generating
+      # an ahelp page would look for a dependency file in the releasenotes
+      # that could be missing; Dec 7 2015. This is therefore a hack and not
+      # a proper solution)
+      $value = $value || "";
       $el->appendText($value);
     }
     
