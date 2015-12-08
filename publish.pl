@@ -379,9 +379,13 @@ my @nonxml;
 #   we don't do anything clever but just rely on the file name
 #
 foreach my $in ( map { s/\.xml$//; $_; } @ARGV ) {
+    # for some reason I am suddenly seeing empty values of $in, so skip them
+    # (rather than work out where they are coming from)
+    next unless $in;
+
     if ( -e "${in}.xml" ) { push @xml, $in; }
     elsif ( -e $in )      { push @nonxml, $in; }
-    else                  { die "Error: Unable to find $in\n"; }
+    else                  { die "Error: Unable to find in=$in\n"; }
 
     # check that the file is in the current working directory
     # [just makes some things a bit easier later on]
