@@ -2341,13 +2341,13 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	<xsl:when test="$type = 'live' and $ignoremissinglink='no'">
 	  <xsl:message terminate="yes">
  ERROR: there is no link for the threadpage link (for site <xsl:value-of select="$siteval"/>)
-   The thread index needs to be published or should this be a threadlink tag instead?
+   The <xsl:value-of select="$siteval"/> thread index needs to be published or should this be a threadlink tag instead?
 	  </xsl:message>
 	</xsl:when>
 	<xsl:otherwise>
 	  <xsl:message terminate="no">
  WARNING: there is no link for the threadpage link (for site <xsl:value-of select="$siteval"/>)
-   The thread index needs to be published or should this be a threadlink tag instead?
+   The <xsl:value-of select="$siteval"/> thread index needs to be published or should this be a threadlink tag instead?
 	  </xsl:message>
 	</xsl:otherwise>
       </xsl:choose>
@@ -2358,11 +2358,22 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
            for now just assume that it has to be created from a threadindex
 	   document -->
       <xsl:if test="name($adoc//*) != 'threadindex'">
-	<xsl:message terminate="yes">
+	<xsl:choose>
+	  <xsl:when test="$ignoremissinglink='no'">
+	    <xsl:message terminate="yes">
  ERROR: threadpage link with site=<xsl:value-of select="$siteval"/> and @name=<xsl:value-of select="@name"/>
    is not to a threadindex page, which is currently not supported; see Doug or should
-   this be a threadlink tag instead?
-	</xsl:message>
+   this be a threadlink tag instead? Or the <xsl:value-of select="$siteval"/> thread index needs publishing.
+	    </xsl:message>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:message terminate="no">
+ WARNING: threadpage link with site=<xsl:value-of select="$siteval"/> and @name=<xsl:value-of select="@name"/>
+   is not to a threadindex page, which is currently not supported; see Doug or should
+   this be a threadlink tag instead? Or the <xsl:value-of select="$siteval"/> thread index needs publishing.
+	    </xsl:message>
+	  </xsl:otherwise>
+	</xsl:choose>
       </xsl:if>
 
       <!-- the 'all' option is auto-generated, so no point checking for it -->
@@ -2370,11 +2381,22 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:if test="$namestr != 'all'">
 	<xsl:variable name="matches" select="$adoc//threadindex/section/id/name[. = $namestr]"/>
 	<xsl:if test="count($matches) = 0">
-	  <xsl:message terminate="yes">
+	  <xsl:choose>
+	    <xsl:when test="$ignoremissinglink='no'">
+	      <xsl:message terminate="yes">
  ERROR: threadpage link with site=<xsl:value-of select="$siteval"/> and @name=<xsl:value-of select="@name"/>
    does not match the contents of the threadindex; is @name correct or should this 
-   be a threadlink tag instead?
-	  </xsl:message>
+   be a threadlink tag instead? Or the <xsl:value-of select="$siteval"/> thread index needs publishing.
+	      </xsl:message>
+	    </xsl:when>
+	    <xsl:otherwise>
+	      <xsl:message terminate="no">
+ WARNING: threadpage link with site=<xsl:value-of select="$siteval"/> and @name=<xsl:value-of select="@name"/>
+   does not match the contents of the threadindex; is @name correct or should this 
+   be a threadlink tag instead? Or the <xsl:value-of select="$siteval"/> thread index needs publishing.
+	      </xsl:message>
+	    </xsl:otherwise>
+	  </xsl:choose>
 	</xsl:if>
       </xsl:if> <!-- $namestr != 'all' -->
     </xsl:if> <!-- boolean(@name) -->
