@@ -375,7 +375,10 @@ sub create_lockfile ($) {
   print $fh "$$\n";
 
   # hopefully this fixes permissions
-  mysetmods $lfile;
+  # mysetmods $lfile;  -- this removes r/w permissions
+  call_chgrp $main::group, $lfile;
+  call_chmod "o-w", $lfile;
+  call_chmod "ug+w", $lfile;
 
   return $fh;
 
