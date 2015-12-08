@@ -337,7 +337,7 @@ sub mysetmods ($) {
 
 # It looks like this lock works over NFS on Linux/OS-X. We use a
 # separate file as the lock file to make it easier to clean up
-# on error.
+# on error. However, does this lock work across multiple machines?
 #
 # A simple watchdog timer is used to catch cases where a file can
 # not be unlocked; may need to tweak the time out.
@@ -373,6 +373,9 @@ sub create_lockfile ($) {
     or die "can't truncate lock file $lfile: $!\n";
 
   print $fh "$$\n";
+
+  # hopefully this fixes permissions
+  mysetmods $lfile;
 
   return $fh;
 
@@ -1495,12 +1498,14 @@ Argh: ahelp reverse dependencies are generally complicated because
       $dom->toFile($fname, 0);
       mysetmods $fname;
       close $lfh;
+
       # would like to delete the lock file, but can not guarantee that it
       # does not now belong to another process!
       #myrm $lockfile;
 
     } elsif ($count > 1) {
       # could clean up, but shouldn't happen so error out
+	close $lfh;
       die "Internal error: multiple ($count) revdep store=$sfile in $fname\n";
     }
 
