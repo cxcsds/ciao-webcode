@@ -1711,7 +1711,8 @@ sub process_dep_file ($) {
     # As outside the publishing loop here we can, and should, cache the
     # hash calculation.
     #
-    my $nhash = get_filehash_cache $fname;
+    my $nhash = get_filehash_cache $fname || "";
+    dbg "Note: label=$label not found (hash is empty)" if $nhash eq "";
     dbg "Has label=$label changed hash (" . ($ohash ne $nhash) . ")";
     $changed{$label} = $fname unless $ohash eq $nhash;
     
