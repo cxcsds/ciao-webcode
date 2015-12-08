@@ -1764,7 +1764,11 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</xsl:message>
       </xsl:if>
 
-      <xsl:if test="contains(@href,'documents_thread') or contains(@href,'threads/')">
+      <!-- occasionally want to link into a thread page - e.g. for sherpa fit.py
+           scripts, so special case those; also, as no easy ends-with()
+           function just use contains
+        -->
+      <xsl:if test="(contains(@href,'documents_thread') or contains(@href,'threads/')) and not(contains(@href, '.py'))">
 	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'threadpage or threadlink'"/></xsl:call-template>
       </xsl:if>
       <xsl:if test="contains(@href,'documents_dictionary') or contains(@href,'dictionary/')">
