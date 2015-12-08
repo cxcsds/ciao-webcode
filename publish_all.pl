@@ -12,8 +12,10 @@
 #     --localxslt
 #     --verbose
 #
-#     There is *no* suppot for --ignore-missing at the moement as it is
-#     meant to be done on a file by file case; this can be changed.
+#     --ignore-missing
+#     Ignore missing links (i.e. let the page publish with a warning
+#     rather than error out). The contents of the link may contain
+#     place-holder text.
 #
 # Aim:
 #  This script provides a way to publish all the files in the current
@@ -104,7 +106,7 @@ my @prefixes =
 
 my %_types = map { ($_,1); } qw( test live trial );
 
-my $usage = "Usage: $0 --config=filename --type=live|test --force --forceforce --xmlonly --localxslt --excludedir=one,two,.. --yes --verbose\n";
+my $usage = "Usage: $0 --config=filename --type=live|test --force --forceforce --xmlonly --localxslt --excludedir=one,two,.. --yes --verbose --ignore-missing\n";
 
 ## Code
 #
@@ -116,12 +118,20 @@ my $localxslt = 0;
 my $excludedirs = "";
 my $yes = 0;
 my $verbose = 0;
+my $ignoremissinglink = 0;
 
 die $usage unless
-  GetOptions 'config=s' => \$configfile, 'type=s' => \$type, 
-  'force!' => \$force, 'forceforce!' => \$forceforce,
-  'excludedir=s' => \$excludedirs, 'xmlonly!' => \$xmlonly, 'yes!' => \$yes,
-  'localxslt!' => \$localxslt, 'verbose!' => \$verbose;
+  GetOptions 
+    'config=s' => \$configfile,
+    'type=s' => \$type, 
+    'force!' => \$force,
+    'forceforce!' => \$forceforce,
+    'excludedir=s' => \$excludedirs,
+    'xmlonly!' => \$xmlonly,
+    'yes!' => \$yes,
+    'localxslt!' => \$localxslt,
+    'ignore-missing!' => \$ignoremissinglink,
+    'verbose!' => \$verbose;
 
 $force = 1 if $forceforce;
 
@@ -357,6 +367,7 @@ my $force_opt = $force ? "--force" : "--noforce";
 my $forceforce_opt = $forceforce ? "--forceforce" : "--noforceforce";
 my $localxslt_opt = $localxslt ? "--localxslt" : "--nolocalxslt";
 my $verbose_opt = $verbose ? "--verbose" : "--noverbose";
+my $ignore_opt = $ignoremissinglink ? "--ignore-missing" : "";
 
 foreach my $href ( \%images, \%files ) {
     foreach my $dir ( keys %{$href} ) {
@@ -367,6 +378,7 @@ foreach my $href ( \%images, \%files ) {
 	# and do the actual publishing
 	system @pexe, $script,
 	  $cfg_opt, $type_opt, $force_opt, $forceforce_opt, $localxslt_opt, $verbose_opt,
+	  $ignore_opt,
 	  @files
 	    and die "\nerror in\n dir=$dir\n with files=" . join(" ",@files) . "\n\n";
     }
