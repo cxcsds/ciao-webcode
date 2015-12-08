@@ -396,6 +396,7 @@ if ( defined $threadindex ) {
     # and do the actual publishing
     system @pexe, $script,
       $cfg_opt, $type_opt, $force_opt, $forceforce_opt, $localxslt_opt, $verbose_opt,
+      $ignore_opt,
       @files
 	and die "\nerror in\n dir=$dir\n with files=" . join(" ",@files) . "\n\n";
 }
