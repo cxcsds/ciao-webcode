@@ -54,6 +54,11 @@
     *    logo image, eg "CIAO Logo". If logoimage is unset then this is the
     *    text that is used
     *
+    *  . logourl, string, optional
+    *
+    *    If a logo is used (either text or an image) then make it a link to
+    *    this location (e.g. '/ciao4.8/').
+    *
     *  . indir - string, required
     *    full path to directory where to find the XML files
     *    must end in a /
@@ -96,11 +101,12 @@
   <xsl:param name="site" select="''"/>
 
   <xsl:param name="cssfile"/>
-  <xsl:param name="navbarname"  select='"ahelp"'/>
-  <xsl:param name="searchssi"   select='"/incl/search.html"'/>
+  <xsl:param name="navbarname" select='"ahelp"'/>
+  <xsl:param name="searchssi"  select='"/incl/search.html"'/>
 
   <xsl:param name="logoimage" select='""'/>
   <xsl:param name="logotext"  select='""'/>
+  <xsl:param name="logourl"   select='""'/>
 
   <xsl:param name="headtitlepostfix"  select='""'/>
   <xsl:param name="texttitlepostfix"  select='""'/>
@@ -248,6 +254,13 @@
       <xsl:if test="$logotext != ''">
 	<xsl:text disable-output-escaping="yes">&lt;p class="navimage"&gt;</xsl:text>
 
+        <!--* link ? -->
+	<xsl:if test="$logourl != ''">
+	  <xsl:text disable-output-escaping="yes">&lt;a href="</xsl:text>
+	  <xsl:value-of select="$logourl"/>
+	  <xsl:text disaple-output-escaping="yes">"&gt;</xsl:text>
+	</xsl:if>
+
 	<!--* logo or text? *-->
 	<xsl:choose>
 	  <xsl:when test="$logoimage != ''">
@@ -257,6 +270,10 @@
 	    <xsl:value-of select="$logotext"/>
 	  </xsl:otherwise>
 	</xsl:choose>
+
+	<xsl:if test="$logourl != ''">
+	  <xsl:text disaple-output-escaping="yes">&lt;/a&gt;</xsl:text>
+	</xsl:if>
 
 	<xsl:text disable-output-escaping="yes">&lt;/p&gt;</xsl:text>
       </xsl:if> <!--* $logotext != '' *-->
@@ -481,15 +498,17 @@
       </xsl:otherwise>
     </xsl:choose></xsl:variable>
 
-    <!--* link to the home page for the site*-->
-    <xsl:text disable-output-escaping="yes">&lt;dt&gt;</xsl:text>
-    <xsl:call-template name="add-link-to-text">
-      <xsl:with-param name="url" select="'../index.html'"/> <!--* I do not think we have a valid depth parameter? *-->
-      <xsl:with-param name="txt" select="concat('Home page (',$pretty-site,')')"/>
-      <xsl:with-param name="class" select="'heading'"/>
-      <xsl:with-param name="title" select="concat('The ',$pretty-site,' Home page')"/>
-    </xsl:call-template>
-    <xsl:text disable-output-escaping="yes">&lt;/dt&gt;</xsl:text>
+    <!--* link to the home page for the site IF there is no logo link *-->
+    <xsl:if test="$logourl = ''">
+      <xsl:text disable-output-escaping="yes">&lt;dt&gt;</xsl:text>
+      <xsl:call-template name="add-link-to-text">
+	<xsl:with-param name="url" select="'../index.html'"/> <!--* I do not think we have a valid depth parameter? *-->
+	<xsl:with-param name="txt" select="concat('Home page (',$pretty-site,')')"/>
+	<xsl:with-param name="class" select="'heading'"/>
+	<xsl:with-param name="title" select="concat('The ',$pretty-site,' Home page')"/>
+      </xsl:call-template>
+      <xsl:text disable-output-escaping="yes">&lt;/dt&gt;</xsl:text>
+    </xsl:if>
 
     <!--* links to the index pages *-->
     <xsl:text disable-output-escaping="yes">&lt;dt&gt;</xsl:text>

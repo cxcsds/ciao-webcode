@@ -285,15 +285,18 @@ my $ahelpindexdir = "";
 $ahelpindexdir = get_config_type( $version_config, "ahelpindexdir", $type )
   if check_config_exists( $version_config, "ahelpindexdir" );
 
-# logo image/text is also optional
+# logo image/text/url is also optional
 # - only needed for navbar pages
 #
 my $logoimage = "";
 my $logotext = "";
+my $logourl = "";
 $logoimage = get_config_version( $version_config, "logoimage" )
   if check_config_exists( $version_config, "logoimage" );
 $logotext = get_config_version( $version_config, "logotext" )
   if check_config_exists( $version_config, "logotext" );
+$logourl = get_config_version( $version_config, "logourl" )
+  if check_config_exists( $version_config, "logourl" );
 
 # the following are only useful for threads: they
 # define the image to add at the end of links to 'images'
@@ -356,6 +359,7 @@ dbg "  searchssi=$searchssi";
 dbg "  mathjaxpath=$mathjaxpath";
 dbg "  logoimage=$logoimage";
 dbg "  logotext=$logotext";
+dbg "  logourl=$logourl";
 dbg "  imglinkicon=$imglinkicon [$imglinkiconwidth x $imglinkiconheight]";
 dbg "  headtitlepostfix=$headtitlepostfix";
 dbg "  texttitlepostfix=$texttitlepostfix";
@@ -814,6 +818,7 @@ sub xml2html_navbar ($) {
     my $params = basic_params $opts;
     $$params{logoimage} = $logoimage if $logoimage ne "";
     $$params{logotext}  = $logotext  if $logotext  ne "";
+    $$params{logourl}   = $logourl   if $logourl   ne "";
 
     # get a list of the pages: we need this so that:
     # - we can create the directory if necessary

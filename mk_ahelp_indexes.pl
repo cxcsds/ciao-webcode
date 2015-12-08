@@ -206,13 +206,16 @@ my $searchssi    = get_config_type $version_config, "searchssi", $type;
 my $googlessi    = get_config_version( $version_config, "googlessi" );
 my $urlbase      = get_config_type $version_config, "outurl", $type;
 
-# logo image/text is also optional
+# logo image/text/url is also optional
 my $logoimage = "";
 $logoimage = get_config_version( $version_config, "logoimage" )
   if check_config_exists( $version_config, "logoimage" );
 my $logotext = "";
 $logotext = get_config_version( $version_config, "logotext" )
   if check_config_exists( $version_config, "logotext" );
+my $logourl = "";
+$logourl = get_config_version( $version_config, "logourl" )
+  if check_config_exists( $version_config, "logourl" );
 
 # optional "postfix" text for page headers
 my $headtitlepostfix = "";
@@ -232,6 +235,7 @@ dbg "  googlessi=$googlessi";
 dbg "  navbarname=$navbar";
 dbg "  logoimage=$logoimage";
 dbg "  logotext=$logotext";
+dbg "  logourl=$logourl";
 dbg "  headtitlepostfix=$headtitlepostfix";
 dbg "  texttitlepostfix=$texttitlepostfix";
 dbg "*** CONFIG DATA (end) ***";
@@ -257,6 +261,8 @@ push @extra, ( logoimage => '../' x ($depth-1) . $logoimage )
   if $logoimage ne "";
 push @extra, ( logotext  => $logotext )
   if $logotext ne "";
+push @extra, ( logourl   => $logourl )
+  if $logourl ne "";
 
 # we 'hardcode' the output of the transformation
 # and ensure that any old files have been deleted

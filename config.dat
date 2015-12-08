@@ -118,9 +118,10 @@ googlessi=/ciao4.8/analytics.ssi
 %mathjaxpath=test /ciao4.8/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
 %mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
 
-# logo/text to use for navbar
+# logo/text/url to use for navbar
 logoimage=imgs/ciao_logo_navbar.gif
 logotext=CIAO Logo
+logourl=/ciao4.8/
 
 # location of the stylesheets
 
@@ -212,6 +213,7 @@ googlessi=/ciao4.3/analytics.ssi
 # logo/text to use for navbar
 logoimage=imgs/ciao_logo_navbar.gif
 logotext=CIAO Logo
+logourl=/ciao/
 
 # location of the stylesheets
 %stylesheets=trial /data/da/Docs/web4/devel/
@@ -414,6 +416,7 @@ version_string=4.8
 
 logoimage=imgs/sherpa_logo_navbar.gif
 logotext=Sherpa Logo
+logourl=/sherpa4.8/
 
 %searchssi=live /sherpa4.8/sherpa_search.ssi
 %searchssi=test /sherpa4.8/sherpa_search.ssi
@@ -525,6 +528,7 @@ imglinkiconheight=16
 
 logoimage=imgs/chips_logo_navbar.gif
 logotext=ChIPS Logo
+logourl=/chips4.8/
 
 %searchssi=live /chips4.8/chips_search.ssi
 %searchssi=test /chips4.8/chips_search.ssi
@@ -736,6 +740,7 @@ texttitlepostfix=CSC
 
 logoimage=imgs/csc_logo_navbar.jpg
 logotext=Chandra Source Catalog logo
+logourl=/csc1/
 
 %searchssi=live /csc1/csc_search.ssi
 %searchssi=test /csc1/csc_search.ssi
@@ -818,6 +823,7 @@ texttitlepostfix=CSC
 
 logoimage=imgs/csc_logo_navbar.jpg
 logotext=Chandra Source Catalog logo
+logourl=/csc2/
 
 %searchssi=live /csc2/csc_search.ssi
 %searchssi=test /csc2/csc_search.ssi
@@ -909,6 +915,7 @@ texttitlepostfix=Iris
 
 logoimage=imgs/iris_logo_small_blue_cropped.jpg
 logotext=Iris logo
+logourl=/iris/
 
 %searchssi=live /iris/csc_search.ssi
 %searchssi=test /iris/csc_search.ssi
@@ -1002,6 +1009,7 @@ imglinkiconheight=16
 
 logoimage=imgs/obsvis_logo_navbar.gif
 logotext=ObsVis logo
+logourl=/obsvis/
 
 %searchssi=live /obsvis/search.ssi
 %searchssi=test /obsvis/search.ssi

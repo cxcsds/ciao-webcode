@@ -332,30 +332,36 @@
     <br/>
     <xsl:apply-templates/>
   </xsl:template> <!--* match=block mode=navbar *-->
-
+  
+  <!-- NOTE: may need to update ahelp_main.xsl with any changes here -->
   <xsl:template name="add-logo-section">
-    <xsl:choose>
-      <xsl:when test="$logoimage != '' and $logotext != ''">
-	<p class="navimage">
-	  <xsl:call-template name="add-image">
-	    <xsl:with-param name="alt"   select="$logotext"/>
-	    <xsl:with-param name="src"   select="$logoimage"/>
-	  </xsl:call-template>
-	</p>
-      </xsl:when>
-	      
-      <xsl:when test="$logotext != ''">
-	<p class="navimage"><xsl:value-of select="$logotext"/></p>
-      </xsl:when>
-
-      <!--*
-	  * decided to not have any white space as doesn't look
-	  * good to me with the re-designed layout
-	  *-->
-      <xsl:otherwise>
-	<!--* <br/> *-->
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:if test="$logotext != ''">
+      <xsl:variable name="logo">
+	<xsl:choose>
+	  <xsl:when test="$logoimage != ''">
+	    <xsl:call-template name="add-image">
+	      <xsl:with-param name="alt" select="$logotext"/>
+	      <xsl:with-param name="src" select="$logoimage"/>
+	    </xsl:call-template>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:value-of select="$logotext"/>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:variable>
+      <p class="navimage">
+	<xsl:choose>
+	  <xsl:when test="$logourl != ''">
+	    <a href="{$logourl}">
+	      <xsl:copy-of select="$logo"/>
+	    </a>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:copy-of select="$logo"/>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </p>
+    </xsl:if>
   </xsl:template> <!--* name=add-logo-section *-->
 
   <!--*

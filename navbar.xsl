@@ -20,6 +20,10 @@
     *     logo image, eg "CIAO Logo". If logoimage is unset then this is the
     *     text that is used
     *
+    *   logourl, string, optional
+    *     If a logo is used (either text or an image) then make it a link to
+    *     this location (e.g. '/ciao4.8/').
+    *
     *-->
 
 <xsl:stylesheet version="1.0"
@@ -36,6 +40,7 @@
   <xsl:param name="startdepth" select='""'/>
   <xsl:param name="logoimage" select='""'/>
   <xsl:param name="logotext"  select='""'/>
+  <xsl:param name="logourl"  select='""'/>
 
   <!--*
       * include the stylesheets AFTER defining the variables
