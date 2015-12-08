@@ -555,13 +555,21 @@
       <xsl:when test="$nfaq = 0">
 	
 	<xsl:choose>
-	  <!--* This will fail if the dictionary includes a file and the
-	      * included text contains a faq link, but worry about that if
-	      * it happens -->
+	  <!--* maybe just combine the dictionary and $ignoremissinglink
+              * check (or remove the dictionary one and force the user to
+              * set ignoremissinglink in that case)
+	      *-->
 	  <xsl:when test="name(//*) = 'dictionary'">
 	    <xsl:message terminate="no">
  WARNING: the dictionary contains a FAQ link but the FAQ has not been
   published yet. Please publish the FAQ and then re-publish the dictionary.
+            </xsl:message>
+	  </xsl:when>
+	  <xsl:when test="$ignoremissinglink = 'yes'">
+	    <xsl:message terminate="no">
+ WARNING: the FAQ (site=<xsl:value-of select="$sitevalue"/>) has not been published yet,
+  please publish it and then re-publish this page
+  (trying to check whether id=<xsl:value-of select="$id"/> is valid)
             </xsl:message>
 	  </xsl:when>
 	  <xsl:otherwise>
