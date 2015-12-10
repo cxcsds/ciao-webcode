@@ -160,7 +160,11 @@
       </xsl:choose></xsl:variable>
 
     <li>
-      <span class="navheader">
+      <!-- The onclick attribute is added so that IOS will pass through mouse events,
+           in particular so that :hover will work. I am not sure what elements need
+	   it
+	-->
+      <span class="navheader" onclick="void(0)">
       <xsl:choose>
 	<xsl:when test="boolean(@link)">
 	  <!--* section has a link attribute *-->
