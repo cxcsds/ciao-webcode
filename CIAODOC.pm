@@ -25,7 +25,6 @@ use Cwd;
 use IO::File;
 use File::stat;
 use File::Basename;
-use Fcntl qw(:DEFAULT :flock);
 
 use XML::LibXML;
 use XML::LibXSLT;
@@ -138,7 +137,6 @@ sub mymkdir   ($);
 sub mycp      ($$);
 sub myrm      ($);
 sub mysetmods ($);
-sub create_lockfile ($);
 
 sub check_paths (@);
 sub check_executables (@);
@@ -265,6 +263,8 @@ sub mymkdir ($) {
     return if -d $dname;
     die "ERROR: <$dname> is a file.\n" if -e $dname;
 
+    dbg "Creating directory: $dname";
+
     # strip through the parts
     my @dirs = split "/", $dname;
     my $dhead = "";
@@ -334,55 +334,6 @@ sub mysetmods ($) {
     call_chgrp $main::group, $name;
 
 } # sub: mysetmods()
-
-# It looks like this lock works over NFS on Linux/OS-X. We use a
-# separate file as the lock file to make it easier to clean up
-# on error. However, does this lock work across multiple machines?
-#
-# A simple watchdog timer is used to catch cases where a file can
-# not be unlocked; may need to tweak the time out.
-#
-# [1] http://www.perlmonks.org/?node_id=14139
-# [2] http://stackoverflow.com/questions/34920/how-do-i-lock-a-file-in-perl
-# [3] http://www.perlmonks.org/?node_id=7058
-#
-# NOTE:
-#   this routine clobbers $SIG{ALRM} and too lazy to reset it
-#
-sub create_lockfile ($) {
-  my $lfile = shift;
-
-  dbg("Creating lock file with PID=$$: $lfile");
-
-  # Hard code time out
-  $SIG{ALRM} = sub { die "Error: unable to read lock file $lfile\n"; };
-  alarm 10;  
-    
-  my $fh;
-  sysopen($fh, $lfile, O_WRONLY | O_CREAT)
-    or die "can't open lock file $lfile: $!\n";
-
-  flock($fh, LOCK_EX)
-    or die "can't lock the lock file $lfile: $!\n";
-
-  # remove timer
-  alarm 0;
-  undef $SIG{ALRM};
-
-  truncate($fh, 0)
-    or die "can't truncate lock file $lfile: $!\n";
-
-  print $fh "$$\n";
-
-  # hopefully this fixes permissions
-  # mysetmods $lfile;  -- this removes r/w permissions
-  call_chgrp $main::group, $lfile;
-  call_chmod "o-w", $lfile;
-  call_chmod "ug+w", $lfile;
-
-  return $fh;
-
-} # sub: create_lockfile
 
 # check_paths( $path1, $path2, ... )
 #
@@ -1373,15 +1324,11 @@ sub check_ahelp_site_valid ($) {
   # $revdepfile (e.g. a releasenotes file) to ahelpindex,
   # but rather we want to mention the ahelp file.
   #
-  # A very simple locking scheme is used - a file called
-  # <revdepfilename>.revdep.lock - is created to ensure
-  # that multiple users publishing at the same time do
-  # not clobber each others changes. This is fragile
-  # - e.g. leaving stale lock files around - and needs
-  # some real-world experience to see if it is a sensible
-  # solution. An alternative would be to check the md5sum
-  # of the file to see if it has been changed between
-  # reading and writing, but this has its own issues.
+  # A very simple locking scheme is used: RCS. I tried a
+  # separate lock file, but it didn't work out well, so I have
+  # decided to use RCS as this is designed to support this
+  # workflow. The cost is un-needed history revisions for the
+  # revdep files, but it should not be excessive.
   # 
 
 =pod HELP
@@ -1454,39 +1401,61 @@ Argh: ahelp reverse dependencies are generally complicated because
 
     my $fname = substr($revdepfile, 0, length($revdepfile)-4) . ".revdep";
 
-    my $lockfile = $fname . ".lock";
+    my $rcsdir = dirname($fname) . "/RCS";
+    dbg "REVDEP file=$fname  RCS=$rcsdir";
 
-    # because of the user group check, lock file creation is moved into the
-    # following code
-    #
+    # Do we need to create the RCS directory?
+    mymkdir $rcsdir unless -d $rcsdir;
+
+    # If the revdep file doesn't exist, create an empty one and add it to RCS
+    #    
     my $dom;
     my $root;
-    my $lfh;
-    if (-e $fname) {
-      if (not grp_matches $fname) {
+    unless ( -e $fname ) {
+	dbg "Creating RCS file for $fname";
+	system "rcs -i -L -t-lockfile -q $fname"
+	    and die "Unable to create RCS file for $fname";
+	# system "touch $fname"
+	#     and die "Unable to create empty file $fname";
+	# mysetmods $fname;
+
+	dbg "Creating new revdep file: $fname";
+	$dom = XML::LibXML::Document->new();
+	$root = $dom->createElement("reversedependencies");
+	$dom->setDocumentElement($root);
+	$dom->toFile($fname, 0);
+	mysetmods $fname;
+
+	system "ci -u -q $fname"
+	    and die "Unable to run 'ci -u $fname'";
+
+	$root = undef;
+	$dom = undef;
+    }
+
+    if (not grp_matches $fname) {
 	dbg "NOTE: unable to write to dependency file $fname as group differs";
 	return;
-      }
-      $lfh = create_lockfile $lockfile;
-      dbg "Reading in revdep file: $fname";
-      $dom = $parser->parse_file($fname);
-      $root = $dom->documentElement();
-    } else {
-      my $dname = dirname($fname);
-
-      # should we create this directory if it does not exist?
-      mymkdir $dname unless -d $dname;
-
-      if (not grp_matches $dname) {
-	dbg "NOTE: unable to create dependency file $fname as group differs";
-	return;
-      }
-      $lfh = create_lockfile $lockfile;
-      dbg "Creating new revdep file: $fname";
-      $dom = XML::LibXML::Document->new();
-      $root = $dom->createElement("reversedependencies");
-      $dom->setDocumentElement($root);
     }
+
+    # There is a possibility that there is a .revdep file but no version in
+    # RCS (due to changes in development), which means that a hack is needed.
+    #
+    # should be able to use $name here
+    my $tempname = $rcsdir . "/" . basename($fname) . ",v";
+    if ( ! -e $tempname ) {
+	system "rcs -i -L -t-lockfile -q $fname"
+	    and die "Unable to create RCS file for $fname";
+	system "ci -u -q $fname"
+	    and die "Unable to run 'ci -u $fname'";
+	
+    }
+
+    dbg "Reading in revdep file: $fname";
+    system "co -l -q $fname"
+	and die "Unable to 'co -l -q $fname'";
+    $dom = $parser->parse_file($fname);
+    $root = $dom->documentElement();
 
     my $count = $dom->find("count(//revdep/store[normalize-space(.)='" . $sfile . "'])");
     if ($count == 0) {
@@ -1500,17 +1469,16 @@ Argh: ahelp reverse dependencies are generally complicated because
       myrm $fname;
       $dom->toFile($fname, 0);
       mysetmods $fname;
-      close $lfh;
-
-      # would like to delete the lock file, but can not guarantee that it
-      # does not now belong to another process!
-      #myrm $lockfile;
 
     } elsif ($count > 1) {
-      # could clean up, but shouldn't happen so error out
-	close $lfh;
-      die "Internal error: multiple ($count) revdep store=$sfile in $fname\n";
+	# do not bother with -q here as about to die anyway
+	system "ci -u $fname"
+	    and die "Unable to check in the revdep file $fname";
+	die "Internal error: multiple ($count) revdep store=$sfile in $fname\n";
     }
+
+    system "ci -u -q $fname"
+	and die "Unable to 'ci -u -q $fname'";
 
   } # sub: add_revdep_file
 
