@@ -160,6 +160,7 @@
       </xsl:choose></xsl:variable>
 
     <li>
+      <span class="navheader">
       <xsl:choose>
 	<xsl:when test="boolean(@link)">
 	  <!--* section has a link attribute *-->
@@ -211,6 +212,12 @@
           * in the order they are specified, but for now use block then
           * list. 
 	  *-->
+
+      <xsl:if test="count(list) != 0">
+	<span class="hassubmenu">➤</span>
+      </xsl:if>
+      </span>
+
       <xsl:apply-templates select="block" mode="navbar"/>
       <xsl:apply-templates select="list" mode="navbar"/>
 
@@ -312,7 +319,6 @@
       * css code is made available via add-htmlhead (helper.xsl)
       *-->
   <xsl:template match="list" mode="navbar">
-    <span class="hassubmenu">➤</span>
     <ul>
       <xsl:apply-templates mode="navbar"/>
     </ul>
