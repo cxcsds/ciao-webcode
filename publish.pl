@@ -382,10 +382,22 @@ my @nonxml;
 # - split into XML and non XML files
 #   we don't do anything clever but just rely on the file name
 #
+# - skip directoried called RCS and any file ending in ",v"
+#
 foreach my $in ( map { s/\.xml$//; $_; } @ARGV ) {
     # for some reason I am suddenly seeing empty values of $in, so skip them
     # (rather than work out where they are coming from)
     next unless $in;
+
+    if ( $in eq "RCS" and -d $in ) {
+	print "skipping RCS directory\n";
+	next;
+    }
+
+    if ( $in =~ /,v$/ ) {
+	print "skipping $in as ends in ,v so taken to be RCS file\n";
+	next;
+    }
 
     if ( -e "${in}.xml" ) { push @xml, $in; }
     elsif ( -e $in )      { push @nonxml, $in; }
