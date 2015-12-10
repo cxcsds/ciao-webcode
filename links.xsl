@@ -1685,6 +1685,8 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	    <xsl:attribute name="target"><xsl:value-of select="@target"/></xsl:attribute>
 	  </xsl:if>
 
+	  <xsl:call-template name="add-class-attribute"/>
+
 	  <xsl:apply-templates/>
 	</a>
       </xsl:with-param>
@@ -1833,6 +1835,17 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	    </xsl:call-template></xsl:if><xsl:value-of select="@href"/></xsl:if>
 	    <xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
 	  </xsl:attribute>
+
+	  <!--// allow javascripty goodness //-->
+          <xsl:if test="boolean(@onclick)">
+	    <xsl:attribute name="onclick"><xsl:value-of select="@onclick"/></xsl:attribute>
+	  </xsl:if>
+          <xsl:if test="boolean(@target)">
+	    <xsl:attribute name="target"><xsl:value-of select="@target"/></xsl:attribute>
+	  </xsl:if>
+
+	  <xsl:call-template name="add-class-attribute"/>
+
 	  <xsl:apply-templates/>
 	</a>
       </xsl:with-param>
@@ -2854,5 +2867,18 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:otherwise>
     </xsl:choose>
   </func:function> <!--* name=djb:read-in-thread-info *-->
+
+  <!--*
+      * need a better way of handling class overrides for elements
+      * and this should probably be moved somewhere else
+      *-->
+  <xsl:template name="add-class-attribute">
+    <xsl:if test="boolean(@class)">
+      <xsl:attribute name="class">
+	<xsl:value-of select="@class"/>
+      </xsl:attribute>
+    </xsl:if>
+  </xsl:template>
+      
 
 </xsl:stylesheet>
