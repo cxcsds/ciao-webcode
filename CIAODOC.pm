@@ -1441,13 +1441,12 @@ Argh: ahelp reverse dependencies are generally complicated because
     # There is a possibility that there is a .revdep file but no version in
     # RCS (due to changes in development), which means that a hack is needed.
     #
-    # should be able to use $name here
     my $tempname = $rcsdir . "/" . basename($fname) . ",v";
     if ( ! -e $tempname ) {
 	system "rcs -i -L -t-lockfile -q $fname"
 	    and die "Unable to create RCS file for $fname";
 	system "ci -u -q $fname"
-	    and die "Unable to run 'ci -u $fname'";
+	    and die "Unable to run 'ci -u -q $fname'";
 	
     }
 
@@ -1472,13 +1471,13 @@ Argh: ahelp reverse dependencies are generally complicated because
 
     } elsif ($count > 1) {
 	# do not bother with -q here as about to die anyway
-	system "ci -u $fname"
+	system "ci -u -mupdate $fname"
 	    and die "Unable to check in the revdep file $fname";
 	die "Internal error: multiple ($count) revdep store=$sfile in $fname\n";
     }
 
-    system "ci -u -q $fname"
-	and die "Unable to 'ci -u -q $fname'";
+    system "ci -u -q -mupdate $fname"
+	and die "Unable to 'ci -u -q -mupdate $fname'";
 
   } # sub: add_revdep_file
 
