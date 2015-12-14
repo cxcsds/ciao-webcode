@@ -151,6 +151,7 @@
 		<xsl:for-each select="section">
 		  <!-- TODO: should this force the name attribute to be non-empty? -->
 		  <xsl:call-template name="add-section-title"/>
+		  <xsl:apply-templates select="intro"/>
 		  <ul>
 		    <xsl:for-each select="note">
 		      <li>
