@@ -101,6 +101,9 @@ my @prefixes =
    "/data/da/Docs/ciaoweb/ciao49",
    "/data/da/Docs/sherpaweb/ciao49",
    "/data/da/Docs/chipsweb/ciao49",
+   "/data/da/Docs/ciaoweb/ciao410",
+   "/data/da/Docs/sherpaweb/ciao410",
+   "/data/da/Docs/chipsweb/ciao410",
 
    "/data/da/Docs/icxcweb/sds",
 
