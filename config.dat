@@ -114,9 +114,9 @@ version_string=4.10
 googlessi=/ciao4.10/analytics.ssi
 
 # MathJax location; it should include any configuration variables
-%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 # logo/text/url to use for navbar
 logoimage=imgs/ciao_logo_navbar.gif
@@ -323,9 +323,9 @@ imglinkiconheight=16
 googlessi=/chart/analytics.ssi
 
 # MathJax location; it should include any configuration variables
-%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/chart/
 %stylesheets=test /data/da/Docs/web4/chart/
@@ -427,9 +427,9 @@ logourl=/sherpa4.10/
 googlessi=/sherpa4.10/analytics.ssi
 
 # MathJax location; it should include any configuration variables
-%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
@@ -539,9 +539,9 @@ logourl=/chips4.10/
 googlessi=/chips4.10/analytics.ssi
 
 # MathJax location; it should include any configuration variables
-%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
@@ -643,9 +643,9 @@ headtitlepostfix=CALDB 4
 # We use the CIAO 4.10 version here even though CALDB releases are decoupled from
 # the CIAO one, since I do not want to have multiple copies of MathJax lying
 # around.
-%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/caldb/
 %stylesheets=test /data/da/Docs/web4/caldb/
@@ -750,9 +750,9 @@ logourl=/csc1/
 # We use the CIAO 4.10 version here even though CSC releases are decoupled from
 # the CIAO one, since I do not want to have too many copies of MathJax lying
 # around, and it makes it easier to support a single version.
-%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
@@ -833,9 +833,9 @@ logourl=/csc2/
 # We use the CIAO 4.10 version here even though CSC releases are decoupled from
 # the CIAO one, since I do not want to have too many copies of MathJax lying
 # around, and it makes it easier to support a single version.
-%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
@@ -1020,9 +1020,9 @@ logourl=/obsvis/
 googlessi=/obsvis/analytics.ssi
 
 # MathJax location; it should include any configuration variables
-%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
@@ -1194,9 +1194,9 @@ number=Cycle 18
 # We use the CIAO 4.6 version here even though proposal releases are decoupled from
 # the CIAO one, since I do not want to have multiple copies of MathJax lying
 # around.
-%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
@@ -1255,9 +1255,9 @@ number=Cycle 17
 # We use the CIAO 4.6 version here even though proposal releases are decoupled from
 # the CIAO one, since I do not want to have multiple copies of MathJax lying
 # around.
-%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
