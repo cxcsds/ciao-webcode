@@ -142,9 +142,23 @@
 			   <xsl:value-of select="@link"/>
 			 </xsl:variable>
 			 
-			 <a class="grouptitle" href="{$grplink}.html">
-			   <strong><xsl:value-of select="title"/></strong>
-			 </a>
+ 			 <xsl:choose>
+ 			   <xsl:when test="@section">
+ 			     <xsl:variable name="grpsection">
+ 			       <xsl:value-of select="@section"/>
+ 			     </xsl:variable>
+
+ 			     <a class="grouptitle" href="{$grplink}.html#{$grpsection}">
+ 			       <strong><xsl:value-of select="title"/></strong>
+ 			     </a>
+ 			   </xsl:when>
+
+ 			   <xsl:otherwise>
+ 			     <a class="grouptitle" href="{$grplink}.html">
+ 			       <strong><xsl:value-of select="title"/></strong>
+ 			     </a>
+ 			   </xsl:otherwise>
+ 			 </xsl:choose>
 		       </xsl:when>
 		       
 		       <xsl:otherwise>
