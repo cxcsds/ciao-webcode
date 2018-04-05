@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE xsl:stylesheet>
 
 <!--* 
@@ -83,10 +83,10 @@
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html"
                   doctype-system="about:legacy-compat"
-		  version="5.0" encoding="utf-8">
+		  version="5.0">
 
       <!--* we start processing the XML file here *-->
-      <html lang="en">
+      <html lang="en-US">
 
 	<!--* make the HTML head node *-->
 	<xsl:call-template name="add-htmlhead-standard"/>
@@ -144,9 +144,9 @@
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html"
                   doctype-system="about:legacy-compat"
-		  version="5.0" encoding="utf-8">
+		  version="5.0">
 
-      <html lang="en">
+      <html lang="en-US">
 
 	<xsl:call-template name="add-htmlhead">
 	  <!-- We used to just have this as FAQ Entry rather than the actual

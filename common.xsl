@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE xsl:stylesheet>
 
 <!--* 
@@ -55,12 +55,15 @@
       * https://www.owasp.org/images/0/0e/OWASP_AppSec_Research_2010_Busting_Frame_Busting_by_Rydstedt.pdf
       *
       * Similar information is at http://javascript.info/tutorial/clickjacking
-      * which seems to suggest the X-Frames-Origin should be added by the web server
+      * which seems to suggest the X-Frames-Options should be added by the web server
       * rather than as a meta tag. Also, we place the javascript within the head
       * block out of convenience (not having to add info to too many places)
       * but should it be in the body (as this page suggests); this just affects
       * the download/rendering speed of the page as far as I can tell. For
       * now leave as is.
+      *
+      * I have taken out the X-Frame-Options line with the change to HTML5
+      * as the W3C validator is complaining vociferously about it.
       *
       * Also add in the favicon here to make things simpler,
       * if not cleaner/semantically sensible.
@@ -86,7 +89,9 @@
 
     <meta name="title"><xsl:attribute name="content"><xsl:value-of select="$title"/></xsl:attribute></meta>
     <meta name="creator" content="SAO-HEA"/>
+    <!-- a language tag on the html element is now used
     <meta http-equiv="content-language" content="en-US"/>
+    -->
     <xsl:if test="$lastmodiso != ''">
       <meta name="date" content="{$lastmodiso}"/>
     </xsl:if>
@@ -120,12 +125,14 @@
     <meta name="keywords" content="HEA,HEAD,High Energy Astrophysics Division"/>
 
     <!--* cross-frame scripting 'protection' *-->
+    <!--
     <xsl:comment>Frame busting from http://securestate.blogspot.com/2010/08/xfs-101-cross-frame-scripting-explained.html</xsl:comment>
     <xsl:text>
 </xsl:text>
     <meta http-equiv="X-Frame-Options" content="Deny"/>
-    <style type="text/css">html { display: none; }</style>
-    <script type="text/javascript">
+    -->
+    <style>html { display: none; }</style>
+    <script>
 if (self == top) {
   document.documentElement.style.display = 'block';
 } else {

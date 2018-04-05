@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE xsl:stylesheet>
 
 <!--* 
@@ -982,7 +982,7 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html" 
                   doctype-system="about:legacy-compat"
-		  version="5.0" encoding="utf-8">
+		  version="5.0">
 
       <!--* get the start of the document over with *-->
       <xsl:call-template name="add-start-html"/>

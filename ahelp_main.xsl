@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE xsl:stylesheet>
 
 <!--*
@@ -46,11 +46,12 @@
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html"
                   doctype-system="about:legacy-compat"
-		  version="5.0" encoding="utf-8">
+		  version="5.0">
       
-      <html lang="en">
+      <html lang="en-US">
 	<head>
-	  <meta charset="UTF-8"/>
+	  <!-- Since libxslt adds in a http-equiv line with the charset -->
+	  <!-- <meta charset="UTF-8"/> -->
 	  <title><xsl:value-of select="$title"/></title>
 
 	  <link rel="canonical" href="{$url}"/> 
@@ -58,7 +59,7 @@
 	  <!--* use CSS for the navbar *-->
 	  <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" href="{$cssfile}"/>
 	  <link rel="stylesheet" title="Default stylesheet for CIAO-related pages" media="print" href="{$cssprintfile}"/>
-<style type="text/css">
+<style>
 /* highlight only the link to this page in the navbar */
 .navbar a[href='<xsl:value-of select="$outname"/>.html'] {
   background: #CCCCCC;

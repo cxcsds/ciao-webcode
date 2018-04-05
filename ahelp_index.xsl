@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE xsl:stylesheet>
 
 <!--* AHELP XML to HTML convertor using XSL Transformations 
@@ -574,9 +574,9 @@
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html"
                   doctype-system="about:legacy-compat"
-		  version="5.0" encoding="utf-8">
+		  version="5.0">
       
-      <html lang="en">
+      <html lang="en-US">
 
 	<xsl:call-template name="add-htmlhead">
 	  <xsl:with-param name="title">Ahelp (alphabetical) - <xsl:value-of select="$headtitlepostfix"/></xsl:with-param>
@@ -775,9 +775,9 @@
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html"
                   doctype-system="about:legacy-compat"
-		  version="5.0" encoding="utf-8">
+		  version="5.0">
       
-      <html lang="en">
+      <html lang="en-US">
 
 	<xsl:call-template name="add-htmlhead">
 	  <xsl:with-param name="title">Ahelp (contextual) - <xsl:value-of select="$headtitlepostfix"/></xsl:with-param>

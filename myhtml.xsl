@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE xsl:stylesheet>
 
 <!--* 
@@ -84,9 +84,9 @@
     <xsl:text disable-output-escaping="yes">&lt;/body&gt;</xsl:text>
   </xsl:template> <!--* name=add-end-body *-->
 
-  <!--* add '<html lang="en">' *-->
+  <!--* add '<html lang="en-US">' *-->
   <xsl:template name="add-start-html">
-    <xsl:text disable-output-escaping="yes">&lt;html lang="en"&gt;</xsl:text>
+    <xsl:text disable-output-escaping="yes">&lt;html lang="en-US"&gt;</xsl:text>
   </xsl:template> <!--* name=add-start-html *-->
   <xsl:template name="add-end-html">
     <xsl:text disable-output-escaping="yes">&lt;/html&gt;</xsl:text>

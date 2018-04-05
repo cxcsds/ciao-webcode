@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE xsl:stylesheet>
 
 <!--* 
@@ -453,10 +453,10 @@
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html" 
                   doctype-system="about:legacy-compat"
-		  version="5.0" encoding="utf-8">
+		  version="5.0">
 
       <!--* get the start of the document over with *-->
-      <html lang="en">
+      <html lang="en-US">
 
 	<xsl:call-template name="add-threadindex-start">
 	  <xsl:with-param name="title"><xsl:value-of select="id/title"/> Threads<xsl:value-of select="concat(' - ',$headtitlepostfix)"/></xsl:with-param>
@@ -520,10 +520,10 @@
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html" 
                   doctype-system="about:legacy-compat"
-		  version="5.0" encoding="utf-8">
+		  version="5.0">
 
       <!--* get the start of the document over with *-->
-      <html lang="en">
+      <html lang="en-US">
 
 	<xsl:call-template name="add-threadindex-start">
 	  <xsl:with-param name="title">Data for Threads<xsl:value-of select="concat(' - ',$headtitlepostfix)"/></xsl:with-param>
@@ -586,10 +586,10 @@
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html" 
                   doctype-system="about:legacy-compat"
-		  version="5.0" encoding="utf-8">
+		  version="5.0">
 
       <!--* get the start of the document over with *-->
-      <html lang="en">
+      <html lang="en-US">
 
 	<xsl:call-template name="add-threadindex-start">
 	  <xsl:with-param name="title"><xsl:if test="$site='sherpa'">Sherpa </xsl:if>Threads<xsl:value-of select="concat(' - ',$headtitlepostfix)"/></xsl:with-param>
@@ -676,10 +676,10 @@
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html" 
                   doctype-system="about:legacy-compat"
-		  version="5.0" encoding="utf-8">
+		  version="5.0">
 
       <!--* get the start of the document over with *-->
-      <html lang="en">
+      <html lang="en-US">
 
 	<xsl:call-template name="add-threadindex-start">
 	  <xsl:with-param name="title">All Threads<xsl:value-of select="concat(' - ',$headtitlepostfix)"/></xsl:with-param>

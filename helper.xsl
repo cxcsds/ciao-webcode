@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE xsl:stylesheet>
 
 <!--* 
@@ -285,8 +285,15 @@
     <xsl:param name='css'/>
     <xsl:param name='page'/>
     <head>
-      <meta charset="UTF-8" />
-
+      <!-- *
+	   * do not add this since libxslt automatically adds in
+	   *   <meta http-equiv="Content-Type"
+           *         content="text/html; charset=UTF-8">
+           *
+           * and the W3C validator says you can't have both
+           *-->
+      <!-- <meta charset="UTF-8" /> -->
+           
       <title><xsl:value-of select="$title"/></title>
 
       <!--* any meta information to add ? *-->
@@ -309,7 +316,7 @@
 	    * input, and do not need the texjax input processor, is it
 	    * worth using a "custom" config?
 	    *-->
-	<script type="text/javascript" src="{$mathjaxpath}"/>
+	<script src="{$mathjaxpath}"/>
       </xsl:if>
 
       <!--* add main stylesheets *-->
@@ -392,7 +399,7 @@
           *
          {!* add a rule to highlight the selected link in the navbar *}
       <xsl:if test="$navbarlink != ''">
-<style type="text/css">
+<style>
 /* highlight the link to this page only in the navbar */
 .navbar a[href='<xsl:value-of select="$navbarlink"/>'] {
   background: #cccccc;
@@ -405,7 +412,7 @@
 
       <!--* do we have any CSS rules ? *-->
       <xsl:if test="$css!=''">
-<style type="text/css">
+<style>
 <xsl:value-of select="$css"/>
 </style>
       </xsl:if>
@@ -441,15 +448,21 @@
   </xsl:template>
 
   <xsl:template match="css" mode="header">
-    <style type="text/css">
+    <style>
       <xsl:apply-templates/>
     </style>
   </xsl:template>
 
   <!--* metalist/meta are a hacky way of setting meta comments in
-      * the head block of a HTML page.
+      * the head block of a HTML page. There are pages with "invalid"
+      * meta blocks that use <meta http-equiv="key" content="..."/>
+      * instead of <meta name="key" content="..."/>,
+      * so handle this case
       *-->
   <xsl:template match="metalist"><xsl:apply-templates select="meta"/></xsl:template>
+  <xsl:template match="meta[@http-equiv and @content]">
+    <meta name="{@http-equiv}" content="{@content}"/>
+  </xsl:template>
   <xsl:template match="meta"><xsl:copy-of select="."/></xsl:template>
 
   <!--*
