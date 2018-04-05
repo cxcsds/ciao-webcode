@@ -78,36 +78,36 @@ version_string=4.10
 # main CSS location
 %css=live /ciao4.10/ciao.css
 %css=test /ciao4.10/ciao.css
-%css=trial /sds/ciao_trial/ciao.css
+%css=trial /ciao/ciao.css
 
 %cssprint=live /ciao4.10/ciao.print.css
 %cssprint=test /ciao4.10/ciao.print.css
-%cssprint=trial /sds/ciao_trial/ciao.print.css
+%cssprint=trial /ciao/ciao.print.css
 
 # favicon location
 %favicon=live /ciao4.10/favicon.ico
 %favicon=test /ciao4.10/favicon.ico
-%favicon=trial /sds/ciao_trial/favicon.ico
+%favicon=trial /ciao/favicon.ico
 
 # location of the news file for the "What's new" link
 %newsfile=live /proj/web-cxc-dmz/htdocs/ciao4.10/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/ciao4.10/news.html
-%newsfile=trial /proj/web-icxc/htdocs/sds/ciao_trial/news.html
+%newsfile=trial /proj/web-cxc-dmz-test/htdocs/ciao/news.html
 
 # Hmmm, should these be version-specific links (i.e. /ciao4.x/ rather than /ciao/)?
 %newsurl=live /ciao/news.html
 %newsurl=test /ciao/news.html
-%newsurl=trial /sds/ciao_trial/news.html
+%newsurl=trial /ciao/news.html
 
 # location of the "watch out" page
 %watchouturl=live /ciao/watchout.html
 %watchouturl=test /ciao/watchout.html
-%watchouturl=trial /sds/ciao_trial/watchout.html
+%watchouturl=trial /ciao/watchout.html
 
 # location of the search ssi
 %searchssi=live /ciao4.10/ciao_search.ssi
 %searchssi=test /ciao4.10/ciao_search.ssi
-%searchssi=trial /sds/ciao_trial/ciao_search.ssi
+%searchssi=trial /ciao/ciao_search.ssi
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
@@ -116,7 +116,7 @@ googlessi=/ciao4.10/analytics.ssi
 # MathJax location; it should include any configuration variables
 %mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 %mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /ciao/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 # logo/text/url to use for navbar
 logoimage=imgs/ciao_logo_navbar.gif
@@ -132,13 +132,12 @@ logourl=/ciao4.10/
 # what's the location for the output files?
 %outdir=live /proj/web-cxc-dmz/htdocs/ciao4.10/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/ciao4.10/
-%outdir=trial /proj/web-icxc-test/htdocs/sds/ciao_trial/
+%outdir=trial /proj/web-cxc-dmz-test/htdocs/ciao/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/ciao/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/ciao4.10/
-#%outurl=trial http://icxc.harvard.edu/sds/ciao_trial/
-%outurl=trial http://icxc1.cfa.harvard.edu/sds/ciao_trial/
+%outurl=trial https://cxc-dmz-test.cfa.harvard.edu/ciao/
 
 # location of the "storage" space
 %storage=live /data/da/Docs/ciaoweb/published/ciao410/live/
@@ -187,23 +186,23 @@ texttitlepostfix=CIAO dev
 version_string=dev
 
 # main CSS location
-%css=trial /sds/ciaositedev/ciao.css
-%cssprint=trial /sds/ciaositedev/ciao.print.css
+%css=trial /ciaositedev/ciao.css
+%cssprint=trial /ciaositedev/ciao.print.css
 
 # favicon location
-%favicon=trial /sds/ciaositedev/favicon.ico
+%favicon=trial /ciaositedev/favicon.ico
 
 # location of the news file for the "What's new" link
-#%newsfile=trial /proj/web-icxc/htdocs/sds/ciaositedev/news.html
-%newsfile=trial /proj/web-icxc-test/htdocs/sds/ciaositedev/news.html
+#%newsfile=trial /proj/web-icxc/htdocs/ciaositedev/news.html
+%newsfile=trial /proj/web-cxc-dmz-test/htdocs/ciaositedev/news.html
 
-%newsurl=trial /sds/ciaositedev/news.html
+%newsurl=trial /ciaositedev/news.html
 
 # location of the "watch out" page
-%watchouturl=trial /sds/ciaositedev/watchout.html
+%watchouturl=trial /ciaositedev/watchout.html
 
 # location of the search ssi
-%searchssi=trial /sds/ciaositedev/ciao_search.ssi
+%searchssi=trial /ciaositedev/ciao_search.ssi
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
@@ -219,12 +218,12 @@ logourl=/ciao/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
 # what's the location for the output files?
-#%outdir=trial /proj/web-icxc/htdocs/sds/ciaositedev/
-%outdir=trial /proj/web-icxc-test/htdocs/sds/ciaositedev/
+#%outdir=trial /proj/web-icxc/htdocs/ciaositedev/
+%outdir=trial /proj/web-cxc-dmz-test/htdocs/ciaositedev/
 
 # live outurl is unversioned for use in canonical header link
-#%outurl=trial http://icxc.harvard.edu/sds/ciaositedev/
-%outurl=trial http://icxc1.cfa.harvard.edu/sds/ciaositedev/
+#%outurl=trial http://icxc.harvard.edu/ciaositedev/
+%outurl=trial https://cxc-dmz-test.cfa.harvard.edu/ciaositedev/
 
 # location of the "storage" space
 %storage=trial /data/da/Docs/ciaoweb/published/ciaositedev/trial/
@@ -299,16 +298,16 @@ number=1.0
 
 %css=live /ciao/ciao.css
 %css=test /ciao/ciao.css
-%css=trial /sds/ciao_trial/ciao.css
+%css=trial /ciao/ciao.css
 
 %cssprint=live /ciao/ciao.print.css
 %cssprint=test /ciao/ciao.print.css
-%cssprint=trial /sds/ciao_trial/ciao.print.css
+%cssprint=trial /ciao/ciao.print.css
 
 # favicon location
 %favicon=live /ciao/favicon.ico
 %favicon=test /ciao/favicon.ico
-%favicon=trial /sds/ciao_trial/favicon.ico
+%favicon=trial /ciao/favicon.ico
 
 imglinkicon=imgs/imageicon.gif
 imglinkiconwidth=23
@@ -316,7 +315,7 @@ imglinkiconheight=16
 
 %searchssi=live /chart/chart_search.ssi
 %searchssi=test /chart/chart_search.ssi
-%searchssi=trial /sds/chart_trial/chart_search.ssi
+%searchssi=trial /sds/chart/chart_search.ssi
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
@@ -325,7 +324,7 @@ googlessi=/chart/analytics.ssi
 # MathJax location; it should include any configuration variables
 %mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 %mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /ciao/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/chart/
 %stylesheets=test /data/da/Docs/web4/chart/
@@ -333,13 +332,13 @@ googlessi=/chart/analytics.ssi
 
 %outdir=live /proj/web-cxc-dmz/htdocs/chart/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chart/
-#%outdir=trial /proj/web-icxc/htdocs/sds/chart_trial/
-%outdir=trial /proj/web-icxc-test/htdocs/sds/chart_trial/
+#%outdir=trial /proj/web-icxc/htdocs/chart/
+%outdir=trial /proj/web-cxc-dmz-test/htdocs/chart/
 
 %outurl=live http://cxc.harvard.edu/chart/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/chart/
-#%outurl=trial http://icxc.harvard.edu/sds/chart_trial/
-%outurl=trial http://icxc1.cfa.harvard.edu/sds/chart_trial/
+#%outurl=trial http://icxc.harvard.edu/sds/chart/
+%outurl=trial https://cxc-dmz-test.cfa.harvard.edu/chart/
 
 %storage=live /data/da/Docs/chartweb/published/internal/live/
 %storage=test /data/da/Docs/chartweb/published/internal/test/
@@ -389,30 +388,30 @@ version_string=4.10
 # main CSS location
 %css=live /ciao4.10/ciao.css
 %css=test /ciao4.10/ciao.css
-%css=trial /sds/ciao_trial/ciao.css
+%css=trial /ciao/ciao.css
 
 %cssprint=live /ciao4.10/ciao.print.css
 %cssprint=test /ciao4.10/ciao.print.css
-%cssprint=trial /sds/ciao_trial/ciao.print.css
+%cssprint=trial /ciao/ciao.print.css
 
 # favicon location
 %favicon=live /ciao4.10/favicon.ico
 %favicon=test /ciao4.10/favicon.ico
-%favicon=trial /sds/ciao_trial/favicon.ico
+%favicon=trial /ciao/favicon.ico
 
 # location of the news file for the "What's new" link
 %newsfile=live /proj/web-cxc-dmz/htdocs/sherpa4.10/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.10/news.html
-%newsfile=trial /proj/web-icxc-test/htdocs/sds/sherpa_trial/news.html
+%newsfile=trial /proj/web-cxc-dmz-test/htdocs/sherpa/news.html
 
 %newsurl=live /sherpa/news.html
 %newsurl=test /sherpa/news.html
-%newsurl=trial /sds/sherpa_trial/news.html
+%newsurl=trial /sds/sherpa/news.html
 
 # location of the "watch out" page
 %watchouturl=live /sherpa/watchout.html
 %watchouturl=test /sherpa/watchout.html
-%watchouturl=trial /sds/sherpa_trial/watchout.html
+%watchouturl=trial /sds/sherpa/watchout.html
 
 logoimage=imgs/sherpa_logo_navbar.gif
 logotext=Sherpa Logo
@@ -420,7 +419,7 @@ logourl=/sherpa4.10/
 
 %searchssi=live /sherpa4.10/sherpa_search.ssi
 %searchssi=test /sherpa4.10/sherpa_search.ssi
-%searchssi=trial /sds/sherpa_trial/sherpa_search.ssi
+%searchssi=trial /sds/sherpa/sherpa_search.ssi
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
@@ -429,7 +428,7 @@ googlessi=/sherpa4.10/analytics.ssi
 # MathJax location; it should include any configuration variables
 %mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 %mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /ciao/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
@@ -437,12 +436,12 @@ googlessi=/sherpa4.10/analytics.ssi
 
 %outdir=live /proj/web-cxc-dmz/htdocs/sherpa4.10/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.10/
-%outdir=trial /proj/web-icxc-test/htdocs/sds/sherpa_trial/
+%outdir=trial /proj/web-cxc-dmz-test/htdocs/sherpa/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/sherpa/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/sherpa4.10/
-%outurl=trial http://icxc1.cfa.harvard.edu/sds/sherpa_trial/
+%outurl=trial https://cxc-dmz-test.cfa.harvard.edu/sherpa/
 
 %storage=live /data/da/Docs/sherpaweb/published/ciao410/live/
 %storage=test /data/da/Docs/sherpaweb/published/ciao410/test/
@@ -503,28 +502,28 @@ imglinkiconheight=16
 
 %css=live /ciao4.10/ciao.css
 %css=test /ciao4.10/ciao.css
-%css=trial /sds/ciao_trial/ciao.css
+%css=trial /ciao/ciao.css
 
 %cssprint=live /ciao4.10/ciao.print.css
 %cssprint=test /ciao4.10/ciao.print.css
-%cssprint=trial /sds/ciao_trial/ciao.print.css
+%cssprint=trial /ciao/ciao.print.css
 
 # favicon location
 %favicon=live /ciao4.10/favicon.ico
 %favicon=test /ciao4.10/favicon.ico
-%favicon=trial /sds/ciao_trial/favicon.ico
+%favicon=trial /ciao/favicon.ico
 
 %newsfile=live /proj/web-cxc-dmz/htdocs/ciao4.10/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/ciao4.10/news.html
-%newsfile=trial /proj/web-icxc-test/htdocs/sds/ciao_trial/news.html
+%newsfile=trial /proj/web-cxc-dmz-test/htdocs/ciao/news.html
 
 %newsurl=live /ciao/news.html
 %newsurl=test /ciao/news.html
-%newsurl=trial /sds/ciao_trial/news.html
+%newsurl=trial /ciao/news.html
 
 %watchouturl=live /ciao/watchout.html
 %watchouturl=test /ciao/watchout.html
-%watchouturl=trial /sds/ciao_trial/watchout.html
+%watchouturl=trial /ciao/watchout.html
 
 logoimage=imgs/chips_logo_navbar.gif
 logotext=ChIPS Logo
@@ -532,7 +531,7 @@ logourl=/chips4.10/
 
 %searchssi=live /chips4.10/chips_search.ssi
 %searchssi=test /chips4.10/chips_search.ssi
-%searchssi=trial /sds/chips_trial/chips_search.ssi
+%searchssi=trial /sds/chips/chips_search.ssi
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
@@ -541,7 +540,7 @@ googlessi=/chips4.10/analytics.ssi
 # MathJax location; it should include any configuration variables
 %mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 %mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /ciao/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
@@ -549,12 +548,12 @@ googlessi=/chips4.10/analytics.ssi
 
 %outdir=live /proj/web-cxc-dmz/htdocs/chips4.10/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chips4.10/
-%outdir=trial /proj/web-icxc-test/htdocs/sds/chips_trial/
+%outdir=trial /proj/web-cxc-dmz-test/htdocs/chips/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/chips/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/chips4.10/
-%outurl=trial http://icxc1.cfa.harvard.edu/sds/chips_trial/
+%outurl=trial https://cxc-dmz-test.cfa.harvard.edu/chips/
 
 %storage=live /data/da/Docs/chipsweb/published/ciao410/live/
 %storage=test /data/da/Docs/chipsweb/published/ciao410/test/
@@ -616,28 +615,28 @@ headtitlepostfix=CALDB 4
 
 %css=live /ciao/ciao.css
 %css=test /ciao/ciao.css
-%css=trial /sds/ciao_trial/ciao.css
+%css=trial /ciao/ciao.css
 
 %cssprint=live /ciao/ciao.print.css
 %cssprint=test /ciao/ciao.print.css
-%cssprint=trial /sds/ciao_trial/ciao.print.css
+%cssprint=trial /ciao/ciao.print.css
 
 # favicon location
 %favicon=live /ciao/favicon.ico
 %favicon=test /ciao/favicon.ico
-%favicon=trial /sds/ciao_trial/favicon.ico
+%favicon=trial /ciao/favicon.ico
 
 %newsfile=live /proj/web-cxc-dmz/htdocs/caldb4/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/caldb4/news.html
-%newsfile=trial /proj/web-icxc-test/htdocs/sds/caldb4/news.html
+%newsfile=trial /proj/web-cxc-dmz-test/htdocs/caldb4/news.html
 
 %newsurl=live /caldb/news.html
 %newsurl=test /caldb/news.html
-%newsurl=trial /sds/caldb4_trial/news.html
+%newsurl=trial /sds/caldb4/news.html
 
 %searchssi=live /caldb4/caldb_search.ssi
 %searchssi=test /caldb4/caldb_search.ssi
-%searchssi=trial /sds/caldb4_trial/caldb_search.ssi
+%searchssi=trial /sds/caldb4/caldb_search.ssi
 
 # MathJax location; it should include any configuration variables
 # We use the CIAO 4.10 version here even though CALDB releases are decoupled from
@@ -645,7 +644,7 @@ headtitlepostfix=CALDB 4
 # around.
 %mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 %mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /ciao/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/caldb/
 %stylesheets=test /data/da/Docs/web4/caldb/
@@ -657,12 +656,12 @@ headtitlepostfix=CALDB 4
 #
 %outdir=live /proj/web-cxc-dmz/htdocs/caldb4/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/caldb4/
-%outdir=trial /proj/web-icxc-test/htdocs/sds/caldb4_trial/
+%outdir=trial /proj/web-cxc-dmz-test/htdocs/caldb4/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/caldb/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/caldb4/
-%outurl=trial http://icxc1.cfa.harvard.edu/sds/caldb4_trial/
+%outurl=trial https://cxc-dmz-test.cfa.harvard.edu/caldb4/
 
 %storage=live /data/da/Docs/caldbweb/published/caldb4/live/
 %storage=test /data/da/Docs/caldbweb/published/caldb4/test/
@@ -714,29 +713,29 @@ texttitlepostfix=CSC
 
 %css=live /csc1/csc.css
 %css=test /csc1/csc.css
-%css=trial /sds/csc_trial/csc.css
+%css=trial /sds/csc/csc.css
 
 %cssprint=live /csc1/csc.print.css
 %cssprint=test /csc1/csc.print.css
-%cssprint=trial /sds/csc_trial/csc.print.css
+%cssprint=trial /sds/csc/csc.print.css
 
 # favicon location
 %favicon=live /csc/favicon.ico
 %favicon=test /csc/favicon.ico
-%favicon=trial /sds/csc_trial/favicon.ico
+%favicon=trial /sds/csc/favicon.ico
 
 %newsfile=live /proj/web-cxc/htdocs/csc1/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/csc1/news.html
-%newsfile=trial /proj/web-icxc-test/htdocs/sds/csc_trial/news.html
+%newsfile=trial /proj/web-cxc-dmz-test/htdocs/csc/news.html
 
 %newsurl=live /csc/news.html
 %newsurl=test /csc/news.html
-%newsurl=trial /sds/csc_trial/news.html
+%newsurl=trial /sds/csc/news.html
 
 # I do not think these are used by CSC site
 %watchouturl=live /csc/watchout.html
 %watchouturl=test /csc/watchout.html
-%watchouturl=trial /sds/csc_trial/watchout.html
+%watchouturl=trial /sds/csc/watchout.html
 
 logoimage=imgs/csc_logo_navbar.jpg
 logotext=Chandra Source Catalog logo
@@ -744,7 +743,7 @@ logourl=/csc1/
 
 %searchssi=live /csc1/csc_search.ssi
 %searchssi=test /csc1/csc_search.ssi
-%searchssi=trial /sds/csc_trial/csc_search.ssi
+%searchssi=trial /sds/csc/csc_search.ssi
 
 # MathJax location; it should include any configuration variables
 # We use the CIAO 4.10 version here even though CSC releases are decoupled from
@@ -752,7 +751,7 @@ logourl=/csc1/
 # around, and it makes it easier to support a single version.
 %mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 %mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /ciao/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
@@ -760,12 +759,12 @@ logourl=/csc1/
 
 %outdir=live /proj/web-cxc-dmz/htdocs/csc1/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/csc1/
-%outdir=trial /proj/web-icxc-test/htdocs/sds/csc_trial/
+%outdir=trial /proj/web-cxc-dmz-test/htdocs/csc/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/csc/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/csc1/
-%outurl=trial http://icxc1.cfa.harvard.edu/sds/csc_trial/
+%outurl=trial https://cxc-dmz-test.cfa.harvard.edu/csc/
 
 %storage=live /data/da/Docs/cscweb/published/csc1/live/
 %storage=test /data/da/Docs/cscweb/published/csc1/test/
@@ -797,29 +796,29 @@ texttitlepostfix=CSC
 
 %css=live /csc2/csc.css
 %css=test /csc2/csc.css
-%css=trial /sds/csc_trial/csc.css
+%css=trial /sds/csc/csc.css
 
 %cssprint=live /csc2/csc.print.css
 %cssprint=test /csc2/csc.print.css
-%cssprint=trial /sds/csc_trial/csc.print.css
+%cssprint=trial /sds/csc/csc.print.css
 
 # favicon location
 %favicon=live /csc/favicon.ico
 %favicon=test /csc/favicon.ico
-%favicon=trial /sds/csc_trial/favicon.ico
+%favicon=trial /sds/csc/favicon.ico
 
 %newsfile=live /proj/web-cxc/htdocs/csc2/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/csc2/news.html
-%newsfile=trial /proj/web-icxc-test/htdocs/sds/csc_trial/news.html
+%newsfile=trial /proj/web-cxc-dmz-test/htdocs/csc/news.html
 
 %newsurl=live /csc/news.html
 %newsurl=test /csc/news.html
-%newsurl=trial /sds/csc_trial/news.html
+%newsurl=trial /sds/csc/news.html
 
 # I do not think these are used by CSC site
 %watchouturl=live /csc/watchout.html
 %watchouturl=test /csc/watchout.html
-%watchouturl=trial /sds/csc_trial/watchout.html
+%watchouturl=trial /sds/csc/watchout.html
 
 logoimage=imgs/csc_logo_navbar.jpg
 logotext=Chandra Source Catalog logo
@@ -827,7 +826,7 @@ logourl=/csc2/
 
 %searchssi=live /csc2/csc_search.ssi
 %searchssi=test /csc2/csc_search.ssi
-%searchssi=trial /sds/csc_trial/csc_search.ssi
+%searchssi=trial /sds/csc/csc_search.ssi
 
 # MathJax location; it should include any configuration variables
 # We use the CIAO 4.10 version here even though CSC releases are decoupled from
@@ -835,7 +834,7 @@ logourl=/csc2/
 # around, and it makes it easier to support a single version.
 %mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 %mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /ciao/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
@@ -843,12 +842,12 @@ logourl=/csc2/
 
 %outdir=live /proj/web-cxc-dmz/htdocs/csc2/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/csc2/
-%outdir=trial /proj/web-icxc-test/htdocs/sds/csc_trial/
+%outdir=trial /proj/web-cxc-dmz-test/htdocs/csc/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live http://cxc.harvard.edu/csc/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/csc2/
-%outurl=trial http://icxc1.cfa.harvard.edu/sds/csc_trial/
+%outurl=trial https://cxc-dmz-test.cfa.harvard.edu/csc/
 
 %storage=live /data/da/Docs/cscweb/published/csc2/live/
 %storage=test /data/da/Docs/cscweb/published/csc2/test/
@@ -939,13 +938,13 @@ googlessi=/iris/analytics.ssi
 
 %outdir=live /proj/web-cxc-dmz/htdocs/iris/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/iris/
-#%outdir=trial /proj/web-icxc/htdocs/sds/site_iris/
-%outdir=trial /proj/web-icxc-test/htdocs/sds/site_iris/
+#%outdir=trial /proj/web-icxc/htdocs/site_iris/
+%outdir=trial /proj/web-icxc-test/htdocs/site_iris/
 
 %outurl=live http://cxc.harvard.edu/iris/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/iris/
 #%outurl=trial http://icxc.harvard.edu/sds/site_iris/
-%outurl=trial http://icxc1.cfa.harvard.edu/sds/site_iris/
+%outurl=trial https://cxc-dmz-test.cfa.harvard.edu/site_iris/
 
 %storage=live /data/da/Docs/irisweb/published/iris/live/
 %storage=test /data/da/Docs/irisweb/published/iris/test/
@@ -996,16 +995,16 @@ imglinkiconheight=16
 
 %css=live /ciao/ciao.css
 %css=test /ciao/ciao.css
-%css=trial /sds/ciao_trial/ciao.css
+%css=trial /ciao/ciao.css
 
 %cssprint=live /ciao/ciao.print.css
 %cssprint=test /ciao/ciao.print.css
-%cssprint=trial /sds/ciao_trial/ciao.print.css
+%cssprint=trial /ciao/ciao.print.css
 
 # favicon location
 %favicon=live /ciao/favicon.ico
 %favicon=test /ciao/favicon.ico
-%favicon=trial /sds/ciao_trial/favicon.ico
+%favicon=trial /ciao/favicon.ico
 
 logoimage=imgs/obsvis_logo_navbar.gif
 logotext=ObsVis logo
@@ -1013,7 +1012,7 @@ logourl=/obsvis/
 
 %searchssi=live /obsvis/search.ssi
 %searchssi=test /obsvis/search.ssi
-%searchssi=trial /sds/obsvis_trial/search.ssi
+%searchssi=trial /sds/obsvis/search.ssi
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
@@ -1022,7 +1021,7 @@ googlessi=/obsvis/analytics.ssi
 # MathJax location; it should include any configuration variables
 %mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 %mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /ciao/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
@@ -1030,11 +1029,11 @@ googlessi=/obsvis/analytics.ssi
 
 %outdir=live /proj/web-cxc-dmz/htdocs/obsvis/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/obsvis/
-%outdir=trial /proj/web-icxc-test/htdocs/sds/obsvis_trial/
+%outdir=trial /proj/web-cxc-dmz-test/htdocs/obsvis/
 
 %outurl=live http://cxc.harvard.edu/obsvis/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/obsvis/
-%outurl=trial http://icxc1.cfa.harvard.edu/sds/obsvis_trial/
+%outurl=trial https://cxc-dmz-test.cfa.harvard.edu/obsvis/
 
 %storage=live /data/da/Docs/obsvisweb/published/obsvis/live/
 %storage=test /data/da/Docs/obsvisweb/published/obsvis/test/
@@ -1086,10 +1085,10 @@ number=1.0
 
 logotext=Science Data Systems
 
-%css=live /sds/ciao.css
-%css=test /sds/ciao.css
-%cssprint=live /sds/ciao.print.css
-%cssprint=test /sds/ciao.print.css
+%css=live /ciao.css
+%css=test /ciao.css
+%cssprint=live /ciao.print.css
+%cssprint=test /ciao.print.css
 
 %favicon=live http://cxc.harvard.edu/ciao/favicon.ico
 %favicon=test http://cxc.harvard.edu/ciao/favicon.ico
@@ -1097,9 +1096,9 @@ logotext=Science Data Systems
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
 
-%outdir=live /proj/web-icxc/htdocs/sds/
-%outdir=test /proj/web-icxc-test/htdocs/sds/
-%outurl=live https://icxc.cfa.harvard.edu/sds/
+%outdir=live /proj/web-icxc/htdocs/
+%outdir=test /proj/web-icxc-test/htdocs/
+%outurl=live https://cxc-dmz-test.cfa.harvard.edu/
 %outurl=test https://icxc2.cfa.harvard.edu/sds/
 
 # ugh - a hack; do not need ahelp here
@@ -1114,10 +1113,10 @@ number=1.0
 
 logotext=Science Data Systems
 
-%css=live /sds/ciao.css
-%css=test /sds/ciao.css
-%cssprint=live /sds/ciao.print.css
-%cssprint=test /sds/ciao.print.css
+%css=live /ciao.css
+%css=test /ciao.css
+%cssprint=live /ciao.print.css
+%cssprint=test /ciao.print.css
 
 %favicon=live http://cxc.harvard.edu/ciao/favicon.ico
 %favicon=test http://cxc.harvard.edu/ciao/favicon.ico
@@ -1196,7 +1195,7 @@ number=Cycle 18
 # around.
 %mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 %mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /ciao/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
@@ -1257,7 +1256,7 @@ number=Cycle 17
 # around.
 %mathjaxpath=live /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 %mathjaxpath=test /ciao4.10/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
+%mathjaxpath=trial /ciao/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 
 %stylesheets=live /data/da/Docs/web4/ciao410/
 %stylesheets=test /data/da/Docs/web4/ciao410/
@@ -1317,7 +1316,7 @@ number=Cycle 16
 # around.
 %mathjaxpath=live /ciao4.6/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
 %mathjaxpath=test /ciao4.6/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
-%mathjaxpath=trial /sds/ciao_trial/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
+%mathjaxpath=trial /ciao/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js
 
 # TODO: change to CIAO 4.6
 %stylesheets=live /data/da/Docs/web4/ciao45/

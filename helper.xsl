@@ -285,6 +285,7 @@
     <xsl:param name='css'/>
     <xsl:param name='page'/>
     <head>
+      <meta charset="UTF-8" />
 
       <title><xsl:value-of select="$title"/></title>
 

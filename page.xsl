@@ -68,9 +68,18 @@
     <!--* output filename to stdout *-->
     <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
 
-    <!--* create document *-->
+    <!--*
+        * create HTML5 document, see
+        * http://w3c.github.io/html/syntax.html#doctype-legacy-string
+        * http://www.microhowto.info/howto/generate_an_html5_doctype_using_xslt.html
+        * https://stackoverflow.com/a/19379446
+        *
+        * Not sure that version="5.0" is actually working properly
+        * (or maybe my libxslt is too old)
+	*-->
     <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="utf-8">
+                  doctype-system="about:legacy-compat"
+		  version="5.0" encoding="utf-8">
 
       <!--* we start processing the XML file here *-->
       <html lang="en">

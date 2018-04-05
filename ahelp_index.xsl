@@ -573,7 +573,8 @@
 
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="utf-8">
+                  doctype-system="about:legacy-compat"
+		  version="5.0" encoding="utf-8">
       
       <html lang="en">
 
@@ -773,7 +774,8 @@
 
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="utf-8">
+                  doctype-system="about:legacy-compat"
+		  version="5.0" encoding="utf-8">
       
       <html lang="en">
 

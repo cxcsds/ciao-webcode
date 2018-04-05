@@ -64,11 +64,13 @@
 
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html"
-      version="4.0" encoding="utf-8">
+                  doctype-system="about:legacy-compat"
+		  version="5.0" encoding="utf-8">
 
       <!--* create document *-->
       <html lang="en">
 	<head>
+	  <meta charset="UTF-8"/>
 	  <title>The page you are looking for has moved</title>
 	  <meta http-equiv="Refresh" >
 	    <xsl:attribute name="content">0; URL=<xsl:value-of select="to"/></xsl:attribute>

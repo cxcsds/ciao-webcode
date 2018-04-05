@@ -804,6 +804,15 @@ sub xml2html_basic ($$$) {
 
 } # sub: xml2html_basic
 
+# See https://stackoverflow.com/a/31726665
+#
+# sub begins_with ($$) {
+#     my $str = shift;
+#     my $prefix = shift;
+# 
+#     return substr($str, 0, length($prefix)) eq $prefix;
+# }
+
 # xml2html_navbar - called by xml2html
 #
 # 02/13/04 - we now pass the site depth into the stylesheet
@@ -905,23 +914,28 @@ sub xml2html_navbar ($) {
 	  unless -e $page;
 
 	# hack the page to remove the leading '<!DOCTYPE ...' link
-	# (first 2 lines)
+	# (first 2 lines). Actually, it looks like these lines may
+	# be blank nowadays.
 	#
 	my $ifh = IO::File->new( "< $page" ) or
 	  die "ERROR: Unable to read from $page\n";
 	my @in = <$ifh>;
 	$ifh->close;
 
-	shift @in;
-	shift @in;
+	my $l1 = shift @in;
+	my $l2 = shift @in;
 
-	my $ofh = IO::File->new( "> $page" ) or
-	  die "ERROR: Unable to write to $page\n";
-	$ofh->print( $_ ) for @in;
-	$ofh->close;
+	if ($l1 =~ /^\s*$/ and $l2 =~ /^\s*$/ ) {
+	  my $ofh = IO::File->new( "> $page" ) or
+	    die "ERROR: Unable to write to $page\n";
+	  $ofh->print( $_ ) for @in;
+	  $ofh->close;
 
-	mysetmods $page;
-	print "Created: $page\n";
+  	  mysetmods $page;
+	  print "Created: $page\n";
+        } else {
+	  print "  - note for Doug: no blank lines starting $page\n";
+	}
 
     }
 
@@ -1727,5 +1741,3 @@ sub process_files ($$) {
     } # foreach @$aref
 
 } # sub: process_files
-
-
