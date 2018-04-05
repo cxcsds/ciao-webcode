@@ -602,8 +602,7 @@
 		</div> <!--// close id=content //-->
 
 		<div id="navbar">
-		  <div class="wrap">
-		    <a name="navtext"/>
+		  <div id="navtext" class="wrap">
 
 		  <xsl:call-template name="add-navbar">
                     <xsl:with-param name="navbar" select="$navbarname"/>
@@ -724,8 +723,8 @@
 
 	    <!--* do we need to add the 'label' *-->
 	    <xsl:if test="position() = 1">
-	      <th valign="top" rowspan="{last()}">
-		<a name="{$letter}"><xsl:value-of select="$letter"/></a>
+	      <th valign="top" rowspan="{last()}" id="{$letter}">
+		<xsl:value-of select="$letter"/>
 	      </th>
 	    </xsl:if>
 	    
@@ -803,8 +802,7 @@
 		</div> <!--// close id=content //-->
 
 		<div id="navbar">
-		  <div class="wrap">
-		    <a name="navtext"/>
+		  <div id="navtext" class="wrap">
 
 		  <xsl:call-template name="add-navbar">
                     <xsl:with-param name="navbar" select="$navbarname"/>
@@ -902,7 +900,7 @@
 	  <tr>
 	    <!--* do we need to add the 'label' *-->
 	    <xsl:if test="position() = 1">
-	      <th valign="top" rowspan="{last()}"><a name="{$context}"><xsl:value-of select="$context"/></a></th>
+	      <th valign="top" rowspan="{last()}" id="{$context}"><xsl:value-of select="$context"/></th>
 	    </xsl:if>
 	    
 	    <!--* and the actual data *-->

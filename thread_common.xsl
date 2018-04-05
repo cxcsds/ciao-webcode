@@ -114,7 +114,7 @@
       </xsl:when>
 
       <xsl:when test="boolean(text/introduction)">
-	<h2><a name="introduction">Introduction</a></h2>
+	<h2 id="introduction">Introduction</h2>
 	<xsl:apply-templates select="text/introduction"/>
 	<hr/>
       </xsl:when> <!--* text/introduction *-->
@@ -122,7 +122,7 @@
       <xsl:when test="boolean(text/overview)">
 	<div id="overview">
 
-	  <h2><a name="overview">Overview</a></h2>
+	  <h2 id="overview">Overview</h2>
 	  
 <!--
 	  <p>
@@ -290,7 +290,7 @@
 
     <xsl:if test="boolean(text/summary)">
       <hr/>
-      <h2><a name="summary">Summary</a></h2>
+      <h2 id="summary">Summary</h2>
 
       <xsl:apply-templates select="text/summary"/>
     </xsl:if>
@@ -326,7 +326,7 @@
     <xsl:if test="count(text/sectionlist/section) > 1">
       <!--* Table of contents, list of parameter files, history *-->
 
-      <h2><a name="toc">Contents</a></h2>
+      <h2 id="toc">Contents</h2>
 
       <ul>
 	<!--* Sections & Subsections *-->
@@ -484,7 +484,7 @@ or do we, as this case is already caught in add-parameters?
     </xsl:if>
 *-->
 
-    <h2><a name="history">History</a></h2>
+    <h2 id="history">History</h2>
 
     <table class="history">
       <xsl:apply-templates/>

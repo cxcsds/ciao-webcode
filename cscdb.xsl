@@ -125,16 +125,9 @@
 
 	       <xsl:for-each select="group">
 		 <xsl:variable name="rowcount"><xsl:value-of select="count(cols/col)"/></xsl:variable>
-		 <tr>
+		 <tr id="{@id}">
 		   <td valign="top" rowspan="{$rowcount}" class="context">
 
-		     <xsl:variable name="grpname">
-		       <xsl:value-of select="@id"/>
-		     </xsl:variable>
-	      
-		     <!--// make an anchor for TOC //-->
-		     <a name="{$grpname}"></a>
-		     
 		     <xsl:choose>
 		       
 		       <xsl:when test="@link">
@@ -199,8 +192,7 @@
 		</div> <!--// close id=content //-->
 
 		<div id="navbar">
-		  <div class="wrap">
-		    <a name="navtext"/>
+		  <div id="navtext" class="wrap">
 
 		  <xsl:call-template name="add-navbar">
 		    <xsl:with-param name="name" select="info/navbar"/>
@@ -303,8 +295,7 @@
 		</div> <!--// close id=content //-->
 
 		<div id="navbar">
-		  <div class="wrap">
-		    <a name="navtext"/>
+		  <div id="navtext" class="wrap">
 
 		  <xsl:call-template name="add-navbar">
 		    <xsl:with-param name="name" select="info/navbar"/>

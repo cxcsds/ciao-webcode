@@ -2470,6 +2470,8 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * add a <a name="id"></a> item to the document 
       * <id name="foo"/> or <id name="foo">...</id>
       *
+      * NOTE: this really should add an id attribute to
+      *       the container (or I should support id attributes)
       *-->
   <xsl:template match="id">
 
@@ -2479,6 +2481,11 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:message>
     </xsl:if>
     <a name="{@name}"><xsl:apply-templates/></a>
+    <!-- TODO: does this work now we are using HTML5?
+      <xsl:attribute name="id"><xsl:value-of select="{@name}"/></xsl:attribute
+      <xsl:apply-templates/>
+    -->
+<xsl:message terminate="no">See Doug about the use of the id tag to add a referent</xsl:message>
   </xsl:template> <!--* id *-->
 
   <!--* 

@@ -124,8 +124,7 @@
 		</div> <!--// close id=content //-->
 
 		<div id="navbar">
-		  <div class="wrap">
-		    <a name="navtext"/>
+		  <div id="navtext" class="wrap">
 
 		  <xsl:call-template name="add-navbar">
 		    <xsl:with-param name="name" select="info/navbar"/>
@@ -313,32 +312,32 @@
 
     <!--* and now the alphabetic list of entries *-->
     <dl>
-      <xsl:if test="$nea != 0"><dt><strong><a name="a">A</a></strong></dt><xsl:for-each select="$ea"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$neb != 0"><dt><strong><a name="b">B</a></strong></dt><xsl:for-each select="$eb"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$nec != 0"><dt><strong><a name="c">C</a></strong></dt><xsl:for-each select="$ec"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$ned != 0"><dt><strong><a name="d">D</a></strong></dt><xsl:for-each select="$ed"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$nee != 0"><dt><strong><a name="e">E</a></strong></dt><xsl:for-each select="$ee"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$nef != 0"><dt><strong><a name="f">F</a></strong></dt><xsl:for-each select="$ef"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$neg != 0"><dt><strong><a name="g">G</a></strong></dt><xsl:for-each select="$eg"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$neh != 0"><dt><strong><a name="h">H</a></strong></dt><xsl:for-each select="$eh"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$nei != 0"><dt><strong><a name="i">I</a></strong></dt><xsl:for-each select="$ei"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$nej != 0"><dt><strong><a name="j">J</a></strong></dt><xsl:for-each select="$ej"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$nek != 0"><dt><strong><a name="k">K</a></strong></dt><xsl:for-each select="$ek"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$nel != 0"><dt><strong><a name="l">L</a></strong></dt><xsl:for-each select="$el"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$nem != 0"><dt><strong><a name="m">M</a></strong></dt><xsl:for-each select="$em"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$nen != 0"><dt><strong><a name="n">N</a></strong></dt><xsl:for-each select="$en"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$neo != 0"><dt><strong><a name="o">O</a></strong></dt><xsl:for-each select="$eo"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$nep != 0"><dt><strong><a name="p">P</a></strong></dt><xsl:for-each select="$ep"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$neq != 0"><dt><strong><a name="q">Q</a></strong></dt><xsl:for-each select="$eq"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$ner != 0"><dt><strong><a name="r">R</a></strong></dt><xsl:for-each select="$er"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$nes != 0"><dt><strong><a name="s">S</a></strong></dt><xsl:for-each select="$es"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$net != 0"><dt><strong><a name="t">T</a></strong></dt><xsl:for-each select="$et"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$neu != 0"><dt><strong><a name="u">U</a></strong></dt><xsl:for-each select="$eu"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$nev != 0"><dt><strong><a name="v">V</a></strong></dt><xsl:for-each select="$ev"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$new != 0"><dt><strong><a name="w">W</a></strong></dt><xsl:for-each select="$ew"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$nex != 0"><dt><strong><a name="x">X</a></strong></dt><xsl:for-each select="$ex"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$ney != 0"><dt><strong><a name="y">Y</a></strong></dt><xsl:for-each select="$ey"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
-      <xsl:if test="$nez != 0"><dt><strong><a name="z">Z</a></strong></dt><xsl:for-each select="$ez"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nea != 0"><dt id="a"><strong>A</strong></dt><xsl:for-each select="$ea"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$neb != 0"><dt id="b"><strong>B</strong></dt><xsl:for-each select="$eb"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nec != 0"><dt id="c"><strong>C</strong></dt><xsl:for-each select="$ec"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$ned != 0"><dt id="d"><strong>D</strong></dt><xsl:for-each select="$ed"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nee != 0"><dt id="e"><strong>E</strong></dt><xsl:for-each select="$ee"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nef != 0"><dt id="f"><strong>F</strong></dt><xsl:for-each select="$ef"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$neg != 0"><dt id="g"><strong>G</strong></dt><xsl:for-each select="$eg"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$neh != 0"><dt id="h"><strong>H</strong></dt><xsl:for-each select="$eh"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nei != 0"><dt id="i"><strong>I</strong></dt><xsl:for-each select="$ei"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nej != 0"><dt id="j"><strong>J</strong></dt><xsl:for-each select="$ej"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nek != 0"><dt id="k"><strong>K</strong></dt><xsl:for-each select="$ek"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nel != 0"><dt id="l"><strong>L</strong></dt><xsl:for-each select="$el"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nem != 0"><dt id="m"><strong>M</strong></dt><xsl:for-each select="$em"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nen != 0"><dt id="n"><strong>N</strong></dt><xsl:for-each select="$en"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$neo != 0"><dt id="o"><strong>O</strong></dt><xsl:for-each select="$eo"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nep != 0"><dt id="p"><strong>P</strong></dt><xsl:for-each select="$ep"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$neq != 0"><dt id="q"><strong>Q</strong></dt><xsl:for-each select="$eq"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$ner != 0"><dt id="r"><strong>R</strong></dt><xsl:for-each select="$er"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nes != 0"><dt id="s"><strong>S</strong></dt><xsl:for-each select="$es"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$net != 0"><dt id="t"><strong>T</strong></dt><xsl:for-each select="$et"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$neu != 0"><dt id="u"><strong>U</strong></dt><xsl:for-each select="$eu"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nev != 0"><dt id="v"><strong>V</strong></dt><xsl:for-each select="$ev"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$new != 0"><dt id="w"><strong>W</strong></dt><xsl:for-each select="$ew"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nex != 0"><dt id="x"><strong>X</strong></dt><xsl:for-each select="$ex"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$ney != 0"><dt id="y"><strong>Y</strong></dt><xsl:for-each select="$ey"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
+      <xsl:if test="$nez != 0"><dt id="z"><strong>Z</strong></dt><xsl:for-each select="$ez"><xsl:sort select="translate(title, $lcletters, $ucletters)"/><xsl:call-template name="add-entry"/></xsl:for-each></xsl:if>
 
     </dl>
     

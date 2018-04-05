@@ -580,17 +580,12 @@
 
     <xsl:choose>
       <xsl:when test="$use-mathjax = 1">
-	<!--*
-	    * how best to supply an anchor now?
-	    * MathJax does add anchors automatically; can we add this?
-	    *-->
-	<a name="{name}"/>
 	<!--* 
 	    * Could place human-readable form in a noscript tag, but this
 	    * way we get to provide something hopefully-readable whilst the
 	    * LaTeX is being rendered.
 	    *-->
-	<span class="MathJax_Preview"><xsl:choose>
+	<span id="{name}" class="MathJax_Preview"><xsl:choose>
 	  <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
 	  <xsl:otherwise><xsl:value-of select="normalize-space(latex)"/></xsl:otherwise>
 	</xsl:choose></span>
@@ -633,10 +628,10 @@
 \end{eqnarray*}
 \end{document}
 	</xsl:document>
-	<a name="{name}"><img src="{name}.png"><xsl:attribute name="alt"><xsl:choose>
+	<img id="{name}" src="{name}.png"><xsl:attribute name="alt"><xsl:choose>
 	  <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
 	  <xsl:otherwise><xsl:value-of select="normalize-space(latex)"/></xsl:otherwise>
-	</xsl:choose></xsl:attribute></img></a>
+	</xsl:choose></xsl:attribute></img>
       </xsl:otherwise>
     </xsl:choose>
 
@@ -1159,7 +1154,7 @@
 
 	<div class="figure">
 	  <div class="caption screenmedia">
-	    <h3><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
+	    <h3 id="{@id}"><xsl:value-of select="$title"/></h3>
 	  </div>
 
 	  <div>
@@ -1261,7 +1256,7 @@
 	  </div>
 
 	  <!--// Figure title placement depends on mediatype //-->
-	  <h3 class="caption printmedia"><a name="{@id}"><xsl:value-of select="$title"/></a></h3>
+	  <h3 class="caption printmedia" id="{@id}"><xsl:value-of select="$title"/></h3>
 
 	  <xsl:if test="caption">
 	  <div class="caption">
@@ -1437,7 +1432,9 @@
 
     <div class="sectionlist">
       <!--* anchor linked to from the overview section *-->
-      <xsl:if test="boolean(/thread/text/overview)"><a name="start-thread"/></xsl:if>
+      <xsl:if test="boolean(/thread/text/overview)">
+	<xsl:attribute name="id">start-thread</xsl:attribute>
+      </xsl:if>
 
       <xsl:variable name="last" select="section[position()=count(../section)]/@id"/>
       <xsl:call-template name="add-sections">
@@ -1494,7 +1491,7 @@ ERROR: section tag has an empty id attribute.
 	    </xsl:message>
 	  </xsl:if>
          
-	  <h2><a name="{@id}"><xsl:value-of select="$titlestring"/></a></h2>
+	  <h2 id="{@id}"><xsl:value-of select="$titlestring"/></h2>
 	  <xsl:apply-templates/>
 	  
 	</xsl:otherwise>
@@ -1537,7 +1534,7 @@ ERROR: section tag has an empty id attribute.
       </xsl:message>
     </xsl:if>
 
-    <h2><a name="{$threadlink}"><xsl:value-of select="$titlestring"/></a></h2>
+    <h2 id="{$threadlink}"><xsl:value-of select="$titlestring"/></h2>
     <p>
       Please follow the
       "<a href="{concat('../',@threadlink,'/')}"><xsl:value-of select="$linkTitle"/></a>"
@@ -1638,9 +1635,9 @@ ERROR: section tag has an empty id attribute.
 
 	<!--* process each subsection *-->
 	<div class="subsection">
-	  <h3><a name="{@id}"><xsl:call-template name="position-to-label">
+	  <h3 id="{@id}"><xsl:call-template name="position-to-label">
 		<xsl:with-param name="type" select="$type"/>
-	      </xsl:call-template><xsl:value-of select="title"/></a></h3>
+	      </xsl:call-template><xsl:value-of select="title"/></h3>
 	  <xsl:apply-templates/>
       
 	  <!--* we only add a hr if we are NOT the last subsection

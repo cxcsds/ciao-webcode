@@ -112,8 +112,7 @@
 		</div> <!--// close id=content //-->
 
 		<div id="navbar">
-		  <div class="wrap">
-		    <a name="navtext"/>
+		  <div id="navtext" class="wrap">
 
 		  <xsl:call-template name="add-navbar">
 		    <xsl:with-param name="name" select="info/navbar"/>
@@ -217,7 +216,7 @@
       </xsl:if>
 
       <!--* the header *-->
-      <h2><a name="{@id}"><xsl:value-of select="name"/></a></h2>
+      <h2 id="{@id}"><xsl:value-of select="name"/></h2>
 
       <!--* loop through the sections *-->
       <xsl:for-each select="faqsection">

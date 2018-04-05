@@ -193,7 +193,8 @@
       </xsl:choose></xsl:variable>
 
     <xsl:element name="{$type}">
-	<a name="{translate($title,' ','_')}"><xsl:value-of select="$title"/></a>
+      <xsl:attribute name="id"><xsl:value-of select="{translate($title,' ','_')}"/></xsl:attribute>
+      <xsl:value-of select="$title"/>
     </xsl:element>
 
   </xsl:template> <!--* name=add-title-anchor *-->

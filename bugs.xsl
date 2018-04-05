@@ -382,8 +382,7 @@
 		</div> <!--// close id=content //-->
 
 		<div id="navbar">
-		  <div class="wrap">
-		    <a name="navtext"/>
+		  <div id="navtext" class="wrap">
 
 		  <xsl:call-template name="add-navbar">
 		    <xsl:with-param name="name" select="info/navbar"/>
@@ -444,7 +443,7 @@
 	</xsl:if>
 	
 	<xsl:if test="//buglist/entry[@cav]">
-	  <h2><a name="caveats">Caveats</a></h2>
+	  <h2 id="caveats">Caveats</h2>
 	  
 	  <dl>
 	    <xsl:apply-templates select="//buglist/entry[@cav]" mode="ahelp-buglist"/>

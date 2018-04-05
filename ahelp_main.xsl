@@ -91,8 +91,7 @@
 		</div> <!--// close id=content //-->
 
 		<div id="navbar">
-		  <div class="wrap">
-		    <a name="navtext"/>
+		  <div id="navtext" class="wrap">
 
 		  <xsl:call-template name="add-navbar">
                     <xsl:with-param name="navbar" select="'ahelp_index'"/>
@@ -184,7 +183,7 @@
       *
       *-->
   <xsl:template match="ENTRY/SYNOPSIS">
-      <h2><a name="synopsis">Synopsis</a></h2>
+      <h2 id="synopsis">Synopsis</h2>
       <p>
 	<xsl:apply-templates/>
       </p>
@@ -254,7 +253,7 @@
       <div class="ahelpsyntax">
 
 	<xsl:if test="parent::ENTRY">
-	  <h2><a name="syntax">Syntax</a></h2>
+	  <h2 id="syntax">Syntax</h2>
 	</xsl:if>
 
 	<xsl:call-template name="add-highlight">
@@ -340,7 +339,7 @@
   <xsl:template name="create-entry-syntax">
 
     <div class="ahelpsyntax">
-      <h2><a name="syntax">Syntax</a></h2>
+      <h2 id="syntax">Syntax</h2>
 
       <xsl:call-template name="add-highlight">
 	<xsl:with-param name="contents"><xsl:call-template name="normalize-line-node">
@@ -537,7 +536,7 @@
       *
       *-->
   <xsl:template match="ENTRY/DESC">
-      <h2><a name="description">Description</a></h2>
+      <h2 id="description">Description</h2>
 
       <xsl:apply-templates/>
   </xsl:template> <!-- match=ENTRY/DESC -->
@@ -840,17 +839,14 @@
     <xsl:for-each select="QEXAMPLE">
 
 	<!--* add anchor *-->
-	<!--* if the first example, we have to add an "examples" anchor too *-->
-	<xsl:if test="position()=1"><a name="examples"/></xsl:if>
+	<!--* if the first example, we have to add an "examples" anchor too;
+            * hack with an empty span *-->
+	<xsl:if test="position()=1"><span name="examples"/></xsl:if>
 
 	<!--* anchor rules are slightly different to add-title-anchor template *-->
-	<h2><xsl:choose>
-	  <xsl:when test="$nexample=1">
-	    <a name="example1">Example</a>
-	  </xsl:when>
-	  <xsl:otherwise>
-	    <a name="example{position()}">Example <xsl:value-of select="position()"/></a>
-	  </xsl:otherwise>
+	<h2 id="example{position()}"><xsl:choose>
+	  <xsl:when test="$nexample=1">Example</xsl:when>
+	  <xsl:otherwise>Example <xsl:value-of select="position()"/></xsl:otherwise>
 	</xsl:choose></h2>
 
 	<xsl:apply-templates select="SYNTAX"/>
@@ -878,7 +874,7 @@
 
     <!--* if the paramlist is empty then let it be empty *-->
 
-      <h2><a name="ptable">Parameters</a></h2>
+      <h2 id="ptable">Parameters</h2>
 
       <table class="ciaotable">
 	<thead>
@@ -901,7 +897,7 @@
       </table>
       <br/>
       
-      <h2><a name="plist">Detailed Parameter Descriptions</a></h2>
+      <h2 id="plist">Detailed Parameter Descriptions</h2>
     
       <xsl:apply-templates select="PARAM" mode="plist"/>
 
@@ -965,7 +961,7 @@
   <xsl:template match="PARAM" mode="plist">
 
       <!--* follow the parameter name with a list of attributes *-->
-      <h4><a name="plist.{@name}">Parameter=<xsl:value-of select="@name"/></a>
+      <h4 id="plist.{@name}">Parameter=<xsl:value-of select="@name"/>
 	<tt><xsl:text> (</xsl:text><xsl:value-of select="@type"/>
 	  <xsl:if test="boolean(@reqd)"><xsl:text> </xsl:text><xsl:choose>
 	      <xsl:when test="@reqd='yes'">required</xsl:when>
@@ -1018,7 +1014,7 @@
   <xsl:template match="BUGS">
     <xsl:variable name="bugincl"><xsl:text>../bugs/</xsl:text><xsl:value-of select="$outname"/>.incl.html</xsl:variable>
 
-      <h2><a name="bugs">Bugs</a></h2>
+      <h2 id="bugs">Bugs</h2>
 			   
       <xsl:choose>
 	<xsl:when test="$site='ciao'">
@@ -1055,9 +1051,9 @@
     <xsl:if test="$have-relnotes">
       <xsl:variable name="title" select="concat('Changes in CIAO ', $version)"/>
       <xsl:choose>
-	<xsl:when test="count(//ADESC[@title=$title]) != 0"><a name="relnotes"/></xsl:when>
+	<xsl:when test="count(//ADESC[@title=$title]) != 0"><span name="relnotes"/></xsl:when>
 	<xsl:otherwise>
-	  <h3><a name="relnotes"><xsl:value-of select="$title"/></a></h3>
+	  <h3 id="relnotes"><xsl:value-of select="$title"/></h3>
 	</xsl:otherwise>
       </xsl:choose>
       <xsl:copy-of select="$relnotes-contents/slug/*"/>
@@ -1115,7 +1111,7 @@
   <xsl:template name="add-seealso">
     
     <xsl:if test="$have-seealso">
-	<h2><a name="seealso">See Also</a></h2>
+	<h2 id="seealso">See Also</h2>
 
 <!--*	<xsl:copy-of select="document($seealsofile)/seealso"/> *-->
 	<!--*

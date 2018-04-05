@@ -485,8 +485,7 @@
 		</div> <!--// close id=content //-->
 
 		<div id="navbar">
-		  <div class="wrap">
-		    <a name="navtext"/>
+		  <div id="navtext"class="wrap">
 
 		  <xsl:call-template name="add-navbar">
 		    <xsl:with-param name="name" select="//threadindex/navbar"/>
@@ -552,8 +551,7 @@
 		</div> <!--// close id=content //-->
 
 		<div id="navbar">
-		  <div class="wrap">
-		    <a name="navtext"/>
+		  <div id="navtext" class="wrap">
 
 		  <xsl:call-template name="add-navbar">
 		    <xsl:with-param name="name" select="//threadindex/navbar"/>
@@ -641,8 +639,7 @@
 		</div> <!--// close id=content //-->
 
 		<div id="navbar">
-		  <div class="wrap">
-		    <a name="navtext"/>
+		  <div id="navtext" class="wrap">
 
 		  <xsl:call-template name="add-navbar">
 		    <xsl:with-param name="name" select="//threadindex/navbar"/>
@@ -710,8 +707,7 @@
 		</div> <!--// close id=content //-->
 
 		<div id="navbar">
-		  <div class="wrap">
-		    <a name="navtext"/>
+		  <div id="navtext" class="wrap">
 
 		  <xsl:call-template name="add-navbar">
 		    <xsl:with-param name="name" select="//threadindex/navbar"/>
@@ -905,7 +901,7 @@
   <xsl:template match="section" mode="all-page">
 
     <div class="threadsection">
-      <h3><a name="{@name}"><xsl:apply-templates select="title" mode="show"/></a></h3>
+      <h3 id="{@name}"><xsl:apply-templates select="title" mode="show"/></h3>
 
       <!--* synopsis? *-->
       <xsl:apply-templates select="synopsis" mode="section-page"/>

@@ -170,8 +170,7 @@
 	  </div> <!--// close id=content //-->
 
 	  <div id="navbar">
-	    <div class="wrap">
-	      <a name="navtext"/>
+	    <div id="navtext" class="wrap">
 	      
 	      <xsl:call-template name="add-navbar">
 		<xsl:with-param name="name" select="info/navbar"/>
