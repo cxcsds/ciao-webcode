@@ -382,14 +382,20 @@ my @nonxml;
 # - split into XML and non XML files
 #   we don't do anything clever but just rely on the file name
 #
-# - skip directories and any file ending in ",v" or "~"
+# - skip directories (unless there's a .xml version)
+#   and any file ending in ",v" or "~"
 #
 foreach my $in ( map { s/\.xml$//; $_; } @ARGV ) {
     # for some reason I am suddenly seeing empty values of $in, so skip them
     # (rather than work out where they are coming from)
     next unless $in;
 
-    if ( -d $in ) {
+    # if ( -d $in ) {
+    #	print "skipping directory $in\n";
+    #	next;
+    # }
+
+    if ( (-d $in) && (! -e "${in}.xml") ) {
 	print "skipping directory $in\n";
 	next;
     }
