@@ -143,7 +143,12 @@
     <xsl:apply-templates select="DESC"/>
     <xsl:apply-templates select="QEXAMPLELIST"/>
     <xsl:apply-templates select="PARAMLIST"/>
+
+    <!-- if there are any ADESC blocks then add a separator,
+         but not between each ADESC block -->
+    <xsl:if test="count(ADESC) &gt; 0"><hr class="midsep"/></xsl:if>
     <xsl:apply-templates select="ADESC"/>
+
     <xsl:if test="$site='ciao'">
       <xsl:call-template name="add-relnotes"/>
     </xsl:if>
@@ -832,22 +837,41 @@
       *   <!ELEMENT QEXAMPLE     (SYNTAX?, DESC?)>
       *
       * as with PARAMLIST we do not complain about an empty list
+      *
+      * There is a labelling issue here, since we need an anchor
+      * to jump too for "the start of the examples", and anchors
+      * for individual examples, but then what do we do when there
+      * is only one example (and so we don't really want to have
+      *   title=Examples then title=Example 1)
+      *
+      * One solution is to remove the anchors for individual examples,
+      * since they are "fragile" (no guarantee that they'll stay the
+      * same, but I may have written links to them). I have gone for
+      * this approach at the moment.
       *-->
   <xsl:template match="QEXAMPLELIST">
+
+    <hr class="midsep"/>
+
+    <!-- Oh great, for some reason the stylesheet styles h2 and h3 to have
+	 the same size! -->
+
+    <h2 id="examples">Example<xsl:if test="$nexample &gt; 1">s</xsl:if></h2>
 
     <!--* we number each example *-->
     <xsl:for-each select="QEXAMPLE">
 
-	<!--* add anchor *-->
-	<!--* if the first example, we have to add an "examples" anchor too;
-            * hack with an empty span *-->
-	<xsl:if test="position()=1"><span name="examples"/></xsl:if>
-
 	<!--* anchor rules are slightly different to add-title-anchor template *-->
+	<!--
 	<h2 id="example{position()}"><xsl:choose>
 	  <xsl:when test="$nexample=1">Example</xsl:when>
 	  <xsl:otherwise>Example <xsl:value-of select="position()"/></xsl:otherwise>
 	</xsl:choose></h2>
+	-->
+
+	<xsl:if test="$nexample>1">
+	  <h3>Example <xsl:value-of select="position()"/></h3>
+	</xsl:if>
 
 	<xsl:apply-templates select="SYNTAX"/>
 	<xsl:apply-templates select="DESC"/>
@@ -873,11 +897,12 @@
   <xsl:template match="PARAMLIST">
 
     <!--* if the paramlist is empty then let it be empty *-->
+    <hr class="midsep"/>
 
-      <h2 id="ptable">Parameters</h2>
+    <h2 id="ptable">Parameters</h2>
 
-      <table class="ciaotable">
-	<thead>
+    <table class="ciaotable">
+      <thead>
 	<tr>
 	  <th>name</th> <th>type</th> 
 	  <xsl:if test="$have-ftype"><th>ftype</th></xsl:if>
@@ -894,13 +919,12 @@
 	<tbody>
 	<xsl:apply-templates select="PARAM" mode="ptable"/>
 	</tbody>
-      </table>
-      <br/>
+    </table>
+    <br/>
       
-      <h2 id="plist">Detailed Parameter Descriptions</h2>
+    <h2 id="plist">Detailed Parameter Descriptions</h2>
     
-      <xsl:apply-templates select="PARAM" mode="plist"/>
-
+    <xsl:apply-templates select="PARAM" mode="plist"/>
 
   </xsl:template> <!--* PARAMLIST *-->
 
@@ -992,6 +1016,7 @@
       *
       *-->
   <xsl:template match="ADESC">
+
       <xsl:if test="boolean(@title)">
 	<xsl:call-template name="add-title-anchor">
 	  <xsl:with-param name="title" select="@title"/>
@@ -1013,6 +1038,8 @@
       *-->
   <xsl:template match="BUGS">
     <xsl:variable name="bugincl"><xsl:text>../bugs/</xsl:text><xsl:value-of select="$outname"/>.incl.html</xsl:variable>
+
+      <hr class="midsep"/>
 
       <h2 id="bugs">Bugs</h2>
 			   
