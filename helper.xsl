@@ -424,7 +424,10 @@
       </xsl:call-template>
       
     </head>
-    
+
+    <!-- TODO: remove this terrible hack as it should not be needed
+	       and we really should be doing this properly
+      -->
     <xsl:call-template name="start-tag"/>body<xsl:call-template name="end-tag"/>  <!--// open html body //-->
   </xsl:template> <!--* add-htmlhead *-->
 
