@@ -485,7 +485,7 @@
 		</div> <!--// close id=content //-->
 
 		<div id="navbar">
-		  <div id="navtext"class="wrap">
+		  <div id="navtext" class="wrap">
 
 		  <xsl:call-template name="add-navbar">
 		    <xsl:with-param name="name" select="//threadindex/navbar"/>
