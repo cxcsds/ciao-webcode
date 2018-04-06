@@ -372,4 +372,16 @@ if (self == top) {
     </xsl:call-template>
   </xsl:template> <!--* add-search-ssi *-->
 
+
+  <!--*
+      * With the move to HTML5, there are a number of "presentational" tags
+      * that the W3C validator does not like.
+      *
+      * Try and address these automatically. Go for very simple cases at
+      * present.
+      *-->
+  <xsl:template match="tt[count(@*)=0]">
+    <span class="tt"><xsl:apply-templates/></span>
+  </xsl:template>
+
 </xsl:stylesheet>
