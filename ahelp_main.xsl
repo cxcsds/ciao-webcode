@@ -72,42 +72,44 @@
           
 	</head>
 
-	<!--* add header and banner *-->
-	<xsl:call-template name="add-header">
-	  <xsl:with-param name="lastmodvalue"  select="//LASTMODIFIED"/>
-	  <xsl:with-param name="with-navbar" select="1"/>
-	</xsl:call-template>
+	<body>
+
+	  <!--* add header and banner *-->
+	  <xsl:call-template name="add-header">
+	    <xsl:with-param name="lastmodvalue"  select="//LASTMODIFIED"/>
+	    <xsl:with-param name="with-navbar" select="1"/>
+	  </xsl:call-template>
 
 	  <!--// main div begins page layout //-->
-	    <div id="main">
+	  <div id="main">
 
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
+	    <!--* the main text *-->
+	    <div id="content">
+	      <div class="wrap">
 
-	      <!--* parse the text *--> 
-	      <xsl:apply-templates select="ENTRY"/>
-		  </div>
-		</div> <!--// close id=content //-->
-
-		<div id="navbar">
-		  <div id="navtext" class="wrap">
-
-		  <xsl:call-template name="add-navbar">
-                    <xsl:with-param name="navbar" select="'ahelp_index'"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
+		<!--* parse the text *--> 
+		<xsl:apply-templates select="ENTRY"/>
+	      </div>
+	    </div> <!--// close id=content //-->
+	    
+	    <div id="navbar">
+	      <div id="navtext" class="wrap">
 		
-	    </div> <!--// close id=main  //-->
+		<xsl:call-template name="add-navbar">
+                  <xsl:with-param name="navbar" select="'ahelp_index'"/>
+		</xsl:call-template>
+	      </div>
+	    </div> <!--// close id=navbar //-->
+	    
+	  </div> <!--// close id=main  //-->
 	
-	<!--* add the banner *-->
-	<xsl:call-template name="add-footer">
-	  <xsl:with-param name="lastmodvalue"  select="//LASTMODIFIED"/>
-	</xsl:call-template>
+	  <!--* add the banner *-->
+	  <xsl:call-template name="add-footer">
+	    <xsl:with-param name="lastmodvalue"  select="//LASTMODIFIED"/>
+	  </xsl:call-template>
 
-	<!--* add </body> tag [the <body> is included in a SSI] *-->
-	<xsl:call-template name="add-end-body"/>
+	</body>
+
       </html>
 
     </xsl:document>
@@ -163,15 +165,14 @@
       *-->
   <xsl:template name="add-page-header">
 
-    <table class="ahelpheader" width="100%">
-      <tr>
-	<td align="left" width="30%"><strong>AHELP for <xsl:value-of select="$headtitlepostfix"/></strong></td>
-	<td align="center" width="40%"><h1 class="ahelp">
-	    <xsl:value-of select="@key"/></h1></td>
-	<td align="right" width="30%">Context: 
-	  <a title="Jump to context list of Ahelp pages" href="{$depth}index_context.html#{@context}"><xsl:value-of select="@context"/></a></td>
-      </tr>
-    </table>
+    <div class="ahelpheader">
+      <div class="firstcol"><strong>AHELP for <xsl:value-of select="$headtitlepostfix"/></strong></div>
+      <div class="centercol"><h1 class="ahelp"><xsl:value-of select="@key"/></h1></div>
+      <div class="lastcol">
+	Context: <a title="Jump to context list of Ahelp pages"
+		    href="{$depth}index_context.html#{@context}"><xsl:value-of select="@context"/></a>
+	</div>
+    </div>
 
   </xsl:template> <!--* name=add-page-header *-->
 
@@ -986,7 +987,7 @@
 
       <!--* follow the parameter name with a list of attributes *-->
       <h4 id="plist.{@name}">Parameter=<xsl:value-of select="@name"/>
-	<tt><xsl:text> (</xsl:text><xsl:value-of select="@type"/>
+	<span class='plist'><xsl:text> (</xsl:text><xsl:value-of select="@type"/>
 	  <xsl:if test="boolean(@reqd)"><xsl:text> </xsl:text><xsl:choose>
 	      <xsl:when test="@reqd='yes'">required</xsl:when>
 	      <xsl:when test="@reqd='no'">not required</xsl:when>
@@ -998,7 +999,7 @@
 	  <xsl:if test="boolean(@units)"><xsl:text> </xsl:text>units=<xsl:value-of select="@units"/></xsl:if>
 	  <xsl:if test="boolean(@stacks)"><xsl:text> </xsl:text>stacks=<xsl:value-of select="@stacks"/></xsl:if>
 	  <xsl:if test="boolean(@autoname)"><xsl:text> </xsl:text>autoname=<xsl:value-of select="@autoname"/></xsl:if>
-	  <xsl:text>)</xsl:text></tt></h4>
+	  <xsl:text>)</xsl:text></span></h4>
 
       <!--* perhaps we shouldn't do a select here - ie just process everything? *-->
       <xsl:apply-templates select="SYNOPSIS|DESC" mode="plist"/>
@@ -1049,6 +1050,7 @@
 	  <xsl:choose>
 	    <!-- CIAO site includes the bug page text -->
 	    <xsl:when test="$have-bugs-external">
+	      <!-- should we apply the templates to these? -->
 	      <xsl:copy-of select="$bugs-contents/slug/*"/>
 	    </xsl:when>
 

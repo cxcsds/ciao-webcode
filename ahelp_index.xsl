@@ -290,9 +290,9 @@
       <xsl:text disable-output-escaping="yes">&lt;dl&gt;</xsl:text>
       <xsl:for-each select="ahelpindex/alphabet[@site=$site]/term">
 
-<xsl:text disable-output-escaping="yes">&lt;dt&gt;&lt;a class=&quot;heading&quot; name=&quot;navbar-</xsl:text>
+<xsl:text disable-output-escaping="yes">&lt;dt id=&quot;navbar-</xsl:text>
 	<xsl:value-of select="name"/>
-<xsl:text disable-output-escaping="yes">&quot;&gt;</xsl:text>
+<xsl:text disable-output-escaping="yes">&quot;&gt;&lt;a class=&quot;heading&quot;&gt;</xsl:text>
 	<xsl:value-of select="name"/>
 <xsl:text disable-output-escaping="yes">&lt;/a&gt;&lt;/dt&gt;</xsl:text>
 
@@ -583,40 +583,41 @@
 	  <xsl:with-param name="pagename" select="$pagename"/>
 	</xsl:call-template>
 
-	<!--* add header and banner *-->
-	<xsl:call-template name="add-header">
-	  <xsl:with-param name="with-navbar" select="1"/>
-	</xsl:call-template>
+	<body>
+
+	  <!--* add header and banner *-->
+	  <xsl:call-template name="add-header">
+	    <xsl:with-param name="with-navbar" select="1"/>
+	  </xsl:call-template>
 
 	  <!--// main div begins page layout //-->
-	    <div id="main">
+	  <div id="main">
 
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
+	    <!--* the main text *-->
+	    <div id="content">
+	      <div class="wrap">
 
-	      <!--* process the contents *-->
-	      <xsl:apply-templates select="ahelpindex/alphabet[@site=$site]"/>
-
-		  </div>
-		</div> <!--// close id=content //-->
-
-		<div id="navbar">
-		  <div id="navtext" class="wrap">
-
-		  <xsl:call-template name="add-navbar">
-                    <xsl:with-param name="navbar" select="$navbarname"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
+		<!--* process the contents *-->
+		<xsl:apply-templates select="ahelpindex/alphabet[@site=$site]"/>
 		
-	    </div> <!--// close id=main  //-->
+	      </div>
+	    </div> <!--// close id=content //-->
+
+	    <div id="navbar">
+	      <div id="navtext" class="wrap">
+		
+		<xsl:call-template name="add-navbar">
+                  <xsl:with-param name="navbar" select="$navbarname"/>
+		</xsl:call-template>
+	      </div>
+	    </div> <!--// close id=navbar //-->
+		
+	  </div> <!--// close id=main  //-->
 	
-	<!--* add the banner *-->
-	<xsl:call-template name="add-footer"/>
-	
-	<!--* add </body> tag [the <body> is included in a SSI] *-->
-	<xsl:call-template name="add-end-body"/>
+	  <!--* add the banner *-->
+	  <xsl:call-template name="add-footer"/>
+
+	</body>
       </html>
       
     </xsl:document>
@@ -723,17 +724,17 @@
 
 	    <!--* do we need to add the 'label' *-->
 	    <xsl:if test="position() = 1">
-	      <th valign="top" rowspan="{last()}" id="{$letter}">
+	      <th class="topalign" rowspan="{last()}" id="{$letter}">
 		<xsl:value-of select="$letter"/>
 	      </th>
 	    </xsl:if>
 	    
 	    <!--* and the actual data *-->
-	    <td valign="top">
+	    <td class="topalign">
 	      <xsl:call-template name="add-table-bg-color"/>
 	      <a href="{$ahelpobj/page}.html"><xsl:value-of select="$thiskey"/></a>
 	    </td>
-	    <td valign="top">
+	    <td class="topalign">
 	      <xsl:call-template name="add-table-bg-color"/>
 	      <a href="index_context.html#{$thiscon}"><xsl:value-of select="$thiscon"/></a>
 	    </td>
@@ -783,40 +784,42 @@
 	  <xsl:with-param name="pagename" select="$pagename"/>
 	</xsl:call-template>
 
-	<!--* add header and banner *-->
-	<xsl:call-template name="add-header">
-	  <xsl:with-param name="with-navbar" select="1"/>
-	</xsl:call-template>
+	<body>
+
+	  <!--* add header and banner *-->
+	  <xsl:call-template name="add-header">
+	    <xsl:with-param name="with-navbar" select="1"/>
+	  </xsl:call-template>
 
 	  <!--// main div begins page layout //-->
-	    <div id="main">
-
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
-
+	  <div id="main">
+	    
+	    <!--* the main text *-->
+	    <div id="content">
+	      <div class="wrap">
+		
 	      <!--* process the contents *-->
 	      <xsl:apply-templates select="ahelpindex/context[@site=$site]"/>
-
-		  </div>
-		</div> <!--// close id=content //-->
-
-		<div id="navbar">
-		  <div id="navtext" class="wrap">
-
-		  <xsl:call-template name="add-navbar">
-                    <xsl:with-param name="navbar" select="$navbarname"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
+	      
+	      </div>
+	    </div> <!--// close id=content //-->
+	    
+	    <div id="navbar">
+	      <div id="navtext" class="wrap">
 		
-	    </div> <!--// close id=main  //-->
+		<xsl:call-template name="add-navbar">
+                  <xsl:with-param name="navbar" select="$navbarname"/>
+		</xsl:call-template>
+	      </div>
+	    </div> <!--// close id=navbar //-->
+		
+	  </div> <!--// close id=main  //-->
+	  
+	  <!--* add the banner *-->
+	  <xsl:call-template name="add-footer"/>
+	  
+	</body>
 
-	<!--* add the banner *-->
-	<xsl:call-template name="add-footer"/>
-
-	<!--* add </body> tag [the <body> is included in a SSI] *-->
-	<xsl:call-template name="add-end-body"/>
       </html>
       
     </xsl:document>
@@ -900,11 +903,11 @@
 	  <tr>
 	    <!--* do we need to add the 'label' *-->
 	    <xsl:if test="position() = 1">
-	      <th valign="top" rowspan="{last()}" id="{$context}"><xsl:value-of select="$context"/></th>
+	      <th class="topalign" rowspan="{last()}" id="{$context}"><xsl:value-of select="$context"/></th>
 	    </xsl:if>
 	    
 	    <!--* and the actual data *-->
-	    <td valign="top">
+	    <td class="topalign">
 	      <xsl:call-template name="add-table-bg-color"/>
 	      <a href="{$ahelpobj/page}.html"><xsl:value-of select="$thiskey"/></a>
 	    </td>
@@ -976,7 +979,7 @@
   </xsl:template> <!--* name=add-link-to-text *-->
 
 
-  <!-- add the altrow class as necessary -->
+  <!-- add the altrow class as necessary; this should not be needed with CSS support  -->
   <xsl:template name="add-table-bg-color">
     <xsl:if test="@number mod 2 = 0">
       <xsl:attribute name="class">altrow</xsl:attribute>

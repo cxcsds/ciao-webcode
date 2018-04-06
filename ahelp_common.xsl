@@ -278,10 +278,6 @@
     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
   </xsl:template>
   
-  <xsl:template name="add-end-body">
-    <xsl:call-template name="add-start-tag"/>/body<xsl:call-template name="add-end-tag"/>
-  </xsl:template>
-
 <!--  <xsl:template name="add-font-m1">
     <xsl:call-template name="add-start-tag"/>font size=&quot;-1&quot;<xsl:call-template name="add-end-tag"/>
   </xsl:template>
