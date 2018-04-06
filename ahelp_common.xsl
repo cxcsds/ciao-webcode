@@ -286,11 +286,6 @@
   </xsl:template>
 -->
 
-  <!--* make this bar stand out *-->
-  <xsl:template name="add-hr-strong">
-    <hr size="3"/> <!--* could also use noshade="0" *-->
-  </xsl:template>
-
   <!--***** START: TEMP SEARCH/REPLACE FUNCTION *****-->
 
   <!--*

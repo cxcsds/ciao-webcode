@@ -93,11 +93,6 @@
   </xsl:template> <!--* name=add-end-html *-->
 
   <!--*
-      * From v1.25 of myhtml.xsl (CIAO 3.1) we no longer have
-      *   start-styles/end-styles
-      * but
-      *   add-text-styles
-      *
       * Parameters:
       *   contents, node set, required
       *     this is the processed content of the link
@@ -158,11 +153,11 @@
     <xsl:param name="contents" select="''"/>
     <xsl:choose>
       <xsl:when test="@tt=1">
-	<tt>
+	<span class="tt">
 	  <xsl:call-template name="add-text-styles-strong">
 	    <xsl:with-param name="contents" select="$contents"/>
 	  </xsl:call-template>
-	</tt>
+	</span>
       </xsl:when>
       <xsl:otherwise>
 	<xsl:call-template name="add-text-styles-strong">

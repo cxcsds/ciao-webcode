@@ -558,8 +558,7 @@
 
   <!--* make this bar stand out *-->
   <xsl:template name="add-hr-strong">
-    <!--* <hr size="3"/> *-->
-    <hr size="5" noshade="0"/>
+    <hr class="bigsep"/>
   </xsl:template>
 
   <!--* used by the test/trial headers *-->
