@@ -1251,7 +1251,7 @@
 	  </div>
 
 	  <!--// Figure title placement depends on mediatype //-->
-	  <h3 class="caption printmedia" id="{@id}"><xsl:value-of select="$title"/></h3>
+	  <h3 class="caption printmedia"><xsl:value-of select="$title"/></h3>
 
 	  <xsl:if test="caption">
 	  <div class="caption">

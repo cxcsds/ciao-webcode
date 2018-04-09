@@ -121,16 +121,7 @@
 
       <xsl:when test="boolean(text/overview)">
 	<div id="overview">
-
-	  <h2 id="overview">Overview</h2>
-	  
-<!--
-	  <p>
-	    <strong>&#187; The threads are in the process of being reviewed
-	    for CIAO 4.3. This message will be removed after the
-	    thread has been updated.</strong>
-	  </p>
--->
+	  <h2>Overview</h2>
 	  <xsl:apply-templates select="text/overview"/>
 	</div>
 	<xsl:call-template name="add-hr-strong"/>
