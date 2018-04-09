@@ -471,23 +471,34 @@
   <!--*
       * htmlscript(s) are a hacky way of setting the script tags in the header
       * block of a HTML page.
-      * instead of being clever we assume there's always a language attribute
-      * ansd there's either a src attribute or the tag has content
-      * >>>AND<<< that content is in the form of a XML comment
+      * It used to check for @type and @src settings, but with the move
+      * to HTML5 I am going to assume this is only being used for
+      * JavaScript, and warn if it isn't.
+      *
+      * The content, if given, must be in the form of a XML comment
       *-->
   <xsl:template match="htmlscripts"><xsl:apply-templates select="htmlscript"/></xsl:template>
   <xsl:template match="htmlscript">
-    <!--* the following check will soon be enforced by the schema so can be removed *-->
-    <xsl:if test="not(@type)">
-      <xsl:message terminate="yes">
- Error: htmlscript tag is missing a type attribute
+    <xsl:if test="boolean(@type) and @type != 'text/javascript'">
+      <xsl:message terminate="no">
+ NOTE: htmlscript with @type=<xsl:value-of select="@type"/>
+  when Doug expected this not to be set at all (or set to text/javascript)
       </xsl:message>
     </xsl:if>
+
+    <xsl:if test="boolean(@language) and @language != 'JavaScript'">
+      <xsl:message terminate="no">
+ NOTE: htmlscript with @language=<xsl:value-of select="@language"/>
+  when Doug expected this not to be set at all (or set to JavasSript)
+      </xsl:message>
+    </xsl:if>
+
     <xsl:choose>
       <xsl:when test="boolean(@src)">
-	<script language="{@language}" type="{@type}" src="{@src}"/>
+	<script src="{@src}"/>
       </xsl:when>
       <xsl:otherwise>
+	<!-- DO WE USE THIS? -->
 	<script language="{@language}" type="{@type}">
 	  <xsl:if test="boolean(comment()) = false()">
 	    <!--* safety check *-->
