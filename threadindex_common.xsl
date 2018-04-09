@@ -228,7 +228,7 @@
 
       </xsl:message>
     </xsl:if>
-    the <tt><xsl:value-of select="."/></tt>
+    the <span class="tt"><xsl:value-of select="."/></span>>
     <xsl:if test="boolean(@slang)"> S-Lang</xsl:if>
     script<xsl:if test="count(following-sibling::script)!=0">; </xsl:if>
   </xsl:template> <!--* match=script mode=threadindex *-->
@@ -248,9 +248,9 @@
 <!--//BOB//-->
     <xsl:if test="boolean(//threadindex/datatable)">
 
-    <table id="threaddatatable" width="90%" cellspacing="0" cellpadding="2"> 
+    <table style="width: 90%;" id="threaddatatable"> 
       <tr>    
-        <td id="threaddatatableheader" colspan="4">
+        <td id="threaddatatableheader" colspan="2">
 	    <h3>Data Used in Threads</h3>
 
 	<xsl:if test="boolean(//threadindex/datatable/datasets)">
@@ -266,11 +266,11 @@
 	</td>
       </tr>
 
-	    <!--* datasets *-->
-	    <xsl:apply-templates select="datatable/datasets"/>
+      <!--* datasets *-->
+      <xsl:apply-templates select="datatable/datasets"/>
 
-	    <!--* packages *--> 
-	    <xsl:apply-templates select="datatable/packages"/>
+      <!--* packages *--> 
+      <xsl:apply-templates select="datatable/packages"/>
     </table>
   </xsl:if>
   </xsl:template> <!--* name=make-datatable *-->
@@ -321,7 +321,7 @@
     <!--* add a separator *-->
     <xsl:if test="position() != last()">
     <tr>
-      <th colspan="4"><hr/></th>
+      <th colspan="2"><hr/></th>
     </tr>
     </xsl:if>
   </xsl:template> <!--* match=dataset *-->
@@ -343,10 +343,10 @@
 
     <!--* set up the header for this section *-->
     <tr>
-      <th colspan="4">Sorted by Thread</th>
+      <th colspan="2">Sorted by Thread</th>
     </tr>
     <tr>
-      <th colspan="3">File</th>
+      <th>File</th>
       <th>Thread</th>
     </tr>  
 
@@ -365,10 +365,10 @@
   <xsl:template match="package">
 
     <tr>
-      <td colspan="3">
-	<tt>
+      <td>
+	<span class="tt">
 	  <a href="data/{file}"><xsl:value-of select="file"/></a>
-	</tt>
+	</span>
       </td>
       <td>
 	<xsl:choose>
