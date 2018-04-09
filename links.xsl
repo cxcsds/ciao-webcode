@@ -349,6 +349,14 @@
 	
 	<xsl:when test="$num=1"><xsl:value-of select="$namematches/context"/></xsl:when>
 
+	<xsl:when test="$num=0">
+	  <xsl:message terminate="yes">
+
+ ERROR: ahelp tag with unknown name of '<xsl:value-of select="$name"/>'
+
+	  </xsl:message>
+	</xsl:when>
+
 	<xsl:otherwise>
 	  <xsl:message terminate="yes">
 
