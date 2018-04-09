@@ -655,10 +655,18 @@
       *-->
   <xsl:template match="bugnum"/>
 
+  <!-- strip out the intro tag -->
+  <xsl:template match="intro">
+    <xsl:apply-templates/>
+  </xsl:template>
+
   <!--*
       * from Chris Stawarz's download-script code
       * - mangled since we now have to interpret all
       *   the tags that Chris was able to use
+      *
+      * The styleing for this now uses CSS grids to layout the
+      * sections.
       *-->
   <xsl:template match="scriptlist">
 
@@ -672,55 +680,38 @@
       </p>
     </div>
 
-    <table class="scripts" border="0" cellpadding="5" width="100%">
-      <xsl:for-each select="category">
+    <xsl:for-each select="category">
+      
+      <h3 class="scriptsection"
+	  id="{translate(@name,' ','')}"><xsl:value-of select="@name"/></h3>
 
-        <tr>
-          <th colspan="4">
-            <h3 id="{translate(@name,' ','')}"><xsl:value-of select="@name"/></h3>
-          </th>
-        </tr>
+      <xsl:if test="boolean(intro)">
+        <div class="scriptintro">
+          <xsl:apply-templates select="intro"/>
+        </div>
+      </xsl:if>
 
-        <xsl:if test="boolean(intro)">
-          <tr>
-            <td colspan="4">
-              <xsl:apply-templates select="intro/."/>
-            </td>
-          </tr>
-        </xsl:if>
+      <xsl:for-each select="script">
 
+	<xsl:variable name="classname">scriptitem<xsl:choose>
+	    <xsl:when test="thread">3</xsl:when>
+	    <xsl:otherwise>2</xsl:otherwise>
+	</xsl:choose></xsl:variable>
+	<div class="{$classname}">
 
-	<xsl:if test="boolean(script)">
-        <xsl:for-each select="script">
-          <tr class="scriptrow">
-	    <td>
-	      <xsl:attribute name="class">scriptcell</xsl:attribute>	      
-	      <xsl:if test="thread"><xsl:attribute name="rowspan">2</xsl:attribute></xsl:if>
-		
-              <strong><xsl:apply-templates select="name" mode="scripts"/></strong>
-            </td>
-	    <td>
-	      <xsl:apply-templates select="desc" mode="scripts"/>
-	    </td>
-          </tr>
+	  <div class="scriptname"><strong><xsl:apply-templates select="name" mode="scripts"/></strong></div>
+	  <div class="scriptinfo"><xsl:apply-templates select="desc" mode="scripts"/></div>
+	  
 	  <xsl:if test="thread">
-            <tr class="scriptrow">
-	      <td>
-		<p>
-		<xsl:text>Thread: </xsl:text> <xsl:apply-templates select="thread" mode="scripts"/>
-		</p>
-	      </td>
-	    </tr>
+	    <div class="scriptthread">
+	      <xsl:text>Thread: </xsl:text> <xsl:apply-templates select="thread" mode="scripts"/>
+	    </div>
 	  </xsl:if>
+	</div>
 
-	  <tr>
-	    <td colspan="2"/>
-	  </tr>
-        </xsl:for-each> <!-- select="script" -->
-	</xsl:if>
-
-      </xsl:for-each> <!-- select="category" -->
-    </table>
+      </xsl:for-each>
+    </xsl:for-each>
+    
   </xsl:template> <!-- match=scriptlist -->
 
   <xsl:template match="name|desc|thread" mode="scripts">
