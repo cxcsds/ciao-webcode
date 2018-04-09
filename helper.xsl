@@ -597,7 +597,7 @@
       </xsl:choose></xsl:variable>
 
     
-      <br clear="all"/>
+      <br style="clear: both;"/>
       <p>
 	  Last published by: <xsl:value-of select="$updateby"/>
 	    at: <xsl:value-of select="$time"/><xsl:text> </xsl:text>

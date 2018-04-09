@@ -344,7 +344,7 @@ if (self == top) {
       </xsl:message>
     </xsl:if>
 
-    <br clear="all"/>
+    <br style="clear: both;"/>
     <div class="bottombar">
       <xsl:call-template name="add-lastmodbar">
 	<xsl:with-param name="lastmodvalue" select="$lastmodvalue"/>
