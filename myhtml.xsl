@@ -573,6 +573,10 @@
       </xsl:message>
     </xsl:if>
 
+    <!-- remove spaces from the name; should really clean up other characters
+         as it is being used as an id (and possibly a file name) -->
+    <xsl:variable name="mathname" select="translate(name, ' ', '')"/>
+
     <xsl:choose>
       <xsl:when test="$use-mathjax = 1">
 	<!--* 
@@ -580,7 +584,7 @@
 	    * way we get to provide something hopefully-readable whilst the
 	    * LaTeX is being rendered.
 	    *-->
-	<span id="{name}" class="MathJax_Preview"><xsl:choose>
+	<span id="{$mathname}" class="MathJax_Preview"><xsl:choose>
 	  <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
 	  <xsl:otherwise><xsl:value-of select="normalize-space(latex)"/></xsl:otherwise>
 	</xsl:choose></span>
@@ -610,7 +614,7 @@
 	    * - need to remove leading/trailing whitespace so that
 	    *   latex doesn't complain
 	    *-->
-	<xsl:document href="{concat($sourcedir,name,'.tex')}" method="text">
+	<xsl:document href="{concat($sourcedir,$mathname,'.tex')}" method="text">
 \documentclass{article}
 \usepackage{color}
 \pagestyle{empty}
@@ -623,7 +627,7 @@
 \end{eqnarray*}
 \end{document}
 	</xsl:document>
-	<img id="{name}" src="{name}.png"><xsl:attribute name="alt"><xsl:choose>
+	<img id="{$mathname}" src="{$mathname}.png"><xsl:attribute name="alt"><xsl:choose>
 	  <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
 	  <xsl:otherwise><xsl:value-of select="normalize-space(latex)"/></xsl:otherwise>
 	</xsl:choose></xsl:attribute></img>
