@@ -535,6 +535,8 @@
   <!--*
       * Support math tags:
       *
+      * *) "equation"
+      *
       *   <math>
       *     <name>...</name>
       *     <latex>...</latex> (latex formula with NO being/end math values)
@@ -542,6 +544,11 @@
       *        if not given then we re-use the latex block)
       * {   <mathml>...</mathml>   (MathML version)   NOT YET IMPLEMENTED    }
       *   </math>
+      *
+      * *) "inline"
+      *
+      *    <inlinemath>...</inlinemath>
+      *       - at the moment the contents are assumed to be LaTeX format
       *
       * If $use-mathjax = 1:
       *   use the MathJax javascript system - http://www.mathjax.org/ -
@@ -594,6 +601,11 @@
 	    * seems to have expanded it in x&lt;y but not x &lt; y ...
 	    * Unfortunately, if stick in CDATA then it gets interpreted by the script
 	    * tag. From simple tests it doesn't seem to be a problem.
+	    *
+            * I did try changing the script to just being a div, adding \[ and \]
+            * around the value-of select, to turn on the LaTeX support in MathJax,
+            * but then it did not hide the MathJax_Preview section, so have
+            * decided to leave this as is for now.
 	    *-->
 	<script type="math/tex; mode=display">
 	  <xsl:value-of select="latex"/>
@@ -635,6 +647,11 @@
     </xsl:choose>
 
   </xsl:template> <!--* match=math *-->
+
+  <!-- There is no attempt to expand the contents; they are just passed straight through -->
+  <xsl:template match="inlinemath">
+    <xsl:value-of select="concat('\(', ., '\)')"/>
+  </xsl:template> <!--* match=inlinemath *-->
 
   <!--*
       * create a SSI statement in the output file
