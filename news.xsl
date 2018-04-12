@@ -91,8 +91,9 @@
 
 	      <h1 class="pagetitle">What's New for CIAO <xsl:value-of select="$siteversion"/></h1>
 
-	        <div class="feed"><p><a href="http://cxc.harvard.edu/ciao/feed.xml">Subscribe to the CIAO&#160;News RSS&#160;feed</a></p></div>
-	       <hr/>
+	      <p class="feed"><a href="http://cxc.harvard.edu/ciao/feed.xml">Subscribe to the CIAO&#160;News RSS&#160;feed</a></p>
+
+	      <hr/>
 
 	      <xsl:apply-templates select="//text/item" mode="main"/>
 	    </div>
