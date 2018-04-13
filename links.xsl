@@ -2037,6 +2037,14 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     
   </xsl:template> <!--* helpdesk *-->
   
+  <xsl:template match="threadindex">
+    <xsl:message terminate="no">
+ WARNING: threadindex tag found; I think you meant threadpage
+          but I don't want to crash for you just yet, so skipping.
+    </xsl:message>
+    <xsl:apply-templates/>
+  </xsl:template>
+
   <!--* 
       * for links to the thread index page(s)
       *
