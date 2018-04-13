@@ -302,7 +302,8 @@
       <!--* any scripts ? *-->
       <xsl:apply-templates select="info/htmlscripts"/>
 
-      <xsl:if test="$use-mathjax = 1 and count(//math) != 0">
+      <xsl:variable name="nmath" select="count(//math) + count(//inlinemath)"/>
+      <xsl:if test="$use-mathjax = 1 and ($nmath != 0)">
 	<xsl:if test="$mathjaxpath = ''">
 	  <xsl:message terminate="yes">
  ERROR: use-mathjax=1 but mathjaxpath is unset and the page contains math tags!
