@@ -172,6 +172,10 @@
 	    <xsl:value-of select="concat('Dictionary: ', normalize-space(title))"/><xsl:if test="$texttitlepostfix!=''"><xsl:value-of select="concat(' - ',$texttitlepostfix)"/></xsl:if>
 	  </xsl:with-param>
 	  <xsl:with-param name="page" select="concat(@id, '.html')"/>
+	  <!-- need to ensure any CSS in the main page gets set to the
+	       sub-pages; should we process the contents? -->
+	  <xsl:with-param name="css"
+			  select="//info/css"/>
 	</xsl:call-template>
 
 	<xsl:call-template name="add-disclaimer"/>
