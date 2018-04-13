@@ -279,11 +279,9 @@
       </xsl:if> <!--* $logotext != '' *-->
 
       <!--* navbar class is now inherited from parent td, not from this div *-->
-      <!--* create the header links (within a dl list)*-->
-      <xsl:text disable-output-escaping="yes">&lt;dl&gt;</xsl:text>
+      <!--* create the header links *-->
       <xsl:call-template name="add-navbar-qlinks"/>
       <xsl:call-template name="add-navbar-alphabet"/>
-      <xsl:text disable-output-escaping="yes">&lt;/dl&gt;</xsl:text>
       <xsl:text disable-output-escaping="yes">&amp;nbsp;&lt;br&gt;</xsl:text>
 
       <!--* loop through each 'letter' (within another dl list) *-->
@@ -368,11 +366,9 @@
 
       <xsl:text disable-output-escaping="yes">&lt;/dl&gt;</xsl:text>
 
-      <!--* create the header links (in a dl list) *-->
-      <xsl:text disable-output-escaping="yes">&lt;dl&gt;</xsl:text>
+      <!--* create the header links *-->
       <xsl:call-template name="add-navbar-alphabet"/>
       <xsl:call-template name="add-navbar-qlinks"/>
-      <xsl:text disable-output-escaping="yes">&lt;/dl&gt;</xsl:text>
       <xsl:text disable-output-escaping="yes">&lt;/div&gt;
 </xsl:text> <!--* class=navbar *-->
 	
@@ -481,9 +477,7 @@
 
   <!--*
       * create the "quick links" section of the navbar
-      * - add a link to the main site "home page"
-      * - this no-longer looks like the main navbar (as of CIAO 4.8)
-      *   since that uses a ul rather than li
+      * - include a link to the main site "home page"
       *-->
   <xsl:template name="add-navbar-qlinks">
 
@@ -500,43 +494,41 @@
 
     <!--* link to the home page for the site IF there is no logo link *-->
     <xsl:if test="$logourl = ''">
-      <xsl:text disable-output-escaping="yes">&lt;dt&gt;</xsl:text>
       <xsl:call-template name="add-link-to-text">
 	<xsl:with-param name="url" select="'../index.html'"/> <!--* I do not think we have a valid depth parameter? *-->
 	<xsl:with-param name="txt" select="concat('Home page (',$pretty-site,')')"/>
 	<xsl:with-param name="class" select="'heading'"/>
 	<xsl:with-param name="title" select="concat('The ',$pretty-site,' Home page')"/>
       </xsl:call-template>
-      <xsl:text disable-output-escaping="yes">&lt;/dt&gt;</xsl:text>
     </xsl:if>
 
     <!--* links to the index pages *-->
-    <xsl:text disable-output-escaping="yes">&lt;dt&gt;</xsl:text>
+    <xsl:text disable-output-escaping="yes">&lt;div class="navqlink"&gt;</xsl:text>
     <xsl:call-template name="add-link-to-text">
       <xsl:with-param name="url" select="'index.html'"/>
       <xsl:with-param name="txt" select="'Help pages (AHELP)'"/>
       <xsl:with-param name="class" select="'heading'"/>
       <xsl:with-param name="title" select="'Main Ahelp page'"/>
     </xsl:call-template>
-    <xsl:text disable-output-escaping="yes">&lt;/dt&gt;</xsl:text>
+    <xsl:text disable-output-escaping="yes">&lt;/div&gt;</xsl:text>
 
-    <xsl:text disable-output-escaping="yes">&lt;dt&gt;</xsl:text>
+    <xsl:text disable-output-escaping="yes">&lt;div class="navqlink"&gt;</xsl:text>
     <xsl:call-template name="add-link-to-text">
       <xsl:with-param name="url" select="'index_alphabet.html'"/>
       <xsl:with-param name="txt" select="'List by alphabet'"/>
       <xsl:with-param name="class" select="'heading'"/>
       <xsl:with-param name="title" select="'Ahelp pages listed in alphabetical order'"/>
     </xsl:call-template>
-    <xsl:text disable-output-escaping="yes">&lt;/dt&gt;</xsl:text>
+    <xsl:text disable-output-escaping="yes">&lt;/div&gt;</xsl:text>
 
-    <xsl:text disable-output-escaping="yes">&lt;dt&gt;</xsl:text>
+    <xsl:text disable-output-escaping="yes">&lt;div class="navqlink"&gt;</xsl:text>
     <xsl:call-template name="add-link-to-text">
       <xsl:with-param name="url" select="'index_context.html'"/>
       <xsl:with-param name="txt" select="'List by context'"/>
       <xsl:with-param name="class" select="'heading'"/>
       <xsl:with-param name="title" select="'Ahelp pages listed by context'"/>
     </xsl:call-template> 
-    <xsl:text disable-output-escaping="yes">&lt;/dt&gt;</xsl:text>
+    <xsl:text disable-output-escaping="yes">&lt;/div&gt;</xsl:text>
 
   </xsl:template> <!--* name=add-navbar-qlinks *-->
 
@@ -544,6 +536,8 @@
       * create the "alphabetical links" section of the navbar
       *-->
   <xsl:template name="add-navbar-alphabet">
+
+    <xsl:text disable-output-escaping="yes">&lt;dl&gt;</xsl:text>
 
     <xsl:text disable-output-escaping="yes">&lt;dt&gt;&lt;span class=&quot;heading&quot;&gt;Jump to:&lt;/span&gt;&lt;/dt&gt;</xsl:text>
 
@@ -557,6 +551,8 @@
       </xsl:call-template><xsl:text> </xsl:text>
     </xsl:for-each>
     <xsl:text disable-output-escaping="yes">&lt;/dd&gt;</xsl:text>
+
+    <xsl:text disable-output-escaping="yes">&lt;/dl&gt;</xsl:text>
 
   </xsl:template> <!--* name=add-navbar-alphabet *-->
 
