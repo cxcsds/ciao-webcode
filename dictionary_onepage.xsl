@@ -97,38 +97,40 @@
 	<!--* make the HTML head node *-->
 	<xsl:call-template name="add-htmlhead-standard"/>
 
-	<xsl:call-template name="add-disclaimer"/>
-	<xsl:call-template name="add-header"/>
+	<body>
+
+	  <xsl:call-template name="add-disclaimer"/>
+	  <xsl:call-template name="add-header"/>
 	
 	  <!--// main div begins page layout //-->
-	    <div id="main">
+	  <div id="main">
+	    
+	    <!--* the main text *-->
+	    <div id="content">
+	      <div class="wrap">
 
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
-
-	      <!--* add the intro text *-->
-	      <xsl:apply-templates select="intro"/>
-	  
-	      <!--* create the list of entries *--> 
-	      <xsl:apply-templates select="entries" mode="toc"/>
-
-		  </div>
-		</div> <!--// close id=content //-->
-
-		<div id="navbar">
-		  <div id="navtext" class="wrap">
-
-		  <xsl:call-template name="add-navbar">
-		    <xsl:with-param name="name" select="info/navbar"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
+		<!--* add the intro text *-->
+		<xsl:apply-templates select="intro"/>
 		
-	    </div> <!--// close id=main  //-->
+		<!--* create the list of entries *--> 
+		<xsl:apply-templates select="entries" mode="toc"/>
+		
+	      </div>
+	    </div> <!--// close id=content //-->
 
-	<xsl:call-template name="add-footer"/>
-	<xsl:call-template name="add-end-body"/>
+	    <div id="navbar">
+	      <div id="navtext" class="wrap">
+		
+		<xsl:call-template name="add-navbar">
+		  <xsl:with-param name="name" select="info/navbar"/>
+		</xsl:call-template>
+	      </div>
+	    </div> <!--// close id=navbar //-->
+	    
+	  </div> <!--// close id=main  //-->
+
+	  <xsl:call-template name="add-footer"/>
+	</body>
       </html>
 
     </xsl:document>
@@ -166,53 +168,51 @@
 	  <xsl:with-param name="title">Dictionary Entries</xsl:with-param>
 	  <xsl:with-param name="page">entries.html</xsl:with-param>
 	</xsl:call-template>
-	
-	<xsl:call-template name="add-disclaimer"/>
-	<xsl:call-template name="add-header"/>
+
+	<body>
+	  <xsl:call-template name="add-disclaimer"/>
+	  <xsl:call-template name="add-header"/>
 	
 	  <!--// main div begins page layout //-->
-	    <div id="main">
-
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
-
-
-	      <h1 class="pagetitle">CSC Dictionary Entries</h1>
-	      
-	      <hr/>
+	  <div id="main">
+	    
+	    <!--* the main text *-->
+	    <div id="content">
+	      <div class="wrap">
+		<h1 class="pagetitle">CSC Dictionary Entries</h1>
+		<hr/>
 	  
-	    <xsl:for-each select="entry">
-	      <xsl:sort select="translate(title, $lcletters, $ucletters)"/>
-
-	      <!--* entry title *-->
-	      <h2 id="{@id}"><xsl:apply-templates select="title"/></h2>
-
-	      <!--* add the explanation *-->
-	      <xsl:apply-templates select="text"/>
-
-	      <div class="qlinkbar">
-	        Return to: <a href=".">Dictionary index</a>
+		<xsl:for-each select="entry">
+		  <xsl:sort select="translate(title, $lcletters, $ucletters)"/>
+		  
+		  <!--* entry title *-->
+		  <h2 id="{@id}"><xsl:apply-templates select="title"/></h2>
+		  
+		  <!--* add the explanation *-->
+		  <xsl:apply-templates select="text"/>
+		  
+		  <div class="qlinkbar">
+	            Return to: <a href=".">Dictionary index</a>
+		  </div>
+		  
+		  <br/><hr/>
+		</xsl:for-each>
 	      </div>
-	  
-	      <br/><hr/>
-	    </xsl:for-each>
-		  </div>
-		</div> <!--// close id=content //-->
+	    </div> <!--// close id=content //-->
 
-		<div id="navbar">
-		  <div id="navtext" class="wrap">
-
-		  <xsl:call-template name="add-navbar">
-		    <xsl:with-param name="name" select="/dictionary_onepage/info/navbar"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
+	    <div id="navbar">
+	      <div id="navtext" class="wrap">
 		
-	    </div> <!--// close id=main  //-->
+		<xsl:call-template name="add-navbar">
+		  <xsl:with-param name="name" select="/dictionary_onepage/info/navbar"/>
+		</xsl:call-template>
+	      </div>
+	    </div> <!--// close id=navbar //-->
+	    
+	  </div> <!--// close id=main  //-->
 
-	<xsl:call-template name="add-footer"/>
-	<xsl:call-template name="add-end-body"/>
+	  <xsl:call-template name="add-footer"/>
+	</body>
       </html>
 
     </xsl:document>

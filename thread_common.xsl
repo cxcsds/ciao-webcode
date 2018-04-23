@@ -975,19 +975,14 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
                   doctype-system="about:legacy-compat"
 		  version="5.0">
 
-      <!--* get the start of the document over with *-->
-      <xsl:call-template name="add-start-html"/>
+      <html lang="en-US">
 
-      <!--* make the HTML head node *-->
       <xsl:call-template name="add-htmlhead-site-thread"/>
-      
-      <!--* add disclaimer about editing the HTML file *-->
-      <xsl:call-template name="add-disclaimer"/>
-      
-      <!--* make the header *-->
-      <xsl:call-template name="add-header"/>
 
-      <!--* set up the standard links before the page starts *-->
+      <body>
+
+      <xsl:call-template name="add-disclaimer"/>
+      <xsl:call-template name="add-header"/>
       <xsl:call-template name="add-top-links-site-html"/>
 
       <div class="mainbar">
@@ -1026,9 +1021,8 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
       <!--* add the footer text *-->
       <xsl:call-template name="add-footer"/>
 
-      <!--* add </body> tag [the <body> is added by the add-htmlhead template] *-->
-      <xsl:call-template name="add-end-body"/>
-      <xsl:call-template name="add-end-html"/>
+      </body>
+      </html>
 
     </xsl:document>
 

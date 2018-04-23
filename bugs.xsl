@@ -80,6 +80,9 @@
       <html lang="en-US">
 
 	<xsl:call-template name="add-htmlhead-standard"/>
+
+	<body>
+
 	<xsl:call-template name="add-disclaimer"/>
 	<xsl:call-template name="add-header"/>
 
@@ -393,7 +396,7 @@
 	    </div> <!--// close id=main  //-->
 	    
 	<xsl:call-template name="add-footer"/>
-	<xsl:call-template name="add-end-body"/>
+	</body>
       </html>
 
     </xsl:document>

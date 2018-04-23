@@ -426,10 +426,6 @@
       
     </head>
 
-    <!-- TODO: remove this terrible hack as it should not be needed
-	       and we really should be doing this properly
-      -->
-    <xsl:call-template name="start-tag"/>body<xsl:call-template name="end-tag"/>  <!--// open html body //-->
   </xsl:template> <!--* add-htmlhead *-->
 
   <!--*
@@ -575,6 +571,7 @@
 
   <!--* used by the test/trial headers *-->
   <xsl:template name="add-start-body-white">
+    <xsl:message terminate="no">*** Please let Doug know if you see this message: add-start-body-white ***</xsl:message>
     <xsl:call-template name="start-tag"/>body bgcolor=<xsl:call-template name="add-quote"/>#FFFFFF<xsl:call-template name="add-quote"/><xsl:call-template name="end-tag"/>
   </xsl:template>
 

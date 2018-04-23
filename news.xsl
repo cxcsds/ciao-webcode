@@ -79,43 +79,52 @@
 	<!--* make the HTML head node *-->
 	<xsl:call-template name="add-htmlhead-standard"/>
 
-	<xsl:call-template name="add-disclaimer"/>
-	<xsl:call-template name="add-header"/>
+	<xsl:call-template name="add-contents"/>
 
-	<!--// main div begins page layout //-->
-	<div id="main">
-	  
-	  <!--* the main text *-->
-	  <div id="content">
-	    <div class="wrap">
-
-	      <h1 class="pagetitle">What's New for CIAO <xsl:value-of select="$siteversion"/></h1>
-
-	      <p class="feed"><a href="http://cxc.harvard.edu/ciao/feed.xml">Subscribe to the CIAO&#160;News RSS&#160;feed</a></p>
-
-	      <hr/>
-
-	      <xsl:apply-templates select="//text/item" mode="main"/>
-	    </div>
-	  </div> <!--// close id=content //-->
-
-	  <div id="navbar">
-	    <div id="navtext" class="wrap">
-	      
-	      <xsl:call-template name="add-navbar">
-		<xsl:with-param name="name" select="info/navbar"/>
-	      </xsl:call-template>
-	    </div>
-	  </div> <!--// close id=navbar //-->
-		
-	</div> <!--// close id=main  //-->
-
-	<xsl:call-template name="add-footer"/>
-	<xsl:call-template name="add-end-body"/>
       </html>
 
     </xsl:document>
   </xsl:template> <!--* match=news *-->
+
+
+  <xsl:template name="add-contents">
+
+    <body>
+
+      <xsl:call-template name="add-disclaimer"/>
+      <xsl:call-template name="add-header"/>
+
+      <!--// main div begins page layout //-->
+      <div id="main">
+	  
+	<!--* the main text *-->
+	<div id="content">
+	  <div class="wrap">
+
+	    <h1 class="pagetitle">What's New for CIAO <xsl:value-of select="$siteversion"/></h1>
+
+	    <p class="feed"><a href="http://cxc.harvard.edu/ciao/feed.xml">Subscribe to the CIAO&#160;News RSS&#160;feed</a></p>
+
+	    <hr/>
+
+	    <xsl:apply-templates select="//text/item" mode="main"/>
+	  </div>
+	  </div> <!--// close id=content //-->
+	
+	<div id="navbar">
+	  <div id="navtext" class="wrap">
+	    
+	    <xsl:call-template name="add-navbar">
+	      <xsl:with-param name="name" select="info/navbar"/>
+	    </xsl:call-template>
+	  </div>
+	</div> <!--// close id=navbar //-->
+		
+      </div> <!--// close id=main  //-->
+
+      <xsl:call-template name="add-footer"/>
+    </body>
+  </xsl:template>
 
 
   <xsl:template match="news" mode="feed">

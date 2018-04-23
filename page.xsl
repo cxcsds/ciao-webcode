@@ -87,52 +87,59 @@
 	<!--* make the HTML head node *-->
 	<xsl:call-template name="add-htmlhead-standard"/>
 
-	<xsl:call-template name="add-disclaimer"/>
-	<xsl:call-template name="add-header"/>
+	<!-- * create the page contents *-->
+	<xsl:apply-templates select="text"/>
 
-	<xsl:choose>
-	  <xsl:when test="boolean(info/navbar)">
-
-	  <!--// main div begins page layout //-->
-	    <div id="main">
-
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
-
-		  <xsl:apply-templates select="text"/>
-		  </div>
-		</div> <!--// close id=content //-->
-
-		<div id="navbar">
-		  <div id="navtext" class="wrap">
-
-		  <xsl:call-template name="add-navbar">
-		    <xsl:with-param name="name" select="info/navbar"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
-		
-	    </div> <!--// close id=main  //-->
-	  </xsl:when>
-	  <xsl:otherwise>
-	    <!--* the main text *-->
-	    <div class="mainbar">
-	      <xsl:apply-templates select="text"/>
-	    </div>
-	  </xsl:otherwise>
-	</xsl:choose>
-	    
-	<xsl:call-template name="add-footer"/>
-	<xsl:call-template name="add-end-body"/>
       </html>
 
     </xsl:document>
   </xsl:template> <!--* match=page *-->
 
-  <!--* note: we process the text so we can handle our `helper' tags *-->
   <xsl:template match="text">
-   <xsl:apply-templates/>
+
+    <body>
+      <!-- copy the attributes of the text node into the body element-->
+      <xsl:copy-of select="@*"/>
+
+      <xsl:call-template name="add-disclaimer"/>
+      <xsl:call-template name="add-header"/>
+
+      <xsl:choose>
+	<xsl:when test="boolean(info/navbar)">
+	  
+	  <div id="main">
+	    
+	    <!--* the main text *-->
+	    <div id="content">
+	      <div class="wrap">
+		<!-- *** user content here *** -->
+		<xsl:apply-templates/>
+	      </div>
+	    </div> <!--// close id=content //-->
+	    
+	    <div id="navbar">
+	      <div id="navtext" class="wrap">
+		
+		<xsl:call-template name="add-navbar">
+		  <xsl:with-param name="name" select="info/navbar"/>
+		</xsl:call-template>
+	      </div>
+	    </div> <!--// close id=navbar //-->
+	    
+	  </div> <!--// close id=main  //-->
+	</xsl:when>
+	<xsl:otherwise>
+	  <!--* the main text *-->
+	  <div class="mainbar">
+	    <!-- *** user content here *** -->
+	    <xsl:apply-templates/>
+	  </div>
+	</xsl:otherwise>
+      </xsl:choose>
+      
+      <xsl:call-template name="add-footer"/>
+    </body>
+
   </xsl:template> <!--* text *-->
 
 </xsl:stylesheet>

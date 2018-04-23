@@ -104,38 +104,39 @@
 	<!--* make the HTML head node *-->
 	<xsl:call-template name="add-htmlhead-standard"/>
 
-	<xsl:call-template name="add-disclaimer"/>
-	<xsl:call-template name="add-header"/>
+	<body>
+	  <xsl:call-template name="add-disclaimer"/>
+	  <xsl:call-template name="add-header"/>
 	
 	  <!--// main div begins page layout //-->
-	    <div id="main">
+	  <div id="main">
+	    
+	    <!--* the main text *-->
+	    <div id="content">
+	      <div class="wrap">
 
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
-
-	      <!--* add the intro text *-->
-	      <xsl:apply-templates select="intro"/>
-	  
-	      <!--* create the list of entries *--> 
-	      <xsl:apply-templates select="entries" mode="toc"/>
-
-		  </div>
-		</div> <!--// close id=content //-->
-
-		<div id="navbar">
-		  <div id="navtext" class="wrap">
-
-		  <xsl:call-template name="add-navbar">
-		    <xsl:with-param name="name" select="info/navbar"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
+		<!--* add the intro text *-->
+		<xsl:apply-templates select="intro"/>
 		
-	    </div> <!--// close id=main  //-->
+		<!--* create the list of entries *--> 
+		<xsl:apply-templates select="entries" mode="toc"/>
+		
+	      </div>
+	    </div> <!--// close id=content //-->
+	    
+	    <div id="navbar">
+	      <div id="navtext" class="wrap">
+		
+		<xsl:call-template name="add-navbar">
+		  <xsl:with-param name="name" select="info/navbar"/>
+		</xsl:call-template>
+	      </div>
+	    </div> <!--// close id=navbar //-->
+		
+	  </div> <!--// close id=main  //-->
 
-	<xsl:call-template name="add-footer"/>
-	<xsl:call-template name="add-end-body"/>
+	  <xsl:call-template name="add-footer"/>
+	</body>
       </html>
 
     </xsl:document>
@@ -178,31 +179,33 @@
 			  select="//info/css"/>
 	</xsl:call-template>
 
-	<xsl:call-template name="add-disclaimer"/>
-	<xsl:call-template name="add-header">
-	  <xsl:with-param name="with-navbar" select="0"/>
-	</xsl:call-template>
+	<body>
 
-	<div class="qlinkbar">
-	  Return to: <a href=".">Dictionary index</a>
-	</div>
+	  <xsl:call-template name="add-disclaimer"/>
+	  <xsl:call-template name="add-header">
+	    <xsl:with-param name="with-navbar" select="0"/>
+	  </xsl:call-template>
 
-	<div class="mainbar">
+	  <div class="qlinkbar">
+	    Return to: <a href=".">Dictionary index</a>
+	  </div>
 
-	  <div class="pagetitle"><h2><xsl:apply-templates select="title"/></h2></div>
-	  <hr/>
+	  <div class="mainbar">
 
-	  <xsl:apply-templates select="text"/>
+	    <div class="pagetitle"><h2><xsl:apply-templates select="title"/></h2></div>
+	    <hr/>
+
+	    <xsl:apply-templates select="text"/>
 	  
-	  <hr/>
-	</div>
+	    <hr/>
+	  </div>
 
-	<div class="qlinkbar">
-	  Return to: <a href=".">Dictionary index</a>
-	</div>
+	  <div class="qlinkbar">
+	    Return to: <a href=".">Dictionary index</a>
+	  </div>
 
-	<xsl:call-template name="add-footer"/>
-	<xsl:call-template name="add-end-body"/>
+	  <xsl:call-template name="add-footer"/>
+	</body>
       </html>
 
     </xsl:document>

@@ -463,43 +463,45 @@
 	  <xsl:with-param name="name" select="id/name"/>
 	</xsl:call-template>
 
+	<body>
+
+	  <xsl:call-template name="add-disclaimer"/>
+	  <xsl:call-template name="add-header"/>
+
 	  <!--// main div begins page layout //-->
-	    <div id="main">
+	  <div id="main">
 
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
+	    <!--* the main text *-->
+	    <div id="content">
+	      <div class="wrap">
 
-	      <!--* set up the title block of the page *-->
-	      <xsl:call-template name="add-threadindex-title">
-		<xsl:with-param name="title" select="id/title"/>
-	      </xsl:call-template>
-
-	      <!--* do we have a synopsis? *-->
-	      <xsl:apply-templates select="synopsis" mode="section-page"/>
-
-	      <!--* process the section *-->
-	      <xsl:apply-templates select="." mode="section-page"/>
-
-		  </div>
-		</div> <!--// close id=content //-->
-
-		<div id="navbar">
-		  <div id="navtext" class="wrap">
-
-		  <xsl:call-template name="add-navbar">
-		    <xsl:with-param name="name" select="//threadindex/navbar"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
+		<!--* set up the title block of the page *-->
+		<xsl:call-template name="add-threadindex-title">
+		  <xsl:with-param name="title" select="id/title"/>
+		</xsl:call-template>
 		
-	    </div> <!--// close id=main  //-->
+		<!--* do we have a synopsis? *-->
+		<xsl:apply-templates select="synopsis" mode="section-page"/>
+		
+		<!--* process the section *-->
+		<xsl:apply-templates select="." mode="section-page"/>
+		
+	      </div>
+	    </div> <!--// close id=content //-->
+	    
+	    <div id="navbar">
+	      <div id="navtext" class="wrap">
+		
+		<xsl:call-template name="add-navbar">
+		  <xsl:with-param name="name" select="//threadindex/navbar"/>
+		</xsl:call-template>
+	      </div>
+	    </div> <!--// close id=navbar //-->
+	    
+	  </div> <!--// close id=main  //-->
 
-	<!--* add the footer text *-->
-	<xsl:call-template name="add-footer"/>
-      
-	<!--* add end body/html tags *-->
-	<xsl:call-template name="add-end-body"/>
+	  <xsl:call-template name="add-footer"/>
+	</body>
       </html>
 
     </xsl:document>
@@ -529,43 +531,45 @@
 	  <xsl:with-param name="name">table</xsl:with-param>
 	</xsl:call-template>
 
+	<body>
+
+	  <xsl:call-template name="add-disclaimer"/>
+	  <xsl:call-template name="add-header"/>
+
 	  <!--// main div begins page layout //-->
-	    <div id="main">
-
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
-
-	      <!-- set up the title block of the page -->
-	      <xsl:call-template name="add-threadindex-title">
-		<xsl:with-param name="title"><xsl:choose>
-		    <xsl:when test="$site='ciao'">Data for CIAO <xsl:value-of select="$siteversion"/> Threads</xsl:when>
-		    <xsl:otherwise>Data for Threads</xsl:otherwise>
-		  </xsl:choose></xsl:with-param>
-	      </xsl:call-template>
-
-	      <!--* add the data table *-->
-	      <xsl:call-template name="make-datatable"/>
-
-		  </div>
-		</div> <!--// close id=content //-->
-
-		<div id="navbar">
-		  <div id="navtext" class="wrap">
-
-		  <xsl:call-template name="add-navbar">
-		    <xsl:with-param name="name" select="//threadindex/navbar"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
+	  <div id="main">
+	    
+	    <!--* the main text *-->
+	    <div id="content">
+	      <div class="wrap">
 		
-	    </div> <!--// close id=main  //-->
+		<!-- set up the title block of the page -->
+		<xsl:call-template name="add-threadindex-title">
+		  <xsl:with-param name="title"><xsl:choose>
+		      <xsl:when test="$site='ciao'">Data for CIAO <xsl:value-of select="$siteversion"/> Threads</xsl:when>
+		      <xsl:otherwise>Data for Threads</xsl:otherwise>
+		  </xsl:choose></xsl:with-param>
+		</xsl:call-template>
+		
+		<!--* add the data table *-->
+		<xsl:call-template name="make-datatable"/>
+		
+	      </div>
+	    </div> <!--// close id=content //-->
+	    
+	    <div id="navbar">
+	      <div id="navtext" class="wrap">
+		
+		<xsl:call-template name="add-navbar">
+		  <xsl:with-param name="name" select="//threadindex/navbar"/>
+		</xsl:call-template>
+	      </div>
+	    </div> <!--// close id=navbar //-->
+	    
+	  </div> <!--// close id=main  //-->
 
-	<!--* add the footer text *-->
-	<xsl:call-template name="add-footer"/>
-      
-	<!--* add end body/html tags *-->
-	<xsl:call-template name="add-end-body"/>
+	  <xsl:call-template name="add-footer"/>
+	</body>
       </html>
 
     </xsl:document>
@@ -594,66 +598,64 @@
 	  <xsl:with-param name="name">index</xsl:with-param>
 	</xsl:call-template>
 
-	    <div id="main">
+	<body>
 
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
+	  <xsl:call-template name="add-disclaimer"/>
+	  <xsl:call-template name="add-header"/>
 
-	      <!-- set up the title block of the page -->
-	      <xsl:call-template name="add-threadindex-title"/>
-
-	      <!--* include the header text *-->
-	      <xsl:apply-templates select="header"/>
-
-	      <!--*
-	          * prior to CIAO 3.1 (v1.21 of this stylesheet) we used to
-	          * use a dl to split up the sections.
-	          *-->
-	      <div class="threadindex">
-
-		<div class="threadsection">
-		  <h3><a href="all.html"><em>All</em> threads</a></h3>
-		  <div class="threadsnopsis">
-		    <p>A list of all the threads on one page.</p>
-		  </div>
-		</div>
+	  <div id="main">
+	    
+	    <!--* the main text *-->
+	    <div id="content">
+	      <div class="wrap">
 		
-		<!--* process the sections in the index *-->
-		<xsl:apply-templates select="section" mode="index-page"/>
-          
-		<!--* do we have a data table? *-->
-		<xsl:if test="boolean(//threadindex/datatable)">
+		<!-- set up the title block of the page -->
+		<xsl:call-template name="add-threadindex-title"/>
+		
+		<!--* include the header text *-->
+		<xsl:apply-templates select="header"/>
+		
+		<div class="threadindex">
+
 		  <div class="threadsection">
-		    <h3><a href="table.html">Datasets</a></h3>
-		    <div class="threadsynopsis">
-		      <p>Links to the datasets used in the threads.</p>
+		    <h3><a href="all.html"><em>All</em> threads</a></h3>
+		    <div class="threadsnopsis">
+		      <p>A list of all the threads on one page.</p>
 		    </div>
 		  </div>
-		</xsl:if>
+		  
+		  <!--* process the sections in the index *-->
+		  <xsl:apply-templates select="section" mode="index-page"/>
+          
+		  <!--* do we have a data table? *-->
+		  <xsl:if test="boolean(//threadindex/datatable)">
+		    <div class="threadsection">
+		      <h3><a href="table.html">Datasets</a></h3>
+		      <div class="threadsynopsis">
+			<p>Links to the datasets used in the threads.</p>
+		      </div>
+		    </div>
+		  </xsl:if>
+		  
+		</div>
+		<br/>
 
 	      </div>
-	      <br/>
+	    </div> <!--// close id=content //-->
 
-		  </div>
-		</div> <!--// close id=content //-->
-
-		<div id="navbar">
-		  <div id="navtext" class="wrap">
-
-		  <xsl:call-template name="add-navbar">
-		    <xsl:with-param name="name" select="//threadindex/navbar"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
+	    <div id="navbar">
+	      <div id="navtext" class="wrap">
 		
-	    </div> <!--// close id=main  //-->
+		<xsl:call-template name="add-navbar">
+		  <xsl:with-param name="name" select="//threadindex/navbar"/>
+		</xsl:call-template>
+	      </div>
+	    </div> <!--// close id=navbar //-->
+	    
+	  </div> <!--// close id=main  //-->
 
-	<!--* add the footer text *-->
-	<xsl:call-template name="add-footer"/>
-
-	<!--* add end body/html tags *-->
-	<xsl:call-template name="add-end-body"/>
+	  <xsl:call-template name="add-footer"/>
+	</body>
       </html>
 
     </xsl:document>
@@ -683,45 +685,47 @@
 	  <xsl:with-param name="name">all</xsl:with-param>
 	</xsl:call-template>
 
+	<body>
+
+	  <xsl:call-template name="add-disclaimer"/>
+	  <xsl:call-template name="add-header"/>
+
 	  <!--// main div begins page layout //-->
-	    <div id="main">
-
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
-
-	      <!-- set up the title block of the page -->
-	      <xsl:call-template name="add-threadindex-title"/>
-
-	      <!--* process the sections in the index *-->
-	      <div class="threadindex">
-		<xsl:apply-templates select="section" mode="all-page"/>
-	      </div>
-
-	      <br/><br/>
-
-	      <!--* add the data table *-->
-	      <xsl:call-template name="make-datatable"/>
-	  
-		  </div>
-		</div> <!--// close id=content //-->
-
-		<div id="navbar">
-		  <div id="navtext" class="wrap">
-
-		  <xsl:call-template name="add-navbar">
-		    <xsl:with-param name="name" select="//threadindex/navbar"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
+	  <div id="main">
+	    
+	    <!--* the main text *-->
+	    <div id="content">
+	      <div class="wrap">
 		
-	    </div> <!--// close id=main  //-->
+		<!-- set up the title block of the page -->
+		<xsl:call-template name="add-threadindex-title"/>
+		
+		<!--* process the sections in the index *-->
+		<div class="threadindex">
+		  <xsl:apply-templates select="section" mode="all-page"/>
+		</div>
+		
+		<br/><br/>
+		
+		<!--* add the data table *-->
+		<xsl:call-template name="make-datatable"/>
+		
+	      </div>
+	    </div> <!--// close id=content //-->
+	    
+	    <div id="navbar">
+	      <div id="navtext" class="wrap">
+		
+		<xsl:call-template name="add-navbar">
+		  <xsl:with-param name="name" select="//threadindex/navbar"/>
+		</xsl:call-template>
+	      </div>
+	    </div> <!--// close id=navbar //-->
+	    
+	  </div> <!--// close id=main  //-->
 
-	<!--* add the footer text *-->
-	<xsl:call-template name="add-footer"/>
-      
-	<!--* add end body/html tags *-->
-	<xsl:call-template name="add-end-body"/>
+	  <xsl:call-template name="add-footer"/>
+	</body>
       </html>
       
     </xsl:document>
@@ -734,8 +738,6 @@
       *   title - title of page (appears in head block so should be concise)
       *   name  - name of page (w/out .html), used for the canonical block
       *
-      * NOTE:
-      *  we *NO LONGER* create a html tag but we do create a BODY tag; ugh!
       *-->
   <xsl:template name="add-threadindex-start">
     <xsl:param name="title" select="'Threads'"/>
@@ -753,12 +755,6 @@
       <xsl:with-param name="page" select="concat($name, '.html')"/>
     </xsl:call-template>
 
-    <!--* add disclaimer about editing thie HTML file *-->
-    <xsl:call-template name="add-disclaimer"/>
-
-    <!--* make the header *-->
-    <xsl:call-template name="add-header"/>
-
   </xsl:template> <!--* name=add-threadindex-start *-->
 
   <!--* 
@@ -771,20 +767,8 @@
   <xsl:template match="section" mode="index-page">
 
     <div class="threadsection">
-      <!--* for CIAO 3.1 we added the new/updated images into the header *-->
       <h3><a href="{id/name}.html"><xsl:apply-templates select="title" mode="show"/></a><xsl:call-template name="report-if-new-or-updated-threads-icons"/></h3>
 
-      <!--*
-          * for CIAO 3.1 have decided not to include the number of
-          * threads as it is hard to get it to look right
-          *
-      <xsl:call-template name="report-if-new-or-updated-threads"/>
-          *
-          *-->
-
-      <!--*
-          * If there's a synopsis section then include it
-          *-->
       <xsl:apply-templates select="synopsis" mode="index-page"/>
 
     </div> <!--* class=threadsection *-->

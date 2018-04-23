@@ -78,132 +78,131 @@
 
 	<!--* make the HTML head node *-->
 	<xsl:call-template name="add-htmlhead-standard"/>
+	
+	<body>
 
-	<!--* add disclaimer about editing this HTML file *-->
-	<xsl:call-template name="add-disclaimer"/>
-
-	<xsl:call-template name="add-header"/>
+	  <!--* add disclaimer about editing this HTML file *-->
+	  <xsl:call-template name="add-disclaimer"/>
+	  <xsl:call-template name="add-header"/>
 
 	  <!--// main div begins page layout //-->
-	    <div id="main">
+	  <div id="main">
 
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
+	    <!--* the main text *-->
+	    <div id="content">
+	      <div class="wrap">
 
-	      <!--* add the intro text *-->
-	      <xsl:if test="intro">
-	        <xsl:apply-templates select="intro"/>
+		<!--* add the intro text *-->
+		<xsl:if test="intro">
+	          <xsl:apply-templates select="intro"/>
 		
-		<!--// add links //-->
-		<span class="qlinkbar">Go to:
-		  <a href="index.html">Catalog Columns Index</a> |
-		  <a>
-		    <xsl:attribute name="href">
-		    <xsl:value-of select="concat($pagename,'_alpha.html')"/>
-		  </xsl:attribute>
-		  Alphabetical List</a>
-		</span>
-		<hr/>
-	      </xsl:if>
+		  <!--// add links //-->
+		  <span class="qlinkbar">Go to:
+		    <a href="index.html">Catalog Columns Index</a> |
+		    <a>
+		      <xsl:attribute name="href">
+			<xsl:value-of select="concat($pagename,'_alpha.html')"/>
+		      </xsl:attribute>
+		      Alphabetical List</a>
+		  </span>
+		  <hr/>
+		</xsl:if>
 
-
-	 <!--// start database column table //-->
-	 <table id="dbtable" class="csctable">
-	   <thead>
-	     <tr>
-	       <th>Context</th>
-	       <th>Column Name</th>
-	       <th>Type</th>
-	       <th>Units</th>
-	       <th>Description</th>
-	     </tr>
-	   </thead>
-
-	   <tbody>
-	     <xsl:for-each select="//objgrp">
-
-	       <xsl:for-each select="group">
-		 <xsl:variable name="rowcount"><xsl:value-of select="count(cols/col)"/></xsl:variable>
-		 <tr id="{@id}">
-		   <td valign="top" rowspan="{$rowcount}" class="context">
-
-		     <xsl:choose>
+		<!--// start database column table //-->
+		<table id="dbtable" class="csctable">
+		  <thead>
+		    <tr>
+		      <th>Context</th>
+		      <th>Column Name</th>
+		      <th>Type</th>
+		      <th>Units</th>
+		      <th>Description</th>
+		    </tr>
+		  </thead>
+		  
+		  <tbody>
+		    <xsl:for-each select="//objgrp">
+		      
+		      <xsl:for-each select="group">
+			<xsl:variable name="rowcount"><xsl:value-of select="count(cols/col)"/></xsl:variable>
+			<tr id="{@id}">
+			  <td valign="top" rowspan="{$rowcount}" class="context">
+			    
+			    <xsl:choose>
 		       
-		       <xsl:when test="@link">
-			 <xsl:variable name="grplink">
-			   <xsl:value-of select="@link"/>
-			 </xsl:variable>
-			 
- 			 <xsl:choose>
- 			   <xsl:when test="@section">
- 			     <xsl:variable name="grpsection">
- 			       <xsl:value-of select="@section"/>
- 			     </xsl:variable>
+			      <xsl:when test="@link">
+				<xsl:variable name="grplink">
+				  <xsl:value-of select="@link"/>
+				</xsl:variable>
+				
+ 				<xsl:choose>
+ 				  <xsl:when test="@section">
+ 				    <xsl:variable name="grpsection">
+ 				      <xsl:value-of select="@section"/>
+ 				    </xsl:variable>
 
- 			     <a class="grouptitle" href="{$grplink}.html#{$grpsection}">
- 			       <strong><xsl:value-of select="title"/></strong>
- 			     </a>
- 			   </xsl:when>
+ 				    <a class="grouptitle" href="{$grplink}.html#{$grpsection}">
+ 				      <strong><xsl:value-of select="title"/></strong>
+ 				    </a>
+ 				  </xsl:when>
 
- 			   <xsl:otherwise>
- 			     <a class="grouptitle" href="{$grplink}.html">
- 			       <strong><xsl:value-of select="title"/></strong>
- 			     </a>
- 			   </xsl:otherwise>
- 			 </xsl:choose>
-		       </xsl:when>
-		       
-		       <xsl:otherwise>
-			 <span class="grouptitle"><strong><xsl:value-of select="title"/></strong></span>
-		       </xsl:otherwise>
-		     </xsl:choose>
-		   </td>
+ 				  <xsl:otherwise>
+ 				    <a class="grouptitle" href="{$grplink}.html">
+ 				      <strong><xsl:value-of select="title"/></strong>
+ 				    </a>
+ 				  </xsl:otherwise>
+ 				</xsl:choose>
+			      </xsl:when>
+			      
+			      <xsl:otherwise>
+				<span class="grouptitle"><strong><xsl:value-of select="title"/></strong></span>
+			      </xsl:otherwise>
+			    </xsl:choose>
+			  </td>
 		   
-		   <!--// if first row, don't include open "tr" tag //-->
-		   <xsl:for-each select="cols/col">
-		     <xsl:if test="position() = 1">
-		       <xsl:call-template name="add-dbcols"/>
-		     </xsl:if>
-		   </xsl:for-each>
-		 </tr>
-		 
-		 <xsl:for-each select="cols/col">
-		   <xsl:if test="position() != 1">
-		     <tr>
-		       <xsl:call-template name="add-dbcols"/>
-		     </tr>
-		   </xsl:if>
-		 </xsl:for-each>
-		 
-		 <xsl:if test="last()">
-		   <tr><td colspan="5" class="separator"><hr/></td></tr>
-		 </xsl:if>
-		 
-	       </xsl:for-each>  <!--// end select="group" //-->
-
-	     </xsl:for-each>  <!--// end select="objgroup" //-->
-	   </tbody>
-	 </table>
-	 <!--// end database column table //-->
+			  <!--// if first row, don't include open "tr" tag //-->
+			  <xsl:for-each select="cols/col">
+			    <xsl:if test="position() = 1">
+			      <xsl:call-template name="add-dbcols"/>
+			    </xsl:if>
+			  </xsl:for-each>
+			</tr>
+			
+			<xsl:for-each select="cols/col">
+			  <xsl:if test="position() != 1">
+			    <tr>
+			      <xsl:call-template name="add-dbcols"/>
+			    </tr>
+			  </xsl:if>
+			</xsl:for-each>
+			
+			<xsl:if test="last()">
+			  <tr><td colspan="5" class="separator"><hr/></td></tr>
+			</xsl:if>
+			
+		      </xsl:for-each>  <!--// end select="group" //-->
+		      
+		    </xsl:for-each>  <!--// end select="objgroup" //-->
+		  </tbody>
+		</table>
+		<!--// end database column table //-->
 	 
+	      </div>
+	    </div> <!--// close id=content //-->
 
-		  </div>
-		</div> <!--// close id=content //-->
-
-		<div id="navbar">
-		  <div id="navtext" class="wrap">
-
-		  <xsl:call-template name="add-navbar">
-		    <xsl:with-param name="name" select="info/navbar"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
+	    <div id="navbar">
+	      <div id="navtext" class="wrap">
 		
-	    </div> <!--// close id=main  //-->
+		<xsl:call-template name="add-navbar">
+		  <xsl:with-param name="name" select="info/navbar"/>
+		</xsl:call-template>
+	      </div>
+	    </div> <!--// close id=navbar //-->
 	    
-	<xsl:call-template name="add-footer"/>
-	<xsl:call-template name="add-end-body"/>
+	  </div> <!--// close id=main  //-->
+	    
+	  <xsl:call-template name="add-footer"/>
+	</body>
       </html>
 
     </xsl:document>
@@ -234,79 +233,79 @@
 	  <xsl:with-param name="page" select="concat($alphapagename, '.html')"/>
 	</xsl:call-template>
 
-	<!--* add disclaimer about editing this HTML file *-->
-	<xsl:call-template name="add-disclaimer"/>
-
-	<xsl:call-template name="add-header"/>
+	<body>
+	  
+	  <!--* add disclaimer about editing this HTML file *-->
+	  <xsl:call-template name="add-disclaimer"/>
+	  
+	  <xsl:call-template name="add-header"/>
 
 	  <!--// main div begins page layout //-->
-	    <div id="main">
-
-		<!--* the main text *-->
-		<div id="content">
-		  <div class="wrap">
-
-	      <!--* add the intro text *-->
-	      <xsl:if test="intro">
-	        <xsl:apply-templates select="intro"/>
-
-		<!--// add links //-->
-		<span class="qlinkbar">Go to:
-		  <a href="index.html">Catalog Columns Index</a> |
-		  <a>
-		    <xsl:attribute name="href">
-		    <xsl:value-of select="concat($pagename,'.html')"/>
-		  </xsl:attribute>
-		  Context List</a>
-		</span>
-		<hr/>
-	      </xsl:if>
-
-
-	 <!--// start database column table //-->
-	 <table id="dbtable" class="csctable">
-	   <thead>
-	     <tr>
-	       <th>Column Name</th>
-	       <th>Type</th>
-	       <th>Units</th>
-	       <th>Description</th>
-	     </tr>
-	   </thead>
-
-	   <tbody>
-	     <xsl:for-each select="//objgrp/group/cols/col">
-	       <xsl:sort select="@name"/>
-
-	       <!--// don't include anything marked as '@hide="abc"' //-->     
-	       <xsl:if test="(contains(@hide,'abc') != true()) or (@hide != 'abc')">
-		 <tr>
-		   <xsl:call-template name="add-dbcols"/>
-		 </tr>
-	       </xsl:if>
-	     </xsl:for-each>
-	   </tbody>
-
-	 </table>
-	 <!--// end database column table //-->
-
-
-		  </div>
-		</div> <!--// close id=content //-->
-
-		<div id="navbar">
-		  <div id="navtext" class="wrap">
-
-		  <xsl:call-template name="add-navbar">
-		    <xsl:with-param name="name" select="info/navbar"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
-		
-	    </div> <!--// close id=main  //-->
+	  <div id="main">
 	    
-	<xsl:call-template name="add-footer"/>
-	<xsl:call-template name="add-end-body"/>
+	    <!--* the main text *-->
+	    <div id="content">
+	      <div class="wrap">
+		
+		<!--* add the intro text *-->
+		<xsl:if test="intro">
+	          <xsl:apply-templates select="intro"/>
+		  
+		  <!--// add links //-->
+		  <span class="qlinkbar">Go to:
+		    <a href="index.html">Catalog Columns Index</a> |
+		    <a>
+		      <xsl:attribute name="href">
+			<xsl:value-of select="concat($pagename,'.html')"/>
+		      </xsl:attribute>
+		      Context List</a>
+		  </span>
+		  <hr/>
+		</xsl:if>
+		
+		<!--// start database column table //-->
+		<table id="dbtable" class="csctable">
+		  <thead>
+		    <tr>
+		      <th>Column Name</th>
+		      <th>Type</th>
+		      <th>Units</th>
+		      <th>Description</th>
+		    </tr>
+		  </thead>
+		  
+		  <tbody>
+		    <xsl:for-each select="//objgrp/group/cols/col">
+		      <xsl:sort select="@name"/>
+		      
+		      <!--// don't include anything marked as '@hide="abc"' //-->     
+		      <xsl:if test="(contains(@hide,'abc') != true()) or (@hide != 'abc')">
+			<tr>
+			  <xsl:call-template name="add-dbcols"/>
+			</tr>
+		      </xsl:if>
+		    </xsl:for-each>
+		  </tbody>
+
+		</table>
+		<!--// end database column table //-->
+
+	      </div>
+	    </div> <!--// close id=content //-->
+
+	    <div id="navbar">
+	      <div id="navtext" class="wrap">
+		
+		<xsl:call-template name="add-navbar">
+		  <xsl:with-param name="name" select="info/navbar"/>
+		</xsl:call-template>
+	      </div>
+	    </div> <!--// close id=navbar //-->
+		
+	  </div> <!--// close id=main  //-->
+	    
+	  <xsl:call-template name="add-footer"/>
+	</body>
       </html>
 
     </xsl:document>
