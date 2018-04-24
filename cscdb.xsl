@@ -312,8 +312,12 @@
   </xsl:template> <!--* match=cscdb mode=alphabet *-->
 
 
+  <!-- the name value is taken to be a link unless it contains a space -->
   <xsl:template name="add-dbcols">
-    <td id="{@name}">
+    <td>
+      <xsl:if test="not(contains(@name, ' '))">
+	<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
+      </xsl:if>
       <xsl:value-of select="@name"/>
     </td>
 
