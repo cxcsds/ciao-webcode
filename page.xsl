@@ -105,7 +105,7 @@
       <xsl:call-template name="add-header"/>
 
       <xsl:choose>
-	<xsl:when test="boolean(info/navbar)">
+	<xsl:when test="boolean(//page/info/navbar)">
 	  
 	  <div id="main">
 	    
@@ -121,7 +121,7 @@
 	      <div id="navtext" class="wrap">
 		
 		<xsl:call-template name="add-navbar">
-		  <xsl:with-param name="name" select="info/navbar"/>
+		  <xsl:with-param name="name" select="//page/info/navbar"/>
 		</xsl:call-template>
 	      </div>
 	    </div> <!--// close id=navbar //-->

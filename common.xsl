@@ -274,6 +274,12 @@ if (self == top) {
       </xsl:message>
     </xsl:if>
 
+    <!-- It would be nice if the metadata for all pages was the same;
+         for instance threadindex pages have a top-level navbar tag
+	 rather than within an info section. -->
+    <xsl:variable name="has-navbar"
+		  select="$with-navbar != 0 and (boolean(//info/navbar) or boolean (//navbar) or $with-navbar = 1)"/>
+
     <xsl:call-template name="add-site-include">
       <xsl:with-param name="type" select="'header'"/>
     </xsl:call-template>
@@ -286,11 +292,12 @@ if (self == top) {
         *    .hideme { display: none; }
         * so it's a good way of getting to lynx users
         *-->
-
-    <div class="hideme">
-      <a href="#navtext" accesskey="s"
-	title="Skip to the navigation links">Skip to the navigation links</a>
-    </div>
+    <xsl:if test="$has-navbar">
+      <div class="hideme">
+	<a href="#navtext" accesskey="s"
+	   title="Skip to the navigation links">Skip to the navigation links</a>
+      </div>
+    </xsl:if>
 
     <!-- *
          * Really this should be called topbar but to avoid 
@@ -300,12 +307,7 @@ if (self == top) {
 	 *-->
     <xsl:variable name="classes">
       <xsl:text>topbarcontainer</xsl:text>
-	<!-- It would be nice if the metadata for all pages was the same;
-             for instance threadindex pages have a top-level navbar tag
-	     rather than within an info section. -->
-	<xsl:if test="$with-navbar != 0 and (boolean(//info/navbar) or boolean (//navbar) or $with-navbar = 1)">
-	<xsl:text> withnavbar</xsl:text>
-      </xsl:if>
+      <xsl:if test="$has-navbar"><xsl:text> withnavbar</xsl:text></xsl:if>
     </xsl:variable>
     <div class="{$classes}">
       <xsl:if test="$site != 'icxc'">
