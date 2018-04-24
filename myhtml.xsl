@@ -1486,7 +1486,14 @@ ERROR: section tag has an empty id attribute.
 	  </xsl:if>
          
 	  <h2 id="{@id}"><xsl:value-of select="$titlestring"/></h2>
-	  <xsl:apply-templates/>
+
+	  <!-- need to hide the title block; as I am not sure if I depend on
+	       the title block being processed in other cases, I don't want
+	       to add a template to just ignore title blocks. Similarly,
+	       I don't want to add a mode here since the contents are
+	       generic.
+	    -->
+	  <xsl:apply-templates select="*[name() != 'title']"/>
 	  
 	</xsl:otherwise>
       </xsl:choose>
@@ -1632,7 +1639,14 @@ ERROR: section tag has an empty id attribute.
 	  <h3 id="{@id}"><xsl:call-template name="position-to-label">
 		<xsl:with-param name="type" select="$type"/>
 	      </xsl:call-template><xsl:value-of select="title"/></h3>
-	  <xsl:apply-templates/>
+
+	  <!-- need to hide the title block; as I am not sure if I depend on
+	       the title block being processed in other cases, I don't want
+	       to add a template to just ignore title blocks. Similarly,
+	       I don't want to add a mode here since the contents are
+	       generic.
+	    -->
+	  <xsl:apply-templates select="*[name() != 'title']"/>
       
 	  <!--* we only add a hr if we are NOT the last subsection
 	      (and hr's are allowed) *-->
