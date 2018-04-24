@@ -126,7 +126,7 @@
 		      <xsl:for-each select="group">
 			<xsl:variable name="rowcount"><xsl:value-of select="count(cols/col)"/></xsl:variable>
 			<tr id="{@id}">
-			  <td valign="top" rowspan="{$rowcount}" class="context">
+			  <td rowspan="{$rowcount}" class="context">
 			    
 			    <xsl:choose>
 		       
@@ -313,14 +313,8 @@
 
 
   <xsl:template name="add-dbcols">
-    <td>
-      <xsl:variable name="aname">
-	<xsl:value-of select="@name"/>
-      </xsl:variable>
-
-      <a class="nohovername" name="{$aname}">
-	<xsl:value-of select="@name"/>
-      </a>
+    <td id="{@name}">
+      <xsl:value-of select="@name"/>
     </td>
 
     <td>
