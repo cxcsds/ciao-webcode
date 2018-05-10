@@ -1400,6 +1400,90 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
   </xsl:template> <!--* why *-->
 
+  <!--* 
+      * Link to a gallery page
+      *
+      * Attributes:
+      *  page - strong, optional
+      *   the name of the page to link to [without the .html]
+      *  id - the anchor to link to
+      *
+      *  + the 'style' attributes although UC is ignored
+      *
+      * if no name is supplied we link to the gallery index page
+      *
+      * There is no default text
+      *-->
+  <xsl:template match="gallery">
+
+    <xsl:call-template name="check-contents-are-not-empty"/>
+
+    <!--* since we don't have a DTD *-->
+    <xsl:call-template name="name-not-allowed"/>
+
+    <!--* check name attribute *-->
+    <xsl:call-template name="check-page-for-no-html"/>
+
+    <!--* are we in the ciao pages or not (ie is this an `external' link or not) *-->
+    <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
+
+    <!--// if there is an attribute, use it 
+	   otherwise, link to the "in-site" gallery example //-->
+    <xsl:variable name="hrefstart"><xsl:choose>    
+      <xsl:when test="@site = 'ciao'">/ciao/gallery/</xsl:when>
+      <xsl:when test="@site = 'sherpa'">/sherpa/gallery/</xsl:when>
+      <xsl:when test="@site = 'chips'">/chips/gallery/</xsl:when>
+
+      <xsl:when test="$site = 'csc'">
+        <xsl:call-template name="add-start-of-href">
+	  <xsl:with-param name="extlink" select="0"/>
+	  <xsl:with-param name="dirname" select="'gallery/'"/>
+	</xsl:call-template>
+      </xsl:when>
+
+      <!-- ciao, chips, sherpa, etc. //-->
+      <xsl:otherwise>
+        <xsl:call-template name="add-start-of-href">
+	    <xsl:with-param name="extlink" select="$extlink"/>
+	  <xsl:with-param name="dirname" select="'gallery/'"/>
+	</xsl:call-template>
+      </xsl:otherwise>
+      </xsl:choose></xsl:variable>
+
+
+    <!--* process the contents, surrounded by styles *-->
+    <xsl:call-template name="add-text-styles">
+      <xsl:with-param name="contents">
+	<a>
+	  <xsl:choose>
+	    <xsl:when test="($site != 'csc') or (@site = 'ciao')">
+ 	      <xsl:attribute name="title">List of CIAO Examples</xsl:attribute>
+	    </xsl:when>
+
+	    <xsl:when test="($site != 'csc') or (@site = 'sherpa')">
+ 	      <xsl:attribute name="title">Gallery of Sherpa Examples</xsl:attribute>
+	    </xsl:when>
+
+	    <xsl:when test="($site != 'csc') or (@site = 'chips')">
+ 	      <xsl:attribute name="title">Gallery of ChIPS Examples</xsl:attribute>
+	    </xsl:when>
+
+	    <xsl:when test="($site = 'csc') or (@site = 'csc')">
+ 	      <xsl:attribute name="title">CSC Gallery of Exapmles</xsl:attribute>
+	    </xsl:when>
+	  </xsl:choose>
+
+	  <xsl:attribute name="href">
+	    <xsl:value-of select="$hrefstart"/>
+	    <xsl:call-template name="sort-out-anchor"/>
+	  </xsl:attribute>
+	  <xsl:apply-templates/>
+	</a>
+      </xsl:with-param>
+    </xsl:call-template>
+
+  </xsl:template> <!--* gallery *-->
+
   <!--*
       * handle download tags:
       *  - in CIAO 3.1 we updated the system so that
