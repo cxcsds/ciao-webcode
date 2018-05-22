@@ -91,39 +91,25 @@
 	<!--* make the HTML head node *-->
 	<xsl:call-template name="add-htmlhead-standard"/>
 
-	<body>
-	  <xsl:call-template name="add-disclaimer"/>
-	  <xsl:call-template name="add-header"/>
-
-	  <!--// main div begins page layout //-->
-	  <div id="main">
-
-	    <!--* the main text *-->
-	    <div id="content">
-	      <div class="wrap">
-		
-		<!--* add the intro text *-->
-		<xsl:apply-templates select="intro"/>
-	  
-		<!--* create the list of FAQ's *--> 
-		<xsl:apply-templates select="faqlist" mode="toc"/>
+	<xsl:variable name="contents">
+	  <!--* add the intro text *-->
+	  <xsl:apply-templates select="intro"/>
+	      
+	  <!--* create the list of FAQ's *--> 
+	  <xsl:apply-templates select="faqlist" mode="toc"/>
+	</xsl:variable>
 	    
-	      </div>
-	    </div> <!--// close id=content //-->
+	<xsl:variable name="navbar">
+	  <xsl:call-template name="add-navbar">
+	    <xsl:with-param name="name" select="info/navbar"/>
+	  </xsl:call-template>
+	</xsl:variable>
+	    
+	<xsl:call-template name="add-body-withnavbar">
+	  <xsl:with-param name="contents" select="$contents"/>
+	  <xsl:with-param name="navbar" select="$navbar"/>
+	</xsl:call-template>
 
-	    <div id="navbar">
-	      <div id="navtext" class="wrap">
-		
-		<xsl:call-template name="add-navbar">
-		  <xsl:with-param name="name" select="info/navbar"/>
-		</xsl:call-template>
-	      </div>
-	    </div> <!--// close id=navbar //-->
-		
-	  </div> <!--// close id=main  //-->
-      
-	  <xsl:call-template name="add-footer"/>
-	</body>
       </html>
 
     </xsl:document>
@@ -161,19 +147,13 @@
 			  select="//info/css"/>
 	</xsl:call-template>
 
-	<body>
-
-	  <xsl:call-template name="add-disclaimer"/>
-	  <xsl:call-template name="add-header">
-	    <xsl:with-param name="with-navbar" select="0"/>
-	  </xsl:call-template>
-
+	<xsl:variable name="contents">
 	  <div class="qlinkbar">
 	    Return to: <a href=".">FAQ index</a>
 	  </div>
 
 	  <div class="mainbar">
-
+	    
 	    <div>
 	      <h2 class="pagetitle"><xsl:apply-templates select="title"/><xsl:call-template name="add-new-or-updated-info"/></h2>
 	      <xsl:apply-templates select="errmsg"/>
@@ -181,16 +161,19 @@
 	    <hr/>
 	    
 	    <xsl:apply-templates select="text"/>
-	  
+	    
 	    <hr/>
 	  </div>
-
+	  
 	  <div class="qlinkbar">
 	    Return to: <a href=".">FAQ index</a>
 	  </div>
+	</xsl:variable>
 
-	  <xsl:call-template name="add-footer"/>
-	</body>
+	<xsl:call-template name="add-body-nonavbar">
+	  <xsl:with-param name="contents" select="$contents"/>
+	</xsl:call-template>
+
       </html>
 
     </xsl:document>

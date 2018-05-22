@@ -118,6 +118,10 @@
   <xsl:param name="version"/>
   <xsl:param name="updateby"/>
 
+  <!-- for the disclaimer -->
+  <xsl:param name="pagename" select='"fake-index-page"'/>
+  <xsl:param name="sourcedir" select='"/dev/null/"'/>
+
   <xsl:variable name="indir"/>
 
   <!--* temporary hack for v1.21/2 of ahelp_common.xsl *-->
@@ -579,41 +583,19 @@
 	  <xsl:with-param name="pagename" select="$pagename"/>
 	</xsl:call-template>
 
-	<body>
+	<xsl:call-template name="add-body-withnavbar">
+	  <xsl:with-param name="contents">
+	    <xsl:apply-templates select="ahelpindex/alphabet[@site=$site]"/>
+	  </xsl:with-param>
 
-	  <!--* add header and banner *-->
-	  <xsl:call-template name="add-header">
-	    <xsl:with-param name="with-navbar" select="1"/>
-	  </xsl:call-template>
+	  <xsl:with-param name="navbar">
+	    <xsl:call-template name="add-navbar">
+              <xsl:with-param name="navbar" select="$navbarname"/>
+	    </xsl:call-template>
+	  </xsl:with-param>
 
-	  <!--// main div begins page layout //-->
-	  <div id="main">
+	</xsl:call-template>
 
-	    <!--* the main text *-->
-	    <div id="content">
-	      <div class="wrap">
-
-		<!--* process the contents *-->
-		<xsl:apply-templates select="ahelpindex/alphabet[@site=$site]"/>
-		
-	      </div>
-	    </div> <!--// close id=content //-->
-
-	    <div id="navbar">
-	      <div id="navtext" class="wrap">
-		
-		<xsl:call-template name="add-navbar">
-                  <xsl:with-param name="navbar" select="$navbarname"/>
-		</xsl:call-template>
-	      </div>
-	    </div> <!--// close id=navbar //-->
-		
-	  </div> <!--// close id=main  //-->
-	
-	  <!--* add the banner *-->
-	  <xsl:call-template name="add-footer"/>
-
-	</body>
       </html>
       
     </xsl:document>
@@ -780,41 +762,18 @@
 	  <xsl:with-param name="pagename" select="$pagename"/>
 	</xsl:call-template>
 
-	<body>
-
-	  <!--* add header and banner *-->
-	  <xsl:call-template name="add-header">
-	    <xsl:with-param name="with-navbar" select="1"/>
-	  </xsl:call-template>
-
-	  <!--// main div begins page layout //-->
-	  <div id="main">
-	    
-	    <!--* the main text *-->
-	    <div id="content">
-	      <div class="wrap">
-		
-	      <!--* process the contents *-->
-	      <xsl:apply-templates select="ahelpindex/context[@site=$site]"/>
+	<xsl:call-template name="add-body-withnavbar">
+	  <xsl:with-param name="contents">
+	    <xsl:apply-templates select="ahelpindex/context[@site=$site]"/>
+	  </xsl:with-param>
 	      
-	      </div>
-	    </div> <!--// close id=content //-->
-	    
-	    <div id="navbar">
-	      <div id="navtext" class="wrap">
-		
-		<xsl:call-template name="add-navbar">
-                  <xsl:with-param name="navbar" select="$navbarname"/>
-		</xsl:call-template>
-	      </div>
-	    </div> <!--// close id=navbar //-->
-		
-	  </div> <!--// close id=main  //-->
-	  
-	  <!--* add the banner *-->
-	  <xsl:call-template name="add-footer"/>
-	  
-	</body>
+	  <xsl:with-param name="navbar">
+	    <xsl:call-template name="add-navbar">
+              <xsl:with-param name="navbar" select="$navbarname"/>
+	    </xsl:call-template>
+	  </xsl:with-param>
+
+	</xsl:call-template>
 
       </html>
       

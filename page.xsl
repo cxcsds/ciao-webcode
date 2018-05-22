@@ -95,51 +95,30 @@
     </xsl:document>
   </xsl:template> <!--* match=page *-->
 
+  <xsl:template match="text[boolean(//page/info/navbar)]">
+
+    <xsl:call-template name="add-body-withnavbar">
+      <xsl:with-param name="contents">
+	<xsl:apply-templates/>
+      </xsl:with-param>
+      <xsl:with-param name="navbar">
+	<xsl:call-template name="add-navbar">
+	  <xsl:with-param name="name" select="//page/info/navbar"/>
+	</xsl:call-template>
+      </xsl:with-param>
+    </xsl:call-template>
+
+  </xsl:template> <!-- text with navbar -->
+
+  <!-- no navbar -->
   <xsl:template match="text">
 
-    <body>
-      <!-- copy the attributes of the text node into the body element-->
-      <xsl:copy-of select="@*"/>
+    <xsl:call-template name="add-body-nonavbar">
+      <xsl:with-param name="contents">
+	<xsl:apply-templates/>
+      </xsl:with-param>
+    </xsl:call-template>
 
-      <xsl:call-template name="add-disclaimer"/>
-      <xsl:call-template name="add-header"/>
-
-      <xsl:choose>
-	<xsl:when test="boolean(//page/info/navbar)">
-	  
-	  <div id="main">
-	    
-	    <!--* the main text *-->
-	    <div id="content">
-	      <div class="wrap">
-		<!-- *** user content here *** -->
-		<xsl:apply-templates/>
-	      </div>
-	    </div> <!--// close id=content //-->
-	    
-	    <div id="navbar">
-	      <div id="navtext" class="wrap">
-		
-		<xsl:call-template name="add-navbar">
-		  <xsl:with-param name="name" select="//page/info/navbar"/>
-		</xsl:call-template>
-	      </div>
-	    </div> <!--// close id=navbar //-->
-	    
-	  </div> <!--// close id=main  //-->
-	</xsl:when>
-	<xsl:otherwise>
-	  <!--* the main text *-->
-	  <div class="mainbar">
-	    <!-- *** user content here *** -->
-	    <xsl:apply-templates/>
-	  </div>
-	</xsl:otherwise>
-      </xsl:choose>
-      
-      <xsl:call-template name="add-footer"/>
-    </body>
-
-  </xsl:template> <!--* text *-->
+  </xsl:template> <!--* text without navbar *-->
 
 </xsl:stylesheet>

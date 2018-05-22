@@ -979,49 +979,43 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
 
       <xsl:call-template name="add-htmlhead-site-thread"/>
 
-      <body>
+      <xsl:call-template name="add-body-nonavbar">
+	<xsl:with-param name="contents">
 
-      <xsl:call-template name="add-disclaimer"/>
-      <xsl:call-template name="add-header"/>
-      <xsl:call-template name="add-top-links-site-html"/>
+	  <xsl:call-template name="add-top-links-site-html"/>
 
-      <div class="mainbar">
+	  <!--* set up the title block of the page *-->
+	  <xsl:call-template name="add-thread-title"/>
 
-	<!--* set up the title block of the page *-->
-	<xsl:call-template name="add-thread-title"/>
-
-	<!--* Introductory text *-->
-	<xsl:call-template name="add-introduction"/>
+	  <!--* Introductory text *-->
+	  <xsl:call-template name="add-introduction"/>
 	
-	<!--* table of contents *-->
-	<xsl:call-template name="add-toc"/>
+	  <!--* table of contents *-->
+	  <xsl:call-template name="add-toc"/>
 
-	<!--* Main thread *-->
-	<xsl:apply-templates select="text/sectionlist"/>
-	  
-	<!--* Summary text *-->
-	<xsl:call-template name="add-summary"/>
-	
-	<!--* Parameter files *-->
-	<xsl:call-template name="add-parameters"/>
+	  <!--* Main thread *-->
+	  <xsl:apply-templates select="text/sectionlist"/>
+	    
+	  <!--* Summary text *-->
+	  <xsl:call-template name="add-summary"/>
+	    
+	  <!--* Parameter files *-->
+	  <xsl:call-template name="add-parameters"/>
 
-	<!-- History -->
-	<xsl:if test="$site != 'pog'">
-	<xsl:apply-templates select="info/history"/>
-	</xsl:if>
+	  <!-- History -->
+	  <xsl:if test="$site != 'pog'">
+	    <xsl:apply-templates select="info/history"/>
+	  </xsl:if>
 
-	<!--* set up the trailing links to threads/harcdopy *-->
-	<xsl:call-template name="add-hr-strong"/>
+	  <!--* set up the trailing links to threads/harcdopy *-->
+	  <xsl:call-template name="add-hr-strong"/>
 
-      </div> <!--* class=mainbar *-->
+	  <!--* set up the trailing links to threads/harcdopy *-->
+	  <xsl:call-template name="add-bottom-links-site-html"/>
 
-      <!--* set up the trailing links to threads/harcdopy *-->
-      <xsl:call-template name="add-bottom-links-site-html"/>
+	</xsl:with-param>
+      </xsl:call-template>
 
-      <!--* add the footer text *-->
-      <xsl:call-template name="add-footer"/>
-
-      </body>
       </html>
 
     </xsl:document>

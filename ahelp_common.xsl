@@ -50,10 +50,21 @@
   <!--*
       * The current date (for the 'last modified' date); lastmod is not used for
       * the individual ahelp pages, but lastmodiso is.
+      *
+      * Actually, I now want LASTMOD to be set to //LASTMODIFIED for individual
+      * ahelp files. So try to flip bewtwen the current date and //LASTMODIFIED
+      * automatically and see if this works.
+      *
       *-->
   <xsl:variable name="dt" select="date:date-time()"/>
-  <xsl:variable name="lastmod"
-    select="concat(date:day-in-month($dt),' ',date:month-name($dt),' ',date:year($dt))"/>
+  <xsl:variable name="lastmod">
+    <xsl:choose>
+      <xsl:when test="boolean(//LASTMODIFIED)"><xsl:value-of select="//LASTMODIFIED"/></xsl:when>
+      <xsl:otherwise><xsl:value-of
+      select="concat(date:day-in-month($dt),' ',date:month-name($dt),' ',date:year($dt))"/></xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
 
   <!--*
       * On Lenin using XSLT version 1.1.28 the following fails with:

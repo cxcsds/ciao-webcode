@@ -77,6 +77,10 @@
 
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select="$pagename"/>.html</xsl:variable>
 
+    <xsl:variable name="release">
+      <xsl:value-of select="@release"/>
+    </xsl:variable>
+
     <!--* output filename to stdout *-->
     <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
 
@@ -90,102 +94,80 @@
 
 	<xsl:call-template name="add-htmlhead-standard"/>
 
-	<body>
-
-	<xsl:call-template name="add-disclaimer"/>
-	<xsl:call-template name="add-header"/>
-
-	<!--// main div begins page layout //-->
-	<div id="main">
-
-	  <!--* the main text *-->
-	  <div id="content">
-	    <div class="wrap">
-       
-              <xsl:variable name="release">
-		<xsl:value-of select="@release"/>
-	      </xsl:variable>
+	<xsl:call-template name="add-body-withnavbar">
+	  <xsl:with-param name="contents">
+	    <h1 class="pagetitle">
+	      CIAO <xsl:value-of select="$release"/> Release Notes
+	    </h1>
 	      
-	      <h1 class="pagetitle">
-		CIAO <xsl:value-of select="$release"/> Release Notes
-	      </h1>
+	    <xsl:if test="@package">
+	      <h2 class="pagetitle"><xsl:value-of select="@package"/> Release</h2>
+	    </xsl:if>
 	      
-	      <xsl:if test="@package">
-		<h2 class="pagetitle"><xsl:value-of select="@package"/> Release</h2>
-	      </xsl:if>
+            <div class="qlinkbar"><a href="history.html">Version History</a></div>
 	      
-              <div class="qlinkbar"><a href="history.html">Version History</a></div>
+	    <hr/>
+	      
+	    <!--* add any summary text *-->
+	    <xsl:if test="text/summary">
+	      <xsl:apply-templates select="text/summary/*"/>
 	      
 	      <hr/>
+	    </xsl:if>
 	      
-	      <!--* add any summary text *-->
-	      <xsl:if test="text/summary">
-	        <xsl:apply-templates select="text/summary/*"/>
-		
-	        <hr/>
-	      </xsl:if>
-	      
-	      <ul>
-	        <xsl:for-each select="text/category">
-	          <li>
-	            <a>
-	              <xsl:attribute name="href">
-	                <xsl:value-of select="concat('#', translate(@name,' /',''))"/>
-	              </xsl:attribute>
-	              <xsl:value-of select="@name"/>
-	            </a>
-	          </li>
-	        </xsl:for-each> <!-- select="category" -->
-	      </ul>
-	      
-	      <hr/>
-	      
+	    <ul>
 	      <xsl:for-each select="text/category">
-		<h2>
-		  <a>
-	            <xsl:attribute name="name">
-	              <xsl:value-of select="translate(@name,' /','')"/>
+	        <li>
+	          <a>
+	            <xsl:attribute name="href">
+	              <xsl:value-of select="concat('#', translate(@name,' /',''))"/>
 	            </xsl:attribute>
-		    <xsl:value-of select="@name"/>
-		  </a>
-		</h2>
-		
-		<xsl:apply-templates select="intro"/>
-		
-		<xsl:for-each select="section">
-		  <!-- TODO: should this force the name attribute to be non-empty? -->
-		  <xsl:call-template name="add-section-title"/>
-		  <xsl:apply-templates select="intro"/>
-		  <ul>
-		    <xsl:for-each select="note">
-		      <li>
-		        <!--pre><xsl:value-of select="."/></pre-->
-		        <xsl:apply-templates select="child::*|child::text()"/>
-		      </li>
-		    </xsl:for-each> <!-- select="note" -->
-		  </ul>
-		</xsl:for-each> <!-- select="section" -->
-	
-	        <hr/>
+	            <xsl:value-of select="@name"/>
+	          </a>
+	        </li>
 	      </xsl:for-each> <!-- select="category" -->
-
-	    </div>
-	  </div> <!--// close id=content //-->
-
-	  <div id="navbar">
-	    <div id="navtext" class="wrap">
+	    </ul>
 	      
-	      <xsl:call-template name="add-navbar">
-		<xsl:with-param name="name" select="info/navbar"/>
-	      </xsl:call-template>
-	    </div>
-	  </div> <!--// close id=navbar //-->
+	    <hr/>
+	      
+	    <xsl:for-each select="text/category">
+	      <h2>
+		<a>
+	          <xsl:attribute name="name">
+	            <xsl:value-of select="translate(@name,' /','')"/>
+	          </xsl:attribute>
+		  <xsl:value-of select="@name"/>
+		</a>
+	      </h2>
+		
+	      <xsl:apply-templates select="intro"/>
+	      
+	      <xsl:for-each select="section">
+		<!-- TODO: should this force the name attribute to be non-empty? -->
+		<xsl:call-template name="add-section-title"/>
+		<xsl:apply-templates select="intro"/>
+		<ul>
+		  <xsl:for-each select="note">
+		    <li>
+		      <!--pre><xsl:value-of select="."/></pre-->
+		      <xsl:apply-templates select="child::*|child::text()"/>
+		    </li>
+		  </xsl:for-each> <!-- select="note" -->
+		</ul>
+	      </xsl:for-each> <!-- select="section" -->
+	
+	      <hr/>
+	    </xsl:for-each> <!-- select="category" -->
+	  </xsl:with-param>
 	  
-	</div> <!--// close id=main  //-->
-	    
-	<xsl:call-template name="add-footer"/>
+	  <xsl:with-param name="navbar">
+	    <xsl:call-template name="add-navbar">
+	      <xsl:with-param name="name" select="info/navbar"/>
+	    </xsl:call-template>
+	  </xsl:with-param>
 
-	</body>
+	</xsl:call-template>
+
       </html>
       
     </xsl:document>

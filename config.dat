@@ -78,7 +78,7 @@ version_string=4.10
 # main CSS location
 %css=live /ciao4.10/ciao.css
 %css=test /ciao4.10/ciao.css
-%css=trial /ciao/ciao.css
+%css=trial /ciao/ciao2.css
 
 %cssprint=live /ciao4.10/ciao.print.css
 %cssprint=test /ciao4.10/ciao.print.css

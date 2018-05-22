@@ -72,43 +72,18 @@
           
 	</head>
 
-	<body>
+	<xsl:call-template name="add-body-withnavbar">
+	  <xsl:with-param name="contents">
+	    <xsl:apply-templates select="ENTRY"/>
+	  </xsl:with-param>
 
-	  <!--* add header and banner *-->
-	  <xsl:call-template name="add-header">
-	    <xsl:with-param name="lastmodvalue"  select="//LASTMODIFIED"/>
-	    <xsl:with-param name="with-navbar" select="1"/>
-	  </xsl:call-template>
+	  <xsl:with-param name="navbar">
+	    <xsl:call-template name="add-navbar">
+              <xsl:with-param name="navbar" select="'ahelp_index'"/>
+	    </xsl:call-template>
+	  </xsl:with-param>
 
-	  <!--// main div begins page layout //-->
-	  <div id="main">
-
-	    <!--* the main text *-->
-	    <div id="content">
-	      <div class="wrap">
-
-		<!--* parse the text *--> 
-		<xsl:apply-templates select="ENTRY"/>
-	      </div>
-	    </div> <!--// close id=content //-->
-	    
-	    <div id="navbar">
-	      <div id="navtext" class="wrap">
-		
-		<xsl:call-template name="add-navbar">
-                  <xsl:with-param name="navbar" select="'ahelp_index'"/>
-		</xsl:call-template>
-	      </div>
-	    </div> <!--// close id=navbar //-->
-	    
-	  </div> <!--// close id=main  //-->
-	
-	  <!--* add the banner *-->
-	  <xsl:call-template name="add-footer">
-	    <xsl:with-param name="lastmodvalue"  select="//LASTMODIFIED"/>
-	  </xsl:call-template>
-
-	</body>
+	</xsl:call-template>
 
       </html>
 

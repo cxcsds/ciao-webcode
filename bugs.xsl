@@ -81,153 +81,146 @@
 
 	<xsl:call-template name="add-htmlhead-standard"/>
 
-	<body>
+	<xsl:call-template name="add-body-withnavbar">
+	  <xsl:with-param name="contents">
+	    <h1 class="pagetitle">
+	      <xsl:value-of select="/bugs/info/title/short"/>
+	    </h1>
 
-	<xsl:call-template name="add-disclaimer"/>
-	<xsl:call-template name="add-header"/>
-
-	<div id="main">
-	  <div id="content">
-	    <div class="wrap">
-	      <h1 class="pagetitle">
-		<xsl:value-of select="/bugs/info/title/short"/>
-	      </h1>
-
-	      <div class="qlinkbar">
-		Return to: <a href=".">Bug List Index</a>
+	    <div class="qlinkbar">
+	      Return to: <a href=".">Bug List Index</a>
+	      <xsl:if test="intro/altlink">
+		<p>
+		  <xsl:text>Related pages: </xsl:text>
+		  <xsl:apply-templates select="intro/altlink"/>
+		</p>
+	      </xsl:if>		  
 		
-		<xsl:if test="intro/altlink">
-		  <p>
-		    <xsl:text>Related pages: </xsl:text>
-		    <xsl:apply-templates select="intro/altlink"/>
-		  </p>
-		</xsl:if>		  
-		
-		<xsl:if test="$site='ciao' and not(/bugs/info/noahelp)">
-		  <xsl:variable name="hrefval"
-				select="concat('../ahelp/', $pagename, '.html')"/>
-		  <p>
-		    For detailed information and examples of running this tool,
-		    refer to
-		    <a href="{$hrefval}"><xsl:value-of
-		    select="concat('the ', $pagename, ' ahelp file')"/></a>.
-		    <xsl:if test="$site='ciao' and (/bugs/info/scripts)">
-		      This script is part of
-		      the <a href="../download/scripts/">CIAO Scripts Package</a>.
-		    </xsl:if> 
-		  </p>
-		</xsl:if>
-	      </div>
-
-	      <xsl:if test="intro/note">
-	        <xsl:apply-templates select="intro/note"/>
+	      <xsl:if test="$site='ciao' and not(/bugs/info/noahelp)">
+		<xsl:variable name="hrefval"
+			      select="concat('../ahelp/', $pagename, '.html')"/>
+		<p>
+		  For detailed information and examples of running this tool,
+		  refer to
+		  <a href="{$hrefval}"><xsl:value-of
+		  select="concat('the ', $pagename, ' ahelp file')"/></a>.
+		  <xsl:if test="$site='ciao' and (/bugs/info/scripts)">
+		    This script is part of
+		    the <a href="../download/scripts/">CIAO Scripts Package</a>.
+		  </xsl:if> 
+		</p>
 	      </xsl:if>
+	    </div>
+
+	    <xsl:if test="intro/note">
+	      <xsl:apply-templates select="intro/note"/>
+	    </xsl:if>
+	    
+	    <xsl:variable name="ctbuglist" select="count(//buglist/entry[not(@cav)])"/>
+	    <xsl:variable name="ctcavlist" select="count(//buglist/entry[@cav])"/>
+	    
+	    <xsl:variable name="isbuglist">
+	      <xsl:choose>
+		<xsl:when test="$ctbuglist > 0">1</xsl:when>
+		<xsl:otherwise>0</xsl:otherwise>
+	      </xsl:choose>
+	    </xsl:variable>
+	    
+	    <xsl:variable name="iscavlist">
+	      <xsl:choose>
+		<xsl:when test="$ctcavlist > 0">1</xsl:when>
+		<xsl:otherwise>0</xsl:otherwise>
+	      </xsl:choose>
+	    </xsl:variable>
+	    
+	    <xsl:variable name="isfixlist" select="count(//fixlist)"/>
+	    <xsl:variable name="isscriptlist" select="count(//scriptlist)"/>
+	    <xsl:variable name="istotal" select="$isbuglist + $iscavlist + $isfixlist + $isscriptlist"/>
+	    
+	    <xsl:if test="($istotal > 1) or (//buglist/subbuglist)">
 	      
-	      <xsl:variable name="ctbuglist" select="count(//buglist/entry[not(@cav)])"/>
-	      <xsl:variable name="ctcavlist" select="count(//buglist/entry[@cav])"/>
-	      
-	      <xsl:variable name="isbuglist">
-		<xsl:choose>
-		  <xsl:when test="$ctbuglist > 0">1</xsl:when>
-		  <xsl:otherwise>0</xsl:otherwise>
-		</xsl:choose>
-	      </xsl:variable>
+	      <ul class="inlinenav">
+		
+		<xsl:if test="//buglist/entry[@cav]">
+		  <li>
+		    <a>
+		      <xsl:attribute name="href">
+			<xsl:text>#caveats</xsl:text>
+		      </xsl:attribute>
+		      
+		      <xsl:text>Caveats</xsl:text>
+		    </a>
+		  </li>		     
+		</xsl:if>
 
-	      <xsl:variable name="iscavlist">
-		<xsl:choose>
-		  <xsl:when test="$ctcavlist > 0">1</xsl:when>
-		  <xsl:otherwise>0</xsl:otherwise>
-		</xsl:choose>
-	      </xsl:variable>
-
-	      <xsl:variable name="isfixlist" select="count(//fixlist)"/>
-	      <xsl:variable name="isscriptlist" select="count(//scriptlist)"/>
-	      <xsl:variable name="istotal" select="$isbuglist + $iscavlist + $isfixlist + $isscriptlist"/>
-
-	      <xsl:if test="($istotal > 1) or (//buglist/subbuglist)">
-
-		<ul class="inlinenav">
-
-		  <xsl:if test="//buglist/entry[@cav]">
-		    <li>
-		      <a>
-			<xsl:attribute name="href">
-			  <xsl:text>#caveats</xsl:text>
-			</xsl:attribute>
-			
-			<xsl:text>Caveats</xsl:text>
-		      </a>
-		    </li>		     
-		  </xsl:if>
-
-		  <xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
-
-		    <xsl:choose>
-		      <xsl:when test="(//buglist/subbuglist)">
-			  <xsl:for-each select="//buglist/subbuglist">
-			    <xsl:choose>
-			      <xsl:when test="position()=1">
+		<xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
+		  
+		  <xsl:choose>
+		    <xsl:when test="(//buglist/subbuglist)">
+		      <xsl:for-each select="//buglist/subbuglist">
+			<xsl:choose>
+			  <xsl:when test="position()=1">
+			    
+			    <li>
+			      <xsl:text>Bugs: </xsl:text>
+			      <a>
+				<xsl:attribute name="href">
+				  <xsl:text>#</xsl:text>
+				  <xsl:value-of select="@ref"/>
+				</xsl:attribute>
 				
-				<li>
-				  <xsl:text>Bugs: </xsl:text>
-				  <a>
-				    <xsl:attribute name="href">
-				      <xsl:text>#</xsl:text>
-					<xsl:value-of select="@ref"/>
-				    </xsl:attribute>
+				<xsl:value-of select="@title"/>
+			      </a>
+			    </li>
+			  </xsl:when>
+			  
+			  <xsl:otherwise>
+			    <li>
+			      <a>
+				<xsl:attribute name="href">
+				  <xsl:text>#</xsl:text>
+				  <xsl:value-of select="@ref"/>
+				</xsl:attribute>
 				
-				    <xsl:value-of select="@title"/>
-				  </a>
-				</li>
-			      </xsl:when>
-				
-			      <xsl:otherwise>
-				<li>
-				  <a>
-				    <xsl:attribute name="href">
-				      <xsl:text>#</xsl:text>
-					<xsl:value-of select="@ref"/>
-				    </xsl:attribute>
-				
-				    <xsl:value-of select="@title"/>
-				  </a>
-				</li>
-			      </xsl:otherwise>
-			    </xsl:choose>
-			  </xsl:for-each>
-		      </xsl:when>
+				<xsl:value-of select="@title"/>
+			      </a>
+			    </li>
+			  </xsl:otherwise>
+			</xsl:choose>
+		      </xsl:for-each>
+		    </xsl:when>
 
-		      <xsl:otherwise>
-			<li>
-			  <a>
-			    <xsl:attribute name="href">
-			      <xsl:text>#bugs</xsl:text>
-			    </xsl:attribute>
-			
-			    <xsl:text>Bugs</xsl:text>
-			  </a>
-			</li>		     
-		      </xsl:otherwise>
-		    </xsl:choose>
-		  </xsl:if>
-
-		  <xsl:if test="//fixlist">		
-		    <xsl:for-each select="//fixlist">
+		    <xsl:otherwise>
 		      <li>
 			<a>
 			  <xsl:attribute name="href">
-			    <xsl:text>#</xsl:text>
-			    <xsl:value-of select="concat('ciao',./@ver)"/>
+			    <xsl:text>#bugs</xsl:text>
 			  </xsl:attribute>
-			
-			  <xsl:text>Bugs fixed in CIAO </xsl:text>
-			  <xsl:value-of select="./@vername"/>
+			  
+			  <xsl:text>Bugs</xsl:text>
 			</a>
-		      </li>
-		    </xsl:for-each>
-		  </xsl:if>
+		      </li>		     
+		    </xsl:otherwise>
+		  </xsl:choose>
+		</xsl:if>
 
-		  <xsl:if test="//scriptlist">
+		<xsl:if test="//fixlist">		
+		  <xsl:for-each select="//fixlist">
+		    <li>
+		      <a>
+			<xsl:attribute name="href">
+			  <xsl:text>#</xsl:text>
+			  <xsl:value-of select="concat('ciao',./@ver)"/>
+			</xsl:attribute>
+			
+			<xsl:text>Bugs fixed in CIAO </xsl:text>
+			<xsl:value-of select="./@vername"/>
+		      </a>
+		    </li>
+		  </xsl:for-each>
+		</xsl:if>
+
+		<xsl:if test="//scriptlist">
 		  <xsl:for-each select="//scriptlist">
 		    <li>
 		      <a>
@@ -235,168 +228,161 @@
 			  <xsl:text>#</xsl:text>
 			  <xsl:value-of select="@ver"/>
 			</xsl:attribute>
-
-			  <xsl:value-of select="@vername"/>
+			
+			<xsl:value-of select="@vername"/>
 			<xsl:text> Bug Fixes</xsl:text>
 		      </a>
 		    </li>
-		    </xsl:for-each>
-		  </xsl:if>
-
-		</ul> <!-- end inlinenav -->
-	      </xsl:if>
-
-		<xsl:if test="(//buglist/entry and count(//buglist/entry)>1) or (//buglist/subbuglist)">
-		  <hr/>
+		  </xsl:for-each>
 		</xsl:if>
-	      <!--// end front materials //-->
+		
+	      </ul> <!-- end inlinenav -->
+	    </xsl:if>
 
+	    <xsl:if test="(//buglist/entry and count(//buglist/entry)>1) or (//buglist/subbuglist)">
+	      <hr/>
+	    </xsl:if>
+	    <!--// end front materials //-->
+	    
 
-	      <!--// any known bugs? -->
-	      <xsl:if test="not(//buglist)">
+	    <!--// any known bugs? -->
+	    <xsl:if test="not(//buglist)">
 
 	      <hr/>
-		<p>
-		  There are currently no known bugs.
-		</p>
+	      <p>
+		There are currently no known bugs.
+	      </p>
 	      <hr/>
 
-	      </xsl:if>
+	    </xsl:if>
 
 
-	      <!--// create TOC if there is more than one bug entry //-->
-	      <xsl:if test="//buglist/subbuglist or (//buglist/entry and count(//buglist/entry)>1)">
-		<h2 class="toc">Table of Contents</h2>
-
+	    <!--// create TOC if there is more than one bug entry //-->
+	    <xsl:if test="//buglist/subbuglist or (//buglist/entry and count(//buglist/entry)>1)">
+	      <h2 class="toc">Table of Contents</h2>
+	      
 	      <xsl:if test="//buglist/entry[@cav]">
 	        <h3 id="caveats">Caveats</h3>
-
+		
 		<ul>
 		  <xsl:apply-templates select="//buglist/entry[@cav]" mode="toc"/>
 		</ul>
 	      </xsl:if>
-
+	      
 	      <xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
-
+		
 		<xsl:choose>
 	          <xsl:when test="//buglist/subbuglist">
 		    <xsl:apply-templates select="//buglist/subbuglist" mode="toc"/>
 	          </xsl:when>
-
+		  
 		  <xsl:otherwise>
 	            <h3 id="bugs">Bugs</h3>
-
+		    
 		    <ul>
 		      <xsl:apply-templates select="//buglist/entry[not(@cav)]" mode="toc"/>
 		    </ul>
 		  </xsl:otherwise>
 		</xsl:choose>	      
 	      </xsl:if>
-	      </xsl:if>
-	      <!--// end TOC //-->
+	    </xsl:if>
+	    <!--// end TOC //-->
 
-
-	      <!-- create body //-->
-
-	      <xsl:if test="//buglist/entry[@cav]">
-	        <hr/>
-
-	        <h2>Caveats</h2>
-
-		<xsl:apply-templates select="//buglist/entry[@cav]" mode="main"/>
-	      </xsl:if>
-
-	      <xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
-	        <hr/>
-
-	        <h2>Bugs</h2>
-
+	    <!-- create body //-->
+	    
+	    <xsl:if test="//buglist/entry[@cav]">
+	      <hr/>
+	      
+	      <h2>Caveats</h2>
+	      
+	      <xsl:apply-templates select="//buglist/entry[@cav]" mode="main"/>
+	    </xsl:if>
+	    
+	    <xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
+	      <hr/>
+	      
+	      <h2>Bugs</h2>
+	      
 	      <xsl:choose>
 	        <xsl:when test="//buglist/subbuglist">
 		  <xsl:apply-templates select="//buglist/subbuglist" mode="main"/>
 	        </xsl:when>
-
+		
 		<xsl:otherwise>
 		  <xsl:apply-templates select="//buglist/entry[not(@cav)]" mode="main"/>
 		</xsl:otherwise>
 	      </xsl:choose>
-	      </xsl:if>
+	    </xsl:if>
+	    
+	    <!--// add "fixed in CIAO x.x" section if applicable //-->
+	    <xsl:if test="//fixlist">
 	      
-	      <!--// add "fixed in CIAO x.x" section if applicable //-->
-	      <xsl:if test="//fixlist">
+	      <xsl:if test="//buglist">
+	        <hr/>
+	      </xsl:if>
 
-	        <xsl:if test="//buglist">
-	          <hr/>
-		</xsl:if>
-
-		<xsl:for-each select="//fixlist">
+	      <xsl:for-each select="//fixlist">
 		<h2>
-		    <xsl:attribute name="id">
-		      <xsl:value-of select="concat('ciao',./@ver)"/>
-		    </xsl:attribute>
-		    
-		    <xsl:text>Bugs fixed in CIAO </xsl:text>
-		      <xsl:value-of select="./@vername"/>
+		  <xsl:attribute name="id">
+		    <xsl:value-of select="concat('ciao',./@ver)"/>
+		  </xsl:attribute>
+		  
+		  <xsl:text>Bugs fixed in CIAO </xsl:text>
+		  <xsl:value-of select="./@vername"/>
 		</h2>
-
+		
 		<p>
 		  The following is a list of bugs that were fixed
 		  in the CIAO <xsl:value-of select="./@vername"/>
 		  software release.
 		</p>
-
+		
 		<xsl:apply-templates select="./entry" mode="main"/>
-		</xsl:for-each>
-	      </xsl:if>
-	      <!--// end "fixed in CIAO x.x" section //-->
+	      </xsl:for-each>
+	    </xsl:if>
+	    <!--// end "fixed in CIAO x.x" section //-->
 
+	    
+	    <!--// add "fixed in version x.x of this script" section if applicable //-->
+	    <xsl:if test="//scriptlist">
 	      
-	      <!--// add "fixed in version x.x of this script" section if applicable //-->
-	      <xsl:if test="//scriptlist">
-
-	        <xsl:if test="(//buglist) or (//fixlist)">
-	          <hr/>
-		</xsl:if>
-
-		  <xsl:for-each select="//scriptlist">
+	      <xsl:if test="(//buglist) or (//fixlist)">
+	        <hr/>
+	      </xsl:if>
+	      
+	      <xsl:for-each select="//scriptlist">
 		<h2>
 		  <a>
 		    <xsl:attribute name="name">
 		      <xsl:value-of select="@ver"/>
 		    </xsl:attribute>
 		    
-		      <xsl:value-of select="@vername"/>
-			<xsl:text> Bug Fixes</xsl:text>
+		    <xsl:value-of select="@vername"/>
+		    <xsl:text> Bug Fixes</xsl:text>
 		  </a>
 		</h2>
-
+		
 		<p>
 		  The following is a list of bugs that were fixed
 		  in version <xsl:value-of select="@vername"/>.
 		</p>
-
-		  <xsl:apply-templates select="entry" mode="main"/>
-		</xsl:for-each>
-	      </xsl:if>
-	      <!--// end "fixed in version x.x" section //-->
-	      <!--// end body //-->
-
-		  </div>
-		</div> <!--// close id=content //-->
-
-		<div id="navbar">
-		  <div id="navtext" class="wrap">
-
-		  <xsl:call-template name="add-navbar">
-		    <xsl:with-param name="name" select="info/navbar"/>
-		  </xsl:call-template>
-		  </div>
-		</div> <!--// close id=navbar //-->
 		
-	    </div> <!--// close id=main  //-->
-	    
-	<xsl:call-template name="add-footer"/>
-	</body>
+		<xsl:apply-templates select="entry" mode="main"/>
+	      </xsl:for-each>
+	    </xsl:if>
+	    <!--// end "fixed in version x.x" section //-->
+	    <!--// end body //-->
+
+	  </xsl:with-param>
+
+	  <xsl:with-param name="navbar">
+	    <xsl:call-template name="add-navbar">
+	      <xsl:with-param name="name" select="info/navbar"/>
+	    </xsl:call-template>
+	  </xsl:with-param>
+
+	</xsl:call-template>
+
       </html>
 
     </xsl:document>
