@@ -222,11 +222,6 @@
     
   </xsl:template> <!--* name=add-navbar *-->
 
-  <!--* used by the test/trial headers *-->
-  <xsl:template name="add-start-body-white">
-    <xsl:call-template name="add-start-tag"/>body bgcolor=<xsl:call-template name="add-quote"/>#FFFFFF<xsl:call-template name="add-quote"/><xsl:call-template name="add-end-tag"/>
-  </xsl:template>
-
   <!--* taken from helper.xsl *-->
 
   <xsl:template name="add-start-tag">

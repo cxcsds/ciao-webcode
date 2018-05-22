@@ -569,12 +569,6 @@
     <hr class="bigsep"/>
   </xsl:template>
 
-  <!--* used by the test/trial headers *-->
-  <xsl:template name="add-start-body-white">
-    <xsl:message terminate="no">*** Please let Doug know if you see this message: add-start-body-white ***</xsl:message>
-    <xsl:call-template name="start-tag"/>body bgcolor=<xsl:call-template name="add-quote"/>#FFFFFF<xsl:call-template name="add-quote"/><xsl:call-template name="end-tag"/>
-  </xsl:template>
-
   <!--*
       * add the "banner" for test pages (at the very top)
       * Lists the current time (found using EXSLT routines)
