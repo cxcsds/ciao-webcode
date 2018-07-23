@@ -286,7 +286,6 @@
       <!--* create the header links *-->
       <xsl:call-template name="add-navbar-qlinks"/>
       <xsl:call-template name="add-navbar-alphabet"/>
-      <xsl:text disable-output-escaping="yes">&amp;nbsp;&lt;br&gt;</xsl:text>
 
       <!--* loop through each 'letter' (within another dl list) *-->
       <xsl:text disable-output-escaping="yes">&lt;dl&gt;</xsl:text>
