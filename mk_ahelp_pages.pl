@@ -329,6 +329,11 @@ $headtitlepostfix = get_config_version( $version_config, "headtitlepostfix" )
 $texttitlepostfix = get_config_version( $version_config, "texttitlepostfix" )
   if check_config_exists( $version_config, "texttitlepostfix" );
 
+# only needed for a warning in the output HTML file (to point to
+# the work directory).
+#
+my $sourcedir = cwd() . "/";
+
 dbg "  uname=$uname";
 dbg "  urlbase=$urlbase";
 dbg "  searchssi=$searchssi";
@@ -339,6 +344,7 @@ dbg "  googlessi=$googlessi";
 dbg "  storageloc=$storageloc";
 dbg "  headtitlepostfix=$headtitlepostfix";
 dbg "  texttitlepostfix=$texttitlepostfix";
+dbg "  sourcedir=$sourcedir";
 dbg "*** CONFIG DATA (end) ***";
 
 @extra =
@@ -354,6 +360,7 @@ dbg "*** CONFIG DATA (end) ***";
    storageloc   => $storageloc,
    headtitlepostfix => $headtitlepostfix,
    texttitlepostfix => $texttitlepostfix,
+   sourcedir => $sourcedir,
   );
 
 my %paramlist = @extra;
@@ -387,6 +394,13 @@ foreach my $in ( @names ) {
     $paramlist{seealsofile} = "${ahelpstore}$seealso_name";
     $paramlist{depth} = '../' x ($depth-1);
 	$paramlist{dname} = $dname;
+
+    # HACK to support common::add-dependencies; this is the
+    # same as the outname parameter. The ahelp code should
+    # probably update to using pagename (or there's some
+    # consistency needed between out/pagename).
+    #
+    $paramlist{pagename} = $name;
 
     clear_dependencies;
 

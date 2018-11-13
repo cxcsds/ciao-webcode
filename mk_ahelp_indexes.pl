@@ -225,6 +225,11 @@ $headtitlepostfix = get_config_version( $version_config, "headtitlepostfix" )
 $texttitlepostfix = get_config_version( $version_config, "texttitlepostfix" )
   if check_config_exists( $version_config, "texttitlepostfix" );
 
+# only needed for a warning in the output HTML file (to point to
+# the work directory).
+#
+my $sourcedir = cwd() . "/";
+
 dbg "  uname=$uname";
 dbg "  urlbase=$urlbase";
 dbg "  searchssi=$searchssi";
@@ -238,6 +243,7 @@ dbg "  logotext=$logotext";
 dbg "  logourl=$logourl";
 dbg "  headtitlepostfix=$headtitlepostfix";
 dbg "  texttitlepostfix=$texttitlepostfix";
+dbg "  sourcedir=$sourcedir";
 dbg "*** CONFIG DATA (end) ***";
 
 @extra =
@@ -252,6 +258,7 @@ dbg "*** CONFIG DATA (end) ***";
    navbarname   => $navbar,
    headtitlepostfix => $headtitlepostfix,
    texttitlepostfix => $texttitlepostfix,
+   sourcedir => $sourcedir,
   );
 
 # note: tweek logoimage location by depth

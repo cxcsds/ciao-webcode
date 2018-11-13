@@ -97,40 +97,25 @@
 	<!--* make the HTML head node *-->
 	<xsl:call-template name="add-htmlhead-standard"/>
 
-	<body>
-
-	  <xsl:call-template name="add-disclaimer"/>
-	  <xsl:call-template name="add-header"/>
-	
-	  <!--// main div begins page layout //-->
-	  <div id="main">
+	<xsl:variable name="contents">
+	  <!--* add the intro text *-->
+	  <xsl:apply-templates select="intro"/>
+	      
+	  <!--* create the list of FAQ's *--> 
+	  <xsl:apply-templates select="entries" mode="toc"/>
+	</xsl:variable>
 	    
-	    <!--* the main text *-->
-	    <div id="content">
-	      <div class="wrap">
-
-		<!--* add the intro text *-->
-		<xsl:apply-templates select="intro"/>
-		
-		<!--* create the list of entries *--> 
-		<xsl:apply-templates select="entries" mode="toc"/>
-		
-	      </div>
-	    </div> <!--// close id=content //-->
-
-	    <div id="navbar">
-	      <div id="navtext" class="wrap">
-		
-		<xsl:call-template name="add-navbar">
-		  <xsl:with-param name="name" select="info/navbar"/>
-		</xsl:call-template>
-	      </div>
-	    </div> <!--// close id=navbar //-->
+	<xsl:variable name="navbar">
+	  <xsl:call-template name="add-navbar">
+	    <xsl:with-param name="name" select="info/navbar"/>
+	  </xsl:call-template>
+	</xsl:variable>
 	    
-	  </div> <!--// close id=main  //-->
+	<xsl:call-template name="add-body-withnavbar">
+	  <xsl:with-param name="contents" select="$contents"/>
+	  <xsl:with-param name="navbar" select="$navbar"/>
+	</xsl:call-template>
 
-	  <xsl:call-template name="add-footer"/>
-	</body>
       </html>
 
     </xsl:document>
@@ -169,50 +154,38 @@
 	  <xsl:with-param name="page">entries.html</xsl:with-param>
 	</xsl:call-template>
 
-	<body>
-	  <xsl:call-template name="add-disclaimer"/>
-	  <xsl:call-template name="add-header"/>
-	
-	  <!--// main div begins page layout //-->
-	  <div id="main">
-	    
-	    <!--* the main text *-->
-	    <div id="content">
-	      <div class="wrap">
-		<h1 class="pagetitle">CSC Dictionary Entries</h1>
-		<hr/>
+	<xsl:variable name="contents">
+	  <h1 class="pagetitle">CSC Dictionary Entries</h1>
+	  <hr/>
 	  
-		<xsl:for-each select="entry">
-		  <xsl:sort select="translate(title, $lcletters, $ucletters)"/>
+	  <xsl:for-each select="entry">
+	    <xsl:sort select="translate(title, $lcletters, $ucletters)"/>
 		  
-		  <!--* entry title *-->
-		  <h2 id="{@id}"><xsl:apply-templates select="title"/></h2>
-		  
-		  <!--* add the explanation *-->
-		  <xsl:apply-templates select="text"/>
-		  
-		  <div class="qlinkbar">
-	            Return to: <a href=".">Dictionary index</a>
-		  </div>
-		  
-		  <br/><hr/>
-		</xsl:for-each>
-	      </div>
-	    </div> <!--// close id=content //-->
-
-	    <div id="navbar">
-	      <div id="navtext" class="wrap">
-		
-		<xsl:call-template name="add-navbar">
-		  <xsl:with-param name="name" select="/dictionary_onepage/info/navbar"/>
-		</xsl:call-template>
-	      </div>
-	    </div> <!--// close id=navbar //-->
+	    <!--* entry title *-->
+	    <h2 id="{@id}"><xsl:apply-templates select="title"/></h2>
 	    
-	  </div> <!--// close id=main  //-->
+	    <!--* add the explanation *-->
+	    <xsl:apply-templates select="text"/>
+	    
+	    <div class="qlinkbar">
+	      Return to: <a href=".">Dictionary index</a>
+	    </div>
+		  
+	    <br/><hr/>
+	  </xsl:for-each>
+	</xsl:variable>
 
-	  <xsl:call-template name="add-footer"/>
-	</body>
+	<xsl:variable name="navbar">
+	  <xsl:call-template name="add-navbar">
+	    <xsl:with-param name="name" select="/dictionary_onepage/info/navbar"/>
+	  </xsl:call-template>
+	</xsl:variable>
+
+	<xsl:call-template name="add-body-withnavbar">
+	  <xsl:with-param name="contents" select="$contents"/>
+	  <xsl:with-param name="navbar" select="$navbar"/>
+	</xsl:call-template>
+	
       </html>
 
     </xsl:document>
