@@ -372,7 +372,7 @@
       *
       * they either have an attribute of file, 
       * which means load the text from @file.xml,
-      * or use their content
+      * or use their content.
       *
       *-->
   <xsl:template name="add-highlight">
@@ -382,6 +382,12 @@
 <pre class="highlight"><xsl:copy-of select="$contents"/></pre>
   </xsl:template> <!--* name=add-highlight *-->
 
+  <!--*
+      * The optional attribute wrap is used to select
+      * the text-wrapping behavior. By default it does not
+      * wrap (wrap="no") but it can be changed to wrap by setting
+      * wrap="yes".
+      *-->
   <xsl:template match="screen">
 
     <!--* a check since we've changed name to file *-->
@@ -410,7 +416,16 @@
       </xsl:choose></xsl:variable>
 
     <!--* <br/> *-->
-    <div class="screen">
+    <xsl:variable name="class"><xsl:choose>
+      <xsl:when test="boolean(@wrap) and @wrap='yes'">screenwrap</xsl:when>
+    <xsl:when test="(boolean(@wrap) and @wrap='no') or not(boolean(@wrap))">screen</xsl:when>
+    <xsl:otherwise>
+      <xsl:message terminate="yes">
+ ERROR: invaling wrap attribute in screen tag: wrap=<xsl:value-of select="@wrap"/>
+      </xsl:message>
+    </xsl:otherwise></xsl:choose></xsl:variable>
+    
+    <div class="{$class}">
       <xsl:call-template name="add-highlight">
 	<xsl:with-param name="contents" select="$contents"/>
       </xsl:call-template>
