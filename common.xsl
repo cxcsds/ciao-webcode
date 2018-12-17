@@ -388,7 +388,7 @@ if (self == top) {
 	</xsl:call-template>
       </div>
 
-      <xsl:if test="($site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'chart' or $site = 'obsvis' or $site = 'iris') and $type = 'live'">
+      <xsl:if test="($site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'chart' or $site = 'obsvis' or $site = 'iris' or $site = 'csc') and $type = 'live'">
 	<xsl:call-template name="add-ssi-include">
           <xsl:with-param name="file" select="$googlessi"/>
 	</xsl:call-template>

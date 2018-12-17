@@ -745,6 +745,10 @@ logourl=/csc1/
 %searchssi=test /csc1/csc_search.ssi
 %searchssi=trial /sds/csc/csc_search.ssi
 
+# location of the google analytics ssi
+# only added for the live site in helper.xsl
+googlessi=/csc1/analytics.ssi
+
 # MathJax location; it should include any configuration variables
 # We use the CIAO 4.11 version here even though CSC releases are decoupled from
 # the CIAO one, since I do not want to have too many copies of MathJax lying
@@ -827,6 +831,10 @@ logourl=/csc2/
 %searchssi=live /csc2/csc_search.ssi
 %searchssi=test /csc2/csc_search.ssi
 %searchssi=trial /sds/csc/csc_search.ssi
+
+# location of the google analytics ssi
+# only added for the live site in helper.xsl
+googlessi=/csc2/analytics.ssi
 
 # MathJax location; it should include any configuration variables
 # We use the CIAO 4.11 version here even though CSC releases are decoupled from
