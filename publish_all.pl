@@ -255,7 +255,9 @@ while ( <$pipe> ) {
     my $dname = $dirs[-1];
     my $path  = join "/", @dirs;
 
-    # user reject
+    # user reject; unfortunately this does not work to exclude
+    # sub-directories of the excluded directory.
+    #
     $nuserrej++, next if exists $excludedirs{$dname};
 
     # reject "backup" files
