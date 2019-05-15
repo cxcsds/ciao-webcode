@@ -444,6 +444,12 @@
       *-->
   <xsl:template match="section" mode="make-section">
 
+    <xsl:if test="normalize-space(id/name)=''">
+      <xsl:message terminate="yes">
+ name attribute of section is missing or empty!
+      </xsl:message>
+    </xsl:if>
+
     <xsl:variable name="filename"><xsl:value-of select="$install"/><xsl:value-of select='id/name'/>.html</xsl:variable>
     <xsl:variable name="version" select="/threadindex/version"/>
     
