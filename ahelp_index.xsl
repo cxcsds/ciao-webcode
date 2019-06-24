@@ -39,6 +39,12 @@
     *  . searchssi - string, default=/incl/search.html, required
     *    url of SSI file for the search bar
     *
+    *  . sitebannerssi=location of file for ssi inclusion to give a sitewide
+    *    banner (at top and bottom of each page). The file is assumed to exist
+    *    and can be empty.
+    *    defaults to banner.html and path is relative to the top-level
+    *    directory of the site.
+    *
     *  . logoimage, string, optional
     *
     *    if the navbar is to have a logo image at the top, this gives the
@@ -103,6 +109,7 @@
   <xsl:param name="cssfile"/>
   <xsl:param name="navbarname" select='"ahelp"'/>
   <xsl:param name="searchssi"  select='"/incl/search.html"'/>
+  <xsl:param name="sitebannerssi" select='"banner.html"'/>
 
   <xsl:param name="logoimage" select='""'/>
   <xsl:param name="logotext"  select='""'/>

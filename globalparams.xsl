@@ -130,7 +130,7 @@
   <xsl:param name="newsfileurl" select='""'/>
   <xsl:param name="watchouturl" select='""'/>
   <xsl:param name="searchssi"   select='"/incl/search.html"'/>
-  <xsl:param name="sitebannerssi"   select='"banner.html"'/>
+  <xsl:param name="sitebannerssi" select='"banner.html"'/>
 
   <xsl:param name="headtitlepostfix" select='""'/>
   <xsl:param name="texttitlepostfix" select='""'/>

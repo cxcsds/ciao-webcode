@@ -203,6 +203,7 @@ my $cssfile      = get_config_type $version_config, "css", $type;
 my $cssprintfile = get_config_type $version_config, "cssprint", $type;
 my $favicon      = get_config_type $version_config, "favicon", $type;
 my $searchssi    = get_config_type $version_config, "searchssi", $type;
+my $sitebannerssi = get_config_type $version_config, "sitebannerssi", $type;
 my $googlessi    = get_config_version( $version_config, "googlessi" );
 my $urlbase      = get_config_type $version_config, "outurl", $type;
 
@@ -233,6 +234,7 @@ my $sourcedir = cwd() . "/";
 dbg "  uname=$uname";
 dbg "  urlbase=$urlbase";
 dbg "  searchssi=$searchssi";
+dng "  sitebannerssi=$sitebannerssi";
 dbg "  cssfile=$cssfile";
 dbg "  cssprintfile=$cssprintfile";
 dbg "  favicon=$favicon";
@@ -254,6 +256,7 @@ dbg "*** CONFIG DATA (end) ***";
    cssprintfile => $cssprintfile,
    favicon      => $favicon,
    searchssi    => $searchssi,
+   sitebannerssi => $sitebannerssi,
    googlessi    => $googlessi,
    navbarname   => $navbar,
    headtitlepostfix => $headtitlepostfix,
