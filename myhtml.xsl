@@ -492,6 +492,8 @@
       </xsl:when>
       <xsl:otherwise>
 <pre>
+<!-- manually copy over the attributes; ugly that special casing this node -->
+<xsl:copy-of select="@*" />
 <xsl:apply-templates/>
 </pre>
       </xsl:otherwise>
