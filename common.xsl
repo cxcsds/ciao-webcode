@@ -453,7 +453,9 @@ if (self == top) {
 	  </xsl:call-template>
 	</xsl:if>
 	<div class="wrap">
+	  <xsl:call-template name="add-sitewide-banner"/>
 	  <xsl:copy-of select="$contents"/>
+	  <xsl:call-template name="add-sitewide-banner"/>
 	</div>
 	<xsl:if test="$breadcrumbs">
 	  <xsl:call-template name="add-breadcrumbs">
@@ -519,7 +521,9 @@ if (self == top) {
 	  </xsl:call-template>
 	</xsl:if>
 	<div class="wrap">
+	  <xsl:call-template name="add-sitewide-banner"/>
 	  <xsl:copy-of select="$contents"/>
+	  <xsl:call-template name="add-sitewide-banner"/>
 	</div>
 	<xsl:if test="$breadcrumbs">
 	  <xsl:call-template name="add-breadcrumbs">
@@ -541,6 +545,21 @@ if (self == top) {
     </body>
   </xsl:template> <!--* add-body-withnavbar *-->
 
+  <!--*
+      * Add the SSI to include a banner that can be inserted for the
+      * whole site (bar maybe a few specialised pages).
+      *
+      * The location of the SSI is given by the global parameter
+      * sitebannerssi
+      *
+      *-->
+  <xsl:template name="add-sitewide-banner">
+    <xsl:call-template name="add-ssi-include">
+      <xsl:with-param name="file"><xsl:call-template name="add-path">
+	<xsl:with-param name="idepth" select="$depth"/>
+      </xsl:call-template><xsl:value-of select="$sitebannerssi"/></xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
 
   <!--*
       * Add a breadcrumbs element for navigation.
