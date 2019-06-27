@@ -414,7 +414,8 @@ if (self == top) {
 
   <!--*
       * The "standard" body for a page where there's no
-      * navigation bar.
+      * navigation bar. Breadcrumbs are added if the
+      * //info/breadcrumbs exists.
       *
       * Any attributes of the parent element are added to the
       * body tag: this is a hacky way to support setting
@@ -440,13 +441,17 @@ if (self == top) {
       </xsl:call-template>
 
       <main id="content">
-	<xsl:call-template name="add-breadcrumbs"/>
+	<xsl:if test="boolean(//info/breadcrumbs)">
+	  <xsl:call-template name="add-breadcrumbs"/>
+	</xsl:if>
 	<div class="wrap">
 	  <xsl:copy-of select="$contents"/>
 	</div>
-	<xsl:call-template name="add-breadcrumbs">
-	  <xsl:with-param name="pos" select="'bottom'"/>
-	</xsl:call-template>
+	<xsl:if test="boolean(//info/breadcrumbs)">
+	  <xsl:call-template name="add-breadcrumbs">
+	    <xsl:with-param name="pos" select="'bottom'"/>
+	  </xsl:call-template>
+	</xsl:if>
       </main>
 
       <xsl:call-template name="add-footer">
@@ -459,7 +464,8 @@ if (self == top) {
 
   <!--*
       * The "standard" body for a page where there is a
-      * navigation bar.
+      * navigation bar. Breadcrumbs are added if the
+      * //info/breadcrumbs exists.
       *
       * Any attributes of the parent element are added to the
       * body tag: this is a hacky way to support setting
@@ -491,13 +497,17 @@ if (self == top) {
       <xsl:call-template name="add-header"/>
 
       <main id="content">
-	<xsl:call-template name="add-breadcrumbs"/>
+	<xsl:if test="boolean(//info/breadcrumbs)">
+	  <xsl:call-template name="add-breadcrumbs"/>
+	</xsl:if>
 	<div class="wrap">
 	  <xsl:copy-of select="$contents"/>
 	</div>
-	<xsl:call-template name="add-breadcrumbs">
-	  <xsl:with-param name="pos" select="'bottom'"/>
-	</xsl:call-template>
+	<xsl:if test="boolean(//info/breadcrumbs)">
+	  <xsl:call-template name="add-breadcrumbs">
+	    <xsl:with-param name="pos" select="'bottom'"/>
+	  </xsl:call-template>
+	</xsl:if>
       </main>
 
       <aside id="navbar">
@@ -513,22 +523,24 @@ if (self == top) {
 
 
   <!--*
-      * Add a breadcrumbs element for navigation if the
-      * breadcrumbs element is set in the info block.
+      * Add a breadcrumbs element for navigation.
       *
       * The styling requires that .breadcrumbs is a child of
       * #content.
+      *
+      * It's the last $depth path elements (give or take 1) that count.
       *
       * /Experimental/
       *-->
   <xsl:template name="add-breadcrumbs">
     <xsl:param name="pos" select="'top'"/>
-    <xsl:if test="boolean(//info/breadcrumbs)">
-      <div class="breadcrumbs breadcrumbs-{$pos}">
-	<xsl:value-of disable-output-escaping="yes"
-	    select="extfuncs:get-breadcrumbs($url, $depth)"/>
-      </div>
-    </xsl:if>
+    <xsl:param name="location" select="$url"/>
+    <xsl:param name="ldepth" select="$depth"/>
+
+    <div class="breadcrumbs breadcrumbs-{$pos}">
+      <xsl:value-of disable-output-escaping="yes"
+		    select="extfuncs:get-breadcrumbs($location, $ldepth)"/>
+    </div>
   </xsl:template>
 
   <!--*

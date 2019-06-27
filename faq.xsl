@@ -148,9 +148,9 @@
 	</xsl:call-template>
 
 	<xsl:variable name="contents">
-	  <div class="qlinkbar">
-	    Return to: <a href=".">FAQ index</a>
-	  </div>
+	  <xsl:call-template name="add-breadcrumbs">
+	    <xsl:with-param name="location" select="$filename"/>
+	  </xsl:call-template>
 
 	  <div class="mainbar">
 	    
@@ -165,9 +165,10 @@
 	    <hr/>
 	  </div>
 	  
-	  <div class="qlinkbar">
-	    Return to: <a href=".">FAQ index</a>
-	  </div>
+	  <xsl:call-template name="add-breadcrumbs">
+	    <xsl:with-param name="pos" select="'bottom'"/>
+	    <xsl:with-param name="location" select="$filename"/>
+	  </xsl:call-template>
 	</xsl:variable>
 
 	<xsl:call-template name="add-body-nonavbar">
