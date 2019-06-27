@@ -440,9 +440,13 @@ if (self == top) {
       </xsl:call-template>
 
       <main id="content">
+	<xsl:call-template name="add-breadcrumbs"/>
 	<div class="wrap">
 	  <xsl:copy-of select="$contents"/>
 	</div>
+	<xsl:call-template name="add-breadcrumbs">
+	  <xsl:with-param name="pos" select="'bottom'"/>
+	</xsl:call-template>
       </main>
 
       <xsl:call-template name="add-footer">
@@ -487,9 +491,13 @@ if (self == top) {
       <xsl:call-template name="add-header"/>
 
       <main id="content">
+	<xsl:call-template name="add-breadcrumbs"/>
 	<div class="wrap">
 	  <xsl:copy-of select="$contents"/>
 	</div>
+	<xsl:call-template name="add-breadcrumbs">
+	  <xsl:with-param name="pos" select="'bottom'"/>
+	</xsl:call-template>
       </main>
 
       <aside id="navbar">
@@ -503,6 +511,25 @@ if (self == top) {
     </body>
   </xsl:template> <!--* add-body-withnavbar *-->
 
+
+  <!--*
+      * Add a breadcrumbs element for navigation if the
+      * breadcrumbs element is set in the info block.
+      *
+      * The styling requires that .breadcrumbs is a child of
+      * #content.
+      *
+      * /Experimental/
+      *-->
+  <xsl:template name="add-breadcrumbs">
+    <xsl:param name="pos" select="'top'"/>
+    <xsl:if test="boolean(//info/breadcrumbs)">
+      <div class="breadcrumbs breadcrumbs-{$pos}">
+	<xsl:value-of disable-output-escaping="yes"
+	    select="extfuncs:get-breadcrumbs($url, $depth)"/>
+      </div>
+    </xsl:if>
+  </xsl:template>
 
   <!--*
       * With the move to HTML5, there are a number of "presentational" tags

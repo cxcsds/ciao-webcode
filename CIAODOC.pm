@@ -1654,6 +1654,41 @@ Argh: ahelp reverse dependencies are generally complicated because
 				  }
 				 );
 
+  # Given the url and depth, return the breadcrumb terms
+  #
+  # For testing just return the actual HTML. I've also forgotten
+  # all my Perl ...
+  #
+  XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				  "get-breadcrumbs",
+				  sub {
+				    my $url = shift;
+                                    my $depth = int(shift) + 1;
+				    my @toks = split(/\//, $url);
+
+				    # remove leading terms
+				    splice(@toks, 0, -$depth);
+
+				    my @counts = reverse (0 .. $#toks);
+
+				    my $out = "";
+				    foreach my $i ( 0 .. $#toks ) {
+					my $count = $counts[$i];
+					my $tok = $toks[$i];
+					if ($out ne "") { $out .= " "; }
+					if ($count == 0) {
+					    $out .= "/ $tok";
+					} else {
+					    my $href;
+					    if ($count == 1) { $href = '.'; }
+					    else { $href = '../' x ($count - 1); }
+					    $out .= "/ <a href='${href}'>$tok</a>";
+					}
+				    }
+
+				    return $out;
+				  }
+				 );
 }
 
 
