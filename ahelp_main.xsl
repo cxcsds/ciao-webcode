@@ -74,7 +74,18 @@
 
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents">
+	    <xsl:call-template name="add-breadcrumbs">
+	      <xsl:with-param name="location" select="$filename"/>
+	      <xsl:with-param name="ldepth" select="'2'"/>
+	    </xsl:call-template>
+
 	    <xsl:apply-templates select="ENTRY"/>
+
+	    <xsl:call-template name="add-breadcrumbs">
+	      <xsl:with-param name="pos" select="'bottom'"/>
+	      <xsl:with-param name="location" select="$filename"/>
+	      <xsl:with-param name="ldepth" select="'2'"/>
+	    </xsl:call-template>
 	  </xsl:with-param>
 
 	  <xsl:with-param name="navbar">
@@ -1144,7 +1155,7 @@
     <!--* do we warrant a "quick links" bar? *-->
     <xsl:if test="$have-desc or $have-example or $have-param or $have-seealso or $have-bugs">
       <div class="noprint">
-      <div>
+      <div class="jumpto">
 	    <strong>Jump to:</strong>
 	    <xsl:if test="$have-desc"><xsl:text> </xsl:text><a title="Jump to the description" href="#description">Description</a></xsl:if>
 	    <xsl:if test="$have-example"><xsl:text> &#183; </xsl:text><a title="Jump to the Example section" href="#examples">Example<xsl:if test="$nexample!=1">s</xsl:if></a></xsl:if>

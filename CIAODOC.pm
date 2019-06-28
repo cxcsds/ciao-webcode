@@ -87,7 +87,8 @@ XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs
 # (eg wavdetect, tg_create_mask), so increase randomly until everything
 # compiles. Why did we not see this in the xsltproc command-line tool?
 #
-XML::LibXSLT->max_depth(750);
+# XML::LibXSLT->max_depth(750);
+XML::LibXSLT->max_depth(2000);
 
 my @funcs_util =
   qw(
