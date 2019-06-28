@@ -127,9 +127,8 @@
   <!--* temporary hack for v1.21/2 of ahelp_common.xsl *-->
   <xsl:param name="url" select='""'/>
 
-
-  <!--* not used: just to stop ahelp_common.xsl from complaining (or I've made a mistake ...) *-->
-  <xsl:param name="depth" value="''"/>
+  <!--* needed by breadcrumbs and to stop some complaints *-->
+  <xsl:param name="depth" select="'1'"/>
 
   <!--*
       * Start processing here: "/"
@@ -584,7 +583,18 @@
 
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents">
+	    <xsl:call-template name="add-breadcrumbs">
+	      <xsl:with-param name="location" select="$filename"/>
+	      <xsl:with-param name="ldepth" select="'2'"/>
+	    </xsl:call-template>
+
 	    <xsl:apply-templates select="ahelpindex/alphabet[@site=$site]"/>
+
+	    <xsl:call-template name="add-breadcrumbs">
+	      <xsl:with-param name="pos" select="'bottom'"/>
+	      <xsl:with-param name="location" select="$filename"/>
+	      <xsl:with-param name="ldepth" select="'2'"/>
+	    </xsl:call-template>
 	  </xsl:with-param>
 
 	  <xsl:with-param name="navbar">
@@ -763,7 +773,18 @@
 
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents">
+	    <xsl:call-template name="add-breadcrumbs">
+	      <xsl:with-param name="location" select="$filename"/>
+	      <xsl:with-param name="ldepth" select="'2'"/>
+	    </xsl:call-template>
+
 	    <xsl:apply-templates select="ahelpindex/context[@site=$site]"/>
+
+	    <xsl:call-template name="add-breadcrumbs">
+	      <xsl:with-param name="pos" select="'bottom'"/>
+	      <xsl:with-param name="location" select="$filename"/>
+	      <xsl:with-param name="ldepth" select="'2'"/>
+	    </xsl:call-template>
 	  </xsl:with-param>
 	      
 	  <xsl:with-param name="navbar">
