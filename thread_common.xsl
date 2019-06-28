@@ -36,6 +36,11 @@
       *
       *-->
   <xsl:template name="add-top-links-site-html">
+    <!-- does this remove the nead for add-thread-qlinks? -->
+    <xsl:call-template name="add-breadcrumbs">
+      <xsl:with-param name="location" select="concat($url, 'index.html')"/>
+    </xsl:call-template>
+
     <xsl:choose>
       <xsl:when test="$site = 'chart'">
 	<xsl:call-template name="add-thread-qlinks-basic"/>
@@ -90,6 +95,10 @@
       </xsl:otherwise>
     </xsl:choose>
 
+    <xsl:call-template name="add-breadcrumbs">
+      <xsl:with-param name="pos" select="'bottom'"/>
+      <xsl:with-param name="location" select="concat($url, 'index.html')"/>
+    </xsl:call-template>
   </xsl:template> <!--* name=add-bottom-links-site-html *-->
 
   <!--*
