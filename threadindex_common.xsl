@@ -471,7 +471,12 @@
 
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents">
-	
+	    <xsl:if test="boolean(//threadindex/breadcrumbs)">
+	      <xsl:call-template name="add-breadcrumbs">
+		<xsl:with-param name="location" select="$filename"/>
+	      </xsl:call-template>
+	    </xsl:if>
+
 	    <!--* set up the title block of the page *-->
 	    <xsl:call-template name="add-threadindex-title">
 	      <xsl:with-param name="title" select="id/title"/>
@@ -482,6 +487,13 @@
 	    
 	    <!--* process the section *-->
 	    <xsl:apply-templates select="." mode="section-page"/>
+
+	    <xsl:if test="boolean(//threadindex/breadcrumbs)">
+	      <xsl:call-template name="add-breadcrumbs">
+		<xsl:with-param name="pos" select="'bottom'"/>
+		<xsl:with-param name="location" select="$filename"/>
+	      </xsl:call-template>
+	    </xsl:if>
 	  </xsl:with-param>
 
 	  <xsl:with-param name="navbar">
@@ -523,6 +535,11 @@
 
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents">
+	    <xsl:if test="boolean(//threadindex/breadcrumbs)">
+	      <xsl:call-template name="add-breadcrumbs">
+		<xsl:with-param name="location" select="$filename"/>
+	      </xsl:call-template>
+	    </xsl:if>
 	    
 	    <!-- set up the title block of the page -->
 	    <xsl:call-template name="add-threadindex-title">
@@ -535,6 +552,12 @@
 	    <!--* add the data table *-->
 	    <xsl:call-template name="make-datatable"/>
 	
+	    <xsl:if test="boolean(//threadindex/breadcrumbs)">
+	      <xsl:call-template name="add-breadcrumbs">
+		<xsl:with-param name="pos" select="'bottom'"/>
+		<xsl:with-param name="location" select="$filename"/>
+	      </xsl:call-template>
+	    </xsl:if>
 	  </xsl:with-param>
 
 	  <xsl:with-param name="navbar">
@@ -573,7 +596,14 @@
 	</xsl:call-template>
 
 	<xsl:call-template name="add-body-withnavbar">
+
 	  <xsl:with-param name="contents">
+	    <xsl:if test="boolean(//threadindex/breadcrumbs)">
+	      <xsl:call-template name="add-breadcrumbs">
+		<xsl:with-param name="location" select="$filename"/>
+	      </xsl:call-template>
+	    </xsl:if>
+
 	    <!-- set up the title block of the page -->
 	    <xsl:call-template name="add-threadindex-title"/>
 		
@@ -603,7 +633,13 @@
 	      </xsl:if>
 	      
 	    </div>
-	    <br/>
+
+	    <xsl:if test="boolean(//threadindex/breadcrumbs)">
+	      <xsl:call-template name="add-breadcrumbs">
+		<xsl:with-param name="pos" select="'bottom'"/>
+		<xsl:with-param name="location" select="$filename"/>
+	      </xsl:call-template>
+	    </xsl:if>
 	  </xsl:with-param>
 
 	  <xsl:with-param name="navbar">
@@ -644,6 +680,12 @@
 
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents">
+	    <xsl:if test="boolean(//threadindex/breadcrumbs)">
+	      <xsl:call-template name="add-breadcrumbs">
+		<xsl:with-param name="location" select="$filename"/>
+	      </xsl:call-template>
+	    </xsl:if>
+
 	    <!-- set up the title block of the page -->
 	    <xsl:call-template name="add-threadindex-title"/>
 		
@@ -657,6 +699,12 @@
 	    <!--* add the data table *-->
 	    <xsl:call-template name="make-datatable"/>
 	
+	    <xsl:if test="boolean(//threadindex/breadcrumbs)">
+	      <xsl:call-template name="add-breadcrumbs">
+		<xsl:with-param name="pos" select="'bottom'"/>
+		<xsl:with-param name="location" select="$filename"/>
+	      </xsl:call-template>
+	    </xsl:if>
 	  </xsl:with-param>
 
 	  <xsl:with-param name="navbar">
