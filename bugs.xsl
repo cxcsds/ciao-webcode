@@ -83,10 +83,6 @@
 
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents">
-	    <xsl:call-template name="add-breadcrumbs">
-	      <xsl:with-param name="location" select="$filename"/>
-	    </xsl:call-template>
-
 	    <h1 class="pagetitle">
 	      <xsl:value-of select="/bugs/info/title/short"/>
 	    </h1>
@@ -375,11 +371,6 @@
 	    </xsl:if>
 	    <!--// end "fixed in version x.x" section //-->
 	    <!--// end body //-->
-
-	    <xsl:call-template name="add-breadcrumbs">
-	      <xsl:with-param name="pos" select="'bottom'"/>
-	      <xsl:with-param name="location" select="$filename"/>
-	    </xsl:call-template>
 	  </xsl:with-param>
 
 	  <xsl:with-param name="navbar">
@@ -388,6 +379,9 @@
 	    </xsl:call-template>
 	  </xsl:with-param>
 
+	  <!-- TODO: do we want to make this optional? -->
+	  <xsl:with-param name="breadcrumbs" select="true()"/>
+	  <xsl:with-param name="location" select="$filename"/>
 	</xsl:call-template>
 
       </html>

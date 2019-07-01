@@ -425,6 +425,11 @@ if (self == top) {
   <xsl:template name="add-body-nonavbar">
     <xsl:param name="contents" select="''"/>
 
+    <xsl:param name="breadcrumbs" select="boolean(//info/breadcrumbs)"/>
+    <!-- pass through to add-breadcrumbs -->
+    <xsl:param name="location" select="$url"/>
+    <xsl:param name="ldepth" select="$depth"/>
+
     <xsl:if test="$contents = ''">
       <xsl:message terminate="yes">
  ERROR: add-body-nonavbar called with empty contents parameter!
@@ -441,15 +446,23 @@ if (self == top) {
       </xsl:call-template>
 
       <main id="content">
-	<xsl:if test="boolean(//info/breadcrumbs)">
-	  <xsl:call-template name="add-breadcrumbs"/>
+<xsl:message terminate="no">
+ DBG:breadcrumbs=<xsl:value-of select="$breadcrumbs"/> location=<xsl:value-of select="$location"/>
+</xsl:message>
+	<xsl:if test="$breadcrumbs">
+	  <xsl:call-template name="add-breadcrumbs">
+	    <xsl:with-param name="location" select="$location"/>
+	    <xsl:with-param name="ldepth" select="$ldepth"/>
+	  </xsl:call-template>
 	</xsl:if>
 	<div class="wrap">
 	  <xsl:copy-of select="$contents"/>
 	</div>
-	<xsl:if test="boolean(//info/breadcrumbs)">
+	<xsl:if test="$breadcrumbs">
 	  <xsl:call-template name="add-breadcrumbs">
 	    <xsl:with-param name="pos" select="'bottom'"/>
+	    <xsl:with-param name="location" select="$location"/>
+	    <xsl:with-param name="ldepth" select="$ldepth"/>
 	  </xsl:call-template>
 	</xsl:if>
       </main>
@@ -476,6 +489,11 @@ if (self == top) {
     <xsl:param name="contents" select="''"/>
     <xsl:param name="navbar" select="''"/>
 
+    <xsl:param name="breadcrumbs" select="boolean(//info/breadcrumbs)"/>
+    <!-- pass through to add-breadcrumbs -->
+    <xsl:param name="location" select="$url"/>
+    <xsl:param name="ldepth" select="$depth"/>
+
     <xsl:if test="$contents = ''">
       <xsl:message terminate="yes">
  ERROR: add-body-withnavbar called with empty contents parameter!
@@ -497,15 +515,23 @@ if (self == top) {
       <xsl:call-template name="add-header"/>
 
       <main id="content">
-	<xsl:if test="boolean(//info/breadcrumbs)">
-	  <xsl:call-template name="add-breadcrumbs"/>
+<xsl:message terminate="no">
+ DBG:breadcrumbs=<xsl:value-of select="$breadcrumbs"/> location=<xsl:value-of select="$location"/>
+</xsl:message>
+	<xsl:if test="$breadcrumbs">
+	  <xsl:call-template name="add-breadcrumbs">
+	    <xsl:with-param name="location" select="$location"/>
+	    <xsl:with-param name="ldepth" select="$ldepth"/>
+	  </xsl:call-template>
 	</xsl:if>
 	<div class="wrap">
 	  <xsl:copy-of select="$contents"/>
 	</div>
-	<xsl:if test="boolean(//info/breadcrumbs)">
+	<xsl:if test="$breadcrumbs">
 	  <xsl:call-template name="add-breadcrumbs">
 	    <xsl:with-param name="pos" select="'bottom'"/>
+	    <xsl:with-param name="location" select="$location"/>
+	    <xsl:with-param name="ldepth" select="$ldepth"/>
 	  </xsl:call-template>
 	</xsl:if>
       </main>

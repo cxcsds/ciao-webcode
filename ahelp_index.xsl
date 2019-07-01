@@ -583,18 +583,7 @@
 
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents">
-	    <xsl:call-template name="add-breadcrumbs">
-	      <xsl:with-param name="location" select="$filename"/>
-	      <xsl:with-param name="ldepth" select="'2'"/>
-	    </xsl:call-template>
-
 	    <xsl:apply-templates select="ahelpindex/alphabet[@site=$site]"/>
-
-	    <xsl:call-template name="add-breadcrumbs">
-	      <xsl:with-param name="pos" select="'bottom'"/>
-	      <xsl:with-param name="location" select="$filename"/>
-	      <xsl:with-param name="ldepth" select="'2'"/>
-	    </xsl:call-template>
 	  </xsl:with-param>
 
 	  <xsl:with-param name="navbar">
@@ -603,6 +592,10 @@
 	    </xsl:call-template>
 	  </xsl:with-param>
 
+	  <!-- TODO: do we want to make this optional? -->
+	  <xsl:with-param name="breadcrumbs" select="true()"/>
+	  <xsl:with-param name="location" select="$filename"/>
+	  <xsl:with-param name="ldepth" select="'2'"/>
 	</xsl:call-template>
 
       </html>
@@ -773,18 +766,7 @@
 
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents">
-	    <xsl:call-template name="add-breadcrumbs">
-	      <xsl:with-param name="location" select="$filename"/>
-	      <xsl:with-param name="ldepth" select="'2'"/>
-	    </xsl:call-template>
-
 	    <xsl:apply-templates select="ahelpindex/context[@site=$site]"/>
-
-	    <xsl:call-template name="add-breadcrumbs">
-	      <xsl:with-param name="pos" select="'bottom'"/>
-	      <xsl:with-param name="location" select="$filename"/>
-	      <xsl:with-param name="ldepth" select="'2'"/>
-	    </xsl:call-template>
 	  </xsl:with-param>
 	      
 	  <xsl:with-param name="navbar">
@@ -793,6 +775,10 @@
 	    </xsl:call-template>
 	  </xsl:with-param>
 
+	  <!-- TODO: do we want to make this optional? -->
+	  <xsl:with-param name="breadcrumbs" select="true()"/>
+	  <xsl:with-param name="location" select="$filename"/>
+	  <xsl:with-param name="ldepth" select="'2'"/>
 	</xsl:call-template>
 
       </html>

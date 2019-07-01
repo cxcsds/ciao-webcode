@@ -98,24 +98,11 @@
 	<xsl:call-template name="add-htmlhead-standard"/>
 
 	<xsl:variable name="contents">
-	  <xsl:if test="boolean(//info/breadcrumbs)">
-	    <xsl:call-template name="add-breadcrumbs">
-	      <xsl:with-param name="location" select="$filename"/>
-	    </xsl:call-template>
-	  </xsl:if>
-
 	  <!--* add the intro text *-->
 	  <xsl:apply-templates select="intro"/>
 	      
 	  <!--* create the list of FAQ's *--> 
 	  <xsl:apply-templates select="entries" mode="toc"/>
-
-	  <xsl:if test="boolean(//info/breadcrumbs)">
-	    <xsl:call-template name="add-breadcrumbs">
-	      <xsl:with-param name="pos" select="'bottom'"/>
-	      <xsl:with-param name="location" select="$filename"/>
-	    </xsl:call-template>
-	  </xsl:if>
 	</xsl:variable>
 	    
 	<xsl:variable name="navbar">
@@ -127,6 +114,9 @@
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents" select="$contents"/>
 	  <xsl:with-param name="navbar" select="$navbar"/>
+
+	  <!-- uses default //info/breadcrumbs -->
+	  <xsl:with-param name="location" select="$filename"/>
 	</xsl:call-template>
 
       </html>

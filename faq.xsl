@@ -92,24 +92,11 @@
 	<xsl:call-template name="add-htmlhead-standard"/>
 
 	<xsl:variable name="contents">
-	  <xsl:if test="boolean(//info/breadcrumbs)">
-	    <xsl:call-template name="add-breadcrumbs">
-	      <xsl:with-param name="location" select="$filename"/>
-	    </xsl:call-template>
-	  </xsl:if>
-
 	  <!--* add the intro text *-->
 	  <xsl:apply-templates select="intro"/>
 	      
 	  <!--* create the list of FAQ's *--> 
 	  <xsl:apply-templates select="faqlist" mode="toc"/>
-
-	  <xsl:if test="boolean(//info/breadcrumbs)">
-	    <xsl:call-template name="add-breadcrumbs">
-	      <xsl:with-param name="pos" select="'bottom'"/>
-	      <xsl:with-param name="location" select="$filename"/>
-	    </xsl:call-template>
-	  </xsl:if>
 	</xsl:variable>
 	    
 	<xsl:variable name="navbar">
@@ -121,8 +108,10 @@
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents" select="$contents"/>
 	  <xsl:with-param name="navbar" select="$navbar"/>
-	</xsl:call-template>
 
+	  <!-- uses default //info/breadcrumbs -->
+	  <xsl:with-param name="location" select="$filename"/>
+	</xsl:call-template>
       </html>
 
     </xsl:document>
@@ -161,12 +150,6 @@
 	</xsl:call-template>
 
 	<xsl:variable name="contents">
-	  <xsl:if test="boolean(//info/breadcrumbs)">
-	    <xsl:call-template name="add-breadcrumbs">
-	      <xsl:with-param name="location" select="$filename"/>
-	    </xsl:call-template>
-	  </xsl:if>
-
 	  <div class="mainbar">
 	    
 	    <div>
@@ -179,17 +162,13 @@
 	    
 	    <hr/>
 	  </div>
-	  
-	  <xsl:if test="boolean(//info/breadcrumbs)">
-	    <xsl:call-template name="add-breadcrumbs">
-	      <xsl:with-param name="pos" select="'bottom'"/>
-	      <xsl:with-param name="location" select="$filename"/>
-	    </xsl:call-template>
-	  </xsl:if>
 	</xsl:variable>
 
 	<xsl:call-template name="add-body-nonavbar">
 	  <xsl:with-param name="contents" select="$contents"/>
+
+	  <!-- uses default //info/breadcrumbs -->
+	  <xsl:with-param name="location" select="$filename"/>
 	</xsl:call-template>
 
       </html>
