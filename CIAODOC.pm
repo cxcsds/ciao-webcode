@@ -1657,8 +1657,11 @@ Argh: ahelp reverse dependencies are generally complicated because
 
   # Given the url and depth, return the breadcrumb terms
   #
-  # For testing just return the actual HTML. I've also forgotten
-  # all my Perl ...
+  # I return the actual HTML as it was easier than dealing with
+  # node sets. I've also forgotten all my Perl ...
+  #
+  # We remove ' index.html' as it doesn't really add anything,
+  # but maybe in this case we don't make the last dir a link?
   #
   XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
 				  "get-breadcrumbs",
@@ -1678,7 +1681,8 @@ Argh: ahelp reverse dependencies are generally complicated because
 					my $tok = $toks[$i];
 					if ($out ne "") { $out .= " "; }
 					if ($count == 0) {
-					    $out .= "/ $tok";
+					    $out .= "/";
+					    $out .= " $tok" if $tok ne "index.html";
 					} else {
 					    my $href;
 					    if ($count == 1) { $href = '.'; }
