@@ -471,7 +471,6 @@
 
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents">
-	
 	    <!--* set up the title block of the page *-->
 	    <xsl:call-template name="add-threadindex-title">
 	      <xsl:with-param name="title" select="id/title"/>
@@ -490,6 +489,9 @@
 	    </xsl:call-template>
 	  </xsl:with-param>
 
+	  <xsl:with-param name="breadcrumbs"
+			  select="boolean(//threadindex/breadcrumbs)"/>
+	  <xsl:with-param name="location" select="$filename"/>
 	</xsl:call-template>
 
       </html>
@@ -523,7 +525,6 @@
 
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents">
-	    
 	    <!-- set up the title block of the page -->
 	    <xsl:call-template name="add-threadindex-title">
 	      <xsl:with-param name="title"><xsl:choose>
@@ -534,7 +535,6 @@
 	    
 	    <!--* add the data table *-->
 	    <xsl:call-template name="make-datatable"/>
-	
 	  </xsl:with-param>
 
 	  <xsl:with-param name="navbar">
@@ -543,6 +543,9 @@
 	    </xsl:call-template>
 	  </xsl:with-param>
 
+	  <xsl:with-param name="breadcrumbs"
+			  select="boolean(//threadindex/breadcrumbs)"/>
+	  <xsl:with-param name="location" select="$filename"/>
 	</xsl:call-template>
       </html>
 
@@ -573,6 +576,7 @@
 	</xsl:call-template>
 
 	<xsl:call-template name="add-body-withnavbar">
+
 	  <xsl:with-param name="contents">
 	    <!-- set up the title block of the page -->
 	    <xsl:call-template name="add-threadindex-title"/>
@@ -603,7 +607,6 @@
 	      </xsl:if>
 	      
 	    </div>
-	    <br/>
 	  </xsl:with-param>
 
 	  <xsl:with-param name="navbar">
@@ -612,6 +615,9 @@
 	    </xsl:call-template>
 	  </xsl:with-param>
 
+	  <xsl:with-param name="breadcrumbs"
+			  select="boolean(//threadindex/breadcrumbs)"/>
+	  <xsl:with-param name="location" select="$filename"/>
 	</xsl:call-template>
       </html>
 
@@ -656,7 +662,6 @@
 		
 	    <!--* add the data table *-->
 	    <xsl:call-template name="make-datatable"/>
-	
 	  </xsl:with-param>
 
 	  <xsl:with-param name="navbar">
@@ -665,6 +670,9 @@
 	    </xsl:call-template>
 	  </xsl:with-param>
 
+	  <xsl:with-param name="breadcrumbs"
+			  select="boolean(//threadindex/breadcrumbs)"/>
+	  <xsl:with-param name="location" select="$filename"/>
 	</xsl:call-template>
       </html>
       

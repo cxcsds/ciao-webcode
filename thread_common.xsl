@@ -36,6 +36,7 @@
       *
       *-->
   <xsl:template name="add-top-links-site-html">
+    <!-- does the breadcrumb support remove the nead for add-thread-qlinks? -->
     <xsl:choose>
       <xsl:when test="$site = 'chart'">
 	<xsl:call-template name="add-thread-qlinks-basic"/>
@@ -89,7 +90,6 @@
 	</xsl:message>
       </xsl:otherwise>
     </xsl:choose>
-
   </xsl:template> <!--* name=add-bottom-links-site-html *-->
 
   <!--*
@@ -1014,6 +1014,11 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
 	  <xsl:call-template name="add-bottom-links-site-html"/>
 
 	</xsl:with-param>
+
+	<!-- TODO: do we want to make this optional? -->
+	<xsl:with-param name="breadcrumbs" select="true()"/>
+	<xsl:with-param name="location" select="concat($url, 'index.html')"/>
+
       </xsl:call-template>
 
       </html>

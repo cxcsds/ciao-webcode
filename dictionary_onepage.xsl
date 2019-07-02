@@ -114,6 +114,9 @@
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents" select="$contents"/>
 	  <xsl:with-param name="navbar" select="$navbar"/>
+
+	  <!-- uses default //info/breadcrumbs -->
+	  <xsl:with-param name="location" select="$filename"/>
 	</xsl:call-template>
 
       </html>

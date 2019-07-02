@@ -88,7 +88,6 @@
 	    </h1>
 
 	    <div class="qlinkbar">
-	      Return to: <a href=".">Bug List Index</a>
 	      <xsl:if test="intro/altlink">
 		<p>
 		  <xsl:text>Related pages: </xsl:text>
@@ -372,7 +371,6 @@
 	    </xsl:if>
 	    <!--// end "fixed in version x.x" section //-->
 	    <!--// end body //-->
-
 	  </xsl:with-param>
 
 	  <xsl:with-param name="navbar">
@@ -381,6 +379,9 @@
 	    </xsl:call-template>
 	  </xsl:with-param>
 
+	  <!-- TODO: do we want to make this optional? -->
+	  <xsl:with-param name="breadcrumbs" select="true()"/>
+	  <xsl:with-param name="location" select="$filename"/>
 	</xsl:call-template>
 
       </html>

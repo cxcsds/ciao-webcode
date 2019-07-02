@@ -108,8 +108,10 @@
 	<xsl:call-template name="add-body-withnavbar">
 	  <xsl:with-param name="contents" select="$contents"/>
 	  <xsl:with-param name="navbar" select="$navbar"/>
-	</xsl:call-template>
 
+	  <!-- uses default //info/breadcrumbs -->
+	  <xsl:with-param name="location" select="$filename"/>
+	</xsl:call-template>
       </html>
 
     </xsl:document>
@@ -148,10 +150,6 @@
 	</xsl:call-template>
 
 	<xsl:variable name="contents">
-	  <div class="qlinkbar">
-	    Return to: <a href=".">FAQ index</a>
-	  </div>
-
 	  <div class="mainbar">
 	    
 	    <div>
@@ -164,14 +162,13 @@
 	    
 	    <hr/>
 	  </div>
-	  
-	  <div class="qlinkbar">
-	    Return to: <a href=".">FAQ index</a>
-	  </div>
 	</xsl:variable>
 
 	<xsl:call-template name="add-body-nonavbar">
 	  <xsl:with-param name="contents" select="$contents"/>
+
+	  <!-- uses default //info/breadcrumbs -->
+	  <xsl:with-param name="location" select="$filename"/>
 	</xsl:call-template>
 
       </html>
