@@ -446,9 +446,6 @@ if (self == top) {
       </xsl:call-template>
 
       <main id="content">
-<xsl:message terminate="no">
- DBG:breadcrumbs=<xsl:value-of select="$breadcrumbs"/> location=<xsl:value-of select="$location"/>
-</xsl:message>
 	<xsl:if test="$breadcrumbs">
 	  <xsl:call-template name="add-breadcrumbs">
 	    <xsl:with-param name="location" select="$location"/>
@@ -515,9 +512,6 @@ if (self == top) {
       <xsl:call-template name="add-header"/>
 
       <main id="content">
-<xsl:message terminate="no">
- DBG:breadcrumbs=<xsl:value-of select="$breadcrumbs"/> location=<xsl:value-of select="$location"/>
-</xsl:message>
 	<xsl:if test="$breadcrumbs">
 	  <xsl:call-template name="add-breadcrumbs">
 	    <xsl:with-param name="location" select="$location"/>
