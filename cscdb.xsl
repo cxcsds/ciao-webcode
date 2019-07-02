@@ -87,13 +87,13 @@
 	      <xsl:apply-templates select="intro"/>
 		
 	      <!--// add links //-->
-	      <span class="qlinkbar">Go to:
-	      <a href="index.html">Catalog Columns Index</a> |
+	      <span class="qlinkbar">Switch to:
 	      <a>
 		<xsl:attribute name="href">
 		  <xsl:value-of select="concat($pagename,'_alpha.html')"/>
 		</xsl:attribute>
-	      Alphabetical List</a>
+	        Columns listed alphabetically
+	      </a>
 	      </span>
 	      <hr/>
 	    </xsl:if>
@@ -185,6 +185,8 @@
 	    </xsl:call-template>
 	  </xsl:with-param>
 
+	  <!-- uses default //info/breadcrumbs -->
+	  <xsl:with-param name="location" select="$filename"/>
 	</xsl:call-template>
 
       </html>
@@ -224,13 +226,13 @@
 	      <xsl:apply-templates select="intro"/>
 		  
 	      <!--// add links //-->
-	      <span class="qlinkbar">Go to:
-	      <a href="index.html">Catalog Columns Index</a> |
+	      <span class="qlinkbar">Switch to:
 	      <a>
 		<xsl:attribute name="href">
 		  <xsl:value-of select="concat($pagename,'.html')"/>
 		</xsl:attribute>
-	      Context List</a>
+		Columns listed by Context
+	      </a>
 	      </span>
 	      <hr/>
 	    </xsl:if>
@@ -269,6 +271,8 @@
 	    </xsl:call-template>
 	  </xsl:with-param>
 
+	  <!-- uses default //info/breadcrumbs -->
+	  <xsl:with-param name="location" select="$filename"/>
 	</xsl:call-template>
 
       </html>
