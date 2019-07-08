@@ -44,11 +44,9 @@
     *  . searchssi=location of file for ssi inclusion to give the search bar
     *    defaults to /incl/search.html
     *
-    *  . sitebannerssi=location of file for ssi inclusion to give a sitewide
-    *    banner (at top and bottom of each page). The file is assumed to exist
-    *    and can be empty.
-    *    defaults to banner.html and path is relative to the top-level
-    *    directory of the site.
+    *  . sitebanner=location of xinclude file for banner (optional)
+    *    The location is relative to the top-level directory for the site
+    *    and should be an xinclude-type page, if set.
     *
     *  . install=full path to directory where to install file
     *
@@ -130,7 +128,7 @@
   <xsl:param name="newsfileurl" select='""'/>
   <xsl:param name="watchouturl" select='""'/>
   <xsl:param name="searchssi"   select='"/incl/search.html"'/>
-  <xsl:param name="sitebannerssi" select='"banner.html"'/>
+  <xsl:param name="sitebanner" select='""'/>
 
   <xsl:param name="headtitlepostfix" select='""'/>
   <xsl:param name="texttitlepostfix" select='""'/>

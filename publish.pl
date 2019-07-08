@@ -258,9 +258,9 @@ my $searchssi = "/incl/search.html";
 $searchssi = get_config_type( $version_config, "searchssi", $type )
   if check_config_exists( $version_config, "searchssi" );
 
-my $sitebannerssi = "banner.html";
-$sitebannerssi = get_config_type( $version_config, "sitebannerssi", $type )
-  if check_config_exists( $version_config, "sitebannerssi" );
+my $sitebanner = "";
+$sitebanner = get_config_type( $version_config, "sitebanner", $type )
+  if check_config_exists( $version_config, "sitebanner" );
 
 # google analytics include
 #
@@ -360,7 +360,7 @@ dbg "  newsfile=$newsfile";
 dbg "  newsfileurl=$newsfileurl";
 dbg "  watchouturl=$watchouturl";
 dbg "  searchssi=$searchssi";
-dbg "  sitebannerssi=$sitebannerssi";
+dbg "  sitebanner=$sitebanner";
 dbg "  mathjaxpath=$mathjaxpath";
 dbg "  logoimage=$logoimage";
 dbg "  logotext=$logotext";
@@ -745,7 +745,7 @@ sub basic_params ($) {
 	    newsfileurl => $newsfileurl,
 	    watchouturl => $watchouturl,
 	    searchssi => $searchssi,
-	    sitebannerssi => $sitebannerssi,
+	    sitebanner => $sitebanner,
 	    googlessi => $googlessi,
 	    mathjaxpath => $mathjaxpath,
 	    headtitlepostfix => $headtitlepostfix,

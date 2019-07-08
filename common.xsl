@@ -455,7 +455,6 @@ if (self == top) {
 	<div class="wrap">
 	  <xsl:call-template name="add-sitewide-banner"/>
 	  <xsl:copy-of select="$contents"/>
-	  <xsl:call-template name="add-sitewide-banner"/>
 	</div>
 	<xsl:if test="$breadcrumbs">
 	  <xsl:call-template name="add-breadcrumbs">
@@ -523,7 +522,6 @@ if (self == top) {
 	<div class="wrap">
 	  <xsl:call-template name="add-sitewide-banner"/>
 	  <xsl:copy-of select="$contents"/>
-	  <xsl:call-template name="add-sitewide-banner"/>
 	</div>
 	<xsl:if test="$breadcrumbs">
 	  <xsl:call-template name="add-breadcrumbs">
@@ -546,19 +544,27 @@ if (self == top) {
   </xsl:template> <!--* add-body-withnavbar *-->
 
   <!--*
-      * Add the SSI to include a banner that can be inserted for the
-      * whole site (bar maybe a few specialised pages).
+      * Add the contents of the sitewide banner.
       *
-      * The location of the SSI is given by the global parameter
-      * sitebannerssi
+      * The location of the banner is given by the global parameter
+      * sitebanner, and the banner is not used if this
+      * variable is not set (i.e. is the default ""), or
+      * //info/nobanner exists.
+      *
+      * The root node should be xinclude, otherwise it is not
+      * guaranteed to be processed correctly.
       *
       *-->
   <xsl:template name="add-sitewide-banner">
-    <xsl:call-template name="add-ssi-include">
-      <xsl:with-param name="file"><xsl:call-template name="add-path">
+    <xsl:if test="$sitebanner != '' and not(boolean(//info/nobanner))">
+
+      <xsl:variable name="filename"><xsl:call-template name="add-path">
 	<xsl:with-param name="idepth" select="$depth"/>
-      </xsl:call-template><xsl:value-of select="$sitebannerssi"/></xsl:with-param>
-    </xsl:call-template>
+      </xsl:call-template><xsl:value-of select="$sitebannerssi"/></xsl:variable>
+
+      <xsl:apply-templates select="document($filename)"/>
+
+    </xsl:if>
   </xsl:template>
 
   <!--*
