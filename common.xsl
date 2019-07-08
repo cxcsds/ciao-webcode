@@ -554,17 +554,26 @@ if (self == top) {
       * The root node should be xinclude, otherwise it is not
       * guaranteed to be processed correctly.
       *
+      * TODO: does this work if we create multiple pages, at different
+      *       depths?
+      *
       *-->
   <xsl:template name="add-sitewide-banner">
     <xsl:if test="$sitebanner != '' and not(boolean(//info/nobanner))">
 
       <xsl:variable name="filename"><xsl:call-template name="add-path">
 	<xsl:with-param name="idepth" select="$depth"/>
-      </xsl:call-template><xsl:value-of select="$sitebannerssi"/></xsl:variable>
+      </xsl:call-template><xsl:value-of select="$sitebanner"/></xsl:variable>
 
-      <xsl:apply-templates select="document($filename)"/>
+      <xsl:apply-templates select="document(concat($sourcedir,$filename))"
+                           mode="include"/>
 
     </xsl:if>
+  </xsl:template>
+
+  <!-- used by add-sitesite-banner -->
+  <xsl:template match="/" mode="include">
+    <xsl:apply-templates/>
   </xsl:template>
 
   <!--*
