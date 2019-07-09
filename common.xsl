@@ -561,8 +561,14 @@ if (self == top) {
   <xsl:template name="add-sitewide-banner">
     <xsl:if test="$sitebanner != '' and not(boolean(//info/nobanner))">
 
+      <!-- hack to support ahelp files -->
+      <xsl:variable name="idepth"><xsl:choose>
+	<xsl:when test="$depth"><xsl:value-of select="$depth"/></xsl:when>
+	<xsl:otherwise>2</xsl:otherwise>
+      </xsl:choose></xsl:variable>
+
       <xsl:variable name="filename"><xsl:call-template name="add-path">
-	<xsl:with-param name="idepth" select="$depth"/>
+	<xsl:with-param name="idepth" select="$idepth"/>
       </xsl:call-template><xsl:value-of select="$sitebanner"/></xsl:variable>
 
       <xsl:apply-templates select="document(concat($sourcedir,$filename))"
@@ -571,10 +577,54 @@ if (self == top) {
     </xsl:if>
   </xsl:template>
 
-  <!-- used by add-sitesite-banner -->
+  <!-- used by add-sitewide-banner and others -->
   <xsl:template match="/" mode="include">
     <xsl:apply-templates/>
   </xsl:template>
+
+  <!-- may also be used by add-sitewide-banner-->
+  <!--*
+         * Handle XInclude files when the whole text is included, not
+	 * a fragment. The idea is that the contents are within an
+	 * xinclude tag, so we can just process the contents.
+         * -->
+  <xsl:template match="xinclude">
+    <xsl:apply-templates/>
+  </xsl:template>
+
+
+  <!--* Was in helper.xsl, but moved over for add-sitewide-banner -->
+  <!--* 
+      * recursive system to add on the correct number of '../' to the path
+      * parameter:
+      *  idepth: "depth" of path (1 means at the top level)
+      *          should be an integer >=1
+      *-->
+  <xsl:template name="add-path">
+    <xsl:param name="idepth" select="1"/>
+    <xsl:param name="path"   select="''"/>
+
+    <xsl:choose>
+      <xsl:when test="$idepth='' or $idepth&lt;1">
+	<!--* safety check *-->
+	<xsl:message terminate="yes">
+ ERROR: add-path called with idepth &lt; 1 or undefined (<xsl:value-of select="$idepth"/>)
+	</xsl:message>
+      </xsl:when>
+      <xsl:when test="$idepth=1">
+	<!--* stop recursion *-->
+	<xsl:value-of select="$path"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<!--* recurse *-->
+	<xsl:call-template name="add-path">
+	  <xsl:with-param name="idepth" select="$idepth - 1"/>
+	  <xsl:with-param name="path"   select="concat($path,'../')"/>
+	</xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template> <!--* name=add-path *-->
+
 
   <!--*
       * Add a breadcrumbs element for navigation.
@@ -607,5 +657,35 @@ if (self == top) {
   <xsl:template match="tt[count(@*)=0]">
     <span class="tt"><xsl:apply-templates/></span>
   </xsl:template>
+
+  <!--*
+      * pass-through handling, needed to support [x]include handling
+      * above
+      *-->
+  <!--*
+      * handle unknown tags
+      *  - perhaps we should exit with an error when we find an unknown tag?
+      *  - currently the metalist template requires that we copy over unknown data
+      *    any others?
+      *
+      * - this causes problems: have removed and handling meta tags
+      *   [by copying over the attributes]
+      *
+      *-->
+  <xsl:template match="@*|node()">
+    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+  </xsl:template>
+
+  <!--*
+      * explicitly ignore comments
+      * - this means that we need explicit markup for SSI's
+
+  <xsl:template match="comment()">
+   <xsl:comment><xsl:value-of select="."/></xsl:comment>
+  </xsl:template>
+
+      *-->
+  <xsl:template match="comment()"/>
+
 
 </xsl:stylesheet>
