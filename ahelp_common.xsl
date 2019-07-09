@@ -33,7 +33,18 @@
   <!--* Change this if the filename changes *-->
   <xsl:variable name="hack-import-ahelp_common" select="extfuncs:register-import-dependency('ahelp_common.xsl')"/>
 
+  <!-- since we can now include "arbitrary" XML in these pages,
+       because of the site banner, then we need to include
+       the full XSLT suite (or so it appears) -->
+
+  <!-- helper.xsl includes common.xsl -->
   <xsl:include href="common.xsl"/>
+
+<!-- too much overlap in helper; and it includes common
+  <xsl:include href="helper.xsl"/>
+-->
+  <xsl:include href="links.xsl"/>
+  <xsl:include href="myhtml.xsl"/>
 
   <!--*
       * allowed values for these parameters (if there are any)
@@ -166,19 +177,19 @@
       * handle a number of calling cases.
       * 
       *-->
-  <xsl:template name="add-highlight">
+  <xsl:template name="ahelp-add-highlight">
     <xsl:param name="contents" select="''"/>
 
     <xsl:if test="$contents = ''">
       <xsl:message terminate="yes">
- ERROR: add-highlight called with no/empty contents parameter for key=<xsl:value-of select="//ENTRY/@key"/> context=<xsl:value-of select="//ENTRY/@context"/>
+ ERROR: ahelp-add-highlight called with no/empty contents parameter for key=<xsl:value-of select="//ENTRY/@key"/> context=<xsl:value-of select="//ENTRY/@context"/>
       </xsl:message>
     </xsl:if>
 
     <!--* yay CSS (although highlight is a poor class name) *-->
     <pre class="highlight"><xsl:copy-of select="$contents"/></pre>
 
-  </xsl:template> <!--* name=add-highlight *-->
+  </xsl:template> <!--* name=ahelp-add-highlight *-->
 
   <!--*
       * add a 'title' with an associated HTML anchor. The 
@@ -277,12 +288,14 @@
     <xsl:text disable-output-escaping="yes">&lt;/pre&gt;</xsl:text>
   </xsl:template>
 
+  <!-- using myhtml version now
   <xsl:template name="add-quote">
     <xsl:text disable-output-escaping="yes">&quot;</xsl:text>
   </xsl:template>
   <xsl:template name="add-nbsp">
     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
   </xsl:template>
+  -->
   
 <!--  <xsl:template name="add-font-m1">
     <xsl:call-template name="add-start-tag"/>font size=&quot;-1&quot;<xsl:call-template name="add-end-tag"/>

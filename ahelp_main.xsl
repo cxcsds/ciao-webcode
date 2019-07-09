@@ -241,7 +241,7 @@
 	  <h2 id="syntax">Syntax</h2>
 	</xsl:if>
 
-	<xsl:call-template name="add-highlight">
+	<xsl:call-template name="ahelp-add-highlight">
 	  <xsl:with-param name="contents"><xsl:apply-templates/></xsl:with-param>
 	</xsl:call-template>
 
@@ -326,7 +326,7 @@
     <div class="ahelpsyntax">
       <h2 id="syntax">Syntax</h2>
 
-      <xsl:call-template name="add-highlight">
+      <xsl:call-template name="ahelp-add-highlight">
 	<xsl:with-param name="contents"><xsl:call-template name="normalize-line-node">
 	    <xsl:with-param name="text"><xsl:call-template name="create-syntax-from-paramlist"/></xsl:with-param>
 	  </xsl:call-template></xsl:with-param>
@@ -605,7 +605,7 @@
     </xsl:if>
 
     <div class="ahelpequation">
-      <xsl:call-template name="add-highlight">
+      <xsl:call-template name="ahelp-add-highlight">
 	<xsl:with-param name="contents" select="normalize-space(.)"/>
       </xsl:call-template>
     </div>
@@ -803,7 +803,7 @@
       *-->
   <xsl:template match="VERBATIM">
     <div class="ahelpverbatim">
-      <xsl:call-template name="add-highlight">
+      <xsl:call-template name="ahelp-add-highlight">
 	<xsl:with-param name="contents"><xsl:apply-templates/></xsl:with-param>
       </xsl:call-template>
     </div>

@@ -43,31 +43,6 @@
   <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc obsvis iris '"/>
   <xsl:variable name="allowed-download-types" select="' solaris solaris10 fc4 fc8 osx_ppc osx_intel caldb atomdb '"/>
 
-  <!--*
-      * handle unknown tags
-      *  - perhaps we should exit with an error when we find an unknown tag?
-      *  - currently the metalist template requires that we copy over unknown data
-      *    any others?
-      *
-      * - this causes problems: have removed and handling meta tags
-      *   [by copying over the attributes]
-      *
-      *-->
-  <xsl:template match="@*|node()">
-    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
-  </xsl:template>
-
-  <!--*
-      * explicitly ignore comments
-      * - this means that we need explicit markup for SSI's
-
-  <xsl:template match="comment()">
-   <xsl:comment><xsl:value-of select="."/></xsl:comment>
-  </xsl:template>
-
-      *-->
-  <xsl:template match="comment()"/>
-
   <!--* 
       * add an attribute to the current node
       *
@@ -86,37 +61,6 @@
     </xsl:call-template><xsl:value-of select="$value"/></xsl:attribute>
 
   </xsl:template> <!--* name=add-attribute *-->
-
-  <!--* 
-      * recursive system to add on the correct number of '../' to the path
-      * parameter:
-      *  idepth: "depth" of path (1 means at the top level)
-      *          should be an integer >=1
-      *-->
-  <xsl:template name="add-path">
-    <xsl:param name="idepth" select="1"/>
-    <xsl:param name="path"   select="''"/>
-
-    <xsl:choose>
-      <xsl:when test="$idepth='' or $idepth&lt;1">
-	<!--* safety check *-->
-	<xsl:message terminate="yes">
- ERROR: add-path called with idepth &lt; 1 or undefined
-	</xsl:message>
-      </xsl:when>
-      <xsl:when test="$idepth=1">
-	<!--* stop recursion *-->
-	<xsl:value-of select="$path"/>
-      </xsl:when>
-      <xsl:otherwise>
-	<!--* recurse *-->
-	<xsl:call-template name="add-path">
-	  <xsl:with-param name="idepth" select="$idepth - 1"/>
-	  <xsl:with-param name="path"   select="concat($path,'../')"/>
-	</xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template> <!--* name=add-path *-->
 
   <!--* UGLY way to add an image
       *

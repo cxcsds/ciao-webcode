@@ -305,6 +305,11 @@ my $searchssi    = get_config_type $version_config, "searchssi", $type;
 my $googlessi    = get_config_version( $version_config, "googlessi" );
 my $urlbase      = get_config_type $version_config, "outurl", $type;
 
+# site banner is optional
+my $sitebanner = "";
+$sitebanner = get_config_type( $version_config, "sitebanner", $type )
+  if check_config_exists( $version_config, "sitebanner" );
+
 my $storageloc = "";
 $storageloc = get_config_type( $version_config, "storageloc", $type )
   if check_config_exists( $version_config, "storageloc" );
@@ -337,6 +342,7 @@ my $sourcedir = cwd() . "/";
 dbg "  uname=$uname";
 dbg "  urlbase=$urlbase";
 dbg "  searchssi=$searchssi";
+dbg "  sitebanner=$sitebanner";
 dbg "  cssfile=$cssfile";
 dbg "  cssprintfile=$cssprintfile";
 dbg "  favicon=$favicon";
@@ -355,6 +361,7 @@ dbg "*** CONFIG DATA (end) ***";
    cssprintfile => $cssprintfile,
    favicon      => $favicon,
    searchssi    => $searchssi,
+   sitebanner   => $sitebanner,
    googlessi    => $googlessi,
    urlbase      => $urlbase,
    storageloc   => $storageloc,
