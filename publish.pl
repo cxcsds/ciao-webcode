@@ -262,6 +262,15 @@ my $sitebanner = "";
 $sitebanner = get_config_type( $version_config, "sitebanner", $type )
   if check_config_exists( $version_config, "sitebanner" );
 
+# If the banner is set, ensure we can find it
+#
+if ($sitebanner ne "") {
+  dbg "** checking for sitebanner=$sitebanner depth=$depth";
+  my $sitebannerfile = '../' x ($depth - 1) . $sitebanner;
+  die "ERROR: Unable to find sitebanner=$sitebannerfile\n" unless
+      -e $sitebannerfile;
+}
+
 # google analytics include
 #
 my $googlessi = "";
