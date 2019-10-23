@@ -1256,16 +1256,44 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <!--* are we in the ciao pages or not (ie is this an `external' link or not) *-->
     <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
 
+    <!--// if there is an attribute, use it 
+	   otherwise, link to the "in-site" why topic //-->
+    <xsl:variable name="hrefstart"><xsl:choose>    
+      <xsl:when test="@site = 'ciao'">/ciao/caveats/</xsl:when>
+      <xsl:when test="@site = 'csc'">/csc/caveats/</xsl:when>
+      <xsl:when test="@site = 'caldb'">/caldb/caveats/</xsl:when>
+
+
+      <!-- ciao, chips, sherpa, etc. //-->
+      <xsl:when test="($site = 'ciao') or ($site = 'csc') or ($site = 'caldb')">
+        <xsl:call-template name="add-start-of-href">
+	  <xsl:with-param name="extlink" select="$extlink"/>
+	  <xsl:with-param name="dirname" select="'caveats/'"/>
+	</xsl:call-template>
+      </xsl:when>
+
+      <xsl:otherwise>
+        <xsl:call-template name="add-start-of-href">
+	    <xsl:with-param name="extlink" select="0"/>
+	  <xsl:with-param name="dirname" select="'caveats/'"/>
+	</xsl:call-template>
+      </xsl:otherwise>
+      </xsl:choose></xsl:variable>
+
+
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
 	<!--* link to caveat *-->
 	<a>
 	  <xsl:attribute name="href">
+	    <!--//
 	    <xsl:call-template name="add-start-of-href">
 	      <xsl:with-param name="extlink" select="$extlink"/>
 	      <xsl:with-param name="dirname" select="'caveats/'"/>
 	    </xsl:call-template>
+	    //-->
+	    <xsl:value-of select="$hrefstart"/>
 	    <xsl:call-template name="sort-out-anchor"/>
 	  </xsl:attribute>
 	  <xsl:apply-templates/>
