@@ -24,6 +24,9 @@
 #  files it thinks are valid - both XML and XML - and then asks you
 #  whether it should process them all.
 #
+#  If it finds a directory that contains the file DO_NOT_PUBLISH then
+#  it automically excludes this directory (and any sub-directories).
+#
 # Options:
 #    --config - used to find perl executable and passed through to publish.pl
 #    --type, --force and --forceforce are passed through to the publish script
@@ -107,6 +110,8 @@ my @prefixes =
    "/data/da/Docs/ciaoweb/ciao411",
    "/data/da/Docs/sherpaweb/ciao411",
    "/data/da/Docs/chipsweb/ciao411",
+   "/data/da/Docs/ciaoweb/ciao412",
+   "/data/da/Docs/sherpaweb/ciao412",
 
    "/data/da/Docs/icxcweb/sds",
 
@@ -141,6 +146,14 @@ die $usage unless
     'localxslt!' => \$localxslt,
     'ignore-missing!' => \$ignoremissinglink,
     'verbose!' => \$verbose;
+
+# check no "sentinel" file indicating this is a not-to-be-published
+# directory
+#
+
+my $sentinel = "DO_NOT_PUBLISH";
+die "The file $sentinel is found in this directory. Publishing is forbidden!\n"
+    if -e $sentinel;
 
 $force = 1 if $forceforce;
 
@@ -231,6 +244,7 @@ $pipe->reader( qw( find . \( -name RCS -o -name SCCS \) -prune -o -print ) );
 
 my %files;
 my %images;
+my %do_not_publish_dirs;
 my $threadindex;
 my $nrej = 0;
 my $nuserrej = 0;
@@ -254,6 +268,43 @@ while ( <$pipe> ) {
     my $fname = pop @dirs;
     my $dname = $dirs[-1];
     my $path  = join "/", @dirs;
+
+    # Reject if this directory contains the sentinel file.
+    #
+    $nrej++, next if exists $do_not_publish_dirs{$path};
+    if (-e "${path}/${sentinel}") {
+	$nrej++;
+	$do_not_publish_dirs{$path} = 1;
+	next;
+    }
+
+    # Check we are not a child of a do-not-publish directory.
+    # I am not sure how we are recursing through the directories,
+    # so can we guarantee that we have processed the parent
+    # first? There are more elegant ways of doing this.
+    #
+    my $end = scalar(@dirs);
+    my $start = scalar(split "/", $prefix);
+ 
+    my $fail = 0;
+    for (my $i = $start - 1; $i < $end; $i++) {
+	my $checkpath = join "/", @dirs[0 .. $i];
+	if (exists $do_not_publish_dirs{$checkpath}) {
+	    print "dbg - skipping $name as $checkpath in excluded directory\n";
+	    $fail = 1;
+	    last;
+	}
+	if ( -e $checkpath . "/" . $sentinel ) {
+	    $do_not_publish_dirs{$checkpath} = 1;
+	    $fail = 1;
+	    last;
+	}
+    }
+
+    if ($fail == 1) {
+	$nrej++;
+	next;
+    }
 
     # user reject; unfortunately this does not work to exclude
     # sub-directories of the excluded directory.
@@ -308,7 +359,7 @@ while ( <$pipe> ) {
     # we reject the download/doc/dmodel directory/contents
     $nrej++, next if $path =~ /download\/doc\/dmodel($|\/)/;
 
-    # last check - is it checked out for editing?
+    # now check - is it checked out for editing?
     # Not 100% convinced about the RCS check
     #
     if ( -e "$path/SCCS/p.$fname" ) {

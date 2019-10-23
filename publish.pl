@@ -66,6 +66,11 @@
 #   in the config file, as are the actual stylesheets needed,
 #   unless the --localxslt flag is used to override this.
 #
+# Notes:
+#   This will refuse to publish anything, no matter how many force
+#   statements you use, in a directory containing the file
+#   DO_NOT_PUBLISH.
+#
 # Author:
 #  Doug Burke (dburke@cfa.harvard.edu)
 #
@@ -139,6 +144,12 @@ page b needs info from page a. This is experimental and should be
 carefully, and rarely, used. One consequence is that the output may
 contain place-holder text.
 
+If the directory contains the file DO_NOT_PUBLISH then the script
+will error out, no matter the number of force options used. This is
+to support data directories that contain data used to generate
+files used in the publishing code, but that themselves should not be
+published.
+
 EOD
 
 # this will be mangled later
@@ -159,6 +170,21 @@ die $usage unless
   'localxslt!' => \$localxslt,
   'ignore-missing!' => \$ignoremissinglink,
   'verbose!' => \$verbose;
+
+# check no "sentinel" file indicating this is a not-to-be-published
+# directory; also check up the parent chain (unfortunately no easy
+# way to know when to stop for now, so just assume we have stuff in
+# /data/da/Docs/blah/blah-with-version/ as the base).
+#
+
+my $sentinel = "DO_NOT_PUBLISH";
+
+my @dtoks = split "/", $dname;
+for (my $i = $#dtoks; $i >= 5; $i--) {
+    my $filename = (join "/", @dtoks[0 .. $i]) . "/" . $sentinel;
+    die "Sentinel file $filename was found. Publishing is forbidden!\n"
+        if -e $filename;
+}
 
 $force = 1 if $forceforce;
 
