@@ -185,7 +185,6 @@ for (my $i = $#dtoks; $i >= 5; $i--) {
     die "Sentinel file $filename was found. Publishing is forbidden!\n"
         if -e $filename;
 }
-die;
 
 $force = 1 if $forceforce;
 
