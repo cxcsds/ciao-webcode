@@ -76,8 +76,7 @@
       <xsl:call-template name="add-logo-section"/>
 
       <xsl:if test="boolean(//links) and $site='csc'">
-
-        <xsl:apply-templates select="//links" mode="create"/>
+        <xsl:apply-templates select="//links" mode="create-csc-top"/>
       </xsl:if>
 
       <!--*
@@ -116,7 +115,14 @@
 	  <hr/>
 	</xsl:if>
 
-        <xsl:apply-templates select="//links" mode="create"/>
+	<xsl:choose>
+	  <xsl:when test="$site='csc'">
+            <xsl:apply-templates select="//links" mode="create-csc-bottom"/>
+	  </xsl:when>
+	  <xsl:otherwise>
+            <xsl:apply-templates select="//links" mode="create"/>
+	  </xsl:otherwise>
+	</xsl:choose>
       </xsl:if>
 
       <xsl:if test="($site='ciao' or $site='chips' or $site='sherpa' or $site='caldb' or $site='csc') and count(//news/item)!=0">
@@ -299,6 +305,8 @@
   <!--* 
       * create the links section 
       * - have a mode of create to replicate "news" template for CIAO pages
+      *
+      * see also the create-csc-top/bottom versions
       *-->
   <xsl:template match="links" mode="create">
 
@@ -311,6 +319,46 @@
   </xsl:template> <!--* match=links mode=create *-->
 
 
+  <!--*
+      * CSC adds these at top and bottom, but now DJB wants to
+      * be "tricky" and add different style names to top and
+      * bottom if the sticky attribute is set.
+      *
+      * This is rather hacky
+      *-->
+  <xsl:template match="links[@sticky]" mode="create-csc-top">
+    <div class="navbar-sticky">
+      <xsl:apply-templates/>
+    </div>
+
+    <xsl:if test="position() != last()">
+      <hr/>
+    </xsl:if>
+  </xsl:template> <!--* match=links mode=create-csc-top *-->
+
+  <xsl:template match="links" mode="create-csc-top">
+    <xsl:apply-templates/>
+    <xsl:if test="position() != last()">
+      <hr/>
+    </xsl:if>
+  </xsl:template> <!--* match=links mode=create-csc-top *-->
+
+  <xsl:template match="links[@sticky]" mode="create-csc-bottom">
+    <div class="navbar-not-sticky">
+      <xsl:apply-templates/>
+    </div>
+
+    <xsl:if test="position() != last()">
+      <hr/>
+    </xsl:if>
+  </xsl:template> <!--* match=links mode=create-csc-bottom *-->
+
+  <xsl:template match="links" mode="create-csc-bottom">
+    <xsl:apply-templates/>
+    <xsl:if test="position() != last()">
+      <hr/>
+    </xsl:if>
+  </xsl:template> <!--* match=links mode=create-csc-bottom *-->
 
   <!--*
       * we use a mode to disambiguate ourselves from the
