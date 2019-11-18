@@ -125,7 +125,6 @@
 	<xsl:when test="$site = 'sherpa'">The Sherpa package for fitting and modeling data (part of CIAO).</xsl:when>
 	<xsl:when test="$site = 'chips'">The ChIPS package for plotting and imaging data (part of CIAO).</xsl:when>
 	<xsl:when test="$site = 'csc'">The Chandra Source Catalog</xsl:when>
-	<xsl:when test="$site = 'pog'">Help for writing proposals for the Chandra X-ray telescope.</xsl:when>
 	
 	<xsl:when test="$site = 'iris'">IRIS - the VAO Spectral Energy Distribution Analysis Tool</xsl:when>
 	
