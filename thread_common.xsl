@@ -42,12 +42,6 @@
 	<xsl:call-template name="add-thread-qlinks-basic"/>
       </xsl:when>
 
-      <xsl:when test="$site = 'pog'">
-	<xsl:call-template name="add-thread-qlinks-basic">
-	  <xsl:with-param name="text" select="'Proposer Threads Page'"/>
-	</xsl:call-template>
-      </xsl:when>
-
       <xsl:when test="$site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'csc' or $site = 'iris'">
 	<xsl:call-template name="add-thread-qlinks"/>
       </xsl:when>
@@ -72,12 +66,6 @@
     <xsl:choose>
       <xsl:when test="$site = 'chart'">
 	<xsl:call-template name="add-thread-qlinks-basic"/>
-      </xsl:when>
-
-      <xsl:when test="$site = 'pog'">
-	<xsl:call-template name="add-thread-qlinks-basic">
-	  <xsl:with-param name="text" select="'Proposer Threads Page'"/>
-	</xsl:call-template>
       </xsl:when>
 
       <xsl:when test="$site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'csc' or $site = 'iris'">
@@ -337,10 +325,8 @@
 	  </xsl:apply-templates>
 	</xsl:if>
 
-    <xsl:if test="$site != 'pog'">	      
 	<!--* History *-->
 	<li><strong><a href="index.html#history">History</a></strong></li>
- 	</xsl:if>
 
 	<!--* Images (if any) *-->
 	<xsl:if test="boolean(images)">
@@ -379,10 +365,8 @@
 	<xsl:apply-templates select="parameters"/>
       </xsl:when>
       <xsl:otherwise>
-	<xsl:if test="$site != 'pog'">
-	  <!--* to separate out the text from the history *-->
-	  <xsl:call-template name="add-hr-strong"/>
-	</xsl:if>
+	<!--* to separate out the text from the history *-->
+	<xsl:call-template name="add-hr-strong"/>
       </xsl:otherwise>
     </xsl:choose>
 
@@ -886,7 +870,6 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
       <div class="printmedia">
 	<img class="cxclogo" alt="[CXC Logo]">
 	  <xsl:attribute name="src"><xsl:choose>
-	    <xsl:when test="$site = 'pog'">../cxc-logo.gif</xsl:when>
 	    <xsl:when test="$site = 'ciao'">../../imgs/cxc-logo.gif</xsl:when>
 	    <xsl:otherwise>/ciao/imgs/cxc-logo.gif</xsl:otherwise>
 	  </xsl:choose></xsl:attribute>
@@ -899,7 +882,6 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
 	<xsl:when test="$site = 'sherpa'">Sherpa Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
 	<xsl:when test="$site = 'csc'">CSC Threads</xsl:when>
 	<xsl:when test="$site = 'iris'">Iris Threads</xsl:when>
-	<xsl:when test="$site = 'pog'">Proposer Threads (<xsl:value-of select="$siteversion"/>)</xsl:when>
       </xsl:choose></p>
 	  
     </div>
@@ -947,7 +929,6 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
       <xsl:when test="$site = 'sherpa'">Sherpa</xsl:when>
       <xsl:when test="$site = 'chart'">ChaRT</xsl:when>
       <xsl:when test="$site = 'csc'">CSC</xsl:when>
-      <xsl:when test="$site = 'pog'">POG</xsl:when>
       <xsl:otherwise>
 	<xsl:message terminate="yes">
  Internal error: djb:get-sitename-string() unable to deal with site=<xsl:value-of select="$site"/>
@@ -1003,9 +984,7 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
 	  <xsl:call-template name="add-parameters"/>
 
 	  <!-- History -->
-	  <xsl:if test="$site != 'pog'">
-	    <xsl:apply-templates select="info/history"/>
-	  </xsl:if>
+	  <xsl:apply-templates select="info/history"/>
 
 	  <!--* set up the trailing links to threads/harcdopy *-->
 	  <xsl:call-template name="add-hr-strong"/>

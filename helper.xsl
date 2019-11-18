@@ -40,7 +40,7 @@
       * the spaces around each root name are important for the simple checking we do
       * - should these be node sets rather than strings?
       *-->
-  <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb pog icxc csc obsvis iris '"/>
+  <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb icxc csc obsvis iris '"/>
   <xsl:variable name="allowed-download-types" select="' solaris solaris10 fc4 fc8 osx_ppc osx_intel caldb atomdb '"/>
 
   <!--* 
