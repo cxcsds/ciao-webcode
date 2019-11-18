@@ -1350,22 +1350,8 @@ sub xml2html_thread ($) {
     my $threadname = $$opts{dirname};
     my $site   = $$opts{site};
 
-    # $store only relevant for non POG sites
-    # - well, I'd like that to be the case but for now (AO5 release, Dec 2002)
-    #   I am going to re-introduce the storage directory for the pog
-    #   just to get things working (otherwise we'd need to check what
-    #   stylesheets want threadDir
-    #
     my $store = "";
     my $threadDir = "";
-#    if ( $site ne "pog" ) {
-#	$store = $$opts{store};
-#	$store .= "/" unless $store =~ /\/$/; # make sure we have a trailing '/'
-#
-#	# do we really need both $store and $threadDir?
-#	$threadDir = $store;
-#	$threadDir =~ s/\/[^\/]+\/$/\//;
-#    }
 
     $store = $$opts{store};
     $store .= "/" unless $store =~ /\/$/; # make sure we have a trailing '/'
