@@ -20,7 +20,7 @@
 #   pages.
 #
 #   It should *only* be run from the CIAO site - ie not the Sherpa
-#   or ChIPS sites.
+#   site.
 #
 # Creates:
 #   Files in the storage location given in the config file
@@ -824,7 +824,7 @@ sub print_list_to_index ($$$) {
 # $id = mangle( $key, $context )
 #
 # since we need to be able to reference a help file via
-# key AND context (ie print/slang and print/chips)
+# key AND context (ie print/slang)
 # we need to mangle the key & context to provide a
 # unique identifier.
 # Both the key and the context are converted to lower-case
@@ -1046,7 +1046,7 @@ sub print_ahelplist_to_xmlindex ($$) {
 		       "paramlist", "filename"
 		     );
 
-    # what site are we: ciao, chips, or sherpa
+    # what site are we: ciao or sherpa
     #
     my $ahelp_site = find_ahelp_site $key, $pkg;
 

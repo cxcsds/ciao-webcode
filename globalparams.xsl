@@ -23,7 +23,7 @@
     *  . lastmodiso=string to use to say when page was last modified
     *               in format YYYY-MM-DD
     *
-    *  . site=one of: ciao chart chips sherpa icxc
+    *  . site=one of: ciao chart sherpa icxc
     *    tells the stylesheet what site we are working with
     *
     *  . ahelpindex=full path to ahelp index file created by mk_ahelp_setup.pl

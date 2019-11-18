@@ -42,7 +42,7 @@
 	<xsl:call-template name="add-thread-qlinks-basic"/>
       </xsl:when>
 
-      <xsl:when test="$site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'csc' or $site = 'iris'">
+      <xsl:when test="$site = 'ciao' or $site = 'sherpa' or $site = 'csc' or $site = 'iris'">
 	<xsl:call-template name="add-thread-qlinks"/>
       </xsl:when>
 
@@ -68,7 +68,7 @@
 	<xsl:call-template name="add-thread-qlinks-basic"/>
       </xsl:when>
 
-      <xsl:when test="$site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'csc' or $site = 'iris'">
+      <xsl:when test="$site = 'ciao' or $site = 'sherpa' or $site = 'csc' or $site = 'iris'">
 	<xsl:call-template name="add-thread-qlinks"/>
       </xsl:when>
 
@@ -878,7 +878,6 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
 
       <p><xsl:choose>
 	<xsl:when test="$site = 'ciao'">CIAO <xsl:value-of select="$siteversion"/> Science Threads</xsl:when>
-	<xsl:when test="$site = 'chips'">ChIPS Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
 	<xsl:when test="$site = 'sherpa'">Sherpa Threads (<xsl:value-of select="$headtitlepostfix"/>)</xsl:when>
 	<xsl:when test="$site = 'csc'">CSC Threads</xsl:when>
 	<xsl:when test="$site = 'iris'">Iris Threads</xsl:when>
@@ -925,7 +924,6 @@ ERROR: there is no paramfile entry with a name of '<xsl:value-of select="$name"/
   <func:function name="djb:get-sitename-string">
     <func:result><xsl:choose>
       <xsl:when test="$site = 'ciao'">CIAO</xsl:when>
-      <xsl:when test="$site = 'chips'">ChIPS</xsl:when>
       <xsl:when test="$site = 'sherpa'">Sherpa</xsl:when>
       <xsl:when test="$site = 'chart'">ChaRT</xsl:when>
       <xsl:when test="$site = 'csc'">CSC</xsl:when>

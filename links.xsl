@@ -79,7 +79,7 @@
   <!--*
       * Link to the ahelp index page. If the site attribute is given
       * then link to that site's index page, otherwise use the local
-      * index if in chips or sherpa sites, otherwise fall back to the
+      * index if in the sherpa site, otherwise fall back to the
       * CIAO site ahelp index.
       *
       * The only attributes it uses are the "style" attributes
@@ -95,8 +95,7 @@
       *     the anchor on the page to link to
       *
       *   @site - optional, string
-      *     the site for the index page (should be "ciao", "sherpa", or
-      *     "chips")
+      *     the site for the index page (should be "ciao" or "sherpa")
       *
       *-->
   <xsl:template match="ahelppage">
@@ -129,13 +128,13 @@
         * complicated mess to work out where to link to
         * copied from FAQ section of XSL
         * - if have a site attribute, then use that
-	* - otherwise if site is not ciao, sherpa, or chips then assume ciao
+	* - otherwise if site is not ciao or sherpa, then assume ciao
         * - otherwise assume the current site
         *
         *-->
     <xsl:variable name="hrefstart"><xsl:choose>
 	<xsl:when test="boolean(@site)"><xsl:value-of select="concat('/',@site,'/ahelp/')"/></xsl:when>
-	<xsl:when test="$site != 'ciao' and $site != 'chips' and $site != 'sherpa' and $site != 'ciaobeta' and $site != 'chipsbeta' and $site != 'sherpabeta'">/ciao/ahelp/</xsl:when>
+	<xsl:when test="$site != 'ciao' and $site != 'sherpa' and $site != 'ciaobeta' and $site != 'sherpabeta'">/ciao/ahelp/</xsl:when>
 	<xsl:otherwise><xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="0"/>
 	    <xsl:with-param name="dirname" select="'ahelp/'"/>
@@ -181,17 +180,16 @@
   <xsl:template name="process-site-name-for-text">
     <xsl:variable name="out"><xsl:choose>
       <xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
-      <xsl:when test="$site != 'ciao' and $site != 'chips' and $site != 'sherpa'">CIAO</xsl:when>
+      <xsl:when test="$site != 'ciao' and $site != 'sherpa'">CIAO</xsl:when>
       <xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
     <xsl:variable name="outlc" select="translate($out,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
     <xsl:choose>
       <xsl:when test="$outlc = 'ciao' or $outlc = 'ciaobeta'">CIAO</xsl:when>
       <xsl:when test="$outlc = 'sherpa' or $outlc = 'sherpabeta'">Sherpa</xsl:when>
-      <xsl:when test="$outlc = 'chips' or $outlc = 'chipsbeta'">ChIPS</xsl:when>
       <xsl:otherwise>
 	<xsl:message terminate="yes">
- Expected site=ciao, sherpa, or chips but sent '<xsl:value-of select="$outlc"/>'
+ Expected site=ciao or sherpa but sent '<xsl:value-of select="$outlc"/>'
 	</xsl:message>
       </xsl:otherwise>
     </xsl:choose>
@@ -622,7 +620,6 @@
       * If no site attribute is given
       *   a faq link in the ciao   pages links to the CIAO faq
       *   a faq link in the sherpa pages links to the Sherpa faq
-      *   a faq link in the chips  pages links to the ChIPS faq
       *   a faq link in the csc    pages links to the CSC faq
       *   a faq link elsewhere assumes the CIAO faq
       *
@@ -663,14 +660,14 @@
     <!--*
         * complicated mess to work out where to link to
         * - if have a site attribute then use that
-        * - otherwise if site=ciao, sherpa, chips, or CSC use that
+        * - otherwise if site=ciao, sherpa, or CSC use that
         * - otherwise assume the CIAO site
         * 
         *-->
     <xsl:variable name="sitevalue"><xsl:choose>
 	<xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
 	<!-- TODO: just check whether there is a faq for this site rather than this complicated check -->
-	<xsl:when test="$site != 'ciao' and $site != 'sherpa' and $site != 'chips' and $site != 'csc'">ciao</xsl:when>
+	<xsl:when test="$site != 'ciao' and $site != 'sherpa' and $site != 'csc'">ciao</xsl:when>
 	<xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
 
@@ -722,7 +719,6 @@
 	  <xsl:value-of select="concat('FAQ: ', $titlestr)"/>
 	</xsl:when>
 	<xsl:otherwise><xsl:choose>
-	    <xsl:when test="$sitevalue = 'chips'">ChIPS Frequently Asked Questions</xsl:when>
 	    <xsl:when test="$sitevalue = 'sherpa'">Sherpa Frequently Asked Questions</xsl:when>
 	    <xsl:when test="boolean(@site)">Frequently Asked Questions</xsl:when>
 	    <xsl:otherwise>CIAO Frequently Asked Questions</xsl:otherwise>
@@ -817,7 +813,7 @@
       *
       * CIAO dictionary has one page per term, CSC dictionary has a single page.
       *
-      * ChIPS, Sherpa, and ChaRT: use the CIAO dictionary.
+      * Sherpa, and ChaRT: use the CIAO dictionary.
       *-->
   
   <xsl:template match="dictionary">
@@ -849,7 +845,7 @@
     <xsl:variable name="sitevalue"><xsl:choose>
 	<xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
 	<!-- TODO: just check whether there is a dictionary for this site rather than this complicated check -->
-	<xsl:when test="$site = 'chips' or $site='sherpa' or $site='chart' or $site='caldb'">ciao</xsl:when>
+	<xsl:when test="$site='sherpa' or $site='chart' or $site='caldb'">ciao</xsl:when>
 	<xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
 
@@ -994,7 +990,7 @@
       *
       * NOTE: there is no default text for the link - you must supply it
       *
-      * the name of the manual (chips, detect, sherpa) is given in the
+      * the name of the manual (detect, sherpa) is given in the
       * name attribute.
       * the page attribute gives the name of the page (sans trailing .html)
       * to link to (if not the main page) *** EXPERIMENTAL ***
@@ -1033,11 +1029,14 @@
 	  </xsl:choose>documents/manuals/html/</xsl:when>
 
 	<xsl:when test="@name='chips'">
+	  <xsl:message terminate="yes">ChIPS manual is no-longer supported - see Doug</xsl:message>
+	  <!--
 	  <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
 	  <xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="$extlink"/>
 	    <xsl:with-param name="dirname">download/doc/chips_manual/</xsl:with-param>
 	  </xsl:call-template>
+	  -->
 	</xsl:when> <!--// end chips //-->
 
 	<xsl:when test="@name='detect'">
@@ -1198,7 +1197,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
         *-->
     <xsl:variable name="hrefstart"><xsl:choose>
 	<xsl:when test="boolean(@site)"><xsl:value-of select="concat('/',@site,'/bugs/')"/></xsl:when>
-	<xsl:when test="$site != 'ciao' and $site != 'sherpa' and $site != chips">/ciao/bugs/</xsl:when>
+	<xsl:when test="$site != 'ciao' and $site != 'sherpa'">/ciao/bugs/</xsl:when>
 	<xsl:otherwise><xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="0"/>
 	    <xsl:with-param name="dirname" select="'bugs/'"/>
@@ -1264,7 +1263,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:when test="@site = 'caldb'">/caldb/caveats/</xsl:when>
 
 
-      <!-- ciao, chips, sherpa, etc. //-->
+      <!-- ciao, sherpa, etc. //-->
       <xsl:when test="($site = 'ciao') or ($site = 'csc') or ($site = 'caldb')">
         <xsl:call-template name="add-start-of-href">
 	  <xsl:with-param name="extlink" select="$extlink"/>
@@ -1393,7 +1392,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</xsl:call-template>
       </xsl:when>
 
-      <!-- ciao, chips, sherpa, etc. //-->
+      <!-- ciao, sherpa, etc. //-->
       <xsl:otherwise>
         <xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="$extlink"/>
@@ -1460,7 +1459,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <xsl:variable name="hrefstart"><xsl:choose>    
       <xsl:when test="@site = 'ciao'">/ciao/gallery/</xsl:when>
       <xsl:when test="@site = 'sherpa'">/sherpa/gallery/</xsl:when>
-      <xsl:when test="@site = 'chips'">/chips/gallery/</xsl:when>
 
       <xsl:when test="$site = 'csc'">
         <xsl:call-template name="add-start-of-href">
@@ -1469,7 +1467,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</xsl:call-template>
       </xsl:when>
 
-      <!-- ciao, chips, sherpa, etc. //-->
+      <!-- ciao, sherpa, etc. //-->
       <xsl:otherwise>
         <xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="$extlink"/>
@@ -1490,10 +1488,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
 	    <xsl:when test="($site != 'csc') or (@site = 'sherpa')">
  	      <xsl:attribute name="title">Gallery of Sherpa Examples</xsl:attribute>
-	    </xsl:when>
-
-	    <xsl:when test="($site != 'csc') or (@site = 'chips')">
- 	      <xsl:attribute name="title">Gallery of ChIPS Examples</xsl:attribute>
 	    </xsl:when>
 
 	    <xsl:when test="($site = 'csc') or (@site = 'csc')">

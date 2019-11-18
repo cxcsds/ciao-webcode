@@ -40,7 +40,7 @@
       * the spaces around each root name are important for the simple checking we do
       * - should these be node sets rather than strings?
       *-->
-  <xsl:variable name="allowed-sites" select="' ciao sherpa chips chart caldb icxc csc obsvis iris '"/>
+  <xsl:variable name="allowed-sites" select="' ciao sherpa chart caldb icxc csc obsvis iris '"/>
   <xsl:variable name="allowed-download-types" select="' solaris solaris10 fc4 fc8 osx_ppc osx_intel caldb atomdb '"/>
 
   <!--* 
@@ -593,11 +593,11 @@
 
   <xsl:template name="add-whatsnew-link">
 
-    <xsl:if test="$site != 'ciao' and $site != 'sherpa' and $site != 'chips'">
+    <xsl:if test="$site != 'ciao' and $site != 'sherpa'">
       <xsl:message terminate="yes">
 
   ERROR: at the moment the whatsnew tag/link is only available
-    to site=ciao, chips, or sherpa, not site=<xsl:value-of select="$site"/>
+    to site=ciao or sherpa, not site=<xsl:value-of select="$site"/>
 
       </xsl:message>
     </xsl:if>
@@ -624,7 +624,7 @@
       <span class="pheader">
 
       <!--// split so that title text is accurate for Sherpa //-->
-      <xsl:if test="$site = 'ciao' or $site = 'chips'">
+      <xsl:if test="$site = 'ciao'">
 	<a title="What's new for CIAO &amp; users of CIAO" href="{$newsfileurl}">WHAT'S NEW</a>
 	<xsl:if test="$watchouturl != ''">
 	  <xsl:text> | </xsl:text>

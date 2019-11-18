@@ -125,7 +125,7 @@
 	</xsl:choose>
       </xsl:if>
 
-      <xsl:if test="($site='ciao' or $site='chips' or $site='sherpa' or $site='caldb' or $site='csc') and count(//news/item)!=0">
+      <xsl:if test="($site='ciao' or $site='sherpa' or $site='caldb' or $site='csc') and count(//news/item)!=0">
 	<xsl:apply-templates select="//news" mode="create"/>
       </xsl:if>
 	
