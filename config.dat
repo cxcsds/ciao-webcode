@@ -90,7 +90,7 @@ version_string=4.11
 %favicon=trial /ciao/favicon.ico
 
 # location of the news file for the "What's new" link
-%newsfile=live /proj/web-cxc-dmz/htdocs/ciao4.11/news.html
+%newsfile=live /proj/web-cxc/htdocs/ciao4.11/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/ciao4.11/news.html
 %newsfile=trial /proj/web-cxc-dmz-test/htdocs/ciao/news.html
 
@@ -135,12 +135,12 @@ logourl=/ciao4.11/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
 # what's the location for the output files?
-%outdir=live /proj/web-cxc-dmz/htdocs/ciao4.11/
+%outdir=live /proj/web-cxc/htdocs/ciao4.11/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/ciao4.11/
 %outdir=trial /proj/web-cxc-dmz-test/htdocs/ciao/
 
 # live outurl is unversioned for use in canonical header link
-%outurl=live http://cxc.harvard.edu/ciao/
+%outurl=live https://cxc.cfa.harvard.edu/ciao/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/ciao4.11/
 %outurl=trial https://cxc-dmz-test.cfa.harvard.edu/ciao/
 
@@ -335,12 +335,12 @@ googlessi=/chart/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/chart/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/chart/
+%outdir=live /proj/web-cxc/htdocs/chart/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chart/
 #%outdir=trial /proj/web-icxc/htdocs/chart/
 %outdir=trial /proj/web-cxc-dmz-test/htdocs/chart/
 
-%outurl=live http://cxc.harvard.edu/chart/
+%outurl=live https://cxc.cfa.harvard.edu/chart/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/chart/
 #%outurl=trial http://icxc.harvard.edu/sds/chart/
 %outurl=trial https://cxc-dmz-test.cfa.harvard.edu/chart/
@@ -405,7 +405,7 @@ version_string=4.11
 %favicon=trial /ciao/favicon.ico
 
 # location of the news file for the "What's new" link
-%newsfile=live /proj/web-cxc-dmz/htdocs/sherpa4.11/news.html
+%newsfile=live /proj/web-cxc/htdocs/sherpa4.11/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.11/news.html
 %newsfile=trial /proj/web-cxc-dmz-test/htdocs/sherpa/news.html
 
@@ -444,12 +444,12 @@ googlessi=/sherpa4.11/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/ciao411/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/sherpa4.11/
+%outdir=live /proj/web-cxc/htdocs/sherpa4.11/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.11/
 %outdir=trial /proj/web-cxc-dmz-test/htdocs/sherpa/
 
 # live outurl is unversioned for use in canonical header link
-%outurl=live http://cxc.harvard.edu/sherpa/
+%outurl=live https://cxc.cfa.harvard.edu/sherpa/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/sherpa4.11/
 %outurl=trial https://cxc-dmz-test.cfa.harvard.edu/sherpa/
 
@@ -523,7 +523,7 @@ imglinkiconheight=16
 %favicon=test /ciao4.11/favicon.ico
 %favicon=trial /ciao/favicon.ico
 
-%newsfile=live /proj/web-cxc-dmz/htdocs/ciao4.11/news.html
+%newsfile=live /proj/web-cxc/htdocs/ciao4.11/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/ciao4.11/news.html
 %newsfile=trial /proj/web-cxc-dmz-test/htdocs/ciao/news.html
 
@@ -561,12 +561,12 @@ googlessi=/chips4.11/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/ciao411/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/chips4.11/
+%outdir=live /proj/web-cxc/htdocs/chips4.11/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/chips4.11/
 %outdir=trial /proj/web-cxc-dmz-test/htdocs/chips/
 
 # live outurl is unversioned for use in canonical header link
-%outurl=live http://cxc.harvard.edu/chips/
+%outurl=live https://cxc.cfa.harvard.edu/chips/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/chips4.11/
 %outurl=trial https://cxc-dmz-test.cfa.harvard.edu/chips/
 
@@ -641,7 +641,7 @@ headtitlepostfix=CALDB 4
 %favicon=test /ciao/favicon.ico
 %favicon=trial /ciao/favicon.ico
 
-%newsfile=live /proj/web-cxc-dmz/htdocs/caldb4/news.html
+%newsfile=live /proj/web-cxc/htdocs/caldb4/news.html
 %newsfile=test /proj/web-cxc-dmz-prev/htdocs/caldb4/news.html
 %newsfile=trial /proj/web-cxc-dmz-test/htdocs/caldb4/news.html
 
@@ -669,12 +669,12 @@ headtitlepostfix=CALDB 4
 # but not the test one (since I only realised I needed a
 # 'versioned' name here after testing had begun)
 #
-%outdir=live /proj/web-cxc-dmz/htdocs/caldb4/
+%outdir=live /proj/web-cxc/htdocs/caldb4/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/caldb4/
 %outdir=trial /proj/web-cxc-dmz-test/htdocs/caldb4/
 
 # live outurl is unversioned for use in canonical header link
-%outurl=live http://cxc.harvard.edu/caldb/
+%outurl=live https://cxc.cfa.harvard.edu/caldb/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/caldb4/
 %outurl=trial https://cxc-dmz-test.cfa.harvard.edu/caldb4/
 
@@ -781,12 +781,12 @@ googlessi=/csc1/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/ciao411/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/csc1/
+%outdir=live /proj/web-cxc/htdocs/csc1/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/csc1/
 %outdir=trial /proj/web-cxc-dmz-test/htdocs/csc/
 
 # live outurl is unversioned for use in canonical header link
-%outurl=live http://cxc.harvard.edu/csc/
+%outurl=live https://cxc.cfa.harvard.edu/csc/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/csc1/
 %outurl=trial https://cxc-dmz-test.cfa.harvard.edu/csc/
 
@@ -868,12 +868,12 @@ googlessi=/csc2/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/ciao411/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/csc2/
+%outdir=live /proj/web-cxc/htdocs/csc2/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/csc2/
 %outdir=trial /proj/web-cxc-dmz-test/htdocs/csc/
 
 # live outurl is unversioned for use in canonical header link
-%outurl=live http://cxc.harvard.edu/csc/
+%outurl=live https://cxc.cfa.harvard.edu/csc/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/csc2/
 %outurl=trial https://cxc-dmz-test.cfa.harvard.edu/csc/
 
@@ -964,12 +964,12 @@ googlessi=/iris/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/ciao43/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/iris/
+%outdir=live /proj/web-cxc/htdocs/iris/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/iris/
 #%outdir=trial /proj/web-icxc/htdocs/site_iris/
 %outdir=trial /proj/web-icxc-test/htdocs/site_iris/
 
-%outurl=live http://cxc.harvard.edu/iris/
+%outurl=live https://cxc.cfa.harvard.edu/iris/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/iris/
 #%outurl=trial http://icxc.harvard.edu/sds/site_iris/
 %outurl=trial https://cxc-dmz-test.cfa.harvard.edu/site_iris/
@@ -1055,11 +1055,11 @@ googlessi=/obsvis/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/ciao411/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/obsvis/
+%outdir=live /proj/web-cxc/htdocs/obsvis/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/obsvis/
 %outdir=trial /proj/web-cxc-dmz-test/htdocs/obsvis/
 
-%outurl=live http://cxc.harvard.edu/obsvis/
+%outurl=live https://cxc.cfa.harvard.edu/obsvis/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/obsvis/
 %outurl=trial https://cxc-dmz-test.cfa.harvard.edu/obsvis/
 
@@ -1118,8 +1118,8 @@ logotext=Science Data Systems
 %cssprint=live /ciao.print.css
 %cssprint=test /ciao.print.css
 
-%favicon=live http://cxc.harvard.edu/ciao/favicon.ico
-%favicon=test http://cxc.harvard.edu/ciao/favicon.ico
+%favicon=live https://cxc.cfa.harvard.edu/ciao/favicon.ico
+%favicon=test https://cxc.cfa.harvard.edu/ciao/favicon.ico
 
 %stylesheets=live /data/da/Docs/web4/ciao411/
 %stylesheets=test /data/da/Docs/web4/ciao411/
@@ -1146,8 +1146,8 @@ logotext=Science Data Systems
 %cssprint=live /ciao.print.css
 %cssprint=test /ciao.print.css
 
-%favicon=live http://cxc.harvard.edu/ciao/favicon.ico
-%favicon=test http://cxc.harvard.edu/ciao/favicon.ico
+%favicon=live https://cxc.cfa.harvard.edu/ciao/favicon.ico
+%favicon=test https://cxc.cfa.harvard.edu/ciao/favicon.ico
 
 %stylesheets=live /data/da/Docs/web4/ciao411/
 %stylesheets=test /data/da/Docs/web4/ciao411/
@@ -1229,12 +1229,12 @@ number=Cycle 18
 %stylesheets=test /data/da/Docs/web4/ciao411/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/proposer/
+%outdir=live /proj/web-cxc/htdocs/proposer/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/proposer/
 %outdir=trial /proj/web-cxc-prev/htdocs/proposer_dev/
 
 # what is the test URL?
-%outurl=live http://cxc.harvard.edu/proposer/
+%outurl=live https://cxc.cfa.harvard.edu/proposer/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/proposer/
 %outurl=trial http://cxc-dmz-prev.cfa.harvard.edu/proposer_dev/
 
@@ -1290,12 +1290,12 @@ number=Cycle 17
 %stylesheets=test /data/da/Docs/web4/ciao411/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/proposer/
+%outdir=live /proj/web-cxc/htdocs/proposer/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/proposer/
 %outdir=trial /proj/web-cxc-prev/htdocs/proposer_dev/
 
 # what is the test URL?
-%outurl=live http://cxc.harvard.edu/proposer/
+%outurl=live https://cxc.cfa.harvard.edu/proposer/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/proposer/
 %outurl=trial http://cxc-dmz-prev.cfa.harvard.edu/proposer_dev/
 
@@ -1351,12 +1351,12 @@ number=Cycle 16
 %stylesheets=test /data/da/Docs/web4/ciao45/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/proposer/
+%outdir=live /proj/web-cxc/htdocs/proposer/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/proposer/
 %outdir=trial /proj/web-cxc-prev/htdocs/proposer_dev/
 
 # what is the test URL?
-%outurl=live http://cxc.harvard.edu/proposer/
+%outurl=live https://cxc.cfa.harvard.edu/proposer/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/proposer/
 %outurl=trial http://cxc-dmz-prev.cfa.harvard.edu/proposer_dev/
 
@@ -1404,12 +1404,12 @@ number=Cycle 15
 %stylesheets=test /data/da/Docs/web4/ciao45/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/proposer/
+%outdir=live /proj/web-cxc/htdocs/proposer/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/proposer/
 %outdir=trial /proj/web-cxc-prev/htdocs/proposer_dev/
 
 # what is the test URL?
-%outurl=live http://cxc.harvard.edu/proposer/
+%outurl=live https://cxc.cfa.harvard.edu/proposer/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/proposer/
 %outurl=trial http://cxc-dmz-prev.cfa.harvard.edu/proposer_dev/
 
@@ -1455,12 +1455,12 @@ number=Cycle 14
 %stylesheets=test /data/da/Docs/web4/ciao44/
 %stylesheets=trial /data/da/Docs/web4/ciao44/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/proposer/
+%outdir=live /proj/web-cxc/htdocs/proposer/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/proposer/
 %outdir=trial /proj/web-cxc-prev/htdocs/proposer_dev/
 
 # what is the test URL?
-%outurl=live http://cxc.harvard.edu/proposer/
+%outurl=live https://cxc.cfa.harvard.edu/proposer/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/proposer/
 %outurl=trial http://cxc-dmz-prev.cfa.harvard.edu/proposer_dev/
 
@@ -1506,12 +1506,12 @@ number=Cycle 13
 %stylesheets=test /data/da/Docs/web4/ciao43/
 %stylesheets=trial /data/da/Docs/web4/ciao43/
 
-%outdir=live /proj/web-cxc-dmz/htdocs/proposer/
+%outdir=live /proj/web-cxc/htdocs/proposer/
 %outdir=test /proj/web-cxc-dmz-prev/htdocs/proposer/
 %outdir=trial /proj/web-cxc-prev/htdocs/proposer_dev/
 
 # what is the test URL?
-%outurl=live http://cxc.harvard.edu/proposer/
+%outurl=live https://cxc.cfa.harvard.edu/proposer/
 %outurl=test http://cxc-dmz-prev.cfa.harvard.edu/proposer/
 %outurl=trial http://cxc-dmz-prev.cfa.harvard.edu/proposer_dev/
 
