@@ -123,7 +123,6 @@
     <xsl:variable name="desc"><xsl:choose>
 	<xsl:when test="$site = 'ciao'">The CIAO software package for analyzing data from X-ray telescopes, including the Chandra X-ray telescope.</xsl:when>
 	<xsl:when test="$site = 'sherpa'">The Sherpa package for fitting and modeling data (part of CIAO).</xsl:when>
-	<xsl:when test="$site = 'chips'">The ChIPS package for plotting and imaging data (part of CIAO).</xsl:when>
 	<xsl:when test="$site = 'csc'">The Chandra Source Catalog</xsl:when>
 	
 	<xsl:when test="$site = 'iris'">IRIS - the VAO Spectral Energy Distribution Analysis Tool</xsl:when>
@@ -387,7 +386,7 @@ if (self == top) {
 	</xsl:call-template>
       </div>
 
-      <xsl:if test="($site = 'ciao' or $site = 'sherpa' or $site = 'chips' or $site = 'chart' or $site = 'obsvis' or $site = 'iris' or $site = 'csc') and $type = 'live'">
+      <xsl:if test="($site = 'ciao' or $site = 'sherpa' or $site = 'chart' or $site = 'obsvis' or $site = 'iris' or $site = 'csc') and $type = 'live'">
 	<xsl:call-template name="add-ssi-include">
           <xsl:with-param name="file" select="$googlessi"/>
 	</xsl:call-template>

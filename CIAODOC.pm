@@ -1064,7 +1064,7 @@ sub get_filehash ($) {
 # about (for the ahelp pages)
 #
 sub list_ahelp_sites () {
-  return qw( ciao chips sherpa );
+  return qw( ciao sherpa );
 }
 
 # $site = find_ahelp_site $key, $pkg;
@@ -1075,16 +1075,13 @@ sub list_ahelp_sites () {
 #
 # The return value is one of
 #    ciao
-#    chips
 #    sherpa
 #
 sub find_ahelp_site ($$) {
   my $key = shift;
   my $pkg = shift;
 
-  if ($pkg eq "chips") {
-      return "chips"; 
-  } elsif ($pkg eq "sherpa") {
+  if ($pkg eq "sherpa") {
       return "sherpa";
   } else {
       return "ciao";

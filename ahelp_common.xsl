@@ -51,7 +51,7 @@
       * - see check-param-allowed template for why want spaces
       *-->
   <xsl:variable name="allowed-types"   select="' live test trial '"/>
-  <xsl:variable name="allowed-sites"   select="' ciao chips sherpa '"/>
+  <xsl:variable name="allowed-sites"   select="' ciao sherpa '"/>
 
   <!--* I THINK SOMETHING IS GOING WRONG .... *-->
   <xsl:param name="depth" select="''"/>

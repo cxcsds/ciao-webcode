@@ -2,7 +2,7 @@
 <!DOCTYPE xsl:stylesheet>
 
 <!--* 
-    * process the sections of the thread index for the CIAO, ChIPS, and Sherpa pages
+    * process the sections of the thread index for the CIAO and Sherpa pages
     *
     * Parameters set in threadindex.xsl
     *  . threadDir - location of input thread XML files
@@ -876,13 +876,12 @@
 	  <xsl:choose>
 	    <xsl:when test="$site = 'ciao'">Science</xsl:when>
 	    <xsl:when test="$site = 'sherpa'">Sherpa</xsl:when>
-	    <xsl:when test="$site = 'chips'">ChIPS</xsl:when>
 	    <xsl:when test="$site = 'csc'">CSC</xsl:when>
 	    <xsl:when test="$site = 'iris'">Iris</xsl:when>
 	  </xsl:choose>
 
 	  <!--// don't include "Threads for CIAO version" in CSC //-->
-	  <xsl:if test="$site='ciao' or $site='chips' or $site='sherpa'">
+	  <xsl:if test="$site='ciao' or $site='sherpa'">
 	    <xsl:value-of select="concat(' ',$ciaothreadver)"/>
 	  </xsl:if>
 	  <xsl:if test="$site='csc' or $site='iris'">

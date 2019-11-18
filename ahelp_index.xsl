@@ -18,7 +18,7 @@
     *
     *  . site - string, required
     *    what site are we to generate the index for, should be
-    *    one of ciao, chips, or sherpa
+    *    one of ciao or sherpa
     *
     *  . url - TEMPORARY HACK - see v1.21 of ahelp_common
     *
@@ -490,11 +490,10 @@
 
     <xsl:variable name="pretty-site"><xsl:choose>
       <xsl:when test="$site = 'ciao'">CIAO</xsl:when>
-      <xsl:when test="$site = 'chips'">ChIPS</xsl:when>
       <xsl:when test="$site = 'sherpa'">Sherpa</xsl:when>
       <xsl:otherwise>
 	<xsl:message terminate="yes">
-  ERROR: expected site to be ciao, chips, or sherpa, not '<xsl:value-of select="$site"/>'
+  ERROR: expected site to be ciao or sherpa, not '<xsl:value-of select="$site"/>'
 	</xsl:message>
       </xsl:otherwise>
     </xsl:choose></xsl:variable>
