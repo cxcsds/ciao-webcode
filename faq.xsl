@@ -153,7 +153,7 @@
 	  <div class="mainbar">
 	    
 	    <div>
-	      <h2 class="pagetitle"><xsl:apply-templates select="title"/><xsl:call-template name="add-new-or-updated-info"/></h2>
+	      <h1 class="pagetitle"><xsl:apply-templates select="title"/><xsl:call-template name="add-new-or-updated-info"/></h1>
 	      <xsl:apply-templates select="errmsg"/>
 	    </div>
 	    <hr/>
