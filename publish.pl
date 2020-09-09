@@ -758,7 +758,7 @@ sub basic_params ($) {
   
     my $url = "${outurl}${in}.html";
 
-    return {
+    my $out = {
 	    type => $$opts{type},
 	    site => $$opts{site},
 	    lastmod => $$opts{lastmod},
@@ -790,8 +790,15 @@ sub basic_params ($) {
 
 	    ignoremissinglink => $ignoremissinglink,
 
-
 	   };
+
+    # hack way to copy over extra keywords
+    while (my ($key, $value) = each %$opts) {
+	next unless $key =~ /^COPY-/;
+	$$out{substr $key, 5} = $value;
+    }
+
+    return $out;
 
 } # basic_params
 
@@ -1523,6 +1530,109 @@ sub xml2html_thread ($) {
 
 } # sub: xml2html_thread
 
+# xml2html_notebook - called by xml2html
+#
+# The notebook element is used to structure the page,
+# and mark where the notebook goes.
+#
+# The notebook is defined in the metadata; it is assumed
+# to match the name of the file but does not need to be.
+#
+sub xml2html_notebook ($) {
+    my $opts = shift;
+
+    my $in     = $$opts{xml};
+    my $dom    = $$opts{xml_dom};
+    my $outdir = $$opts{outdir};
+    my $outurl = $$opts{outurl};
+
+    print "Parsing [notebook]: $in\n";
+
+    my $rnode = $dom->documentElement();
+
+    # info/notebook contains the ipynb name
+    #
+    my @nbs = $rnode->findnodes('info/notebook');
+    die "No info/notebook node in $in\n" if $#nbs == -1;
+    die "Mutiple info/notebook nodes in $in\n" unless $#nbs == 0;
+
+    my $nb = $nbs[0]->textContent;
+    dbg "Found notebook=$nb";
+
+    die "Unable to find notebook=$nb\n" unless -f $nb;
+    die "notebook does not end in .ipynb\n" unless $nb =~ '\.ipynb\z';
+
+    my @pages = ("${outdir}${in}.html", "${outdir}${nb}");
+    return if should_we_skip $in, @pages;
+    print "\n";
+
+    # If we've got this far we can remove the converted HTML file
+    # (it is checked bu xml2html_basic). Does this help?
+    #
+    myrm $pages[0];
+
+    # Convert the notebook using nbconvert.
+    # This is currently ***VERY SIMPLE*** and we should use
+    # our own templates to do the conversion.
+    #
+    # The current approach is to extract
+    #  - the header information (script and style elements)
+    #  - the body contents
+    #
+    # Can we rely on XML::LibXML to parse it?
+    #
+    my $raw_html = qx "jupyter nbconvert --to html ${nb} --stdout";
+    dbg "Ran nbconvert";
+
+    my $htmldom = read_html_string($raw_html);
+    my $hnode = $htmldom->documentElement();
+
+    # Not ideal, building the string up like this
+    my $htmlhead = "";
+    foreach my $node ($hnode->findnodes('head/*')) {
+	my $name = $node->nodeName;
+	next unless $name eq "script" or $name eq "style" or $name eq "link";
+
+	# convert <script src="..."/> to <script src="..."></script>
+	#
+	my $cts = $node->toString();
+
+	if ($cts =~ '<script src.*"/>') {
+	    $cts = substr $cts, 0, -2;
+	    $cts .= '></script>';
+	}
+
+	# replace <![CDATA[..]]> constructs with xx
+	#
+	$cts =~ s/<!\[CDATA\[(.*)\]\]>/$1/sm;
+
+	$htmlhead .= $cts;
+    }
+    die "No HEAD content\n" if $htmlhead eq '';
+
+    my @htmlbody = $hnode->findnodes('body');
+    die "Unexpected body contents\n" unless $#htmlbody == 0;
+
+    $$opts{'COPY-notebook_header'} = $htmlhead;
+    $$opts{'COPY-notebook_contents'} = $htmlbody[0]->toString();
+
+    # Handle the notebook using xml2html_basic
+    #
+    $$opts{pagename} = $in;
+
+    xml2html_basic "notebook", "notebook", $opts;
+
+    # Copy over the ipynb file
+    #
+    my $out = "${outdir}$nb";
+    mycp $nb, $out;
+    print "  copied    : $nb\n";
+
+    my $url = "${outurl}${in}.html";
+    print "\nThe page can be viewed at:\n  ${url}\n\n";
+
+} # sub: xml2html_notebook
+
 # die_if_icxc $root
 #
 # dies if the site (global variable $site) is equal
@@ -1689,6 +1799,9 @@ sub process_xml ($$) {
 	    #   a) need to know about them to clean up beforehand
 	    #   b) remove the <?xml... line from the 'slugs'/included files
 	    xml2html_basic 'relnotes', 'relnotes', $opts;
+	} elsif ( $root eq "notebook" ) {
+	    die_if_icxc $root;
+	    xml2html_notebook $opts;
 	} else {
 	  # We have some "non-publishing" XML files on iCXC (they are used
 	  # to create other XML files that can be published), so skip them
