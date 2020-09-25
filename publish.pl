@@ -1581,8 +1581,16 @@ sub xml2html_notebook ($) {
     #
     # Can we rely on XML::LibXML to parse it?
     #
-    my $raw_html = qx "jupyter nbconvert --to html ${nb} --stdout";
+    my $template = "lab";
+    # my $template = "classic";
+    my $raw_html = qx "jupyter nbconvert --to html ${nb} --template ${template} --stdout";
     dbg "Ran nbconvert";
+
+    # Clean up the HTML as it can contain <DEPRECATED> </DEPRECATED>
+    # comments which breaks everything.
+    #
+    $raw_html =~ s/<DEPRECATED>//g;
+    $raw_html =~ s/<\/DEPRECATED>//g;
 
     my $htmldom = read_html_string($raw_html);
     my $hnode = $htmldom->documentElement();
