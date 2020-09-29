@@ -290,11 +290,17 @@ p.notebook-link a.button:hover {
   <xsl:template match="notebook">
     <div class="notebook">
       <p class="notebook-link">
-	View the
+	Download the
 	<a class="button"><xsl:attribute name="href"><xsl:value-of select="//info/notebook"/></xsl:attribute>notebook</a>.
       </p>
     
       <xsl:value-of select="$notebook_contents" disable-output-escaping="yes"/>
+
+      <p class="notebook-link">
+	Download the
+	<a class="button"><xsl:attribute name="href"><xsl:value-of select="//info/notebook"/></xsl:attribute>notebook</a>.
+      </p>
+
     </div>
   </xsl:template>
       

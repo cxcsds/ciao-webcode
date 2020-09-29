@@ -14,11 +14,15 @@
 {{ resources.include_css("static/theme-light.css") }}
 
 <style type="text/css">
-a.anchor-link {
+div.notebook a.anchor-link {
    display: none;
 }
-.highlight  {
+div.notebook .highlight  {
     margin: 0.4em;
+}
+/* try to make nn-notebook links look like our standard */
+div.notebook .notebook-link a {
+  text-decoration: underline;
 }
 </style>
 
