@@ -100,7 +100,7 @@ my @funcs_util =
 my @funcs_xslt =
   qw(
      translate_file
-     read_xml_file read_xml_string
+     read_xml_file read_xml_string read_html_string
      find_math_pages
     );
 my @funcs_cfg  =
@@ -147,6 +147,7 @@ sub extract_filename ($);
  
 sub read_xml_file ($);
 sub read_xml_string ($);
+sub read_html_string ($);
 sub translate_file ($$;$);
 sub translate_file_lang ($$$;$);
 
@@ -441,6 +442,14 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     dbg " - about to parse XML chunk, first line='$firstline'";
     $parser->parse_string($str)
       or die "ERROR: unable to parse XML string, start='$firstline'\n";
+  }
+
+  sub read_html_string ($) {
+    my $str = shift;
+    my $firstline = (split(/\n/,$str))[0];
+    dbg " - about to parse HTML chunk, first line='$firstline'";
+    $parser->parse_html_string($str)
+      or die "ERROR: unable to parse HTML string, start='$firstline'\n";
   }
 
   # TODO:

@@ -97,17 +97,21 @@
       *-->
   <xsl:template name="add-sao-metadata">
     <xsl:param name="title"/>
+    <!-- for now relax this, as seeing odd behavior in notebook.xsl
     <xsl:if test="not(boolean($title))">
       <xsl:message terminate="yes">
  Internal Error: add-sao-metadata called but title parameter not set.
       </xsl:message>
     </xsl:if>
+    -->
 
     <xsl:if test="$favicon != ''">
       <link rel="icon" href="{$favicon}"/>
     </xsl:if>
 
-    <meta name="title"><xsl:attribute name="content"><xsl:value-of select="$title"/></xsl:attribute></meta>
+    <xsl:if test="boolean($title)">
+      <meta name="title"><xsl:attribute name="content"><xsl:value-of select="$title"/></xsl:attribute></meta>
+    </xsl:if>
     <meta name="creator" content="SAO-HEA"/>
     <!-- a language tag on the html element is now used
     <meta http-equiv="content-language" content="en-US"/>

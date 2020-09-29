@@ -1,0 +1,25 @@
+{% from 'mathjax.html.j2' import mathjax %}
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="{{ resources.require_js_url }}"></script>
+
+{% for css in resources.inlining.css -%}
+  <style type="text/css">
+    {{ css }}
+  </style>
+{% endfor %}
+
+{{ resources.include_css("static/index.css") }}
+{{ resources.include_css("static/theme-light.css") }}
+
+<style type="text/css">
+a.anchor-link {
+   display: none;
+}
+.highlight  {
+    margin: 0.4em;
+}
+</style>
+
+{{ mathjax() }}
