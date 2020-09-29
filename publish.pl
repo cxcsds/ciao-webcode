@@ -1571,58 +1571,40 @@ sub xml2html_notebook ($) {
     #
     myrm $pages[0];
 
-    # Convert the notebook using nbconvert.
-    # This is currently ***VERY SIMPLE*** and we should use
-    # our own templates to do the conversion.
+    # Convert the notebook using nbconvert. This relies on a
+    # small Python application to use our customized conversion,
+    # which
+    #   - creates two text files that get inserted into
+    #     the xslt process, and contain
+    #     - header info (e.g. the JS and CSS to include)
+    #     - the converted notebook (without header/footer)
+    #   - writes out the PNGs separately
     #
-    # The current approach is to extract
-    #  - the header information (script and style elements)
-    #  - the body contents
+    my $nb_files = qx "python $FindBin::Bin/extract_notebook.py ${nb} ${outdir}";
+
+    my $raw_header_name = (split(/\n/,$nb_files))[0];
+    my $raw_header = do {
+	local $/ = undef;
+	open my $fh, "<", $raw_header_name
+	    or die "could not open $raw_header_name: $!";
+	<$fh>;
+    };
+
+    my $raw_html_name = (split(/\n/,$nb_files))[1];
+    my $raw_html = do {
+	local $/ = undef;
+	open my $fh, "<", $raw_html_name
+	    or die "could not open $raw_html_name: $!";
+	<$fh>;
+    };
+
+    $$opts{'COPY-notebook_header'} = $raw_header;
+    $$opts{'COPY-notebook_contents'} = $raw_html;
+
+    # Delete the temporary files
     #
-    # Can we rely on XML::LibXML to parse it?
-    #
-    my $template = "lab";
-    # my $template = "classic";
-    my $raw_html = qx "jupyter nbconvert --to html ${nb} --template ${template} --stdout";
-    dbg "Ran nbconvert";
-
-    # Clean up the HTML as it can contain <DEPRECATED> </DEPRECATED>
-    # comments which breaks everything.
-    #
-    $raw_html =~ s/<DEPRECATED>//g;
-    $raw_html =~ s/<\/DEPRECATED>//g;
-
-    my $htmldom = read_html_string($raw_html);
-    my $hnode = $htmldom->documentElement();
-
-    # Not ideal, building the string up like this
-    my $htmlhead = "";
-    foreach my $node ($hnode->findnodes('head/*')) {
-	my $name = $node->nodeName;
-	next unless $name eq "script" or $name eq "style" or $name eq "link";
-
-	# convert <script src="..."/> to <script src="..."></script>
-	#
-	my $cts = $node->toString();
-
-	if ($cts =~ '<script src.*"/>') {
-	    $cts = substr $cts, 0, -2;
-	    $cts .= '></script>';
-	}
-
-	# replace <![CDATA[..]]> constructs with xx
-	#
-	$cts =~ s/<!\[CDATA\[(.*)\]\]>/$1/sm;
-
-	$htmlhead .= $cts;
-    }
-    die "No HEAD content\n" if $htmlhead eq '';
-
-    my @htmlbody = $hnode->findnodes('body');
-    die "Unexpected body contents\n" unless $#htmlbody == 0;
-
-    $$opts{'COPY-notebook_header'} = $htmlhead;
-    $$opts{'COPY-notebook_contents'} = $htmlbody[0]->toString();
+    myrm $raw_header_name;
+    myrm $raw_html_name;
 
     # Handle the notebook using xml2html_basic
     #

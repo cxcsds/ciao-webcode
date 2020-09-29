@@ -196,25 +196,6 @@
 	  <!-- add in navbar header contents -->
 	  <xsl:value-of select="$notebook_header" disable-output-escaping="yes"/>
 
-	  <!-- *
-	       * HACK
-	       *
-	       * Version 6.0.2 of nbconvert seems to force the width of
-               * multi-line output sections to match the "Out [x]"
-               * section when using the lab template.
-	       *
-	       * It's not at all obvious why this happens but
-               * I have spent way too much time chasing my tail with
-               * this so it's hack time.
-	       *
-	       *-->
-	  <style>
-div.jp-OutputPrompt {
-background: orange;
-  flex: 0 0 auto;
-}
-	  </style>
-	  
 	</head>
 
 	<!-- * create the page contents *-->
