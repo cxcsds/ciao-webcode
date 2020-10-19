@@ -187,13 +187,25 @@
 	    </xsl:choose>
 	  </xsl:if>
 
-	  <!-- Add in CSS
-	       * special notebook runes
+	  <xsl:call-template name="add-sao-metadata">
+	    <xsl:with-param name="title" select="normalize-space($title)"/>
+	  </xsl:call-template>
+
+	  <!-- add in navbar header contents -->
+	  <xsl:value-of select="$notebook_header" disable-output-escaping="yes"/>
+
+	  <!-- Add in CSS, *AFTER* the notebook rules
+
+	       * special notebook rules
 	       * any ones the user has set up
 	  -->
 
-	  <css>
-p.notebook-link a.button {
+	  <style type="text/css">
+div.notebook p.notebook-link {
+    padding: 0.5em;
+}
+
+div.notebook p.notebook-link a.button {
     padding: 10px;
 
     border: none;
@@ -213,37 +225,26 @@ p.notebook-link a.button {
 
     cursor: pointer;
 
-    /* currently not in #install: a shadow */
     -webkit-box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.75);
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.75);
 
-    /* to make sure the two use the same font, since forms can be
     set to a different font */
     font-family: Sans;
 }
 
-p.notebook-link a.button:hover {
+div.notebook p.notebook-link a.button:hover {
 
-    /* try to subtly darken the color to make it noticeable */
     color: rgba(0, 0, 0, 0.8);
 
-    /* a more materials-like pressed "out" look */
     -webkit-box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.75);
     box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.75);
 
 }
-	  </css>
+	  </style>
 
 	  <xsl:apply-templates select="info/css" mode="header"/>
-
-	  <xsl:call-template name="add-sao-metadata">
-	    <xsl:with-param name="title" select="normalize-space($title)"/>
-	  </xsl:call-template>
-
-	  <!-- add in navbar header contents -->
-	  <xsl:value-of select="$notebook_header" disable-output-escaping="yes"/>
 
 	</head>
 
