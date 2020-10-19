@@ -187,6 +187,55 @@
 	    </xsl:choose>
 	  </xsl:if>
 
+	  <!-- Add in CSS
+	       * special notebook runes
+	       * any ones the user has set up
+	  -->
+
+	  <css>
+p.notebook-link a.button {
+    padding: 10px;
+
+    border: none;
+
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+
+    color: rgba(0, 0, 0, 0.6);
+
+    background-color: #99CC66;
+
+    font-size: 1.2em;
+
+    text-decoration: none;
+    text-align: center;
+
+    cursor: pointer;
+
+    /* currently not in #install: a shadow */
+    -webkit-box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.75);
+
+    /* to make sure the two use the same font, since forms can be
+    set to a different font */
+    font-family: Sans;
+}
+
+p.notebook-link a.button:hover {
+
+    /* try to subtly darken the color to make it noticeable */
+    color: rgba(0, 0, 0, 0.8);
+
+    /* a more materials-like pressed "out" look */
+    -webkit-box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.75);
+
+}
+	  </css>
+
 	  <xsl:apply-templates select="info/css" mode="header"/>
 
 	  <xsl:call-template name="add-sao-metadata">
@@ -242,7 +291,7 @@
     <div class="notebook">
       <p class="notebook-link">
 	View the
-	<a><xsl:attribute name="href"><xsl:value-of select="//info/notebook"/></xsl:attribute>notebook</a>.
+	<a class="button"><xsl:attribute name="href"><xsl:value-of select="//info/notebook"/></xsl:attribute>notebook</a>.
       </p>
     
       <xsl:value-of select="$notebook_contents" disable-output-escaping="yes"/>
