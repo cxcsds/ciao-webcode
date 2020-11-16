@@ -590,16 +590,10 @@
 
     <xsl:choose>
       <xsl:when test="$use-mathjax = 1">
-	<!--* 
-	    * Could place human-readable form in a noscript tag, but this
-	    * way we get to provide something hopefully-readable whilst the
-	    * LaTeX is being rendered.
-	    *-->
-	<span id="{$mathname}" class="MathJax_Preview"><xsl:choose>
-	  <xsl:when test="boolean(text)"><xsl:value-of select="text"/></xsl:when>
-	  <xsl:otherwise><xsl:value-of select="normalize-space(latex)"/></xsl:otherwise>
-	</xsl:choose></span>
 	<!--*
+	    * We used to (MathJax 2) have a separate preview section but I am
+	    * removing this for now.
+	    *
 	    * TODO: worried about &lt; being converted to <, as seen in the example
 	    * thread (possibly some oddities in how expansion happens, since libXSLT
 	    * seems to have expanded it in x&lt;y but not x &lt; y ...
@@ -611,15 +605,15 @@
             * but then it did not hide the MathJax_Preview section, so have
             * decided to leave this as is for now.
 	    *-->
-	<script type="math/tex; mode=display">
+	<span id="{$mathname}" class="MathJax-span">\[
 	  <xsl:value-of select="latex"/>
+	\]</span>
 	  <!--
           <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
 	  <xsl:value-of select="latex"/>
 	  <xsl:text disable-output-escaping="yes">]]</xsl:text>
 	  <xsl:text disable-output-escaping="yes">></xsl:text>
 	  -->
-	</script>
       </xsl:when>
 
       <xsl:otherwise>

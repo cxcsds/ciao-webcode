@@ -126,7 +126,7 @@
               </xsl:message>
 	    </xsl:if>
 
-	    <script src="{$mathjaxpath}"/>
+	    <script src="{$mathjaxpath}" id="MathJax-script" async="true"/>
 	  </xsl:if>
 
 	  <!--* add main stylesheets *-->
