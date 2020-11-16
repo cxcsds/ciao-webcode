@@ -243,7 +243,7 @@
 	    * input, and do not need the texjax input processor, is it
 	    * worth using a "custom" config?
 	    *-->
-	<script src="{$mathjaxpath}"/>
+	<script src="{$mathjaxpath}" id="MathJax-script" async="true"/>
       </xsl:if>
 
       <!--* add main stylesheets *-->
