@@ -132,12 +132,10 @@
 	      
 	    <xsl:for-each select="text/category">
 	      <h2>
-		<a>
-	          <xsl:attribute name="name">
-	            <xsl:value-of select="translate(@name,' /','')"/>
-	          </xsl:attribute>
-		  <xsl:value-of select="@name"/>
-		</a>
+	        <xsl:attribute name="id">
+	          <xsl:value-of select="translate(@name,' /','')"/>
+	        </xsl:attribute>
+		<a><xsl:value-of select="@name"/></a>
 	      </h2>
 		
 	      <xsl:apply-templates select="intro"/>
