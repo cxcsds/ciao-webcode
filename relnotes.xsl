@@ -188,7 +188,9 @@
   <xsl:template name="add-section-title">
     <xsl:choose>
       <xsl:when test="@ahelpskip = '1' or not($is-current-release)">
-	<h3><xsl:value-of select="@name"/></h3>
+	<h3><xsl:if test="@id != ''">
+	  <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
+	</xsl:if><xsl:value-of select="@name"/></h3>
       </xsl:when>
       <xsl:otherwise>
 	<xsl:variable name="pagename"><xsl:choose>
@@ -245,7 +247,9 @@
 	    </xsl:choose></xsl:variable>
 
 
-	    <h3><a class="helplink">
+	    <h3><xsl:if test="@id != ''">
+	      <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
+	      </xsl:if><a class="helplink">
 	      <xsl:if test="$matches/summary != ''">
 		<xsl:attribute name="title">Ahelp (<xsl:value-of select="$context"/>): <xsl:value-of select="$matches/summary"/></xsl:attribute>
 	      </xsl:if>
