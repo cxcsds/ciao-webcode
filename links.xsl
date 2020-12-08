@@ -2607,7 +2607,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:attribute name="id"><xsl:value-of select="{@name}"/></xsl:attribute
       <xsl:apply-templates/>
     -->
-<xsl:message terminate="no">See Doug about the use of the id tag to add a referent</xsl:message>
+    <xsl:message terminate="no">Use id attribute not &lt;id name="<xsl:value-of select="@name"/>"&gt;<xsl:apply-templates/>&lt;/id&gt;</xsl:message>
   </xsl:template> <!--* id *-->
 
   <!--* 
