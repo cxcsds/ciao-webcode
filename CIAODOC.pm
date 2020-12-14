@@ -42,7 +42,11 @@ sub use_mathjax () { return 1; }
 
 # Set up XML/XSLT processors
 # (registration of functions happens later)
-my $parser = XML::LibXML->new()
+#
+# NOTE: documentation seems to suggest that expand_entities is set to 1
+#       but this no-longer holds, so explicitly set it.
+#
+my $parser = XML::LibXML->new(expand_entities => 1)
   or die "Error: Unable to create XML::LibXML parser instance.\n";
 $parser->validation(0);
 $parser->expand_xinclude(1); # NOTE: don't actually use XInclude at the moment
