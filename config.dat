@@ -38,7 +38,8 @@
 # when calling list_seealso because it is no-longer set in the
 # ciaorun script; hopefully this can be removed in CIAO 4.7
 #
-%listseealso=lin /usr/bin/env LD_LIBRARY_PATH=${ASCDS_INSTALL}/lib:${ASCDS_INSTALL}/ots/lib ciaorun /data/da/Docs/web4/utilities/binexe/list_seealso.ciao43.lin64
+# 2023-05-25 updated list_seeaslo.ciao415.lin64 to build on RHEL8 since libxerces3.1 no longer available
+%listseealso=lin /usr/bin/env LD_LIBRARY_PATH=${ASCDS_INSTALL}/lib:${ASCDS_INSTALL}/ots/lib ciaorun /data/da/Docs/web4/utilities/binexe/list_seealso.ciao415.lin64
 %perl=lin perl
 #%perl=lin /usr/bin/env PERL5LIB=/data/da/Docs/local/linux_x86_64/lib64/perl5/site_perl:/data/da/Docs/local/linux_x86_64/lib64/perl5:/data/da/Docs/local/linux_x86_64/lib/perl5/site_perl perl
 
