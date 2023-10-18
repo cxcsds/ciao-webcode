@@ -782,6 +782,90 @@ googlessi=/csc2/analytics.ssi
 
 -version
 
++version csc21
+
+# is this used for anything other than ahelp?
+number=2.1
+
+headtitlepostfix=CSC
+texttitlepostfix=CSC
+
+%css=live /csc2.1/csc.css
+%css=test /csc2.1/csc.css
+%css=trial /sds/csc2.1/csc.css
+
+%cssprint=live /csc2.1/csc.print.css
+%cssprint=test /csc2.1/csc.print.css
+%cssprint=trial /sds/csc2.1/csc.print.css
+
+# favicon location
+%favicon=live /csc/favicon.ico
+%favicon=test /cscfavicon.ico
+%favicon=trial /sds/csc/favicon.ico
+
+%newsfile=live /proj/web-cxc/htdocs/csc2.1/news.html
+%newsfile=test /proj/web-cxc-dmz-prev/htdocs/csc2.1/news.html
+%newsfile=trial /proj/web-cxc-dmz-test/htdocs/csc2.1/news.html
+
+%newsurl=live /csc/news.html
+%newsurl=test /csc/news.html
+%newsurl=trial /sds/csc/news.html
+
+# I do not think these are used by CSC site
+%watchouturl=live /csc/watchout.html
+%watchouturl=test /csc/watchout.html
+%watchouturl=trial /sds/csc/watchout.html
+
+logoimage=imgs/csc_logo_navbar.jpg
+logotext=Chandra Source Catalog logo
+logourl=/csc2.1/
+
+%searchssi=live /csc2.1/csc_search.ssi
+%searchssi=test /csc2.1/csc_search.ssi
+%searchssi=trial /sds/csc2.1/csc_search.ssi
+
+# location of the google analytics ssi
+# only added for the live site in helper.xsl
+googlessi=/csc2/analytics.ssi
+
+# MathJax location
+%mathjaxpath=live /ciao4.15/mathjax3/tex-chtml.js
+%mathjaxpath=test /ciao4.15/mathjax3/tex-chtml.js
+%mathjaxpath=trial /ciao/mathjax3/tex-chtml.js
+
+%stylesheets=live /data/da/Docs/web4/ciao415/
+%stylesheets=test /data/da/Docs/web4/ciao415/
+%stylesheets=trial /data/da/Docs/web4/devel/
+
+%outdir=live /proj/web-cxc/htdocs/csc2.1/
+%outdir=test /proj/web-cxc-dmz-prev/htdocs/csc2.1/
+%outdir=trial /proj/web-cxc-dmz-test/htdocs/csc2.1/
+
+# live outurl is unversioned for use in canonical header link
+%outurl=live https://cxc.cfa.harvard.edu/csc/
+%outurl=test https://cxc-prev.cfa.harvard.edu/csc2.1/
+%outurl=trial https://cxc-dmz-test.cfa.harvard.edu/csc/
+
+%storage=live /data/da/Docs/cscweb/published/csc2.1/live/
+%storage=test /data/da/Docs/cscweb/published/csc2.1/test/
+%storage=trial /data/da/Docs/cscweb/published/csc2.1/trial/
+
+# where does the ahelp 'index' file live
+# use CIAO versions
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao415/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao415/trial/ahelp/
+
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.15/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.15/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.15/
+
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao415.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao415.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao415.trial.xml
+
+-version
+
 @stylesheets=page
 @stylesheets=navbar
 @stylesheets=redirect
