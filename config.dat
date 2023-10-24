@@ -39,7 +39,7 @@
 # ciaorun script; hopefully this can be removed in CIAO 4.7
 #
 # 2023-05-25 updated list_seeaslo.ciao415.lin64 to build on RHEL8 since libxerces3.1 no longer available
-%listseealso=lin /usr/bin/env LD_LIBRARY_PATH=${ASCDS_INSTALL}/lib:${ASCDS_INSTALL}/ots/lib ciaorun /data/da/Docs/web4/utilities/binexe/list_seealso.ciao415.lin64
+%listseealso=lin /usr/bin/env LD_LIBRARY_PATH=${ASCDS_INSTALL}/lib:${ASCDS_INSTALL}/ots/lib /data/da/Docs/web4/utilities/binexe/list_seealso.ciao415.lin64
 %perl=lin perl
 #%perl=lin /usr/bin/env PERL5LIB=/data/da/Docs/local/linux_x86_64/lib64/perl5/site_perl:/data/da/Docs/local/linux_x86_64/lib64/perl5:/data/da/Docs/local/linux_x86_64/lib/perl5/site_perl perl
 
@@ -73,31 +73,31 @@ depth_offset=0
 # I cannot be bothered to be clever and have default/fall through
 # values
 #
-+version ciao415
-number=4.15
++version ciao416
+number=4.16
 
-headtitlepostfix=CIAO 4.15
-texttitlepostfix=CIAO 4.15
+headtitlepostfix=CIAO 4.16
+texttitlepostfix=CIAO 4.16
 
-version_string=4.15
+version_string=4.16
 
 # main CSS location
-%css=live /ciao4.15/ciao.css
-%css=test /ciao4.15/ciao.css
+%css=live /ciao4.16/ciao.css
+%css=test /ciao4.16/ciao.css
 %css=trial /ciao/ciao.css
 
-%cssprint=live /ciao4.15/ciao.print.css
-%cssprint=test /ciao4.15/ciao.print.css
+%cssprint=live /ciao4.16/ciao.print.css
+%cssprint=test /ciao4.16/ciao.print.css
 %cssprint=trial /ciao/ciao.print.css
 
 # favicon location
-%favicon=live /ciao4.15/favicon.ico
-%favicon=test /ciao4.15/favicon.ico
+%favicon=live /ciao4.16/favicon.ico
+%favicon=test /ciao4.16/favicon.ico
 %favicon=trial /ciao/favicon.ico
 
 # location of the news file for the "What's new" link
-%newsfile=live /proj/web-cxc/htdocs/ciao4.15/news.html
-%newsfile=test /proj/web-cxc-dmz-prev/htdocs/ciao4.15/news.html
+%newsfile=live /proj/web-cxc/htdocs/ciao4.16/news.html
+%newsfile=test /proj/web-cxc-dmz-prev/htdocs/ciao4.16/news.html
 %newsfile=trial /proj/web-cxc-dmz-test/htdocs/ciao/news.html
 
 # Hmmm, should these be version-specific links (i.e. /ciao4.x/ rather than /ciao/)?
@@ -111,8 +111,8 @@ version_string=4.15
 %watchouturl=trial /ciao/watchout.html
 
 # location of the search ssi
-%searchssi=live /ciao4.15/ciao_search.ssi
-%searchssi=test /ciao4.15/ciao_search.ssi
+%searchssi=live /ciao4.16/ciao_search.ssi
+%searchssi=test /ciao4.16/ciao_search.ssi
 %searchssi=trial /ciao/ciao_search.ssi
 
 # location of the banner page, relative to the top-level directory
@@ -122,38 +122,38 @@ version_string=4.15
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
-googlessi=/ciao4.15/analytics.ssi
+googlessi=/ciao4.16/analytics.ssi
 
 # MathJax location
-%mathjaxpath=live /ciao4.15/mathjax3/tex-chtml.js
-%mathjaxpath=test /ciao4.15/mathjax3/tex-chtml.js
+%mathjaxpath=live /ciao4.16/mathjax3/tex-chtml.js
+%mathjaxpath=test /ciao4.16/mathjax3/tex-chtml.js
 %mathjaxpath=trial /ciao/mathjax3/tex-chtml.js
 
 # logo/text/url to use for navbar
 logoimage=imgs/ciao_logo_navbar.gif
 logotext=CIAO Logo
-logourl=/ciao4.15/
+logourl=/ciao4.16/
 
 # location of the stylesheets
 
-%stylesheets=live /data/da/Docs/web4/ciao415/
-%stylesheets=test /data/da/Docs/web4/ciao415/
+%stylesheets=live /data/da/Docs/web4/ciao416/
+%stylesheets=test /data/da/Docs/web4/ciao416/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
 # what's the location for the output files?
-%outdir=live /proj/web-cxc/htdocs/ciao4.15/
-%outdir=test /proj/web-cxc-dmz-prev/htdocs/ciao4.15/
+%outdir=live /proj/web-cxc/htdocs/ciao4.16/
+%outdir=test /proj/web-cxc-dmz-prev/htdocs/ciao4.16/
 %outdir=trial /proj/web-cxc-dmz-test/htdocs/ciao/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live https://cxc.cfa.harvard.edu/ciao/
-%outurl=test https://cxc-prev.cfa.harvard.edu/ciao4.15/
+%outurl=test https://cxc-prev.cfa.harvard.edu/ciao4.16/
 %outurl=trial https://cxc-dmz-test.cfa.harvard.edu/ciao/
 
 # location of the "storage" space
-%storage=live /data/da/Docs/ciaoweb/published/ciao415/live/
-%storage=test /data/da/Docs/ciaoweb/published/ciao415/test/
-%storage=trial /data/da/Docs/ciaoweb/published/ciao415/trial/
+%storage=live /data/da/Docs/ciaoweb/published/ciao416/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao416/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao416/trial/
 
 # We are moving away from the use of %storage and towards
 # %storageloc, which gives the location of an XML file,
@@ -161,27 +161,27 @@ logourl=/ciao4.15/
 #   <storage><dir site="ciao">/data/da/Docs/ciaoweb/published/ciao40/live/</dir>...</storage>
 # but we have not converted everything yet
 #
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao415.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao415.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao415.trial.xml
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao416.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao416.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao416.trial.xml
 
 ## ahelp section
 #
 # where do the ahelp files (ie the XML files) live
 #
 
-%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.15/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.15/
-%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.15/
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.16/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.16/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.16/
 
 # where does the ahelp 'index' file live
 # - ie the directory that contains
 #     ahelpindex.xml
 #     ahelpindex.lis
 #
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao415/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao415/trial/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao416/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao416/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao416/trial/ahelp/
 
 # what navbar to use for the ahelp index pages
 ahelpindexnavbar=analysis
@@ -333,8 +333,8 @@ imglinkiconheight=16
 googlessi=/chart/analytics.ssi
 
 # MathJax location
-%mathjaxpath=live /ciao4.15/mathjax3/tex-chtml.js
-%mathjaxpath=test /ciao4.15/mathjax3/tex-chtml.js
+%mathjaxpath=live /ciao4.16/mathjax3/tex-chtml.js
+%mathjaxpath=test /ciao4.16/mathjax3/tex-chtml.js
 %mathjaxpath=trial /ciao/mathjax3/tex-chtml.js
 
 %stylesheets=live /data/da/Docs/web4/chart/
@@ -355,13 +355,13 @@ googlessi=/chart/analytics.ssi
 %storage=test /data/da/Docs/chartweb/published/internal/test/
 %storage=trial /data/da/Docs/chartweb/published/internal/trial/
 
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao415.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao415.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao415.trial.xml
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao416.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao416.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao416.trial.xml
 
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao415/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao415/trial/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao416/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao416/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao416/trial/ahelp/
 
 -version
 
@@ -388,31 +388,31 @@ prefix=/data/da/Docs/sherpaweb
 
 depth_offset=0
 
-+version ciao415
-number=4.15
++version ciao416
+number=4.16
 
-headtitlepostfix=CIAO 4.15 Sherpa
-texttitlepostfix=CIAO 4.15 Sherpa
+headtitlepostfix=CIAO 4.16 Sherpa
+texttitlepostfix=CIAO 4.16 Sherpa
 
-version_string=4.15
+version_string=4.16
 
 # main CSS location
-%css=live /ciao4.15/ciao.css
-%css=test /ciao4.15/ciao.css
+%css=live /ciao4.16/ciao.css
+%css=test /ciao4.16/ciao.css
 %css=trial /ciao/ciao.css
 
-%cssprint=live /ciao4.15/ciao.print.css
-%cssprint=test /ciao4.15/ciao.print.css
+%cssprint=live /ciao4.16/ciao.print.css
+%cssprint=test /ciao4.16/ciao.print.css
 %cssprint=trial /ciao/ciao.print.css
 
 # favicon location
-%favicon=live /ciao4.15/favicon.ico
-%favicon=test /ciao4.15/favicon.ico
+%favicon=live /ciao4.16/favicon.ico
+%favicon=test /ciao4.16/favicon.ico
 %favicon=trial /ciao/favicon.ico
 
 # location of the news file for the "What's new" link
-%newsfile=live /proj/web-cxc/htdocs/sherpa4.15/news.html
-%newsfile=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.15/news.html
+%newsfile=live /proj/web-cxc/htdocs/sherpa4.16/news.html
+%newsfile=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.16/news.html
 %newsfile=trial /proj/web-cxc-dmz-test/htdocs/sherpa/news.html
 
 %newsurl=live /sherpa/news.html
@@ -426,10 +426,10 @@ version_string=4.15
 
 logoimage=imgs/sherpa_logo_navbar.gif
 logotext=Sherpa Logo
-logourl=/sherpa4.15/
+logourl=/sherpa4.16/
 
-%searchssi=live /sherpa4.15/sherpa_search.ssi
-%searchssi=test /sherpa4.15/sherpa_search.ssi
+%searchssi=live /sherpa4.16/sherpa_search.ssi
+%searchssi=test /sherpa4.16/sherpa_search.ssi
 %searchssi=trial /sds/sherpa/sherpa_search.ssi
 
 # location of the banner page, relative to the top-level directory
@@ -439,41 +439,41 @@ logourl=/sherpa4.15/
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
-googlessi=/sherpa4.15/analytics.ssi
+googlessi=/sherpa4.16/analytics.ssi
 
 # MathJax location
-%mathjaxpath=live /ciao4.15/mathjax3/tex-chtml.js
-%mathjaxpath=test /ciao4.15/mathjax3/tex-chtml.js
+%mathjaxpath=live /ciao4.16/mathjax3/tex-chtml.js
+%mathjaxpath=test /ciao4.16/mathjax3/tex-chtml.js
 %mathjaxpath=trial /ciao/mathjax3/tex-chtml.js
 
-%stylesheets=live /data/da/Docs/web4/ciao415/
-%stylesheets=test /data/da/Docs/web4/ciao415/
+%stylesheets=live /data/da/Docs/web4/ciao416/
+%stylesheets=test /data/da/Docs/web4/ciao416/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
-%outdir=live /proj/web-cxc/htdocs/sherpa4.15/
-%outdir=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.15/
+%outdir=live /proj/web-cxc/htdocs/sherpa4.16/
+%outdir=test /proj/web-cxc-dmz-prev/htdocs/sherpa4.16/
 %outdir=trial /proj/web-cxc-dmz-test/htdocs/sherpa/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live https://cxc.cfa.harvard.edu/sherpa/
-%outurl=test https://cxc-prev.cfa.harvard.edu/sherpa4.15/
+%outurl=test https://cxc-prev.cfa.harvard.edu/sherpa4.16/
 %outurl=trial https://cxc-dmz-test.cfa.harvard.edu/sherpa/
 
-%storage=live /data/da/Docs/sherpaweb/published/ciao415/live/
-%storage=test /data/da/Docs/sherpaweb/published/ciao415/test/
-%storage=trial /data/da/Docs/sherpaweb/published/ciao415/trial/
+%storage=live /data/da/Docs/sherpaweb/published/ciao416/live/
+%storage=test /data/da/Docs/sherpaweb/published/ciao416/test/
+%storage=trial /data/da/Docs/sherpaweb/published/ciao416/trial/
 
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao415.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao415.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao415.trial.xml
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao416.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao416.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao416.trial.xml
 
-%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.15/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.15/
-%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.15/
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.16/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.16/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.16/
 
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao415/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao415/trial/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao416/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao416/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao416/trial/ahelp/
 
 ahelpindexnavbar=ahelp
 
@@ -543,11 +543,11 @@ headtitlepostfix=CALDB 4
 %searchssi=trial /sds/caldb4/caldb_search.ssi
 
 # MathJax location
-# We use the CIAO 4.15 version here even though CALDB releases are decoupled from
+# We use the CIAO 4.16 version here even though CALDB releases are decoupled from
 # the CIAO one, since I do not want to have multiple copies of MathJax lying
 # around.
-%mathjaxpath=live /ciao4.15/mathjax3/tex-chtml.js
-%mathjaxpath=test /ciao4.15/mathjax3/tex-chtml.js
+%mathjaxpath=live /ciao4.16/mathjax3/tex-chtml.js
+%mathjaxpath=test /ciao4.16/mathjax3/tex-chtml.js
 %mathjaxpath=trial /ciao/mathjax3/tex-chtml.js
 
 %stylesheets=live /data/da/Docs/web4/caldb/
@@ -572,13 +572,13 @@ headtitlepostfix=CALDB 4
 %storage=trial /data/da/Docs/caldbweb/published/caldb4/trial/
 
 # point to the CIAO ahelp file indexes
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao415.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao415.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao415.trial.xml
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao416.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao416.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao416.trial.xml
 
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao415/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao416/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao416/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao416/test/ahelp/
 
 -version
 
@@ -665,8 +665,8 @@ googlessi=/csc1/analytics.ssi
 %mathjaxpath=test /ciao4.12/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 %mathjaxpath=trial /ciao/mathjax3/tex-chtml.js
 
-%stylesheets=live /data/da/Docs/web4/ciao415/
-%stylesheets=test /data/da/Docs/web4/ciao415/
+%stylesheets=live /data/da/Docs/web4/ciao416/
+%stylesheets=test /data/da/Docs/web4/ciao416/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc/htdocs/csc1/
@@ -684,17 +684,17 @@ googlessi=/csc1/analytics.ssi
 
 # where does the ahelp 'index' file live
 # use CIAO versions
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao415/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao415/trial/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao416/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao416/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao416/trial/ahelp/
 
-%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.15/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.15/
-%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.15/
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.16/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.16/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.16/
 
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao415.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao415.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao415.trial.xml
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao416.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao416.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao416.trial.xml
 
 -version
 
@@ -745,12 +745,12 @@ logourl=/csc2/
 googlessi=/csc2/analytics.ssi
 
 # MathJax location
-%mathjaxpath=live /ciao4.15/mathjax3/tex-chtml.js
-%mathjaxpath=test /ciao4.15/mathjax3/tex-chtml.js
+%mathjaxpath=live /ciao4.16/mathjax3/tex-chtml.js
+%mathjaxpath=test /ciao4.16/mathjax3/tex-chtml.js
 %mathjaxpath=trial /ciao/mathjax3/tex-chtml.js
 
-%stylesheets=live /data/da/Docs/web4/ciao415/
-%stylesheets=test /data/da/Docs/web4/ciao415/
+%stylesheets=live /data/da/Docs/web4/ciao416/
+%stylesheets=test /data/da/Docs/web4/ciao416/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc/htdocs/csc2/
@@ -768,17 +768,17 @@ googlessi=/csc2/analytics.ssi
 
 # where does the ahelp 'index' file live
 # use CIAO versions
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao415/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao415/trial/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao416/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao416/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao416/trial/ahelp/
 
-%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.15/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.15/
-%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.15/
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.16/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.16/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.16/
 
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao415.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao415.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao415.trial.xml
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao416.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao416.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao416.trial.xml
 
 -version
 
@@ -829,12 +829,12 @@ logourl=/csc2.1/
 googlessi=/csc2/analytics.ssi
 
 # MathJax location
-%mathjaxpath=live /ciao4.15/mathjax3/tex-chtml.js
-%mathjaxpath=test /ciao4.15/mathjax3/tex-chtml.js
+%mathjaxpath=live /ciao4.16/mathjax3/tex-chtml.js
+%mathjaxpath=test /ciao4.16/mathjax3/tex-chtml.js
 %mathjaxpath=trial /ciao/mathjax3/tex-chtml.js
 
-%stylesheets=live /data/da/Docs/web4/ciao415/
-%stylesheets=test /data/da/Docs/web4/ciao415/
+%stylesheets=live /data/da/Docs/web4/ciao416/
+%stylesheets=test /data/da/Docs/web4/ciao416/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc/htdocs/csc2.1/
@@ -852,17 +852,17 @@ googlessi=/csc2/analytics.ssi
 
 # where does the ahelp 'index' file live
 # use CIAO versions
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao415/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao415/trial/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao416/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao416/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao416/trial/ahelp/
 
-%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.15/
-%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.15/
-%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.15/
+%ahelpfiles=live /data/da/Docs/sxml_manuals/webxml/4.16/
+%ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.16/
+%ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.16/
 
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao415.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao415.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao415.trial.xml
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao416.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao416.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao416.trial.xml
 
 -version
 
@@ -936,8 +936,8 @@ googlessi=/obsvis/analytics.ssi
 %mathjaxpath=test /ciao4.12/mathjax/MathJax.js?config=TeX-MML-AM_CHTML
 %mathjaxpath=trial /ciao/mathjax3/tex-chtml.js
 
-%stylesheets=live /data/da/Docs/web4/ciao415/
-%stylesheets=test /data/da/Docs/web4/ciao415/
+%stylesheets=live /data/da/Docs/web4/ciao416/
+%stylesheets=test /data/da/Docs/web4/ciao416/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
 %outdir=live /proj/web-cxc/htdocs/obsvis/
@@ -954,17 +954,17 @@ googlessi=/obsvis/analytics.ssi
 
 # where does the ahelp 'index' file live
 # use CIAO versions
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao415/live/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
-%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao416/live/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao416/test/ahelp/
+%ahelpindexdir=trial /data/da/Docs/ciaoweb/published/ciao416/test/ahelp/
 
-%storage=live /data/da/Docs/ciaoweb/published/ciao415/live/
-%storage=test /data/da/Docs/ciaoweb/published/ciao415/test/
-%storage=trial /data/da/Docs/ciaoweb/published/ciao415/trial/
+%storage=live /data/da/Docs/ciaoweb/published/ciao416/live/
+%storage=test /data/da/Docs/ciaoweb/published/ciao416/test/
+%storage=trial /data/da/Docs/ciaoweb/published/ciao416/trial/
 
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao415.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao415.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao415.trial.xml
+%storageloc=live /data/da/Docs/ciaoweb/storage.ciao416.live.xml
+%storageloc=test /data/da/Docs/ciaoweb/storage.ciao416.test.xml
+%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao416.trial.xml
 
 -version
 
@@ -1006,8 +1006,8 @@ logotext=Science Data Systems
 %favicon=live https://cxc.cfa.harvard.edu/ciao/favicon.ico
 %favicon=test https://cxc.cfa.harvard.edu/ciao/favicon.ico
 
-%stylesheets=live /data/da/Docs/web4/ciao415/
-%stylesheets=test /data/da/Docs/web4/ciao415/
+%stylesheets=live /data/da/Docs/web4/ciao416/
+%stylesheets=test /data/da/Docs/web4/ciao416/
 
 %outdir=live /proj/web-icxc/htdocs/
 %outdir=test /proj/web-icxc-test/htdocs/
@@ -1015,8 +1015,8 @@ logotext=Science Data Systems
 %outurl=test https://icxc2.cfa.harvard.edu/sds/
 
 # ugh - a hack; do not need ahelp here
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao416/test/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao416/test/ahelp/
 
 -version
 
@@ -1034,8 +1034,8 @@ logotext=Science Data Systems
 %favicon=live https://cxc.cfa.harvard.edu/ciao/favicon.ico
 %favicon=test https://cxc.cfa.harvard.edu/ciao/favicon.ico
 
-%stylesheets=live /data/da/Docs/web4/ciao415/
-%stylesheets=test /data/da/Docs/web4/ciao415/
+%stylesheets=live /data/da/Docs/web4/ciao416/
+%stylesheets=test /data/da/Docs/web4/ciao416/
 
 %outdir=live /proj/web-cxc-secure/htdocs/sds/
 %outdir=test /proj/web-cxc-secure/htdocs/sds/
@@ -1043,8 +1043,8 @@ logotext=Science Data Systems
 %outurl=test https://cxc.cfa.harvard.edu/sds/
 
 # ugh - a hack; do not need ahelp here
-%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
-%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao415/test/ahelp/
+%ahelpindexdir=live /data/da/Docs/ciaoweb/published/ciao416/test/ahelp/
+%ahelpindexdir=test /data/da/Docs/ciaoweb/published/ciao416/test/ahelp/
 
 -version
 
