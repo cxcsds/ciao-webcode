@@ -25,6 +25,7 @@ use Cwd;
 use IO::File;
 use File::stat;
 use File::Basename;
+use File::Temp;
 
 use XML::LibXML;
 use XML::LibXSLT;
@@ -358,7 +359,7 @@ sub check_paths (@) {
 
 # check_executables( $bin1, $bin2, ... )
 #
-# checks that the input fiels are executable
+# checks that the input files are executable
 # dies if they aren't.
 #
 sub check_executables (@) {
@@ -1704,6 +1705,50 @@ Argh: ahelp reverse dependencies are generally complicated because
 				    return $out;
 				  }
 				 );
+
+  # Use pygments to process the contents with the given language.
+  # The check for pygmentize should be done only once.
+  #
+  # Style sheet can be accessed with
+  #    pygmentize -f html -S default -a .highlight
+  #
+  XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				  "add-language-styles",
+				  sub {
+				      my $lang = shift;
+				      my $cts = shift;
+
+				      if ($lang eq "none") {
+					  return $cts;
+				      }
+
+				      # If we don't have pygmentize just skip
+				      # things.
+				      #
+				      my $PROG = "pygmentize";
+				      `$PROG -V`;
+				      if ($? ne 0) {
+					  dbg "pygmentize is not available - language=$lang";
+					  return $cts;
+				      }
+
+				      my $tfile = File::Temp->new(
+					  'TEMPLATE' => "pygmXXXXXX",
+					  'SUFFIX' => ".pyg");
+				      $tfile->print($cts);
+
+				      my $filename = $tfile->filename();
+				      $tfile->close() and
+					  my $conv = `$PROG -f html -l $lang -O nowrap=true $filename`;
+
+				      if ($conv eq "") {
+					  dbg "Unable to $PROG language $lang";
+					  return $cts;
+				      }
+
+				      return $conv;
+				  });
+
 }
 
 
