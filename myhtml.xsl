@@ -377,9 +377,12 @@
       *-->
   <xsl:template name="add-highlight">
     <xsl:param name="contents" select="''"/>
+    <xsl:param name="language" select="'none'"/>
 
     <!--* yay CSS (although highlight is a poor class name) *-->
-<pre class="highlight"><xsl:copy-of select="$contents"/></pre>
+    <pre class="highlight"><xsl:value-of
+    select="extfuncs:add-language-styles($language, $contents)"
+    disable-output-escaping="yes"/></pre>
   </xsl:template> <!--* name=add-highlight *-->
 
   <!--*
@@ -387,6 +390,9 @@
       * the text-wrapping behavior. By default it does not
       * wrap (wrap="no") but it can be changed to wrap by setting
       * wrap="yes".
+      *
+      * Added support for the lang tag. This is used to
+      * set up the pygmentize call.
       *-->
   <xsl:template match="screen">
 
@@ -424,10 +430,17 @@
  ERROR: invaling wrap attribute in screen tag: wrap=<xsl:value-of select="@wrap"/>
       </xsl:message>
     </xsl:otherwise></xsl:choose></xsl:variable>
+
+    <!-- what is the language -->
+    <xsl:variable name="language"><xsl:choose>
+      <xsl:when test="boolean(@lang)"><xsl:value-of select="@lang"/></xsl:when>
+      <xsl:otherwise>none</xsl:otherwise>
+      </xsl:choose></xsl:variable>
     
     <div class="{$class}">
       <xsl:call-template name="add-highlight">
 	<xsl:with-param name="contents" select="$contents"/>
+	<xsl:with-param name="language" select="$language"/>
       </xsl:call-template>
     </div>
     <!--* <br/> *-->

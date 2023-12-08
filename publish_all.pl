@@ -430,6 +430,7 @@ my $localxslt_opt = $localxslt ? "--localxslt" : "--nolocalxslt";
 my $verbose_opt = $verbose ? "--verbose" : "--noverbose";
 my $ignore_opt = $ignoremissinglink ? "--ignore-missing" : "";
 
+my @errors;
 foreach my $href ( \%images, \%files ) {
     foreach my $dir ( keys %{$href} ) {
 	my @files = @{ $$href{$dir} };
@@ -441,7 +442,7 @@ foreach my $href ( \%images, \%files ) {
 	  $cfg_opt, $type_opt, $force_opt, $forceforce_opt, $localxslt_opt, $verbose_opt,
 	  $ignore_opt,
 	  @files
-	    and die "\nerror in\n dir=$dir\n with files=" . join(" ",@files) . "\n\n";
+	    and push @errors, "dir=$dir with files=" . join(" ",@files);
     }
 }
 
@@ -463,6 +464,10 @@ if ( defined $threadindex ) {
 }
 
 chdir $cwd;
+
+if ($#errors > -1) { print "\nERRORS when publishing:\n"; }
+foreach my $emsg ( @errors ) { print "** $emsg\n"; }
+if ($#errors > -1) { print "\n"; }
 
 ## End
 #

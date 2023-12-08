@@ -782,7 +782,7 @@ googlessi=/csc2/analytics.ssi
 
 -version
 
-+version csc21
++version csc2.1
 
 # is this used for anything other than ahelp?
 number=2.1
