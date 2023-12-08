@@ -78,9 +78,9 @@ my @prefixes =
    "/data/da/Docs/irisweb/iris",
    "/data/da/Docs/cscweb/csc1",
    "/data/da/Docs/cscweb/csc2",
+   "/data/da/Docs/cscweb/csc2.1",
    "/data/da/Docs/chartweb/internal",
    "/data/da/Docs/obsvisweb/website",
-
    "/data/da/Docs/caldbweb/caldb4",
    "/data/da/Docs/ciaoweb/dev",
    "/data/da/Docs/ciaoweb/ciao43",
@@ -109,6 +109,8 @@ my @prefixes =
    "/data/da/Docs/sherpaweb/ciao414",
    "/data/da/Docs/ciaoweb/ciao415",
    "/data/da/Docs/sherpaweb/ciao415",
+   "/data/da/Docs/ciaoweb/ciao416",
+   "/data/da/Docs/sherpaweb/ciao416",
 
    "/data/da/Docs/icxcweb/sds",
 
