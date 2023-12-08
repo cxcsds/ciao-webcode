@@ -2132,7 +2132,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	<!--* could just set href directly but want class to appear first (for testing) *-->
 	<a>
 	  <xsl:attribute name="title">CXC Helpdesk</xsl:attribute>
-	  <xsl:attribute name="href">/helpdesk/</xsl:attribute>
+	  <xsl:attribute name="href">/help/</xsl:attribute>
 	  <xsl:choose>
 	    <xsl:when test=".=''">CXC Helpdesk</xsl:when>
 	    <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
