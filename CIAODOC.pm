@@ -1723,7 +1723,9 @@ Argh: ahelp reverse dependencies are generally complicated because
 				      }
 
 				      # If we don't have pygmentize just skip
-				      # things.
+				      # things. This should probably die
+				      # instead but leave like this for
+				      # testing.
 				      #
 				      my $PROG = "pygmentize";
 				      `$PROG -V`;

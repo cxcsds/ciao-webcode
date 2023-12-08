@@ -1538,6 +1538,9 @@ sub xml2html_thread ($) {
 # The notebook is defined in the metadata; it is assumed
 # to match the name of the file but does not need to be.
 #
+# To process a notebook we need to have python with
+# nbconvert >= 6.0 installed.
+#
 sub xml2html_notebook ($) {
     my $opts = shift;
 
@@ -1567,7 +1570,7 @@ sub xml2html_notebook ($) {
     print "\n";
 
     # If we've got this far we can remove the converted HTML file
-    # (it is checked bu xml2html_basic). Does this help?
+    # (it is checked by xml2html_basic). Does this help?
     #
     myrm $pages[0];
 
@@ -1581,6 +1584,10 @@ sub xml2html_notebook ($) {
     #   - writes out the PNGs separately
     #
     my $nb_files = qx "python $FindBin::Bin/extract_notebook.py ${nb} ${outdir}";
+    if ($? ne 0) {
+	# I've forgotten how to handle failure cases in perl
+	die "To process a notebook we need python with nbconvert installed!";
+    }
 
     my $raw_header_name = (split(/\n/,$nb_files))[0];
     my $raw_header = do {
