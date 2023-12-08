@@ -1735,7 +1735,7 @@ sub process_xml ($$) {
 	# add it to each file (at least this means if there's any
 	# version-specific styling we can pick it up).
 	#
-	my $codestyle = $droot->findvalue('count(text//screen[@lang]) != 0');
+	my $codestyle = $droot->findvalue('count(//screen[@lang]) != 0');
 	if ($codestyle eq "true") {
 	    my $pstyles = get_pygments_styles();
 	    my $nodetext = "/*** pygmentize styles ***/\n$pstyles";
