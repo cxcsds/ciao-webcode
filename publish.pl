@@ -1729,6 +1729,46 @@ sub process_xml ($$) {
 	    next;
 	}
 
+	# To support pygments (experimental) we need to add or augment
+	# any info/css block with the pygments stylesheet. We should
+	# make this a separate file to share between files but for now
+	# add it to each file (at least this means if there's any
+	# version-specific styling we can pick it up).
+	#
+	my $codestyle = $droot->findvalue('count(text//screen[@lang]) != 0');
+	if ($codestyle eq "true") {
+	    my $pstyles = get_pygments_styles();
+	    my $nodetext = "/*** pygmentize styles ***/\n$pstyles";
+
+	    # Do we have a <page>/info/css block
+	    #
+	    my @cssnodes = $droot->findnodes('info/css');
+	    my $ncss = scalar(@cssnodes);
+	    if ($ncss == 0) {
+		# I think this works but it has not been checked.
+		my $cssnode = XML::LibXML::Element->new("css");
+		$cssnode->appendTextNode($nodetext);
+
+		# Assume only one info exists
+		my $info = $droot->find("info");
+		if ($info->size() != 1) {
+		    die "Unexpected number of info elements";
+		}
+		# this is a bit silly
+		foreach my $tempnode ($info->get_nodelist) {
+		    $tempnode->appendChild($cssnode);
+		}
+
+	    } elsif ($ncss == 1) {
+		my $cssnode = $cssnodes[0];
+		my $node = $dom->createTextNode($nodetext);
+		$cssnode->addChild($node);
+
+	    } else {
+		die "Error: multiple info/css blocks - likely a problem";
+	    }
+	}
+
 	$$opts{xml_dom} = $dom;
 
 	# when was the file last modified?

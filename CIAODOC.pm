@@ -101,6 +101,7 @@ my @funcs_util =
      check_paths check_executables check_executable_runs
      extract_filename get_ostype
      list_ahelp_sites find_ahelp_site check_ahelp_site_valid
+     get_pygments_styles
     );
 my @funcs_xslt =
   qw(
@@ -1114,6 +1115,69 @@ sub check_ahelp_site_valid ($) {
       unless exists $asites{$site};
 } # sub: check_ahelp_site_valid()
 
+# Pygments
+#
+# Use pygments to process the contents with the given language.
+# The check for pygmentize should be done only once.
+#
+# Style sheet can be accessed with
+#    pygmentize -f html -S default -a .highlight
+#
+# Note that to take advantage of the highlighting the code
+# needs to either have access to the stylesheet in some
+# manner - either included in the file or accessed from an
+# external stylesheet.
+#
+sub get_pygments_styles() {
+    my $PROG = "pygmentize";
+    my $styles = `$PROG -f html -S default -a .highlight`;
+    if ($? ne 0) {
+	die 'Error: pygmentize is not available but we have screen[@lang]';
+    }
+    return $styles;
+}
+
+XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
+				"add-language-styles",
+				sub {
+				    my $lang = shift;
+				    my $cts = shift;
+
+				    if ($lang eq "none") {
+					return $cts;
+				    }
+
+				    # If we don't have pygmentize just skip
+				    # things. This should probably die
+				    # instead but leave like this for
+				    # testing (and we should have already
+				    # checked for pygmnentize anyway).
+				    #
+				    my $PROG = "pygmentize";
+				    `$PROG -V`;
+				    if ($? ne 0) {
+					dbg "pygmentize is not available - language=$lang";
+					return $cts;
+				    }
+
+				    my $tfile = File::Temp->new(
+					'TEMPLATE' => "pygmXXXXXX",
+					'SUFFIX' => ".pyg");
+				    $tfile->print($cts);
+
+				    my $filename = $tfile->filename();
+				    $tfile->close() and
+					my $conv = `$PROG -f html -l $lang -O nowrap=true $filename`;
+
+				    if ($conv eq "") {
+					dbg "Unable to $PROG language $lang";
+					return $cts;
+				    }
+
+				    return $conv;
+				});
+
+
 # Dependency tracking
 
 {
@@ -1705,51 +1769,6 @@ Argh: ahelp reverse dependencies are generally complicated because
 				    return $out;
 				  }
 				 );
-
-  # Use pygments to process the contents with the given language.
-  # The check for pygmentize should be done only once.
-  #
-  # Style sheet can be accessed with
-  #    pygmentize -f html -S default -a .highlight
-  #
-  XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs",
-				  "add-language-styles",
-				  sub {
-				      my $lang = shift;
-				      my $cts = shift;
-
-				      if ($lang eq "none") {
-					  return $cts;
-				      }
-
-				      # If we don't have pygmentize just skip
-				      # things. This should probably die
-				      # instead but leave like this for
-				      # testing.
-				      #
-				      my $PROG = "pygmentize";
-				      `$PROG -V`;
-				      if ($? ne 0) {
-					  dbg "pygmentize is not available - language=$lang";
-					  return $cts;
-				      }
-
-				      my $tfile = File::Temp->new(
-					  'TEMPLATE' => "pygmXXXXXX",
-					  'SUFFIX' => ".pyg");
-				      $tfile->print($cts);
-
-				      my $filename = $tfile->filename();
-				      $tfile->close() and
-					  my $conv = `$PROG -f html -l $lang -O nowrap=true $filename`;
-
-				      if ($conv eq "") {
-					  dbg "Unable to $PROG language $lang";
-					  return $cts;
-				      }
-
-				      return $conv;
-				  });
 
 }
 
