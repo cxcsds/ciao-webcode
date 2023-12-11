@@ -70,7 +70,7 @@
   <xsl:template match="a|A">
     <xsl:message terminate="yes">
       Please convert all &lt;<xsl:value-of select="name()"/>&gt; tags to one of:
-      threadlink, cxclink, imglink, extlink, id, helpdesk, manual, pog, caveat, ...
+      threadlink, cxclink, downloadlink, imglink, extlink, id, helpdesk, manual, pog, caveat, ...
       The tag contains:
       <xsl:value-of select="."/>
     </xsl:message>
@@ -1966,6 +1966,54 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     </xsl:call-template>
     
   </xsl:template> <!--* cxclink *-->                                            
+
+
+  <!-- for a local download, to make sure the browser knows this is meant to be a
+       download and not just a link to display in another tab. -->
+  <xsl:template match="downloadlink">
+
+    <xsl:call-template name="check-contents-are-not-empty"/>
+
+    <xsl:if test="not(boolean(@href))">
+	<xsl:message terminate="yes">
+ ERROR: downloadlink tags need an href attribute!
+	</xsl:message>
+    </xsl:if>
+
+    <!-- seen this on some sites -->
+    <xsl:if test="starts-with(@href, 'http')">
+	<xsl:message terminate="yes">
+ ERROR: downloadlink tags MUST be local - found
+    &lt;downloadlink href="<xsl:value-of select="@href"/>"&gt;<xsl:value-of select="."/>&lt;/downloadlink&gt;
+	</xsl:message>
+      </xsl:if>
+
+    <!--* TODO: for now drop id tag -->
+    <xsl:if test="boolean(@id)">
+      <xsl:message terminate="yes">
+ ERROR: a downloadlink tag has an id attribute. This is currently not allowed!
+      </xsl:message>
+    </xsl:if>
+
+    <!--* process the contents, surrounded by styles *-->
+    <xsl:call-template name="add-text-styles">
+      <xsl:with-param name="contents">
+	<a download="">
+	  <!--* note the ugly way I find the name of the root node (ie 'name(//*)') *-->
+	  <xsl:attribute name="href"><xsl:value-of select="@href"/></xsl:attribute>
+	  <xsl:if test="boolean(@filename)">
+	    <xsl:attribute name="filename"><xsl:value-of select="@filename"/></xsl:attribute>
+	  </xsl:if>
+	  <xsl:if test="boolean(@type)">
+	    <xsl:attribute name="type"><xsl:value-of select="@type"/></xsl:attribute>
+	  </xsl:if>
+	  <xsl:call-template name="add-class-attribute"/>
+	  <xsl:apply-templates/>
+	</a>
+      </xsl:with-param>
+    </xsl:call-template>
+
+  </xsl:template> <!--* downloadlink *-->
 
 
 <!--*
