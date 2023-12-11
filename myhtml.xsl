@@ -379,10 +379,23 @@
     <xsl:param name="contents" select="''"/>
     <xsl:param name="language" select="'none'"/>
 
-    <!--* yay CSS (although highlight is a poor class name) *-->
-<pre class="highlight"><xsl:value-of
-    select="extfuncs:add-language-styles($language, $contents)"/></pre>
-
+    <!--* yay CSS (although highlight is a poor class name)
+	*
+	* So, we have an issue here with the processed text here
+	* - if there's no processing then we can just copy over
+	*   the text and things like '&amp; <foo>xx</foo>' will
+	*   get converted.
+	* - if styling is added (i.e. language is not 'none') then
+	*   we need to disable the output escaping, since we want
+	*   tags to be tags (and hope that the actual text will
+	*   have been converted correctly, which it should be...)
+	*-->
+<pre class="highlight"><xsl:choose>
+  <xsl:when test="$language='none'"><xsl:copy-of select="$contents"/></xsl:when>
+  <xsl:otherwise><xsl:value-of
+  select="extfuncs:add-language-styles($language, $contents)"
+  disable-output-escaping="yes"/></xsl:otherwise>
+</xsl:choose></pre>
   </xsl:template> <!--* name=add-highlight *-->
 
   <!--*
