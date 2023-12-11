@@ -380,9 +380,9 @@
     <xsl:param name="language" select="'none'"/>
 
     <!--* yay CSS (although highlight is a poor class name) *-->
-    <pre class="highlight"><xsl:value-of
-    select="extfuncs:add-language-styles($language, $contents)"
-    disable-output-escaping="yes"/></pre>
+<pre class="highlight"><xsl:value-of
+    select="extfuncs:add-language-styles($language, $contents)"/></pre>
+
   </xsl:template> <!--* name=add-highlight *-->
 
   <!--*
