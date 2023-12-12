@@ -206,7 +206,9 @@
 
       <!--* loop through the sections *-->
       <xsl:for-each select="faqsection">
-	<h3><xsl:apply-templates select="name"/></h3>
+	<h3><xsl:if test="boolean(name[@id])"><xsl:attribute name="id">
+	  <xsl:value-of select="name/@id"/>
+	  </xsl:attribute></xsl:if><xsl:apply-templates select="name"/></h3>
 
 	<!--* list through each entry *-->
 	<ol type="1">
