@@ -434,10 +434,12 @@
 	</xsl:when>
       </xsl:choose></xsl:variable>
 
-    <!--* <br/> *-->
-    <xsl:variable name="class"><xsl:choose>
+    <!-- when @lang is used we add both 'screen' and 'screen-<lang>',
+         perhaps we should just use the latter but it would mean
+         more work with the stylesheets? -->
+    <xsl:variable name="classes"><xsl:choose>
       <xsl:when test="boolean(@wrap) and @wrap='yes'">screenwrap</xsl:when>
-    <xsl:when test="(boolean(@wrap) and @wrap='no') or not(boolean(@wrap))">screen</xsl:when>
+    <xsl:when test="(boolean(@wrap) and @wrap='no') or not(boolean(@wrap))">screen<xsl:if test="boolean(@lang)"> screen-<xsl:value-of select="@lang"/></xsl:if></xsl:when>
     <xsl:otherwise>
       <xsl:message terminate="yes">
  ERROR: invaling wrap attribute in screen tag: wrap=<xsl:value-of select="@wrap"/>
@@ -449,8 +451,8 @@
       <xsl:when test="boolean(@lang)"><xsl:value-of select="@lang"/></xsl:when>
       <xsl:otherwise>none</xsl:otherwise>
       </xsl:choose></xsl:variable>
-    
-    <div class="{$class}">
+
+    <div class="{$classes}">
       <xsl:call-template name="add-highlight">
 	<xsl:with-param name="contents" select="$contents"/>
 	<xsl:with-param name="language" select="$language"/>
