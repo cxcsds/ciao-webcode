@@ -199,6 +199,7 @@
       *
       * Parameters:
       *   title - string, required
+      *
       *-->
   <xsl:template name="add-title-anchor">
     <xsl:param name="title"/>
@@ -209,13 +210,35 @@
       </xsl:message>
     </xsl:if>
 
-    <xsl:variable name="type"><xsl:choose>
-	<xsl:when test="ancestor::PARAM">h5</xsl:when>
-	<xsl:otherwise>h3</xsl:otherwise>
-      </xsl:choose></xsl:variable>
+    <xsl:variable name="ctitle">
+      <xsl:value-of select="translate($title,' ','_')"/>
+    </xsl:variable>
 
+    <xsl:variable name="type"><xsl:choose>
+      <xsl:when test="ancestor::PARAM">h5</xsl:when>
+      <xsl:otherwise>h3</xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
+    <!--*
+	* Try to guess whether it's safe to use $title as the anchor.
+        * This should really check against $ctitle and apply the
+	* conversion to @title, but that is excessive for now.
+	* I had tried moving the count out into a variable but then
+	* it created true/false strings and they are taken as
+	* being true (an empty string is false), so leave this note
+	* here for future me.
+	*
+	* would like to only write out the warning once but YOLO
+	* -->
     <xsl:element name="{$type}">
-      <xsl:attribute name="id"><xsl:value-of select="translate($title,' ','_')"/></xsl:attribute>
+      <xsl:choose>
+	<xsl:when test="count(//@title[. = $title]) = 1">
+	  <xsl:attribute name="id"><xsl:value-of select="$ctitle"/></xsl:attribute>
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:message terminate="no">  NOTE: multiple title='<xsl:value-of select="$title"/>' so can not use as an anchor/id</xsl:message>
+	</xsl:otherwise>
+      </xsl:choose>
       <xsl:value-of select="$title"/>
     </xsl:element>
 
