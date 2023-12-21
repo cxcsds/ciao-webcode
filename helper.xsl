@@ -387,6 +387,7 @@
       *-->
   <xsl:template match="metalist"><xsl:apply-templates select="meta"/></xsl:template>
   <xsl:template match="meta[@http-equiv and @content]">
+    <xsl:message terminate="no">  WARNING: change 'http-equiv' attribute of meta link(s) to 'name'</xsl:message>
     <meta name="{@http-equiv}" content="{@content}"/>
   </xsl:template>
   <xsl:template match="meta"><xsl:copy-of select="."/></xsl:template>
