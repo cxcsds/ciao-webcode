@@ -1887,6 +1887,17 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</xsl:message>
       </xsl:if>
 
+      <!--*
+	  * technically we could have a URL beginning with /help that is not
+	  * for helpdesk, but let's worry about that if we ever find one.
+	  *-->
+      <xsl:if test="starts-with(@href, '/help')">
+	<xsl:message terminate="yes">
+ ERROR: cxclink tag with href="<xsl:value-of select="@href"/>" - use &lt;helpdesk&gt; instead
+    - speak to Doug if you think this is wrongy wrong wrong
+	</xsl:message>
+      </xsl:if>
+
       <!-- occasionally want to link into a thread page - e.g. for sherpa fit.py
            scripts, so special case those; also, as no easy ends-with()
            function just use contains
