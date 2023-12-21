@@ -76,6 +76,13 @@
     </xsl:message>
   </xsl:template> <!-- a|A -->
 
+  <!-- catch some common failure cases that DJB makes -->
+  <xsl:template match="cxclnik|extlnik">
+    <xsl:message terminate="yes">
+      Found element called &lt;<xsl:value-of select="name()"/>&gt; which is 99.99% a typo
+    </xsl:message>
+  </xsl:template>
+
   <!--*
       * Link to the ahelp index page. If the site attribute is given
       * then link to that site's index page, otherwise use the local
