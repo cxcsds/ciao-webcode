@@ -732,7 +732,7 @@
 		  
 	<!--* do we add a HR? *-->
 	<xsl:if test="position() != last()">
-	  <tr><td colspan="7"><hr/></td></tr>
+	  <tr><td colspan="4"><hr/></td></tr>
 	</xsl:if>
 	
       </xsl:for-each> <!--* term *-->
@@ -887,7 +887,7 @@
 	
 	<!--* do we add a HR? *-->
 	<xsl:if test="position() != last()">
-	  <tr><td colspan="5"><hr/></td></tr>
+	  <tr><td colspan="3"><hr/></td></tr>
 	</xsl:if>
 
       </xsl:for-each> <!--* ahelpindex/context/term *-->
