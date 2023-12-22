@@ -1774,4 +1774,13 @@ ERROR: section tag has an empty id attribute.
     </xsl:message>
   </xsl:template>
 
+  <!--*
+      * I keep on doing this...
+      *-->
+  <xsl:template match="annotation">
+    <xsl:message terminate="yes">
+ ERROR: found &lt;annotation&gt; tag which should probably be &lt;admonition&gt;
+    </xsl:message>
+  </xsl:template>
+
 </xsl:stylesheet>
