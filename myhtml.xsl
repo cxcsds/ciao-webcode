@@ -1054,7 +1054,8 @@
     <xsl:variable name="nfig" select="count(//figure[@id=$id])"/>
     <xsl:variable name="nsec" select="count(//section[@id=$id])"/>
     <xsl:variable name="nsub" select="count(//subsection[@id=$id])"/>
-    <xsl:variable name="nmatches" select="$nfig + $nsec + $nsub"/>
+    <xsl:variable name="nsubsub" select="count(//subsubsection[@id=$id])"/>
+    <xsl:variable name="nmatches" select="$nfig + $nsec + $nsub + $nsubsub"/>
     <xsl:choose>
       <xsl:when test="$nmatches=1"/>
       <xsl:when test="$nmatches>1">
@@ -1075,8 +1076,8 @@
   <!--*
       * This is ugly; do we handle this better in other parts of the system?
       * (we need a different mode since there must be an explicit title template
-      * somewhere that ignores the content, presumably to handle section/subsection
-      * title elements).
+      * somewhere that ignores the content, presumably to handle
+      * section/subsection/subsubsection title elements).
       *
       * I added this so that we could include some mark up in the title element of
       * figures, but so far it does not seem to actually do this.
@@ -1417,7 +1418,8 @@
   </xsl:template> <!--* match=caption mode=figure *-->
 
   <!--*
-         * Handle section/subsections
+         * Handle section/subsections/subsubsections (getting a little
+	 * crazy)
 	 *
 	 * This used to be in threads, but has now been moved here so
 	 * that it can be used in any document.
@@ -1692,6 +1694,52 @@ ERROR: section tag has an empty id attribute.
   </xsl:template> <!--* match=subsectionlist *-->
 
   <!--*
+      * process a subsubsectionlist
+      *
+      * Parameters:
+      *
+      *-->
+  <xsl:template match="subsubsectionlist">
+
+    <!--*
+        * need to store as a variable since we have changed
+        * context node by the time we come to use it
+        *-->
+    <xsl:variable name="type" select="@type"/>
+
+    <div class="subsubsectionlist">
+
+      <!--* use a pull-style approach *-->
+      <xsl:for-each select="subsubsection">
+
+	<!--* process each subsection *-->
+	<div class="subsubsection">
+	  <h4 id="{@id}"><xsl:call-template name="position-to-label">
+		<xsl:with-param name="type" select="$type"/>
+	      </xsl:call-template><xsl:value-of select="title"/></h4>
+
+	  <!-- need to hide the title block; as I am not sure if I depend on
+	       the title block being processed in other cases, I don't want
+	       to add a template to just ignore title blocks. Similarly,
+	       I don't want to add a mode here since the contents are
+	       generic.
+	    -->
+	  <xsl:apply-templates select="*[name() != 'title']"/>
+
+	  <!--* we only add a hr if we are NOT the last subsubsection
+	      (and hr's are allowed) *-->
+	  <xsl:if test="position() != last() and (not(/*/text/@separator) or /*/text/@separator = 'bar')">
+	    <xsl:call-template name="add-mid-sep"/>
+	  </xsl:if>
+
+	</div> <!--* class=subsubsection *-->
+      </xsl:for-each>
+
+    </div> <!--* class=subsubsectionlist *-->
+
+  </xsl:template> <!--* match=subsubsectionlist *-->
+
+  <!--*
       * add a separator between "sections"
       *-->
   <xsl:template name="add-mid-sep">
@@ -1713,6 +1761,15 @@ ERROR: section tag has an empty id attribute.
     <div style="font-weight: bold; color: red;">
       <xsl:apply-templates/>
     </div>
+  </xsl:template>
+
+  <!--*
+      * just in case...
+      *-->
+  <xsl:template match="subsubsubsection|subsubsubsectionlist">
+    <xsl:message terminate="yes">
+ ERROR: found &lt;<xsl:value-of select="name()"/>&gt; tag - see Doug!
+    </xsl:message>
   </xsl:template>
 
 </xsl:stylesheet>
