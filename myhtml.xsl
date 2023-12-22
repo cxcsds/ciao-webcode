@@ -1698,4 +1698,21 @@ ERROR: section tag has an empty id attribute.
     <hr class="midsep"/>
   </xsl:template>
 
+  <!--*
+      * allow us to add a TODO marker that gets displayed
+      * *and* stops the page being published to the live
+      * site.
+      *-->
+  <xsl:template match="TODO|todo|Todo|ToDo">
+    <xsl:if test="$type='live'">
+      <xsl:message terminate="yes">
+ ERROR: found &lt;<xsl:value-of select="name()"/>&gt; tag with contents
+ <xsl:value-of select="."/>
+      </xsl:message>
+    </xsl:if>
+    <div style="font-weight: bold; color: red;">
+      <xsl:apply-templates/>
+    </div>
+  </xsl:template>
+
 </xsl:stylesheet>
