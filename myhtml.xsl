@@ -170,7 +170,7 @@
 
   <!--*
       * lists: 
-      * we allow ul and ol (type=A, a, or 1)
+      * we allow ul and ol (type=A, a, I, i, or 1)
       * and introduce <list> with an
       * attribute of type (undef => ul, otherwise ol type A, a, or 1)
       *
@@ -202,15 +202,17 @@
 
     <!--* this could be cleverer *-->
     <xsl:choose>
-      <xsl:when test="string(@type)='A' or string(@type)='a'">
+      <xsl:when test="string(@type)='A' or string(@type)='a' or
+		      string(@type)='I' or string(@type)='i' or
+		      string(@type)='1'">
 	<ol type="{@type}">
 	  <xsl:apply-templates/>
 	</ol>
       </xsl:when>
-      <xsl:when test="string(@type)='1'">
-	<ol type="1">
-	  <xsl:apply-templates/>
-	</ol>
+      <xsl:when test="boolean(@type)">
+	<xsl:message terminate="yes">
+ ERROR list tag with unknown type='<xsl:value-of select="@type"/>'
+	</xsl:message>
       </xsl:when>
       <xsl:otherwise>
 	<ul>
