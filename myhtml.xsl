@@ -1760,6 +1760,10 @@ ERROR: section tag has an empty id attribute.
  <xsl:value-of select="."/>
       </xsl:message>
     </xsl:if>
+    <xsl:message terminate="no">
+ NOTE: found &lt;<xsl:value-of select="name()"/>&gt; tag with contents
+ <xsl:value-of select="."/>
+    </xsl:message>
     <div style="font-weight: bold; color: red;">
       <xsl:apply-templates/>
     </div>
