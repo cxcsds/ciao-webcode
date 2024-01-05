@@ -1787,4 +1787,14 @@ ERROR: section tag has an empty id attribute.
     </xsl:message>
   </xsl:template>
 
+  <!--*
+      * argh; using xi:include is too easy to mess up and
+      * include the wrapper, so let's catch it and just
+      * process it's contents.
+      *-->
+  <xsl:template match="item">
+    <xsl:message terminate="no"> note: processing item tag (hopefully from xi:xinclude)</xsl:message>
+    <xsl:apply-templates/>
+  </xsl:template>
+
 </xsl:stylesheet>
