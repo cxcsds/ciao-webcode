@@ -706,12 +706,12 @@ number=2.0
 headtitlepostfix=CSC
 texttitlepostfix=CSC
 
-%css=live /csc2/csc.css
-%css=test /csc2/csc.css
+%css=live /csc2.0/csc.css
+%css=test /csc2.0/csc.css
 %css=trial /sds/csc/csc.css
 
-%cssprint=live /csc2/csc.print.css
-%cssprint=test /csc2/csc.print.css
+%cssprint=live /csc2.0/csc.print.css
+%cssprint=test /csc2.0/csc.print.css
 %cssprint=trial /sds/csc/csc.print.css
 
 # favicon location
@@ -719,8 +719,8 @@ texttitlepostfix=CSC
 %favicon=test /csc/favicon.ico
 %favicon=trial /sds/csc/favicon.ico
 
-%newsfile=live /proj/web-cxc/htdocs/csc2/news.html
-%newsfile=test /proj/web-cxc-dmz-prev/htdocs/csc2/news.html
+%newsfile=live /proj/web-cxc/htdocs/csc2.0/news.html
+%newsfile=test /proj/web-cxc-dmz-prev/htdocs/csc2.0/news.html
 %newsfile=trial /proj/web-cxc-dmz-test/htdocs/csc/news.html
 
 %newsurl=live /csc/news.html
@@ -734,15 +734,15 @@ texttitlepostfix=CSC
 
 logoimage=imgs/csc_logo_navbar.jpg
 logotext=Chandra Source Catalog logo
-logourl=/csc2/
+logourl=/csc2.0/
 
-%searchssi=live /csc2/csc_search.ssi
-%searchssi=test /csc2/csc_search.ssi
+%searchssi=live /csc2.0/csc_search.ssi
+%searchssi=test /csc2.0/csc_search.ssi
 %searchssi=trial /sds/csc/csc_search.ssi
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
-googlessi=/csc2/analytics.ssi
+googlessi=/csc2.0/analytics.ssi
 
 # MathJax location
 %mathjaxpath=live /ciao4.16/mathjax3/tex-chtml.js
@@ -753,18 +753,18 @@ googlessi=/csc2/analytics.ssi
 %stylesheets=test /data/da/Docs/web4/ciao416/
 %stylesheets=trial /data/da/Docs/web4/devel/
 
-%outdir=live /proj/web-cxc/htdocs/csc2/
-%outdir=test /proj/web-cxc-dmz-prev/htdocs/csc2/
+%outdir=live /proj/web-cxc/htdocs/csc2.0/
+%outdir=test /proj/web-cxc-dmz-prev/htdocs/csc2.0/
 %outdir=trial /proj/web-cxc-dmz-test/htdocs/csc/
 
 # live outurl is unversioned for use in canonical header link
 %outurl=live https://cxc.cfa.harvard.edu/csc/
-%outurl=test https://cxc-prev.cfa.harvard.edu/csc2/
+%outurl=test https://cxc-prev.cfa.harvard.edu/csc2.0/
 %outurl=trial https://cxc-dmz-test.cfa.harvard.edu/csc/
 
-%storage=live /data/da/Docs/cscweb/published/csc2/live/
-%storage=test /data/da/Docs/cscweb/published/csc2/test/
-%storage=trial /data/da/Docs/cscweb/published/csc2/trial/
+%storage=live /data/da/Docs/cscweb/published/csc2.0/live/
+%storage=test /data/da/Docs/cscweb/published/csc2.0/test/
+%storage=trial /data/da/Docs/cscweb/published/csc2.0/trial/
 
 # where does the ahelp 'index' file live
 # use CIAO versions
