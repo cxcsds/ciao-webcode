@@ -1504,7 +1504,7 @@
     <xsl:for-each select="section">
       <xsl:variable name="titlestring"><xsl:call-template name="find-section-label"/></xsl:variable>
 
-      <div class="section">
+      <section class="section">
       <xsl:choose>
 	<xsl:when test="boolean(@threadlink)">
 	  <xsl:call-template name="add-section-threadlink">
@@ -1518,8 +1518,15 @@
 ERROR: section tag has an empty id attribute.
 	    </xsl:message>
 	  </xsl:if>
-         
-	  <h2 id="{@id}"><xsl:value-of select="$titlestring"/></h2>
+
+	  <xsl:choose>
+	    <xsl:when test="$titlestring = ''">
+	      <xsl:message terminate="no">WARNING: missing title for section. Probably do not want this</xsl:message>
+	    </xsl:when>
+	    <xsl:otherwise>
+	      <h2 id="{@id}"><xsl:value-of select="$titlestring"/></h2>
+	    </xsl:otherwise>
+	  </xsl:choose>
 
 	  <!-- need to hide the title block; as I am not sure if I depend on
 	       the title block being processed in other cases, I don't want
@@ -1537,7 +1544,7 @@ ERROR: section tag has an empty id attribute.
 	<xsl:with-param name="last-section-id" select="$last-section-id"/>
       </xsl:call-template>
       
-    </div> <!--* class=section *-->
+    </section> <!--* class=section *-->
     </xsl:for-each>
     
   </xsl:template> <!--* name=add-sections *-->
@@ -1668,32 +1675,66 @@ ERROR: section tag has an empty id attribute.
       <!--* use a pull-style approach *-->
       <xsl:for-each select="subsection">
 
-	<!--* process each subsection *-->
-	<div class="subsection">
-	  <h3 id="{@id}"><xsl:call-template name="position-to-label">
-		<xsl:with-param name="type" select="$type"/>
-	      </xsl:call-template><xsl:value-of select="title"/></h3>
+	<xsl:variable name="titlestr">
+	  <xsl:call-template name="position-to-label">
+	    <xsl:with-param name="type" select="$type"/>
+	    </xsl:call-template><xsl:value-of select="title"/>
+	</xsl:variable>
 
-	  <!-- need to hide the title block; as I am not sure if I depend on
-	       the title block being processed in other cases, I don't want
-	       to add a template to just ignore title blocks. Similarly,
-	       I don't want to add a mode here since the contents are
-	       generic.
-	    -->
-	  <xsl:apply-templates select="*[name() != 'title']"/>
-      
-	  <!--* we only add a hr if we are NOT the last subsection
-	      (and hr's are allowed) *-->
-	  <xsl:if test="position() != last() and (not(/*/text/@separator) or /*/text/@separator = 'bar')">
-	    <xsl:call-template name="add-mid-sep"/>
-	  </xsl:if>
-      
-	</div> <!--* class=subsection *-->
+	<!--* process each subsection *-->
+	<xsl:call-template name="internal-subsection">
+	  <xsl:with-param name="classname">subsection</xsl:with-param>
+	  <xsl:with-param name="title" select="$titlestr"/>
+	  <xsl:with-param name="header">h3</xsl:with-param>
+	</xsl:call-template>
+
       </xsl:for-each>
 
     </div> <!--* class=subsectionlist *-->
 
   </xsl:template> <!--* match=subsectionlist *-->
+
+  <xsl:template name="internal-subsection">
+    <xsl:param name="classname"/>
+    <xsl:param name="title"/>
+    <xsl:param name="header"/>
+
+    <!--*
+	* process each "section"
+	* - if there is a title block then we use a section element,
+	*   otherwise it's a plain div.
+	*-->
+    <xsl:variable name="element"><xsl:choose>
+      <xsl:when test="count(child::title) = 0">div</xsl:when>
+      <xsl:otherwise>section</xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
+    <xsl:element name="{$element}">
+      <xsl:attribute name="class"><xsl:value-of select="$classname"/></xsl:attribute>
+      <xsl:element name="{$header}">
+	<xsl:if test="boolean(@id)">
+	  <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
+	</xsl:if>
+	<xsl:value-of select="$title"/>
+      </xsl:element>
+
+      <!-- need to hide the title block; as I am not sure if I depend on
+	   the title block being processed in other cases, I don't want
+	   to add a template to just ignore title blocks. Similarly,
+	   I don't want to add a mode here since the contents are
+	   generic.
+      -->
+      <xsl:apply-templates select="*[name() != 'title']"/>
+
+      <!--* we only add a hr if we are NOT the last subsection
+	  (and hr's are allowed) *-->
+      <xsl:if test="position() != last() and (not(/*/text/@separator) or /*/text/@separator = 'bar')">
+	<xsl:call-template name="add-mid-sep"/>
+      </xsl:if>
+
+    </xsl:element>
+
+  </xsl:template> <!--* name=internal-subsection *-->
 
   <!--*
       * process a subsubsectionlist
@@ -1714,27 +1755,18 @@ ERROR: section tag has an empty id attribute.
       <!--* use a pull-style approach *-->
       <xsl:for-each select="subsubsection">
 
+	<xsl:variable name="titlestr">
+	  <xsl:call-template name="position-to-label">
+	    <xsl:with-param name="type" select="$type"/>
+	    </xsl:call-template><xsl:value-of select="title"/>
+	</xsl:variable>
+
 	<!--* process each subsection *-->
-	<div class="subsubsection">
-	  <h4 id="{@id}"><xsl:call-template name="position-to-label">
-		<xsl:with-param name="type" select="$type"/>
-	      </xsl:call-template><xsl:value-of select="title"/></h4>
-
-	  <!-- need to hide the title block; as I am not sure if I depend on
-	       the title block being processed in other cases, I don't want
-	       to add a template to just ignore title blocks. Similarly,
-	       I don't want to add a mode here since the contents are
-	       generic.
-	    -->
-	  <xsl:apply-templates select="*[name() != 'title']"/>
-
-	  <!--* we only add a hr if we are NOT the last subsubsection
-	      (and hr's are allowed) *-->
-	  <xsl:if test="position() != last() and (not(/*/text/@separator) or /*/text/@separator = 'bar')">
-	    <xsl:call-template name="add-mid-sep"/>
-	  </xsl:if>
-
-	</div> <!--* class=subsubsection *-->
+	<xsl:call-template name="internal-subsection">
+	  <xsl:with-param name="classname">subsubsection</xsl:with-param>
+	  <xsl:with-param name="title" select="$titlestr"/>
+	  <xsl:with-param name="header">h4</xsl:with-param>
+	</xsl:call-template>
       </xsl:for-each>
 
     </div> <!--* class=subsubsectionlist *-->
