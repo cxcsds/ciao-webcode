@@ -635,9 +635,19 @@
             * but then it did not hide the MathJax_Preview section, so have
             * decided to leave this as is for now.
 	    *-->
-	<span id="{$mathname}" class="MathJax-span">\[
-	  <xsl:value-of select="latex"/>
-	\]</span>
+	<xsl:choose>
+	  <xsl:when test="$mathname = ''">
+	    <span class="MathJax-span">\[
+<xsl:value-of select="latex"/>
+	    \]</span>
+	  </xsl:when>
+	    <xsl:otherwise>
+	    <span id="{$mathname}" class="MathJax-span">\[
+<xsl:value-of select="latex"/>
+	    \]</span>
+	    </xsl:otherwise>
+	  </xsl:choose>
+
 	  <!--
           <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
 	  <xsl:value-of select="latex"/>
