@@ -1670,9 +1670,14 @@ ERROR: section tag has an empty id attribute.
 
 	<!--* process each subsection *-->
 	<div class="subsection">
-	  <h3 id="{@id}"><xsl:call-template name="position-to-label">
-		<xsl:with-param name="type" select="$type"/>
-	      </xsl:call-template><xsl:value-of select="title"/></h3>
+	  <h3>
+	    <xsl:if test="boolean(@id)">
+	      <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
+	    </xsl:if>
+	    <xsl:call-template name="position-to-label">
+	      <xsl:with-param name="type" select="$type"/>
+	      </xsl:call-template><xsl:value-of select="title"/>
+	  </h3>
 
 	  <!-- need to hide the title block; as I am not sure if I depend on
 	       the title block being processed in other cases, I don't want
@@ -1716,9 +1721,14 @@ ERROR: section tag has an empty id attribute.
 
 	<!--* process each subsection *-->
 	<div class="subsubsection">
-	  <h4 id="{@id}"><xsl:call-template name="position-to-label">
-		<xsl:with-param name="type" select="$type"/>
-	      </xsl:call-template><xsl:value-of select="title"/></h4>
+	  <h4>
+	    <xsl:if test="boolean(@id)">
+	      <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
+	    </xsl:if>
+	    <xsl:call-template name="position-to-label">
+	      <xsl:with-param name="type" select="$type"/>
+	      </xsl:call-template><xsl:value-of select="title"/>
+	  </h4>
 
 	  <!-- need to hide the title block; as I am not sure if I depend on
 	       the title block being processed in other cases, I don't want
