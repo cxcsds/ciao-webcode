@@ -1025,14 +1025,10 @@
 	<xsl:apply-templates select="title" mode="title-parsing"/>
 	</xsl:if></func:result>
       </xsl:when>
-      <xsl:otherwise>
-	<xsl:if test="not(boolean(title))">
-	  <xsl:message terminate="yes">
- ERROR: title block can not be empty in a figure for non-thread pages
-	  </xsl:message>
-	</xsl:if>
+      <xsl:when test="boolean(title)">
 	<func:result><xsl:apply-templates select="title" mode="title-parsing"/></func:result>
-      </xsl:otherwise>
+      </xsl:when>
+      <xsl:otherwise/> <!-- just return nothing -->
     </xsl:choose>
   </func:function>
 
@@ -1147,7 +1143,7 @@
  ERROR: figure (id=<xsl:value-of select="@id"/>) does not contain a description tag
       </xsl:message>
     </xsl:if>
-    
+
     <xsl:variable name="bmap-simple" select="bitmap[(boolean(@thumbnail)=false() or @thumbnail='0')
 					     and (boolean(@hardcopy)=false() or @hardcopy='0')]"/>
     <xsl:variable name="bmap-thumb"  select="bitmap[boolean(@thumbnail)=true() and @thumbnail='1']"/>
@@ -1187,12 +1183,10 @@
     <xsl:variable name="has-bmap-hard" select="$num-bmap-hard = 1"/>
 
     <xsl:variable name="num-title" select="count(title)"/>
-    
+
     <!--* work out the figure number/title *-->
-    <xsl:variable name="title"><xsl:choose>
-      <xsl:when test="$num-title != 0"><xsl:value-of select="djb:make-figure-title($pos)"/></xsl:when>
-      <xsl:otherwise/>
-      </xsl:choose></xsl:variable>
+    <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
+    <xsl:variable name="title"><xsl:value-of select="djb:make-figure-title($pos)"/></xsl:variable>
 
     <!--*
         * Display the HTML figure caption?
@@ -1204,7 +1198,7 @@
 	    <h3><xsl:value-of select="$title"/></h3>
 	  </div>
       </xsl:if>
-      
+
 	  <div>
 	    <!--* do we need this class attribute, as it is only meaningful for screen media? *-->
 	    <xsl:attribute name="class"><xsl:choose>
@@ -1307,7 +1301,7 @@
       <xsl:if test="$num-title != 0">
 	  <h3 class="caption printmedia"><xsl:value-of select="$title"/></h3>
       </xsl:if>
-      
+
 	  <xsl:if test="caption">
 	  <div class="caption">
 	    <xsl:apply-templates select="caption" mode="figure"/>
