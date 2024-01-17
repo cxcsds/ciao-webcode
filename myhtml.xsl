@@ -1524,6 +1524,8 @@
 	  </xsl:call-template>
 	</xsl:when>
 	<xsl:otherwise>
+	  <!-- should this look for not(boolean(@id))?> if so, many
+	       pages will fail -->
 	  <xsl:if test="@id = ''">
 	    <xsl:message terminate="yes">
 ERROR: section tag has an empty id attribute.
@@ -1535,7 +1537,12 @@ ERROR: section tag has an empty id attribute.
 	      <xsl:message terminate="no">WARNING: missing title for section. Probably do not want this</xsl:message>
 	    </xsl:when>
 	    <xsl:otherwise>
-	      <h2 id="{@id}"><xsl:value-of select="$titlestring"/></h2>
+	      <h2>
+		<xsl:if test="boolean(@id)">
+		  <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
+		</xsl:if>
+	        <xsl:value-of select="$titlestring"/>
+	      </h2>
 	    </xsl:otherwise>
 	  </xsl:choose>
 
