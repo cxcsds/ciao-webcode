@@ -84,8 +84,14 @@ use Cwd;
 use IO::File;
 use IO::Pipe;
 
+# we only need this when validating, but always load it in
+use JSON;
+
 use lib $FindBin::Bin;
 use CIAODOC qw( :util :xslt :cfg :deps );
+
+# only needed if reporting HTML validation errors
+binmode(STDOUT, ":encoding(UTF-8)");
 
 ## Subroutines (see end of file)
 #
@@ -202,8 +208,22 @@ my $config = parse_config( $configfile );
 # most of the config stuff is parsed below, but we need these two here
 my $site_config;
 ( $site, $site_config ) = find_site $config, $dname;
-$config = undef; # DBG: just make sure no one is trying to access it
+
 dbg "Site = $site";
+
+# Find the validator.
+#
+my $validator = get_config_main( $config, "validator" );
+{
+    my $retval = `java -jar $validator --version`;
+    if ( $? == 0 ) {
+	dbg "validator found - version $retval";
+    } else {
+	$validator = undef;
+    }
+}
+
+$config = undef; # DBG: just make sure no one is trying to access it
 
 check_type_known $site_config, $type;
 dbg "Type = $type";
@@ -644,12 +664,31 @@ sub initialise_pages {
 #  checks that the transformation created the necessary
 #  pages AND sets the correct permission/group
 #
+#  This also validates the output file IF it's a .html file,
+#  and we have the validator.
+#
 sub check_for_page {
     foreach my $page ( @_ ) {
 	die "Error: transformation did not create $page\n"
 	  unless -e $page;
 	mysetmods $page;
 	print "Created: $page\n";
+
+	if (defined $validator) {
+	    # Check the errors and warnings from $page
+	    my $output = `java -jar $validator --stdout --format json $page`;
+	    if ( $? != 0 ) {
+		print "HTML issues (see Doug):\n";
+		my $json = decode_json $output;
+		my $msgs = $$json{"messages"};
+		while (my ($idx, $msg) = each @$msgs) {
+		    my $ctr = $idx + 1;
+		    print "$ctr : $$msg{'type'} - $$msg{'message'}\n";
+		    # provide mode information
+		    dbg "$$msg{'extract'}";
+		}
+	    }
+	}
     }
 } # sub: check_for_page()
 
