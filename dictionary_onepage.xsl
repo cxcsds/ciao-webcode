@@ -155,6 +155,8 @@
 	<xsl:call-template name="add-htmlhead">
 	  <xsl:with-param name="title">Dictionary Entries</xsl:with-param>
 	  <xsl:with-param name="page">entries.html</xsl:with-param>
+	  <xsl:with-param name="css"
+			  select="//info/css"/>
 	</xsl:call-template>
 
 	<xsl:variable name="contents">
