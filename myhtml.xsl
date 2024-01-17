@@ -1147,12 +1147,7 @@
  ERROR: figure (id=<xsl:value-of select="@id"/>) does not contain a description tag
       </xsl:message>
     </xsl:if>
-    <xsl:if test="boolean(title)=false()">
-      <xsl:message terminate="yes">
- ERROR: figure (id=<xsl:value-of select="@id"/>) does not contain a title tag
-      </xsl:message>
-    </xsl:if>
-
+    
     <xsl:variable name="bmap-simple" select="bitmap[(boolean(@thumbnail)=false() or @thumbnail='0')
 					     and (boolean(@hardcopy)=false() or @hardcopy='0')]"/>
     <xsl:variable name="bmap-thumb"  select="bitmap[boolean(@thumbnail)=true() and @thumbnail='1']"/>
@@ -1191,19 +1186,25 @@
     <xsl:variable name="has-bmap-thumb" select="$num-bmap-thumb = 1"/>
     <xsl:variable name="has-bmap-hard" select="$num-bmap-hard = 1"/>
 
+    <xsl:variable name="num-title" select="count(title)"/>
+    
     <!--* work out the figure number/title *-->
-    <xsl:variable name="pos" select="djb:get-figure-number(@id)"/>
-    <xsl:variable name="title" select="djb:make-figure-title($pos)"/>
+    <xsl:variable name="title"><xsl:choose>
+      <xsl:when test="$num-title != 0"><xsl:value-of select="djb:make-figure-title($pos)"/></xsl:when>
+      <xsl:otherwise/>
+      </xsl:choose></xsl:variable>
 
     <!--*
         * Display the HTML figure caption?
 	*-->
 
-	<div class="figure">
+    <div id="{@id}" class="figure">
+      <xsl:if test="$num-title != 0">
 	  <div class="caption screenmedia">
-	    <h3 id="{@id}"><xsl:value-of select="$title"/></h3>
+	    <h3><xsl:value-of select="$title"/></h3>
 	  </div>
-
+      </xsl:if>
+      
 	  <div>
 	    <!--* do we need this class attribute, as it is only meaningful for screen media? *-->
 	    <xsl:attribute name="class"><xsl:choose>
@@ -1303,8 +1304,10 @@
 	  </div>
 
 	  <!--// Figure title placement depends on mediatype //-->
+      <xsl:if test="$num-title != 0">
 	  <h3 class="caption printmedia"><xsl:value-of select="$title"/></h3>
-
+      </xsl:if>
+      
 	  <xsl:if test="caption">
 	  <div class="caption">
 	    <xsl:apply-templates select="caption" mode="figure"/>
