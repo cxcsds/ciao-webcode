@@ -48,6 +48,11 @@
 %listseealso=osx ciaorun /data/da/Docs/web4/utilities/binexe/list_seealso.ciao46.osx64
 %perl=osx perl
 
+# Validation service: see https://validator.github.io/validator/
+# Assumed to be a java app.
+#
+validator=/data/da/Docs/web4/dist.20.6.30/vnu.jar
+
 # what "site" (ie part of the web pages) are we creating?
 +site ciao
 
