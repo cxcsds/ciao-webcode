@@ -599,9 +599,10 @@
   <xsl:template match="math">
 
     <!--* DTD-style checks *-->
-    <xsl:if test="boolean(name)=false() or boolean(latex)=false()">
+    <xsl:if test="boolean(name)=false() and boolean(latex)=false()">
       <xsl:message terminate="yes">
  Error: math tag is missing at least one of name or latex
+ <xsl:value-of select="."/>
       </xsl:message>
     </xsl:if>
 
