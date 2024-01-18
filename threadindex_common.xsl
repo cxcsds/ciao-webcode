@@ -51,10 +51,11 @@
       <div class="threadsublist">
 	<h4><xsl:apply-templates select="title" mode="show"/></h4>
 
-	<!-- we have now added synopsis blocks here, so need to handle
-	     this -->
+	<!-- getting a bit messy about processing; can we clean this
+	     up - in particular deciding what is processed before and
+	     after the ul element.
+	     -->
 	<xsl:if test="boolean(text)">
-	  <xsl:message terminate="no">See Doug about this message</xsl:message>
 	  <xsl:apply-templates select="text"/>
 	</xsl:if>
 
