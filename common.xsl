@@ -439,8 +439,12 @@ if (self == top) {
     </xsl:if>
 
     <body class="nonavbar">
-      <!-- copy the attributes of the text node into the body element-->
-      <xsl:copy-of select="@*"/>
+      <!--*
+	  * copy the attributes of the text node into the body element
+	  * - ideally we'd just select the known supported values,
+	  *   but that's hard to set up
+      -->
+      <xsl:copy-of select="@*[name() != 'name']"/>
 
       <xsl:call-template name="add-disclaimer"/>
       <xsl:call-template name="add-header">
@@ -508,8 +512,12 @@ if (self == top) {
 
     <body class="withnavbar">
 
-      <!-- copy the attributes of the text node into the body element-->
-      <xsl:copy-of select="@*"/>
+      <!--*
+	  * copy the attributes of the text node into the body element
+	  * - ideally we'd just select the known supported values,
+	  *   but that's hard to set up
+      -->
+      <xsl:copy-of select="@*[name() != 'name']"/>
 
       <xsl:call-template name="add-disclaimer"/>
       <xsl:call-template name="add-header"/>
