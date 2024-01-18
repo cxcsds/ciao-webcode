@@ -51,13 +51,20 @@
       <div class="threadsublist">
 	<h4><xsl:apply-templates select="title" mode="show"/></h4>
 
+	<!-- we have now added synopsis blocks here, so need to handle
+	     this -->
 	<xsl:if test="boolean(text)">
+	  <xsl:message terminate="no">See Doug about this message</xsl:message>
 	  <xsl:apply-templates select="text"/>
+	</xsl:if>
+
+	<xsl:if test="boolean(synopsis)">
+	  <xsl:apply-templates select="synopsis" mode="index-page"/>
 	</xsl:if>
 
 	<ul>
 	  <!--* we do not want to process the title element here *-->
-	  <xsl:apply-templates select="*[name() != 'title' and name() != 'text']" mode="threadindex"/>
+	  <xsl:apply-templates select="*[name() != 'title' and name() != 'text' and name() != 'synopsis']" mode="threadindex"/>
 	</ul>
 	<!--* do we need a spacer? *-->
 	<xsl:if test="name(following-sibling::*[1]) = 'item'">
