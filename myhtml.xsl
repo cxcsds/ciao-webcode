@@ -1843,4 +1843,15 @@ ERROR: section tag has an empty id attribute.
     <xsl:apply-templates/>
   </xsl:template>
 
+  <!--*
+      * some typos I have been known to make; with the validation
+      * now done this is less important, as we should get told
+      * about it, but still...
+      *-->
+  <xsl:template match="extling|extlinl|exclink|cxcling|cxclinl">
+    <xsl:message terminate="yes">
+ ERROR: found &lt;<xsl:value-of select="name()"/>&gt; tag
+    </xsl:message>
+  </xsl:template>
+
 </xsl:stylesheet>
