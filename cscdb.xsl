@@ -79,7 +79,11 @@
 	<!--* make the HTML head node *-->
 	<xsl:call-template name="add-htmlhead-standard"/>
 
-	<xsl:call-template name="add-body-withnavbar">
+	<!--
+	     let's drop the navbar here
+	     <xsl:call-template name="add-body-withnavbar">
+	-->
+	<xsl:call-template name="add-body-nonavbar">
 	  <xsl:with-param name="contents">
 
 	    <!--* add the intro text *-->
@@ -179,11 +183,13 @@
 	 
 	  </xsl:with-param>
 
+	  <!-- this is ignored now
 	  <xsl:with-param name="navbar">
 	    <xsl:call-template name="add-navbar">
 	      <xsl:with-param name="name" select="info/navbar"/>
 	    </xsl:call-template>
 	  </xsl:with-param>
+	  -->
 
 	  <!-- uses default //info/breadcrumbs -->
 	  <xsl:with-param name="location" select="$filename"/>
@@ -219,7 +225,11 @@
 	  <xsl:with-param name="page" select="concat($alphapagename, '.html')"/>
 	</xsl:call-template>
 
-	<xsl:call-template name="add-body-withnavbar">
+	<!--
+	     let's drop the navbar here
+	     <xsl:call-template name="add-body-withnavbar">
+	-->
+	<xsl:call-template name="add-body-nonavbar">
 	  <xsl:with-param name="contents">
 	    <!--* add the intro text *-->
 	    <xsl:if test="intro">
@@ -265,11 +275,13 @@
 	    <!--// end database column table //-->
 	  </xsl:with-param>
 
+	  <!-- this is ignored now
 	  <xsl:with-param name="navbar">
 	    <xsl:call-template name="add-navbar">
 	      <xsl:with-param name="name" select="info/navbar"/>
 	    </xsl:call-template>
 	  </xsl:with-param>
+	  -->
 
 	  <!-- uses default //info/breadcrumbs -->
 	  <xsl:with-param name="location" select="$filename"/>
