@@ -664,20 +664,36 @@ sub initialise_pages {
 #  checks that the transformation created the necessary
 #  pages AND sets the correct permission/group
 #
-#  This also validates the output file IF it's a .html file,
-#  and we have the validator.
-#
 sub check_for_page {
     foreach my $page ( @_ ) {
 	die "Error: transformation did not create $page\n"
 	  unless -e $page;
 	mysetmods $page;
 	print "Created: $page\n";
+    }
+} # sub: check_for_page()
 
-	if (defined $validator) {
-	    # Check the errors and warnings from $page
-	    my $output = `java -jar $validator --stdout --format json $page`;
-	    if ( $? != 0 ) {
+# Usage:
+#   validate_page( @soft );
+#
+# Aim:
+#
+#  Pass through the pages through the W3C validator (if available). It
+#  relies on only being called on "full" pages (and not things like
+#  slug files or the redirect page).
+#
+#  This only checks .html files
+#
+sub validate_page (@) {
+    return if not (defined $validator);
+    foreach my $page ( @_ ) {
+	next if not ($page =~ /\.html$/i);
+
+	print "Validate: $page\n";
+
+	# Check the errors and warnings from $page
+	my $output = `java -jar $validator --stdout --format json $page`;
+	if ( $? != 0 ) {
 		print "HTML issues (see Doug):\n";
 		my $json = decode_json $output;
 		my $msgs = $$json{"messages"};
@@ -687,10 +703,9 @@ sub check_for_page {
 		    # provide mode information
 		    dbg "$$msg{'extract'}";
 		}
-	    }
 	}
     }
-} # sub: check_for_page()
+} # sub: validate_page()
 
 #
 # Usage:
@@ -889,6 +904,7 @@ sub xml2html_basic ($$$) {
 
     # success or failure?
     check_for_page( @outfiles );
+    validate_page( @pages );  # note: not @outfiles
 
     # math?
     process_math( $outdir, @math );
@@ -1087,6 +1103,7 @@ sub xml2html_cscdb ($) {
 
     # success or failure?
     check_for_page( @pages );
+    validate_page( @pages );
 
     # math?
     process_math( $outdir, @math );
@@ -1139,6 +1156,7 @@ sub xml2html_news ($) {
 
     # success or failure?
     check_for_page( @pages );
+    validate_page( @pages );
 
     # math?
     process_math( $outdir, @math );
@@ -1309,6 +1327,7 @@ sub xml2html_multiple ($$$) {
 
     # check the softcopy versions
     check_for_page( @soft );
+    validate_page( @soft );
 
     # math?
     process_math( $outdir, @math );
@@ -1374,6 +1393,7 @@ sub xml2html_threadindex ($) {
 
     # check the softcopy versions
     check_for_page( @soft );
+    validate_page( @soft );
 
     print "\nThe thread index pages can be viewed at:\n  $outurl\n\n";
 
