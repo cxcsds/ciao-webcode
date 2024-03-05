@@ -864,6 +864,9 @@ sub basic_params ($) {
 # At present pagelabel and stylesheethead are set to the
 # same value, so could amalgamate; leave as is for now
 #
+# The option no_validate is used to control whether to
+# validate the HTML output.
+#
 sub xml2html_basic ($$$) {
     my $pagelabel = shift; # used to identify the page type to the user
     my $stylesheethead = shift; # name of stylesheet, without path or trailing .xsl
@@ -904,7 +907,12 @@ sub xml2html_basic ($$$) {
 
     # success or failure?
     check_for_page( @outfiles );
-    validate_page( @pages );  # note: not @outfiles
+
+    if (exists $$opts{no_validate}) {
+	print "Skipping validation of @pages\n";
+    } else {
+	validate_page( @pages );  # note: not @outfiles
+    }
 
     # math?
     process_math( $outdir, @math );
@@ -1600,6 +1608,10 @@ sub xml2html_thread ($) {
 # To process a notebook we need to have python with
 # nbconvert >= 6.0 installed.
 #
+# The output of the notebook page is not passed through the
+# validator as it appears to cause too-many problems:
+# https://github.com/cxcsds/ciao-webcode/issues/85
+#
 sub xml2html_notebook ($) {
     my $opts = shift;
 
@@ -1676,6 +1688,9 @@ sub xml2html_notebook ($) {
     #
     $$opts{pagename} = $in;
 
+    # Note we do not validate the output
+    #
+    $$opts{no_validate} = 1;
     xml2html_basic "notebook", "notebook", $opts;
 
     # Copy over the ipynb file
