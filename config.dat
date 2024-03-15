@@ -865,9 +865,9 @@ googlessi=/csc2/analytics.ssi
 %ahelpfiles=test /data/da/Docs/sxml_manuals/webxml/4.16/
 %ahelpfiles=trial /data/da/Docs/sxml_manuals/webxml/4.16/
 
-%storageloc=live /data/da/Docs/ciaoweb/storage.ciao416.live.xml
-%storageloc=test /data/da/Docs/ciaoweb/storage.ciao416.test.xml
-%storageloc=trial /data/da/Docs/ciaoweb/storage.ciao416.trial.xml
+%storageloc=live /data/da/Docs/cscweb/storage.csc21.live.xml
+%storageloc=test /data/da/Docs/cscweb/storage.csc21.test.xml
+%storageloc=trial /data/da/Docs/cscweb/storage.csc21.trial.xml
 
 -version
 
