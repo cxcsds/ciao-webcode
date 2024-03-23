@@ -121,9 +121,9 @@ version_string=4.16
 %searchssi=trial /ciao/ciao_search.ssi
 
 # location of the banner page, relative to the top-level directory
-#%sitebanner=live banner.xml
-#%sitebanner=test banner.xml
-#%sitebanner=trial banner.xml
+%sitebanner=live banner.xml
+%sitebanner=test banner.xml
+%sitebanner=trial banner.xml
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
@@ -438,9 +438,9 @@ logourl=/sherpa4.16/
 %searchssi=trial /sds/sherpa/sherpa_search.ssi
 
 # location of the banner page, relative to the top-level directory
-#%sitebanner=live banner.xml
-#%sitebanner=test banner.xml
-#%sitebanner=trial banner.xml
+%sitebanner=live banner.xml
+%sitebanner=test banner.xml
+%sitebanner=trial banner.xml
 
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
