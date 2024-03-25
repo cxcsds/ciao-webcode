@@ -1811,9 +1811,10 @@ ERROR: section tag has an empty id attribute.
  NOTE: found &lt;<xsl:value-of select="name()"/>&gt; tag with contents
  <xsl:value-of select="."/>
     </xsl:message>
-    <div style="font-weight: bold; color: red;">
+    <!-- we could decide to change the wrapper depending on the contents -->
+    <span style="font-weight: bold; color: red;">
       <xsl:apply-templates/>
-    </div>
+    </span>
   </xsl:template>
 
   <!--*
