@@ -289,7 +289,7 @@ while ( <$pipe> ) {
     for (my $i = $start - 1; $i < $end; $i++) {
 	my $checkpath = join "/", @dirs[0 .. $i];
 	if (exists $do_not_publish_dirs{$checkpath}) {
-	    print "dbg - skipping $name as $checkpath in excluded directory\n";
+	    dbg "dbg - skipping $name as $checkpath in excluded directory\n";
 	    $fail = 1;
 	    last;
 	}
