@@ -167,6 +167,7 @@
 	  <xsl:choose>
 	      <xsl:when test="@type = 'alphabet'">index_alphabet.html</xsl:when>
 	      <xsl:when test="@type = 'context'">index_context.html</xsl:when>
+	      <xsl:otherwise>index.html</xsl:otherwise>
 	    </xsl:choose><xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if></xsl:attribute>
 
 	  <!--* text *-->
@@ -686,7 +687,10 @@
       </xsl:call-template></xsl:otherwise>
     </xsl:choose></xsl:variable>
 
-    <xsl:variable name="href"><xsl:value-of select="$hrefstart"/><xsl:if test="boolean(@id)"><xsl:value-of select="@id"/>.html</xsl:if></xsl:variable>
+    <xsl:variable name="href"><xsl:value-of select="$hrefstart"/><xsl:choose>
+    <xsl:when test="boolean(@id)"><xsl:value-of select="@id"/>.html</xsl:when>
+    <xsl:otherwise>index.html</xsl:otherwise>
+    </xsl:choose></xsl:variable>
 
     <!-- create the title for the link and where we check that the id value is
 	 valid -->
@@ -913,8 +917,10 @@
 	    <xsl:when test="($site != 'csc') or (@site = 'ciao')">
 	      <xsl:attribute name="href">
 	        <xsl:value-of select="$hrefstart"/>
-		<xsl:if test="boolean(@id)">
-		  <xsl:value-of select="@id"/>.html</xsl:if>
+		<xsl:choose>
+		  <xsl:when test="boolean(@id)"><xsl:value-of select="@id"/>.html</xsl:when>
+		  <xsl:otherwise>index.html</xsl:otherwise>
+		  </xsl:choose>
 	      </xsl:attribute> 
 	    </xsl:when>
 
@@ -973,9 +979,12 @@
     <a>
       <xsl:attribute name="title">The Proposers' Observatory Guide</xsl:attribute>
       <xsl:attribute name="href">
-	<xsl:text>/proposer/POG/</xsl:text>
-        <!--* note the added "html/" here *-->
-	<xsl:if test="boolean(@name)">html/<xsl:value-of select="@name"/></xsl:if>
+	<xsl:text>/proposer/POG/html/</xsl:text>
+	<xsl:choose>
+	  <xsl:when test="boolean(@name)"><xsl:value-of select="@name"/></xsl:when>
+	  <xsl:otherwise>index.html</xsl:otherwise>
+	</xsl:choose>
+
         <!--* could worry about including index.html before # if there's no @name *-->
 	<xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
       </xsl:attribute>
@@ -1601,8 +1610,8 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 		  <xsl:with-param name="extlink" select="$extlink"/>
 		  <xsl:with-param name="dirname" select="''"/>
 		</xsl:call-template>
-		<xsl:text>download/</xsl:text>
-		<xsl:if test='boolean(@id)'>index.html#<xsl:value-of select="@id"/></xsl:if>
+		<xsl:text>download/index.html</xsl:text>
+		<xsl:if test='boolean(@id)'>#<xsl:value-of select="@id"/></xsl:if>
 	      </xsl:otherwise>
 	    </xsl:choose>
 	  </xsl:attribute>
@@ -1665,6 +1674,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	  <xsl:with-param name="extlink" select="$extlink"/>
 	  <xsl:with-param name="dirname" select="'download/scripts/'"/>
 	</xsl:call-template>
+	<!-- assume that name is not empty -->
 	<xsl:value-of select="$name"/>
       </xsl:attribute>
 
@@ -1709,7 +1719,8 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	      <xsl:with-param name="extlink" select="$extlink"/>
 	      <xsl:with-param name="dirname" select="'download/scripts/'"/>
 	    </xsl:call-template>
-	    <xsl:if test="boolean(@id)">index.html#<xsl:value-of select="@id"/></xsl:if>
+	    <xsl:text>index.html</xsl:text>
+	    <xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
 	  </xsl:attribute>
 
 	  <!--* text *-->
@@ -1747,16 +1758,23 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
   <xsl:template name="mylink">
 
+    <!-- TODO: is this still being used? -->
+
     <!--* list the params expected by this template *-->
     <xsl:param name="filename"/>
     <xsl:param name="dir"/>
     <xsl:param name="text"/>
 
+    <xsl:variable name="fname"><xsl:choose>
+      <xsl:when test="$filename != ''"><xsl:value-of select="$filename"/></xsl:when>
+      <xsl:otherwise>index.html</xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
     <!--*
         * used to say for href: concat($dir,'/',$filename)
         * but decided to make the dir parameter end in / where necessary
         *-->
-    <a href="{concat($dir,$filename)}"><xsl:value-of select="$text"/></a>
+    <a href="{concat($dir,$fname)}"><xsl:value-of select="$text"/></a>
   </xsl:template> <!--* mylink *-->
 
   <!--* 
@@ -1962,9 +1980,19 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	<a>
 	  <!--* note the ugly way I find the name of the root node (ie 'name(//*)') *-->
 	  <xsl:attribute name="href">
-	    <xsl:if test="boolean(@href)"><xsl:if test="starts-with(@href,'/')=false() and name(//*)='navbar'"><xsl:call-template name="add-path">
-	      <xsl:with-param name="idepth" select="$depth"/>
-	    </xsl:call-template></xsl:if><xsl:value-of select="@href"/></xsl:if>
+	    <xsl:choose>
+	      <xsl:when test="boolean(@href)">
+		<xsl:if test="starts-with(@href,'/')=false() and name(//*)='navbar'">
+		  <xsl:call-template name="add-path">
+		    <xsl:with-param name="idepth" select="$depth"/>
+		  </xsl:call-template>
+		</xsl:if>
+		<xsl:value-of select="@href"/>
+		<!-- add in index.html if needed -->
+		<xsl:if test="substring(@href, string-length(@href)) = '/'">index.html</xsl:if>
+	      </xsl:when>
+	      <xsl:otherwise>index.html</xsl:otherwise> <!-- TODO: should this be illegal? -->
+	    </xsl:choose>
 	    <xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
 	  </xsl:attribute>
 
@@ -2198,7 +2226,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	<!--* could just set href directly but want class to appear first (for testing) *-->
 	<a>
 	  <xsl:attribute name="title">CXC Helpdesk</xsl:attribute>
-	  <xsl:attribute name="href">/help/</xsl:attribute>
+	  <xsl:attribute name="href">/help/</xsl:attribute> <!-- NOTE: this has to be /help/ and not /help/index.html -->
 	  <xsl:choose>
 	    <xsl:when test=".=''">CXC Helpdesk</xsl:when>
 	    <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
@@ -2831,9 +2859,11 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   <xsl:template name="sort-out-anchor">
 
     <xsl:choose>
-      <xsl:when test="boolean(@page)"><xsl:value-of select="@page"/>.html<xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if></xsl:when>
-      <xsl:when test="boolean(@id)">index.html#<xsl:value-of select="@id"/></xsl:when>
+      <xsl:when test="boolean(@page)"><xsl:value-of select="@page"/></xsl:when>
+      <xsl:otherwise>index</xsl:otherwise>
     </xsl:choose>
+    <xsl:text>.html</xsl:text>
+    <xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
 
   </xsl:template> <!--* name=sort-out-anchor *-->
 
