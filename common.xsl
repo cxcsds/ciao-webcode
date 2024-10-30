@@ -40,7 +40,7 @@
     <xsl:call-template name="newline"/>
   </xsl:template> <!--* name= add-disclaimer *-->
 
-  <!--*
+   <!--*
       * check that a parameter is not empty, exiting if it is.
       *
       * Parameters:
@@ -104,7 +104,7 @@
       </xsl:message>
     </xsl:if>
     -->
-
+    
     <xsl:if test="$favicon != ''">
       <link rel="icon" href="{$favicon}"/>
     </xsl:if>
@@ -145,7 +145,7 @@
     <meta name="keywords" content="SI,Smithsonian,Smithsonian Institute"/>
     <meta name="keywords" content="CfA,SAO,Harvard-Smithsonian,Center for Astrophysics"/>
     <meta name="keywords" content="HEA,HEAD,High Energy Astrophysics Division"/>
-
+    
     <!--* cross-frame scripting 'protection' *-->
     <!--
     <xsl:comment>Frame busting from http://securestate.blogspot.com/2010/08/xfs-101-cross-frame-scripting-explained.html</xsl:comment>
@@ -161,8 +161,26 @@ if (self == top) {
   top.location = self.location;
 }
     </script>
+
+    <!--// also apply 'no-web-index' tag to prevent web indexing if invoked //-->
+    <xsl:call-template name="add-noindex"/>
+    
   </xsl:template> <!--* name=add-sao-metadata *-->
 
+  <!--*
+      * prevent indexing by web search engines with a "no-web-index"
+      * tag in an XML file's "info" block 
+      *
+  -->
+  <xsl:template name="add-noindex">
+    <xsl:choose>
+      <xsl:when test="info/no-web-index">
+	<meta name="robots" content="noindex,nofollow"/>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+ 
+  
   <!--*
       * add a ssi include statement to the output, surrounded by new lines
       * (because we are having issues with the register CGI stuff
