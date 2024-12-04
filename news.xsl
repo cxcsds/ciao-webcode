@@ -116,7 +116,19 @@
     <xsl:variable name="filename"><xsl:value-of select="$install"/>feed.xml</xsl:variable>
 
     <!--* create document *-->
-    <xsl:document href="{$filename}">
+    <xsl:document href="{$filename}"
+		  method="xml" version="1.0" omit-xml-declaration="no">
+
+      <!-- See
+	https://github.com/genmon/aboutfeeds/blob/main/tools/pretty-feed-v3.xsl
+        for styling info
+	-->
+
+      <xsl:processing-instruction name="xml-stylesheet">
+	<!-- TODO: the href value could be configurable -->
+	<xsl:text>href="pretty-feed-v3.xsl" type="text/xsl"</xsl:text>
+      </xsl:processing-instruction>
+      <xsl:call-template name="newline"/>
 
       <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
 	<channel><xsl:call-template name="newline"/> 
