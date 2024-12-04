@@ -157,7 +157,7 @@
     <xsl:for-each select=".">
 
     <!-- create summary and id -->
-    <div class="newsitem">
+    <article class="newsitem">
       <h3>
 	<xsl:attribute name="id">
 	  <xsl:text>item-</xsl:text>
@@ -170,7 +170,7 @@
       <div>
       <xsl:apply-templates select="desc/*"/>
       </div>
-    </div>
+    </article>
     </xsl:for-each> 
   </xsl:template> 
   <!-- end main bug content template -->
@@ -208,7 +208,12 @@
       </xsl:message>
     </xsl:if>
 
-    <xsl:value-of select="concat($daynum,' ',$month,' ',$year)"/>
+    <time>
+      <xsl:attribute name="datetime">
+	<xsl:value-of select="pubdate"/>
+      </xsl:attribute>
+      <xsl:value-of select="concat($daynum,' ',$month,' ',$year)"/>
+    </time>
   </xsl:template>
 
   <xsl:template name="calculate-pubdate-feed">
