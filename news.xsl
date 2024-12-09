@@ -93,7 +93,7 @@
       <xsl:with-param name="contents">
 	<h1 class="pagetitle">What's New for CIAO <xsl:value-of select="$siteversion"/></h1>
 
-	<p class="feed"><a href="http://cxc.harvard.edu/ciao/feed.xml">Subscribe to the CIAO&#160;News RSS&#160;feed</a></p>
+	<p class="feed"><a href="https://cxc.harvard.edu/ciao/feed.xml">Subscribe to the CIAO&#160;News RSS&#160;feed</a></p>
 
 	<hr/>
 
@@ -133,10 +133,10 @@
       <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
 	<channel><xsl:call-template name="newline"/> 
 	  <title>CIAO Software News</title><xsl:call-template name="newline"/>     
-	  <link>http://cxc.harvard.edu/ciao/news.html</link><xsl:call-template name="newline"/>
-	  <description>What's New in the CIAO Software</description><xsl:call-template name="newline"/> 
+	  <link>https://cxc.harvard.edu/ciao/news.html</link><xsl:call-template name="newline"/>
+	  <description>Updates and changes for the CIAO Software system.</description><xsl:call-template name="newline"/>
 
-	  <atom:link xmlns:atom="http://www.w3.org/2005/Atom"  href="http://cxc.harvard.edu/ciao/feed.xml" rel="self" type="application/rss+xml" />
+	  <atom:link xmlns:atom="http://www.w3.org/2005/Atom"  href="https://cxc.harvard.edu/ciao/feed.xml" rel="self" type="application/rss+xml" />
 
 	  <xsl:apply-templates select="//text/item" mode="feed"/>
 	</channel>	
@@ -159,10 +159,7 @@
     <!-- create summary and id -->
     <article class="newsitem">
       <h3>
-	<xsl:attribute name="id">
-	  <xsl:text>item-</xsl:text>
-	  <xsl:value-of select="pubdate"/>
-	</xsl:attribute>
+	<xsl:attribute name="id"><xsl:call-template name="get-anchor"/></xsl:attribute>
 	<xsl:value-of select="title"/>
       </h3>
       <p class="newsdate"><xsl:call-template name="calculate-pubdate-html"/></p>
@@ -178,13 +175,19 @@
   <!-- news items template / feed -->
   <xsl:template match="item" mode="feed">
     <xsl:for-each select=".">
-     
+
+      <xsl:variable name="anchor">
+	<xsl:value-of select="$outurl"/>
+	<xsl:text>news.html#</xsl:text>
+	<xsl:call-template name="get-anchor"/>
+      </xsl:variable>
+
       <item>
 	<title><xsl:value-of select="title"/></title>
 	<pubDate><xsl:call-template name="calculate-pubdate-feed"/></pubDate>	
 	
-	<link><xsl:value-of select="$outurl"/><xsl:text>news.html#item-</xsl:text><xsl:value-of select="pubdate"/></link>
-	<guid><xsl:value-of select="$outurl"/><xsl:text>news.html#item-</xsl:text><xsl:value-of select="pubdate"/></guid>
+	<link><xsl:value-of select="$anchor"/></link>
+	<guid><xsl:value-of select="$anchor"/></guid>
 
 	<description>
           <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
@@ -196,6 +199,24 @@
     </xsl:for-each> 
   </xsl:template> 
   <!-- end feed bug content template -->
+
+  <!--* We need a unique identifier for each entry. This used to just be
+        set to "item-<pubdate>", but this fails if there are multiple
+        items in a day. So, we use "item-<pubdate>-<ctr>", even if there
+        is only one item released on this day (e.g. imagine we add an
+        entry in the morning and then later in the day, after the feed
+        has been published; we do not want the original fragment to
+        become invalid). However, it is more complex than that since
+        we can not just count the number of preceding-sibling elements
+	since the file is generally in time ordered, with newer first.
+	So the numbers should go "item-<pubdate>-<max ctr>" to
+	"item-<pubdate>-1", and not the other way.
+  -->
+  <xsl:template name="get-anchor">
+    <xsl:variable name="pd" select="pubdate"/>
+    <xsl:variable name="ctr" select="1 + count(following-sibling::*[pubdate=$pd])"/>
+    <xsl:value-of select="concat('item-', $pd, '-', $ctr)"/>
+  </xsl:template>
 
   <xsl:template name="calculate-pubdate-html">    
     <xsl:variable name="daynum"  select="date:day-in-month(pubdate)"/>
