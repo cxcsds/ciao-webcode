@@ -291,26 +291,30 @@
 	    
 	    <xsl:if test="//buglist/entry[@cav]">
 	      <hr/>
+
+	      <section>
+		<h2>Caveats</h2>
+		<xsl:apply-templates select="//buglist/entry[@cav]" mode="main"/>
+	      </section>
 	      
-	      <h2>Caveats</h2>
-	      
-	      <xsl:apply-templates select="//buglist/entry[@cav]" mode="main"/>
 	    </xsl:if>
 	    
 	    <xsl:if test="(//buglist/entry[not(@cav)]) or (//buglist/subbuglist)">
 	      <hr/>
+
+	      <section>
+		<h2>Bugs</h2>
 	      
-	      <h2>Bugs</h2>
-	      
-	      <xsl:choose>
-	        <xsl:when test="//buglist/subbuglist">
-		  <xsl:apply-templates select="//buglist/subbuglist" mode="main"/>
-	        </xsl:when>
+		<xsl:choose>
+	          <xsl:when test="//buglist/subbuglist">
+		    <xsl:apply-templates select="//buglist/subbuglist" mode="main"/>
+	          </xsl:when>
 		
-		<xsl:otherwise>
-		  <xsl:apply-templates select="//buglist/entry[not(@cav)]" mode="main"/>
-		</xsl:otherwise>
-	      </xsl:choose>
+		  <xsl:otherwise>
+		    <xsl:apply-templates select="//buglist/entry[not(@cav)]" mode="main"/>
+		  </xsl:otherwise>
+		</xsl:choose>
+	      </section>
 	    </xsl:if>
 	    
 	    <!--// add "fixed in CIAO x.x" section if applicable //-->
@@ -321,22 +325,24 @@
 	      </xsl:if>
 
 	      <xsl:for-each select="//fixlist">
-		<h2>
-		  <xsl:attribute name="id">
-		    <xsl:value-of select="concat('ciao',./@ver)"/>
-		  </xsl:attribute>
+		<section>
+		  <h2>
+		    <xsl:attribute name="id">
+		      <xsl:value-of select="concat('ciao',./@ver)"/>
+		    </xsl:attribute>
 		  
-		  <xsl:text>Bugs fixed in CIAO </xsl:text>
-		  <xsl:value-of select="./@vername"/>
-		</h2>
+		    <xsl:text>Bugs fixed in CIAO </xsl:text>
+		    <xsl:value-of select="./@vername"/>
+		  </h2>
 		
-		<p>
-		  The following is a list of bugs that were fixed
-		  in the CIAO <xsl:value-of select="./@vername"/>
-		  software release.
-		</p>
+		  <p>
+		    The following is a list of bugs that were fixed
+		    in the CIAO <xsl:value-of select="./@vername"/>
+		    software release.
+		  </p>
 		
-		<xsl:apply-templates select="./entry" mode="main"/>
+		  <xsl:apply-templates select="./entry" mode="main"/>
+		</section>
 	      </xsl:for-each>
 	    </xsl:if>
 	    <!--// end "fixed in CIAO x.x" section //-->
@@ -350,23 +356,25 @@
 	      </xsl:if>
 	      
 	      <xsl:for-each select="//scriptlist">
-		<h2>
-		  <a>
-		    <xsl:attribute name="name">
-		      <xsl:value-of select="@ver"/>
-		    </xsl:attribute>
+		<section>
+		  <h2>
+		    <a>
+		      <xsl:attribute name="id">
+			<xsl:value-of select="@ver"/>
+		      </xsl:attribute>
 		    
-		    <xsl:value-of select="@vername"/>
-		    <xsl:text> Bug Fixes</xsl:text>
-		  </a>
-		</h2>
+		      <xsl:value-of select="@vername"/>
+		      <xsl:text> Bug Fixes</xsl:text>
+		    </a>
+		  </h2>
 		
-		<p>
-		  The following is a list of bugs that were fixed
-		  in version <xsl:value-of select="@vername"/>.
-		</p>
+		  <p>
+		    The following is a list of bugs that were fixed
+		    in version <xsl:value-of select="@vername"/>.
+		  </p>
 		
-		<xsl:apply-templates select="entry" mode="main"/>
+		  <xsl:apply-templates select="entry" mode="main"/>
+		</section>
 	      </xsl:for-each>
 	    </xsl:if>
 	    <!--// end "fixed in version x.x" section //-->
@@ -549,19 +557,17 @@
     
     <xsl:for-each select=".">
 
-    <h3>
-      <a>
-      <xsl:attribute name="name">
-        <xsl:value-of select="@ref"/>
-      </xsl:attribute>
+      <h3>
+	<a>
+	  <xsl:attribute name="id">
+            <xsl:value-of select="@ref"/>
+	  </xsl:attribute>
 
-      <xsl:value-of select="@title"/>
-      </a>
-    </h3>
+	  <xsl:value-of select="@title"/>
+	</a>
+      </h3>
 
-    <ol>
       <xsl:apply-templates select="entry" mode="main"/>
-    </ol>
 
     </xsl:for-each>
   </xsl:template> 
@@ -573,65 +579,66 @@
     <xsl:for-each select=".">
 
     <!-- create summary and id -->
-    <div class="bugitem">
-    <div class="bugsummary">
-      <xsl:attribute name="id">
+    <article class="bugitem">
+      <!-- should we auto-generate the heading level? -->
+      <h3 class="bugsummary">
+	<xsl:attribute name="id">
 
-	   <xsl:choose>
-	     <xsl:when test="@ref"><xsl:value-of select="@ref"/></xsl:when>
-	     <xsl:when test="@bugnum"><xsl:text>bug-</xsl:text><xsl:value-of select="@bugnum"/></xsl:when>
-	     <xsl:otherwise>
-      <xsl:message terminate="yes">
+	  <xsl:choose>
+	    <xsl:when test="@ref"><xsl:value-of select="@ref"/></xsl:when>
+	    <xsl:when test="@bugnum"><xsl:text>bug-</xsl:text><xsl:value-of select="@bugnum"/></xsl:when>
+	    <xsl:otherwise>
+	      <xsl:message terminate="yes">
 
  ERROR: you must have either a ref or a bugnum attribute on the entry
 
-      </xsl:message>
-	     </xsl:otherwise>
-	   </xsl:choose>
-      </xsl:attribute>
+	      </xsl:message>
+	    </xsl:otherwise>
+	  </xsl:choose>
+	</xsl:attribute>
 
-      <p>
 	<xsl:apply-templates select="summary/*|summary/text()"/>
 
-	 <!--// add new/updated icon if the entry has a type attribute //-->
-	 <xsl:if test="@type">
-	   <xsl:choose>
-	     <xsl:when test="@type = 'new'">
-	       <xsl:call-template name="add-image">
-		 <xsl:with-param name="src"   select="'imgs/new.gif'"/>
-		 <xsl:with-param name="alt"   select="'New'"/>
-	       </xsl:call-template>
-	     </xsl:when>
+	<!--// add new/updated icon if the entry has a type attribute //-->
+	<xsl:if test="@type">
+	  <xsl:choose>
+	    <xsl:when test="@type = 'new'">
+	      <xsl:call-template name="add-image">
+		<xsl:with-param name="src"   select="'imgs/new.gif'"/>
+		<xsl:with-param name="alt"   select="'New'"/>
+	      </xsl:call-template>
+	    </xsl:when>
 
-	     <xsl:when test="@type = 'updated'">
-	       <xsl:call-template name="add-image">
-		 <xsl:with-param name="src"   select="'imgs/updated.gif'"/>
-		 <xsl:with-param name="alt"   select="'Updated'"/>
-	       </xsl:call-template>
-	     </xsl:when>
+	    <xsl:when test="@type = 'updated'">
+	      <xsl:call-template name="add-image">
+		<xsl:with-param name="src"   select="'imgs/updated.gif'"/>
+		<xsl:with-param name="alt"   select="'Updated'"/>
+	      </xsl:call-template>
+	    </xsl:when>
 
-	     <xsl:otherwise>
-	       <xsl:message terminate="yes">
+	    <xsl:otherwise>
+	      <xsl:message terminate="yes">
  ERROR: item tag found in navbar with unrecognised type attribute
    of type=<xsl:value-of select="@type"/>
-	       </xsl:message>
-	     </xsl:otherwise>
-	   </xsl:choose>	  
-	 </xsl:if>
+	      </xsl:message>
+	    </xsl:otherwise>
+	  </xsl:choose>
+	</xsl:if>
 
-	 <xsl:if test="./date">
-	   <xsl:apply-templates select="./date"/>
-	 </xsl:if>
+	<xsl:if test="./date">
+	  <!-- TODO: could use time tag -->
+	  <xsl:apply-templates select="./date"/>
+	</xsl:if>
+      </h3>
 
-        <xsl:if test="./platform">
-	  <br/>
-          <xsl:text>(</xsl:text>
-            <xsl:apply-templates select="platform/text()"/>
-          <xsl:text>) </xsl:text>  
-        </xsl:if>
-      </p>
-    <!-- done with summary and id -->
-    </div>
+      <xsl:if test="./platform">
+	<!-- TODO: check styling -->
+	<p class="platforms">
+          <xsl:text>Platforms: </xsl:text>
+          <xsl:apply-templates select="platform/text()"/>
+	</p>
+      </xsl:if>
+      <!-- done with summary and id -->
 
       <xsl:if test="./desc">
 	<div class="buganswer">
@@ -646,9 +653,9 @@
 
 	  <ol>
 	    <xsl:for-each select="work">	
-	    <li>
-	      <xsl:apply-templates select="./*"/>
-	    </li>
+	      <li>
+		<xsl:apply-templates select="./*"/>
+	      </li>
 	    </xsl:for-each>
 	  </ol>
 	</xsl:if> 
@@ -659,8 +666,19 @@
 	  <xsl:apply-templates select="work/*"/>
 	</xsl:if> 
 	</div>
-	</xsl:if>       
-    </div>
+      </xsl:if>
+
+      <!-- should we always warn if desc is not given? -->
+      <xsl:if test="not(./desc) and not(./work)">
+	<xsl:message terminate="no">
+  NOTE: entry <xsl:choose>
+  <xsl:when test="@ref">ref=<xsl:value-of select="@ref"/></xsl:when>
+  <xsl:when test="@bugnum">bugnum=<xsl:value-of select="@bugnum"/></xsl:when>
+  <xsl:otherwise>{{THIS SHOULD NOT HAPPEN}}</xsl:otherwise>
+</xsl:choose> has no desc or work elements.
+	</xsl:message>
+      </xsl:if>
+    </article>
     </xsl:for-each>
   </xsl:template> 
   <!-- end main bug content template -->
@@ -742,9 +760,9 @@
 
 	  <ol>
 	    <xsl:for-each select="work">	
-	    <li>
-	      <xsl:apply-templates select="./*"/>
-	    </li>
+	      <li>
+		<xsl:apply-templates select="./*"/>
+	      </li>
 	    </xsl:for-each>
 	  </ol>
 	</xsl:if> 
