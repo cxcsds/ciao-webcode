@@ -93,7 +93,7 @@
       <xsl:with-param name="contents">
 	<h1 class="pagetitle">What's New for CIAO <xsl:value-of select="$siteversion"/></h1>
 
-	<p class="feed"><a href="http://cxc.harvard.edu/ciao/feed.xml">Subscribe to the CIAO&#160;News RSS&#160;feed</a></p>
+	<p class="feed"><a href="https://cxc.harvard.edu/ciao/feed.xml">Subscribe to the CIAO&#160;News RSS&#160;feed</a></p>
 
 	<hr/>
 
@@ -133,10 +133,10 @@
       <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
 	<channel><xsl:call-template name="newline"/> 
 	  <title>CIAO Software News</title><xsl:call-template name="newline"/>     
-	  <link>http://cxc.harvard.edu/ciao/news.html</link><xsl:call-template name="newline"/>
+	  <link>https://cxc.harvard.edu/ciao/news.html</link><xsl:call-template name="newline"/>
 	  <description>What's New in the CIAO Software</description><xsl:call-template name="newline"/> 
 
-	  <atom:link xmlns:atom="http://www.w3.org/2005/Atom"  href="http://cxc.harvard.edu/ciao/feed.xml" rel="self" type="application/rss+xml" />
+	  <atom:link xmlns:atom="http://www.w3.org/2005/Atom"  href="https://cxc.harvard.edu/ciao/feed.xml" rel="self" type="application/rss+xml" />
 
 	  <xsl:apply-templates select="//text/item" mode="feed"/>
 	</channel>	
