@@ -719,9 +719,11 @@ sub validate_page (@) {
 		    dbg "$$msg{'extract'}";
 		}
 
-		my $name = fileparse($page);
-		$name =~ s/.html$//;
-		push @validate_has_error, $name;
+		if ( $validate_is_error ) {
+		    my $name = fileparse($page);
+		    $name =~ s/.html$//;
+		    push @validate_has_error, $name;
+		}
 	}
     }
 } # sub: validate_page()
