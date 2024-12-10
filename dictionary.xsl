@@ -168,15 +168,11 @@
 	</xsl:call-template>
 
 	<xsl:variable name="contents">
-	  <div class="mainbar">
-	    
-	    <div class="pagetitle"><h2><xsl:apply-templates select="title"/></h2></div>
+	  <article class="mainbar">
+	    <h2 class="pagetitle"><xsl:apply-templates select="title"/></h2>
 	    <hr/>
-	    
 	    <xsl:apply-templates select="text"/>
-	    
-	    <hr/>
-	  </div>
+	  </article>
 	</xsl:variable>
 
 	<xsl:call-template name="add-body-nonavbar">
