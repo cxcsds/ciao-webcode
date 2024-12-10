@@ -108,10 +108,10 @@
       </xsl:when> <!--* text/introduction *-->
 
       <xsl:when test="boolean(text/overview)">
-	<div id="overview">
+	<section id="overview">
 	  <h2>Overview</h2>
 	  <xsl:apply-templates select="text/overview"/>
-	</div>
+	</section>
 	<xsl:call-template name="add-hr-strong"/>
       </xsl:when> <!--* text/overview *-->
 
