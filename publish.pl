@@ -26,6 +26,11 @@
 #     rather than error out). The contents of the link may contain
 #     place-holder text.
 #
+#     --validate
+#     Error out if there's any HTML validation error. By default such
+#     errors are displayed but ignored. Note that all files are processed
+#     first.
+#
 #   by default will not create HTML files if they already exist
 #   and are newer than the XML file (also checks for other
 #   associated files and the created PDF files).
@@ -83,6 +88,9 @@ use FindBin;
 use Cwd;
 use IO::File;
 use IO::Pipe;
+
+# Is this always available?
+use File::Basename qw (fileparse);
 
 # we only need this when validating, but always load it in
 use JSON;
@@ -150,6 +158,9 @@ page b needs info from page a. This is experimental and should be
 carefully, and rarely, used. One consequence is that the output may
 contain place-holder text.
 
+The --validate option is used to make any HTML validation errors
+to cause the script to error out rather than continue.
+
 If the directory contains the file DO_NOT_PUBLISH then the script
 will error out, no matter the number of force options used. This is
 to support data directories that contain data used to generate
@@ -167,6 +178,9 @@ my $force = 0;
 my $forceforce = 0;
 my $localxslt = 0;
 my $ignoremissinglink = 0;
+my $validate_is_error = 0;
+my @validate_has_error = ();
+
 die $usage unless
   GetOptions
   'config=s' => \$configfile,
@@ -175,6 +189,7 @@ die $usage unless
   'forceforce!'   => \$forceforce,
   'localxslt!' => \$localxslt,
   'ignore-missing!' => \$ignoremissinglink,
+  'validate!' => \$validate_is_error,
   'verbose!' => \$verbose;
 
 # check no "sentinel" file indicating this is a not-to-be-published
@@ -703,6 +718,10 @@ sub validate_page (@) {
 		    # provide mode information
 		    dbg "$$msg{'extract'}";
 		}
+
+		my $name = fileparse($page);
+		$name =~ s/.html$//;
+		push @validate_has_error, $name;
 	}
     }
 } # sub: validate_page()
@@ -1952,6 +1971,9 @@ sub process_xml ($$) {
 	}
 
     } # foreach: my $in
+
+    # If there were validation errors and we care, error out.
+    die "Validation errors: @{validate_has_error} file(s)" if @validate_has_error;
 
     # TODO: send in more information
     process_changed $type, $published, \@changed;
