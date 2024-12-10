@@ -461,8 +461,9 @@ if (self == top) {
 	  * copy the attributes of the text node into the body element
 	  * - ideally we'd just select the known supported values,
 	  *   but that's hard to set up
+	  * - we do explictly drop 'name' and 'type' attributes though
       -->
-      <xsl:copy-of select="@*[name() != 'name']"/>
+      <xsl:copy-of select="@*[name() != 'name' and name() != 'type']"/>
 
       <xsl:call-template name="add-disclaimer"/>
       <xsl:call-template name="add-header">
