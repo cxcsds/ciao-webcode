@@ -150,18 +150,17 @@
 	</xsl:call-template>
 
 	<xsl:variable name="contents">
-	  <div class="mainbar">
+	  <article class="mainbar">
 	    
-	    <div>
-	      <h1 class="pagetitle"><xsl:apply-templates select="title"/><xsl:call-template name="add-new-or-updated-info"/></h1>
-	      <xsl:apply-templates select="errmsg"/>
-	    </div>
+	    <h1 class="pagetitle"><xsl:apply-templates select="title"/><xsl:call-template name="add-new-or-updated-info"/></h1>
 	    <hr/>
+
+	    <!-- how does this look? -->
+	    <xsl:apply-templates select="errmsg"/>
 	    
 	    <xsl:apply-templates select="text"/>
 	    
-	    <hr/>
-	  </div>
+	  </article>
 	</xsl:variable>
 
 	<xsl:call-template name="add-body-nonavbar">
@@ -218,8 +217,9 @@
 	      <xsl:with-param name="with-date" select="1"/>
 	    </xsl:call-template>
 
-	      <!--* do we need to add an error message? *-->
+	      <!--* do we need to add an error message? for now, ignore
 	      <xsl:apply-templates select="errmsg"/>
+	       *-->
 	    </li>
 	  </xsl:for-each> <!--* faqentry *-->
 	</ol>
@@ -244,10 +244,12 @@
       *-->
   <xsl:template match="errmsg">
 
-    <xsl:call-template name="add-highlight-pre">
-      <xsl:with-param name="contents"><xsl:apply-templates/></xsl:with-param>
-    </xsl:call-template>
-
+    <div>
+      <xsl:call-template name="add-highlight-pre">
+	<xsl:with-param name="contents"><xsl:apply-templates/></xsl:with-param>
+      </xsl:call-template>
+    </div>
+    
   </xsl:template>
 
   <!--*
