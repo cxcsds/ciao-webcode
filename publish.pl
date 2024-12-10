@@ -1593,6 +1593,9 @@ sub xml2html_thread ($) {
     #
     foreach my $page ( @screen ) { myrm "$page.xml"; }
 
+    # validate the pages
+    validate_page( @html );
+
     print "\nThe thread can be viewed at:\n  $outurl\n\n";
 
 } # sub: xml2html_thread
