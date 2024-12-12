@@ -1991,7 +1991,13 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 		<!-- add in index.html if needed -->
 		<xsl:if test="substring(@href, string-length(@href)) = '/'">index.html</xsl:if>
 	      </xsl:when>
-	      <xsl:otherwise>index.html</xsl:otherwise> <!-- TODO: should this be illegal? -->
+	      <!-- up until CIAO 4.17 this chose index.html, but that is
+		   not useful and some pages assume it is using the actual
+		   page name, which makes sense.
+		   If it should have been index.html then that can be
+                   specified directly
+		   -->
+	      <xsl:otherwise><xsl:value-of select="concat($pagename, '.html')"/></xsl:otherwise>
 	    </xsl:choose>
 	    <xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
 	  </xsl:attribute>
