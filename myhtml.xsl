@@ -446,7 +446,12 @@
       <xsl:message terminate="yes">
  ERROR: invaling wrap attribute in screen tag: wrap=<xsl:value-of select="@wrap"/>
       </xsl:message>
-    </xsl:otherwise></xsl:choose></xsl:variable>
+    </xsl:otherwise></xsl:choose>
+    <!-- add in any user-requested classes -->
+    <xsl:if test="boolean(@class)">
+      <xsl:value-of select="concat(' ', @class)"/>
+    </xsl:if>
+    </xsl:variable>
 
     <!-- what is the language -->
     <xsl:variable name="language"><xsl:choose>
