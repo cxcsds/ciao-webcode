@@ -1996,7 +1996,16 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 		   page name, which makes sense.
 		   If it should have been index.html then that can be
                    specified directly
-		   -->
+                   EXCEPT for threads, where $pagename='thread' but we
+		   want the output to be "index.html"
+	      -->
+	      <xsl:when test="name(//*)='thread' and $pagename='thread'">index.html</xsl:when>
+	      <xsl:when test="$pagename='thread'">
+		<xsl:message terminate="no">
+  WARNING - please see Doug as he didn't expect this to happen
+		</xsl:message>
+		thread.html
+	      </xsl:when>
 	      <xsl:otherwise><xsl:value-of select="concat($pagename, '.html')"/></xsl:otherwise>
 	    </xsl:choose>
 	    <xsl:if test="boolean(@id)">#<xsl:value-of select="@id"/></xsl:if>
