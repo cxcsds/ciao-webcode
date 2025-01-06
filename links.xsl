@@ -2446,14 +2446,17 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
 	<a>
-	  <!--* add the href attibute *-->
+	  <!--*
+	      * Add the href attibute. Note that we always want to
+	      * include the file name (in this case $index).
+	      *-->
 	  <xsl:attribute name="href"><xsl:value-of
 		select="$urlfrag"/><xsl:choose>
 		<!--* and now the actual directory/file *-->
 	
 		<!--* name specified (id may or may not be) *-->
-		<xsl:when test="boolean(@name)"><xsl:value-of select="@name"/>/<xsl:if
-		    test="boolean(@id)"><xsl:value-of select="concat($index,'#',@id)"/></xsl:if></xsl:when>
+		<xsl:when test="boolean(@name)"><xsl:value-of select="concat(@name,'/',$index)"/><xsl:if
+		test="boolean(@id)"><xsl:value-of select="concat('#',@id)"/></xsl:if></xsl:when>
 
 		<!--* 
                     * if id only then we include the page name in the URL to make
