@@ -89,7 +89,7 @@
   <!--*
       * process lists slightly differently to the
       * way they are handled in myhtml.xsl
-      * - this means we can simpligy the list-handling
+      * - this means we can simplify the list-handling
       *   in myhtml
       *-->
   <xsl:template match="list" mode="threadindex">
@@ -181,7 +181,7 @@
         *   is in the sub-directory of this page so we needn't bother?
 	*
         *-->
-    <a class="threadlink" href="{$thisThreadInfo/name}/"><xsl:value-of select="$thisThreadInfo/title/long"/></a>
+    <a class="threadlink" href="{$thisThreadInfo/name}/index.html"><xsl:value-of select="$thisThreadInfo/title/long"/></a>
 
     <!--* Is this thread new or recently updated ? *-->
     <xsl:if test="boolean($thisThreadInfo/history/@new)">
@@ -268,7 +268,8 @@
 	        <xsl:choose>
 		  <xsl:when test="$site='ciao'">archivedownload/</xsl:when>
 		  <xsl:when test="$site='sherpa'">/ciao/threads/archivedownload/</xsl:when>
-		  </xsl:choose>
+		</xsl:choose>
+		index.html
 	       </xsl:attribute>How to Download Chandra Data from the Archive</a>
 	</xsl:if>
 	</td>
@@ -425,15 +426,15 @@
 	    <xsl:text> || </xsl:text>
 	    <!--* and now the "external" links *-->
 	    <xsl:for-each select="//threadindex/qlinks/qlink">
-
-	    <xsl:choose>
-	      <xsl:when test="position() = last()">
-	        <a href="{@href}"><xsl:value-of select="normalize-space(.)"/></a> 
-	      </xsl:when>
-	      <xsl:otherwise>
-	        <a href="{@href}"><xsl:value-of select="normalize-space(.)"/></a> | 
-	      </xsl:otherwise>
-	    </xsl:choose>
+	      <!-- ensure link ends in index.html and not / -->
+	      <xsl:variable name="href">
+		<xsl:value-of select="@href"/>
+		<xsl:if test="(substring(@href, string-length(@href)) = '/')
+			      and
+			      (substring(@href, 1, 4) != 'http')">index.html</xsl:if>
+	      </xsl:variable>
+	      <a href="{$href}"><xsl:value-of select="normalize-space(.)"/></a>
+	      <xsl:if test="position() != last()"> | </xsl:if>
 	    </xsl:for-each>
 	  </xsl:when>
 	  <xsl:otherwise>
@@ -815,7 +816,7 @@
 
     <xsl:if test="$ThreadInfo/history[@new=1]">
       <li>
-	<a href="{$ThreadInfo/name}/"><xsl:value-of select="$ThreadInfo/title/long"/></a>
+	<a href="{$ThreadInfo/name}/index.html"><xsl:value-of select="$ThreadInfo/title/long"/></a>
 	<xsl:apply-templates select="$ThreadInfo/history" mode="date"/>
 	<xsl:call-template name="add-new-image"/>
       </li>
@@ -827,7 +828,7 @@
     <xsl:variable name="ThreadInfo" select="document(concat($threadDir,@name,'/thread.xml'))/thread/info"/>
     <xsl:if test="$ThreadInfo/history[@updated=1]">
       <li>
-	<a href="{$ThreadInfo/name}/"><xsl:value-of select="$ThreadInfo/title/long"/></a>
+	<a href="{$ThreadInfo/name}/index.html"><xsl:value-of select="$ThreadInfo/title/long"/></a>
 	<xsl:apply-templates select="$ThreadInfo/history" mode="date"/>
 	<xsl:call-template name="add-updated-image"/>
       </li>
