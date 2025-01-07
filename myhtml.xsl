@@ -1599,7 +1599,7 @@ ERROR: section tag has an empty id attribute.
     <h2 id="{$threadlink}"><xsl:value-of select="$titlestring"/></h2>
     <p>
       Please follow the
-      "<a href="{concat('../',@threadlink,'/')}"><xsl:value-of select="$linkTitle"/></a>"
+      "<a href="{concat('../',@threadlink,'/index.html')}"><xsl:value-of select="$linkTitle"/></a>"
       thread.
     </p>
   </xsl:template> <!--* add-section-threadlink *-->
