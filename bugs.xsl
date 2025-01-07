@@ -105,7 +105,7 @@
 		  select="concat('the ', $pagename, ' ahelp file')"/></a>.
 		  <xsl:if test="$site='ciao' and (/bugs/info/scripts)">
 		    This script is part of
-		    the <a href="../download/scripts/">CIAO Scripts Package</a>.
+		    the <a href="../download/scripts/index.html">CIAO Scripts Package</a>.
 		  </xsl:if> 
 		</p>
 	      </xsl:if>
@@ -191,13 +191,7 @@
 
 		    <xsl:otherwise>
 		      <li>
-			<a>
-			  <xsl:attribute name="href">
-			    <xsl:text>#bugs</xsl:text>
-			  </xsl:attribute>
-			  
-			  <xsl:text>Bugs</xsl:text>
-			</a>
+			<a href="#bugs">Bugs</a>
 		      </li>		     
 		    </xsl:otherwise>
 		  </xsl:choose>
@@ -782,7 +776,8 @@
   <!--* altlinks template *-->
   <xsl:template match="intro/altlink">
     <xsl:for-each select=".">
-       <a>
+      <a>
+	<!-- should this check that @ref ends in index.html if a directory? -->
          <xsl:attribute name="href">
 	   <xsl:value-of select="@ref"/>
 	 </xsl:attribute>
