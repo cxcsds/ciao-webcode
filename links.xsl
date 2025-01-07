@@ -17,7 +17,7 @@
   <xsl:param name="ahelpindex"  select='""'/>
   <xsl:variable name="ahelpindexfile" select="document($ahelpindex)"/>
 
-    * 
+    *
     * Thoughts:
     * - a number of links go to the 'index' page (eg ahelp)
     *   when no attribute is given whereas some tags have a separate
@@ -52,7 +52,7 @@
     *        since this code needs changing when a new faq page is added to
     *        a site]
     *   add id attribute to the link constructs (see cxclink for an example)
-    *  
+    *
     *-->
 
 <xsl:stylesheet version="1.0"
@@ -205,7 +205,7 @@
 
   <!--*
       * handle ahelp tags:
-      * 
+      *
       * Attributes:
       *   name - string, required
       *     the ahelp 'key'
@@ -241,7 +241,7 @@
       *   as a tool tip, but not by netscape 4
       *   Now added parameter SYNOPSIS for parameter links
       *
-      * I explicitly check for site attributes and die to make sure we 
+      * I explicitly check for site attributes and die to make sure we
       * clean up the input documents (all part of the move to per-site
       * ahelp files in the CIAO 4 series of releases).
       *
@@ -249,7 +249,7 @@
       * is used to determine which of the context=sl.*/py.*  files
       * to link to. If $proglang is not set and you have context=sl.*/py.*
       * matches, we automatically link to both. This is being removed in
-      * CIAO 4.5 since it hasn't been needed since CIAO 4.2. 
+      * CIAO 4.5 since it hasn't been needed since CIAO 4.2.
       *-->
 
 
@@ -307,12 +307,12 @@
         *     name and context
         *   attributes, which makes the following a bit of a mess and
         *   not partcularly efficient
-        * 
+        *
         * Could just output 'ahelp foo' if we don't know foo - ie with no
         * link. This would allow pages to be published before the ahelp
         * file makes it into the database (still print a warning and
         * only do this for no matches: multiple matches would still die)
-        * 
+        *
         * note: looks like we can't say @name on the RHS of tests in XPATH
 	* and get it to refer to the value of the name attribute of the
 	* current context node (ie that node that is current before the
@@ -352,7 +352,7 @@
 
 	<!-- special case when num=0 (ie ahelp is unknown) -->
 	<xsl:when test="$num=0 and $type!='live'">unknown</xsl:when>
-	
+
 	<xsl:when test="$num=1"><xsl:value-of select="$namematches/context"/></xsl:when>
 
 	<xsl:when test="$num=0">
@@ -373,7 +373,7 @@
 	  </xsl:message>
 	</xsl:otherwise>
       </xsl:choose></xsl:variable>
-    
+
     <!--*
 	* should only have 0 or 1 matches here; the code has become somewhat
 	* unwieldly as we now support publishing to the test/devel sites
@@ -422,13 +422,13 @@
 
 	<!--* what site is the ahelp page on? *-->
 	<xsl:variable name="ahelpsite" select="$matches/site"/>
-	
+
 	<!--*
 	    * if this is a parameter link then check we know about this parameter
 	    *-->
 	<xsl:variable name="paramname" select="@param"/>
 	<xsl:variable name="parammatch" select="$matches/parameters/parameter[name=$paramname]"/>
-	
+
 	<xsl:if test="boolean(@param)">
 	  <xsl:if test="count($parammatch)!=1">
 	    <xsl:choose>
@@ -457,28 +457,28 @@
 	  <xsl:when test="$site != $ahelpsite">
 	    <xsl:value-of select="concat('/',$ahelpsite,'/ahelp/')"/>
 	  </xsl:when>
-	  
+
 	  <xsl:otherwise><xsl:call-template name="add-start-of-href">
 	    <xsl:with-param name="extlink" select="0"/>
 	    <xsl:with-param name="dirname" select="'ahelp/'"/>
 	  </xsl:call-template></xsl:otherwise>
 	</xsl:choose></xsl:variable>
-	
+
 	<!--* process the contents, surrounded by styles *-->
 	<xsl:call-template name="add-text-styles">
 	  <xsl:with-param name="contents">
 	    <a>
 	      <xsl:attribute name="class">helplink</xsl:attribute>
-	      
+
 	      <!--*
 		  * Add the summary as a title attribute. There should be
 		  * a summary tag for all ahelp pages, but use an if
 		  * statement in case one is missing.
-		  * 
-		  * If we are linking to a parameter, use that synopsis
-		  * instead 
 		  *
-		  * NOTE: add the context if including summary 
+		  * If we are linking to a parameter, use that synopsis
+		  * instead
+		  *
+		  * NOTE: add the context if including summary
 		  *-->
 
               <xsl:variable name="titleval"><xsl:choose>
@@ -514,7 +514,7 @@
 		  <xsl:when test="boolean(@param)">#plist.<xsl:value-of select="@param"/></xsl:when>
 		</xsl:choose>
 	      </xsl:attribute> <!--* end of href *-->
-	      
+
 	      <!--* and now the text contents
 		  * if the contents are empty, the we have to use either @name or @param
 		  * (which we may have to turn into uppercase).
@@ -522,7 +522,7 @@
 	      <xsl:choose>
 		<!--* use the supplied text *-->
 		<xsl:when test=".!=''"><xsl:apply-templates/></xsl:when>
-		
+
 		<!--* we have to use either the @param or @name attribute *-->
 		<xsl:when test="boolean(@param)">
 		  <xsl:call-template name="handle-uc">
@@ -530,7 +530,7 @@
 		    <xsl:with-param name="text" select="@param"/>
 		  </xsl:call-template>
 		</xsl:when>
-		
+
 		<xsl:otherwise>
 		  <xsl:call-template name="handle-uc">
 		    <xsl:with-param name="uc"   select="boolean(@uc) and @uc=1"/>
@@ -538,7 +538,7 @@
 		  </xsl:call-template>
 		</xsl:otherwise>
 	      </xsl:choose>
-	      
+
 	    </a>
 	  </xsl:with-param>
 	</xsl:call-template> <!--* add-text-styles *-->
@@ -567,7 +567,7 @@
     <xsl:variable name="nfaq" select="count($faq-contents/faq)"/>
     <xsl:choose>
       <xsl:when test="$nfaq = 0">
-	
+
 	<xsl:choose>
 	  <!--* maybe just combine the dictionary and $ignoremissinglink
               * check (or remove the dictionary one and force the user to
@@ -635,7 +635,7 @@
       *    faq.xml not available, then error out
       *      as long this is not the dictionary page (not 100% reliable test)
       *      (this is to allow the dictionary to be published, then faq, then
-      *       dictionary)   
+      *       dictionary)
       *    exists but not valid, then error out
       * At the moment these are also errors for non-live sites
       *-->
@@ -670,7 +670,7 @@
         * - if have a site attribute then use that
         * - otherwise if site=ciao, sherpa, or CSC use that
         * - otherwise assume the CIAO site
-        * 
+        *
         *-->
     <xsl:variable name="sitevalue"><xsl:choose>
 	<xsl:when test="boolean(@site)"><xsl:value-of select="@site"/></xsl:when>
@@ -697,11 +697,11 @@
     <xsl:variable name="title"><xsl:choose>
 	<xsl:when test="boolean(@id)">
 
-	  <!--* TODO: maybe this should just be a get-faq-title template 
+	  <!--* TODO: maybe this should just be a get-faq-title template
 	      * which errors out if @id is invalid?
 	      *-->
 
-	  <xsl:variable name="faq-file"><xsl:value-of 
+	  <xsl:variable name="faq-file"><xsl:value-of
 				select="djb:get-faq-filename($sitevalue)"/></xsl:variable>
 	  <xsl:variable name="faq-contents"
 			select="extfuncs:read-file-if-exists($faq-file)"/>
@@ -826,11 +826,11 @@
       *
       * Sherpa, and ChaRT: use the CIAO dictionary.
       *-->
-  
+
   <xsl:template match="dictionary">
 
     <xsl:call-template name="check-contents-are-not-empty"/>
-    
+
     <!--* since we don't have a DTD *-->
     <xsl:call-template name="name-not-allowed">
       <xsl:with-param name="tag" select="'id'"/>
@@ -860,7 +860,7 @@
 	<xsl:otherwise><xsl:value-of select="$site"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
 
-    <!--// if there is an attribute, use it 
+    <!--// if there is an attribute, use it
 	   otherwise, link to the "in-site" dictionary //-->
     <xsl:variable name="hrefstart"><xsl:choose>
       <xsl:when test="$sitevalue != $site"><xsl:value-of select="concat('/',$sitevalue,'/dictionary/')"/></xsl:when>
@@ -875,7 +875,7 @@
     <xsl:variable name="title"><xsl:choose>
 	<xsl:when test="boolean(@id)">
 
-	  <xsl:variable name="dictionary-file"><xsl:value-of 
+	  <xsl:variable name="dictionary-file"><xsl:value-of
 				select="djb:get-dictionary-filename($sitevalue)"/></xsl:variable>
 	  <xsl:variable name="dictionary-contents"
 			select="extfuncs:read-file-if-exists($dictionary-file)"/>
@@ -921,13 +921,16 @@
 		  <xsl:when test="boolean(@id)"><xsl:value-of select="@id"/>.html</xsl:when>
 		  <xsl:otherwise>index.html</xsl:otherwise>
 		  </xsl:choose>
-	      </xsl:attribute> 
+	      </xsl:attribute>
 	    </xsl:when>
 
 	    <xsl:when test="($site = 'csc') or (@site = 'csc')">
 	      <xsl:attribute name="href">
 	        <xsl:value-of select="$hrefstart"/>
-		<xsl:if test="boolean(@id)">entries.html#<xsl:value-of select="@id"/></xsl:if>
+		<xsl:choose>
+		  <xsl:when test="boolean(@id)">entries.html#<xsl:value-of select="@id"/></xsl:when>
+		  <xsl:otherwise>index.html</xsl:otherwise>
+		</xsl:choose>
 	      </xsl:attribute>
 	    </xsl:when>
 
@@ -945,7 +948,7 @@
 
       </xsl:with-param>
     </xsl:call-template>
-    
+
   </xsl:template> <!--* dictionary *-->
 
   <!--*
@@ -967,7 +970,7 @@
       *     if need to link to a particular version of POG then use this
       *
       * similar to the ahelp tag, except that we are linking to the POG.
-      * If no value is given, use the text link "the POG". 
+      * If no value is given, use the text link "the POG".
       *
       * NOTE: currently no styles are allowed
       *
@@ -995,7 +998,7 @@
 	<xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
       </xsl:choose>
     </a>
-    
+
   </xsl:template> <!--* pog *-->
 
   <!--*
@@ -1023,7 +1026,7 @@
   <xsl:template match="manual">
 
     <xsl:call-template name="check-contents-are-not-empty"/>
-    
+
     <!--* check name attribute *-->
     <xsl:call-template name="check-page-for-no-html"/>
 
@@ -1073,7 +1076,7 @@
 	</a>
       </xsl:with-param>
     </xsl:call-template>
-    
+
   </xsl:template> <!--* manual *-->
 
   <!--*
@@ -1081,11 +1084,11 @@
       *
       * Parameters:
       *   site, string, optional (defaults to CIAO)
-      *     - what 
+      *     - what
       *   standard style attributes
       *
       * For CIAO 3.0 added the site attribute to allow us to link
-      * to different manual pages (if necessary). Defaults to 
+      * to different manual pages (if necessary). Defaults to
       * CIAO if not specified
       *
       *-->
@@ -1135,7 +1138,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
   </xsl:template> <!--* manualpage *-->
 
-  <!--* 
+  <!--*
       * Link to the data products guide
       *
       * Attributes:
@@ -1191,7 +1194,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * Link to the bugs page
       *
       * parameters:
-      *   depth 
+      *   depth
       *
       * attributes:
       * id   - string, optional
@@ -1244,7 +1247,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
 
 
-  <!--* 
+  <!--*
       * Link to a caveat
       *
       * Attributes:
@@ -1271,9 +1274,9 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <!--* are we in the ciao pages or not (ie is this an `external' link or not) *-->
     <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
 
-    <!--// if there is an attribute, use it 
+    <!--// if there is an attribute, use it
 	   otherwise, link to the "in-site" why topic //-->
-    <xsl:variable name="hrefstart"><xsl:choose>    
+    <xsl:variable name="hrefstart"><xsl:choose>
       <xsl:when test="@site = 'ciao'">/ciao/caveats/</xsl:when>
       <xsl:when test="@site = 'csc'">/csc/caveats/</xsl:when>
       <xsl:when test="@site = 'caldb'">/caldb/caveats/</xsl:when>
@@ -1319,7 +1322,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   </xsl:template> <!--* caveat *-->
 
 
-  <!--* 
+  <!--*
       * Link to an analysis guide
       *
       * Attributes:
@@ -1368,7 +1371,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
   </xsl:template> <!--* aguide *-->
 
-  <!--* 
+  <!--*
       * Link to a why document
       *
       * Attributes:
@@ -1395,9 +1398,9 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <!--* are we in the ciao pages or not (ie is this an `external' link or not) *-->
     <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
 
-    <!--// if there is an attribute, use it 
+    <!--// if there is an attribute, use it
 	   otherwise, link to the "in-site" why topic //-->
-    <xsl:variable name="hrefstart"><xsl:choose>    
+    <xsl:variable name="hrefstart"><xsl:choose>
       <xsl:when test="@site = 'ciao'">/ciao/why/</xsl:when>
       <xsl:when test="@site = 'csc'">/csc/why/</xsl:when>
 
@@ -1443,7 +1446,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
   </xsl:template> <!--* why *-->
 
-  <!--* 
+  <!--*
       * Link to a gallery page
       *
       * Attributes:
@@ -1470,9 +1473,9 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <!--* are we in the ciao pages or not (ie is this an `external' link or not) *-->
     <xsl:variable name="extlink"><xsl:call-template name="not-in-ciao"/></xsl:variable>
 
-    <!--// if there is an attribute, use it 
+    <!--// if there is an attribute, use it
 	   otherwise, link to the "in-site" gallery example //-->
-    <xsl:variable name="hrefstart"><xsl:choose>    
+    <xsl:variable name="hrefstart"><xsl:choose>
       <xsl:when test="@site = 'ciao'">/ciao/gallery/</xsl:when>
       <xsl:when test="@site = 'sherpa'">/sherpa/gallery/</xsl:when>
 
@@ -1569,7 +1572,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	<xsl:message terminate="yes">
  ERROR: download link found with type and id attributes
  when only one is allowed
- type=<xsl:value-of select="@type"/>  id=<xsl:value-of select="@id"/> 
+ type=<xsl:value-of select="@type"/>  id=<xsl:value-of select="@id"/>
 	</xsl:message>
       </xsl:if>
     </xsl:if> <!--* boolean(@type) *-->
@@ -1620,13 +1623,13 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</a>
       </xsl:with-param>
     </xsl:call-template>
-    
+
   </xsl:template> <!--* download *-->
 
   <!--*
       * handle script tags:
       * produces different links depending on whether type=test or live
-      * 
+      *
       * Attributes:
       *   name - string, required
       *     name of script
@@ -1648,6 +1651,12 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
   <xsl:template match="script">
 
+    <xsl:if test="not(boolean(@name))">
+      <xsl:message terminate="yes">
+  ERROR script tag missing name attribute; perhape use scriptpage instead?
+      </xsl:message>
+    </xsl:if>
+
     <!--* process the contents, surrounded by styles *-->
     <xsl:call-template name="add-text-styles">
       <xsl:with-param name="contents">
@@ -1657,7 +1666,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</xsl:call-template>
       </xsl:with-param>
     </xsl:call-template>
-    
+
   </xsl:template> <!--* match=script *-->
 
   <xsl:template name="create-script-link">
@@ -1684,14 +1693,14 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	<xsl:otherwise><xsl:value-of select="$text"/></xsl:otherwise>
       </xsl:choose>
     </a>
-    
+
   </xsl:template> <!--* name=create-script-link *-->
 
   <!--*
       * Link to the scripts page
       *
       * parameters:
-      *   depth 
+      *   depth
       *
       * attributes:
       * id   - string, optional
@@ -1744,7 +1753,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       * so that we wanted to link to the live site to allow checks of
       * the link. This approach is no longer valid so some of the
       * complexity (and need for the template) has gone.
-      * 
+      *
       * Tried to be clever, decided it's too hard, so
       * parameters:
       *   filename = string
@@ -1777,8 +1786,8 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <a href="{concat($dir,$fname)}"><xsl:value-of select="$text"/></a>
   </xsl:template> <!--* mylink *-->
 
-  <!--* 
-      * we allow the contents of <extlink> to contain HTML 
+  <!--*
+      * we allow the contents of <extlink> to contain HTML
       *
       * Attributes:
       *  href = URL of page
@@ -1833,11 +1842,11 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 
   </xsl:template> <!--* extlink *-->
 
-  <!--* 
+  <!--*
       * for links within cxc.harvard.edu
       *
       * parameters:
-      *   depth 
+      *   depth
       *
       * attributes:
       * href - string, optional
@@ -1938,7 +1947,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:if test="contains(@href,'html_manual')">
 	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'manual'"/></xsl:call-template>
       </xsl:if>
-      
+
       <xsl:if test="contains(@href,'download/doc/data_products_guide')">
 	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'dpguide'"/></xsl:call-template>
       </xsl:if>
@@ -1946,7 +1955,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:if test="contains(@href,'download_ciao_reg') and not(starts-with(@href,'/ciao'))">
 	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'download'"/></xsl:call-template>
       </xsl:if>
-      
+
       <!--* QUS: how best to add site-specific knowledge here? For now just
           *      hard code the annoyances
 	  *-->
@@ -1961,7 +1970,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       <xsl:if test="contains(@href,'aguide/')">
 	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'aguide'"/></xsl:call-template>
       </xsl:if>
-      
+
       <xsl:if test="contains(@href,'POG')">
 	<xsl:call-template name="warn-in-cxclink"><xsl:with-param name="link" select="'pog'"/></xsl:call-template>
       </xsl:if>
@@ -2025,8 +2034,8 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</a>
       </xsl:with-param>
     </xsl:call-template>
-    
-  </xsl:template> <!--* cxclink *-->                                            
+
+  </xsl:template> <!--* cxclink *-->
 
 
   <!-- for a local download, to make sure the browser knows this is meant to be a
@@ -2083,7 +2092,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     * You cannot link directly to index.html as it is a redirect.
     *
     * parameters:
-    *   depth 
+    *   depth
     *
     * attributes:
     * ver - string, optional
@@ -2151,11 +2160,11 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 </xsl:template> <!--* relnote *-->
 
 
-  <!--* 
+  <!--*
       * for links within icxc.harvard.edu/sds/
       *
       * parameters:
-      *   depth 
+      *   depth
       *
       * attributes:
       * href - string, optional
@@ -2182,7 +2191,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   <xsl:template match="icxclink">
 
     <xsl:call-template name="check-contents-are-not-empty"/>
-    
+
     <!--* safety check *-->
     <xsl:if test="$site != 'icxc'">
       <xsl:message terminate="yes">
@@ -2193,7 +2202,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 <xsl:value-of select="."/>
       </xsl:message>
     </xsl:if>
-    
+
     <!--* are we an "external" link for this site *-->
     <xsl:variable name="extlink" select="starts-with(@href,'/')"/>
 
@@ -2214,7 +2223,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</a>
       </xsl:with-param>
     </xsl:call-template>
-    
+
   </xsl:template> <!--* icxclink *-->
 
   <!--*
@@ -2228,11 +2237,11 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *     if true set the link text to upper case [***not used***]
       *
       * similar to the ahelp tag, except that we are linking to the help desk.
-      * If no value is given, use the text link "CXC Helpdesk". 
+      * If no value is given, use the text link "CXC Helpdesk".
       *
       * as with cxclink, depth tag is used only for the extlink image
       *-->
-  
+
   <xsl:template match="helpdesk">
 
     <!--* process the contents, surrounded by styles *-->
@@ -2249,9 +2258,9 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	</a>
       </xsl:with-param>
     </xsl:call-template>
-    
+
   </xsl:template> <!--* helpdesk *-->
-  
+
   <xsl:template match="threadindex">
     <xsl:message terminate="no">
  WARNING: threadindex tag found; I think you meant threadpage
@@ -2260,7 +2269,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <xsl:apply-templates/>
   </xsl:template>
 
-  <!--* 
+  <!--*
       * for links to the thread index page(s)
       *
       * attributes:
@@ -2288,7 +2297,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   <xsl:template match="threadpage">
 
     <xsl:call-template name="check-contents-are-not-empty"/>
-    
+
     <!--* since we don't have a DTD *-->
     <xsl:call-template name="page-not-allowed"/>
 
@@ -2346,10 +2355,10 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *   uc - boolean, optional
       *     if true set the link text to upper case [***does not work***]
       *
-      * notes: 
+      * notes:
       *  if no name attribute is supplied we either:
       *   - if the root node is thread, link to the current page
-      *   - else throw a wobbly and tell the user to use threadpage (or there's an error). 
+      *   - else throw a wobbly and tell the user to use threadpage (or there's an error).
       *
       *  id only is only allowed if the rootnode is thread
       *    OR dummy (ie an include file)
@@ -2435,7 +2444,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     </xsl:call-template></xsl:variable>
 
     <xsl:variable name="index">index.html</xsl:variable>
-    
+
     <!--*
 	* Process the contents, surrounded by styles.
 	* I think the code below can be cleaned up
@@ -2453,12 +2462,12 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	  <xsl:attribute name="href"><xsl:value-of
 		select="$urlfrag"/><xsl:choose>
 		<!--* and now the actual directory/file *-->
-	
+
 		<!--* name specified (id may or may not be) *-->
 		<xsl:when test="boolean(@name)"><xsl:value-of select="concat(@name,'/',$index)"/><xsl:if
 		test="boolean(@id)"><xsl:value-of select="concat('#',@id)"/></xsl:if></xsl:when>
 
-		<!--* 
+		<!--*
                     * if id only then we include the page name in the URL to make
                     * offline browsing/site-packaging code to work
                     *-->
@@ -2474,7 +2483,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	      <xsl:call-template name="find-thread-title">
 		<xsl:with-param name="threadinfo" select="$threadinfo"/>
 	      </xsl:call-template>
-	    </xsl:when>	    
+	    </xsl:when>
 	    <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
 	  </xsl:choose>
 	</a>
@@ -2644,14 +2653,14 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	    <xsl:when test="$ignoremissinglink='no'">
 	      <xsl:message terminate="yes">
  ERROR: threadpage link with site=<xsl:value-of select="$siteval"/> and @name=<xsl:value-of select="@name"/>
-   does not match the contents of the threadindex; is @name correct or should this 
+   does not match the contents of the threadindex; is @name correct or should this
    be a threadlink tag instead? Or the <xsl:value-of select="$siteval"/> thread index needs publishing.
 	      </xsl:message>
 	    </xsl:when>
 	    <xsl:otherwise>
 	      <xsl:message terminate="no">
  WARNING: threadpage link with site=<xsl:value-of select="$siteval"/> and @name=<xsl:value-of select="@name"/>
-   does not match the contents of the threadindex; is @name correct or should this 
+   does not match the contents of the threadindex; is @name correct or should this
    be a threadlink tag instead? Or the <xsl:value-of select="$siteval"/> thread index needs publishing.
 	      </xsl:message>
 	    </xsl:otherwise>
@@ -2672,7 +2681,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       *
       * If the contents are empty then we use the bug number
       *-->
-  
+
   <xsl:template match="buglink">
 
     <!--* check we are in the iCXC site *-->
@@ -2697,11 +2706,11 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
 	<xsl:when test=".=''"><xsl:value-of select="@num"/></xsl:when>
 	<xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
     </xsl:choose></a>
-    
+
   </xsl:template> <!--* buglink *-->
-  
+
   <!--*
-      * add a <a name="id"></a> item to the document 
+      * add a <a name="id"></a> item to the document
       * <id name="foo"/> or <id name="foo">...</id>
       *
       * NOTE: this really should add an id attribute to
@@ -2722,7 +2731,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     <xsl:message terminate="no">Use id attribute not &lt;id name="<xsl:value-of select="@name"/>"&gt;<xsl:apply-templates/>&lt;/id&gt;</xsl:message>
   </xsl:template> <!--* id *-->
 
-  <!--* 
+  <!--*
       * handle-uc
       *
       * params:
@@ -2740,7 +2749,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
     </xsl:choose>
   </xsl:template> <!--* name=handle-uc *-->
 
-  <!--* 
+  <!--*
       * returns a 0 if $site != ciao, a 1 otherwise
       *
       * example use:
@@ -3002,7 +3011,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   </func:function> <!--* name djb:get-faq-filename *-->
 
   <!-- return the location of the faq in the storage location -->
-  <func:function name="djb:get-faq-filename-storage"> 
+  <func:function name="djb:get-faq-filename-storage">
     <xsl:param name="sitevalue" select="$site"/>
     <func:result select="concat(djb:get-storage-path($sitevalue),'faq/index.xml')"/>
   </func:function>
@@ -3034,7 +3043,7 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
   </func:function> <!--* name djb:get-dictionary-filename *-->
 
   <!-- return the location of the dictionary in the storage location -->
-  <func:function name="djb:get-dictionary-filename-storage"> 
+  <func:function name="djb:get-dictionary-filename-storage">
     <xsl:param name="sitevalue" select="$site"/>
     <func:result select="concat(djb:get-storage-path($sitevalue),'dictionary/index.xml')"/>
   </func:function>
@@ -3122,6 +3131,6 @@ Error: manualpage tag found with site=<xsl:value-of select="@site"/>
       </xsl:attribute>
     </xsl:if>
   </xsl:template>
-      
+
 
 </xsl:stylesheet>
