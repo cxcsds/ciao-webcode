@@ -38,8 +38,14 @@ def check_file(xslt, infile):
             f"{infile}"
             ]
 
-    proc = sbp.run(comm, check=True, stdout=sbp.PIPE, stderr=sbp.PIPE,
-                   encoding="utf-8")
+    try:
+        proc = sbp.run(comm, check=True, stdout=sbp.PIPE,
+                       stderr=sbp.PIPE, encoding="utf-8")
+    except Exception as exc:
+        sys.stderr.write(f"# FAILED: {infile}\n")
+        sys.stderr.write(f"## {exc}\n")
+        return set()
+
     stdout = proc.stdout.strip()
     if stdout == '':
         return set()
