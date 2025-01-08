@@ -26,10 +26,9 @@
 #     rather than error out). The contents of the link may contain
 #     place-holder text.
 #
-#     --validate
-#     Error out if there's any HTML validation error. By default such
-#     errors are displayed but ignored. Note that all files are processed
-#     first.
+#     --validate=default, skip, error
+#     Should we check for validation errors, not check, or error out
+#     if we find any?
 #
 #   by default will not create HTML files if they already exist
 #   and are newer than the XML file (also checks for other
@@ -158,8 +157,9 @@ page b needs info from page a. This is experimental and should be
 carefully, and rarely, used. One consequence is that the output may
 contain place-holder text.
 
-The --validate option is used to make any HTML validation errors
-to cause the script to error out rather than continue.
+The --validate option is used to determine whether to: check for
+any HTML validation errors (default), ignore the validation check
+(skip), or error out if there are any (error).
 
 If the directory contains the file DO_NOT_PUBLISH then the script
 will error out, no matter the number of force options used. This is
@@ -178,7 +178,7 @@ my $force = 0;
 my $forceforce = 0;
 my $localxslt = 0;
 my $ignoremissinglink = 0;
-my $validate_is_error = 0;
+my $validate_option = "default";
 my @validate_has_error = ();
 
 die $usage unless
@@ -189,8 +189,12 @@ die $usage unless
   'forceforce!'   => \$forceforce,
   'localxslt!' => \$localxslt,
   'ignore-missing!' => \$ignoremissinglink,
-  'validate!' => \$validate_is_error,
+  'validate=s' => \$validate_option,
   'verbose!' => \$verbose;
+
+my %validate_options = map { $_ => 1 } ("default", "skip", "error");
+die "Unknown validate option $validate_option\n"
+    unless exists($validate_options{$validate_option});
 
 # check no "sentinel" file indicating this is a not-to-be-published
 # directory; also check up the parent chain (unfortunately no easy
@@ -701,6 +705,7 @@ sub check_for_page {
 #
 sub validate_page (@) {
     return if not (defined $validator);
+    return if $validate_option eq "skip";
     foreach my $page ( @_ ) {
 	next if not ($page =~ /\.html$/i);
 
@@ -719,7 +724,7 @@ sub validate_page (@) {
 		    dbg "$$msg{'extract'}";
 		}
 
-		if ( $validate_is_error ) {
+		if ( $validate_option eq "error" ) {
 		    my $name = fileparse($page);
 		    $name =~ s/.html$//;
 		    push @validate_has_error, $name;
