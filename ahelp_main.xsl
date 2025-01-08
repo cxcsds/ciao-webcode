@@ -1036,7 +1036,8 @@
 	    <xsl:otherwise>
 	      <xsl:apply-templates/>
 	      <p>
-		Refer to the <a href="/ciao/bugs/">CIAO bug pages</a> for an up-to-date listing of known issues.
+		<!-- we could try and make this a relative link -->
+		Refer to the <a href="/ciao/bugs/index.html">CIAO bug pages</a> for an up-to-date listing of known issues.
 	      </p>
 	    </xsl:otherwise>
 	  </xsl:choose>
