@@ -1862,13 +1862,14 @@ sub process_xml ($$) {
 		    $tempnode->appendChild($cssnode);
 		}
 
-	    } elsif ($ncss == 1) {
+	    } else {
+		# Just add to the **first** node for now, which will
+		# hopefully allow us to over-ride any settings if
+		# necessary.
+		#
 		my $cssnode = $cssnodes[0];
 		my $node = $dom->createTextNode($nodetext);
 		$cssnode->addChild($node);
-
-	    } else {
-		die "Error: multiple info/css blocks - likely a problem";
 	    }
 	}
 
