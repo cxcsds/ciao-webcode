@@ -199,6 +199,7 @@
       * input variables:
       *   title - required
       *   css   - optional: text of css-1 rules
+      *   css-src - optional: hack to pass through src attribute for css links
       *   page  - optional: if given then the canonical link is created as
       *              canonicalbase + page
       *           else
@@ -209,6 +210,7 @@
   <xsl:template name="add-htmlhead">
     <xsl:param name='title'/>
     <xsl:param name='css'/>
+    <xsl:param name='css-src'/>
     <xsl:param name='page'/>
     <head>
       <!-- *
@@ -344,6 +346,14 @@
 </style>
       </xsl:if>
 
+      <!--
+	  This is not great; what happens if multiple @src and
+	  there should be a better way to do this.
+      -->
+      <xsl:if test="$css-src!=''">
+<link rel="stylesheet" href="{$css-src}"/>
+      </xsl:if>
+
       <xsl:apply-templates select="info/css" mode="header"/>
 
       <xsl:call-template name="add-sao-metadata">
@@ -362,6 +372,11 @@
       * updated to support optional media and title attributes
     -->
   <xsl:template match="css[@src]" mode="header">
+    <!--
+
+Not sure why we now get css content here (the pygmentize
+changes, but we do now with faq at least
+
     <xsl:if test="normalize-space(.)!=''">
       <xsl:message terminate="yes">
  ERROR: css tag with src attribute is not empty:
@@ -369,8 +384,15 @@
    contents=<xsl:value-of select="."/>
       </xsl:message>
     </xsl:if>
-	
+    -->
     <link rel="stylesheet" href="{@src}"/>
+
+    <!-- for some reason we now need to do this; see comment above -->
+    <xsl:if test="normalize-space(.)!=''">
+      <style>
+	<xsl:value-of select="."/>
+      </style>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="css" mode="header">

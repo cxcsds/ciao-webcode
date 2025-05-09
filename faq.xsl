@@ -147,6 +147,10 @@
 	       sub-pages; should we process the contents? -->
 	  <xsl:with-param name="css"
 			  select="//info/css"/>
+
+	  <!-- TODO: rework this -->
+	  <xsl:with-param name="css-src"
+			  select="//info/css/@src"/>
 	</xsl:call-template>
 
 	<xsl:variable name="contents">
