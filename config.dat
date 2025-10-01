@@ -834,6 +834,11 @@ logourl=/csc2.1/
 %searchssi=test /csc2.1/csc_search.ssi
 %searchssi=trial /sds/csc2.1/csc_search.ssi
 
+# # location of the banner page, relative to the top-level directory
+# %sitebanner=live banner.xml
+# %sitebanner=test banner.xml
+# %sitebanner=trial banner.xml
+
 # location of the google analytics ssi
 # only added for the live site in helper.xsl
 googlessi=/csc2.1/analytics.ssi
