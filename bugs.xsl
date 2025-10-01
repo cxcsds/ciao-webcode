@@ -96,8 +96,12 @@
 	      </xsl:if>		  
 		
 	      <xsl:if test="$site='ciao' and not(/bugs/info/noahelp)">
+		<xsl:variable name="ahelpname"><xsl:choose>
+		  <xsl:when test="/bugs/info/ahelpname"><xsl:value-of select="/bugs/info/ahelpname"/></xsl:when>
+		  <xsl:otherwise><xsl:value-of select="$pagename"/></xsl:otherwise>
+		</xsl:choose></xsl:variable>
 		<xsl:variable name="hrefval"
-			      select="concat('../ahelp/', $pagename, '.html')"/>
+			      select="concat('../ahelp/', $ahelpname, '.html')"/>
 		<p>
 		  For detailed information and examples of running this tool,
 		  refer to
