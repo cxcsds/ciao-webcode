@@ -154,13 +154,13 @@
     <meta http-equiv="X-Frame-Options" content="Deny"/>
     -->
     <style>html { display: none; }</style>
-    <script>
+<script>
 if (self == top) {
   document.documentElement.style.display = 'block';
 } else {
   top.location = self.location;
 }
-    </script>
+</script>
 
     <!--// also apply 'no-web-index' tag to prevent web indexing if invoked //-->
     <xsl:call-template name="add-noindex"/>
@@ -174,11 +174,13 @@ if (self == top) {
   -->
   <xsl:template name="add-noindex">
     <xsl:choose>
-      <xsl:when test="info/no-web-index">
+      <xsl:when test="//info/no-web-index">
+	<xsl:call-template name="newline"/>
 	<meta name="robots" content="noindex,nofollow"/>
+	<xsl:call-template name="newline"/>
       </xsl:when>
     </xsl:choose>
-  </xsl:template>
+  </xsl:template> <!--* name=add-noindex *-->
  
   
   <!--*
@@ -432,6 +434,36 @@ if (self == top) {
     </xsl:call-template>
   </xsl:template> <!--* add-search-ssi *-->
 
+
+  <!--*
+      * 'defer'ed scripts (whether by HTML's script/defer attribute
+      *  or done by DOM load event listener, it must reside in the
+      *  page 'body' element; if 'defer' is used, it must be the
+      *  first attribute provided to 'script-body'
+      *
+  -->
+  <xsl:template match="//info/script-body">
+    <script>
+      <!--     <xsl:copy-of select="@*" /> -->
+      <xsl:copy-of select="(@*)[
+			   name() = 'defer' or name() = 'src' or
+			   name() = 'type'
+			   ]"/>
+      <xsl:apply-templates/>
+    </script>
+  </xsl:template>
+
+  <xsl:template name="add-body-script">
+    <xsl:if test="//info/script-body">
+      <xsl:call-template name="newline"/>
+
+      <xsl:apply-templates select="//info/script-body"/>
+
+      <xsl:call-template name="newline"/>
+    </xsl:if>
+  </xsl:template> <!--* name=add-body-script -->
+
+
   <!--*
       * The "standard" body for a page where there's no
       * navigation bar. Breadcrumbs are added if the
@@ -466,6 +498,7 @@ if (self == top) {
                               name() != 'type']"/>
 
       <xsl:call-template name="add-disclaimer"/>
+      <xsl:call-template name="add-body-script"/>
       <xsl:call-template name="add-header">
 	<xsl:with-param name="with-navbar" select="0"/>
       </xsl:call-template>
@@ -540,6 +573,7 @@ if (self == top) {
                               name() != 'release']"/>
 
       <xsl:call-template name="add-disclaimer"/>
+      <xsl:call-template name="add-body-script"/>
       <xsl:call-template name="add-header"/>
 
       <main id="content">
