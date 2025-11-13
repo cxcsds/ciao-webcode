@@ -10,6 +10,7 @@
 #     --xmlonly
 #     --yes
 #     --localxslt
+#     --validate=default, skip, error
 #     --verbose
 #
 #     --ignore-missing
@@ -134,6 +135,7 @@ my $excludedirs = "";
 my $yes = 0;
 my $verbose = 0;
 my $ignoremissinglink = 0;
+my $validate_option = "default";
 
 die $usage unless
   GetOptions 
@@ -146,7 +148,13 @@ die $usage unless
     'yes!' => \$yes,
     'localxslt!' => \$localxslt,
     'ignore-missing!' => \$ignoremissinglink,
+    'validate=s' => \$validate_option,
     'verbose!' => \$verbose;
+
+my %validate_options = map { $_ => 1 } ("default", "skip", "error");
+my $validate_opt_str = join(", ", sort keys %validate_options);
+die "Unknown validate option '$validate_option'\n valid options: $validate_opt_str\n"
+    unless exists($validate_options{$validate_option});
 
 # check no "sentinel" file indicating this is a not-to-be-published
 # directory
@@ -431,6 +439,7 @@ my $forceforce_opt = $forceforce ? "--forceforce" : "--noforceforce";
 my $localxslt_opt = $localxslt ? "--localxslt" : "--nolocalxslt";
 my $verbose_opt = $verbose ? "--verbose" : "--noverbose";
 my $ignore_opt = $ignoremissinglink ? "--ignore-missing" : "";
+my $validate_opt = "--validate=$validate_option";
 
 my @errors;
 foreach my $href ( \%images, \%files ) {
@@ -442,7 +451,7 @@ foreach my $href ( \%images, \%files ) {
 	# and do the actual publishing
 	system @pexe, $script,
 	  $cfg_opt, $type_opt, $force_opt, $forceforce_opt, $localxslt_opt, $verbose_opt,
-	  $ignore_opt,
+	  $ignore_opt, $validate_opt,
 	  @files
 	    and push @errors, "dir=$dir with files=" . join(" ",@files);
     }
@@ -460,7 +469,7 @@ if ( defined $threadindex ) {
     # and do the actual publishing
     system @pexe, $script,
       $cfg_opt, $type_opt, $force_opt, $forceforce_opt, $localxslt_opt, $verbose_opt,
-      $ignore_opt,
+      $ignore_opt, $validate_opt,
       @files
 	and die "\nerror in\n dir=$dir\n with files=" . join(" ",@files) . "\n\n";
 }
