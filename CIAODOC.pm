@@ -1814,7 +1814,17 @@ sub process_dep_file ($) {
   #
   while ( my ($label, $filename) = each %changed ) {
     dbg "Reading in from $filename";
+
+    # NOTE:
+    # For now (end of 2025) we do **NOT** expand XInclude statements
+    # because there is no guarantee that the include file has been
+    # copied over to the store. This is not ideal (e.g. what happens
+    # if the XInclude contains the element being checked), but it
+    # is what it is.
+    #
+    $parser->expand_xinclude(0);
     my $xdom = $parser->parse_file($filename);
+    $parser->expand_xinclude(1);
     my $xroot = $xdom->documentElement();
 
     foreach my $node ( $root->findnodes('//xpath/hash/hitem[key="' . $label . '"]/value/hash/hitem') ) {
@@ -1823,6 +1833,9 @@ sub process_dep_file ($) {
 
       # query filename using xpath and compare to value
       my $nvalue = $xroot->findvalue("normalize-space(${xpath})");
+      if ($ovalue ne $nvalue) {
+	  dbg "**DIFF** '$xpath' '$ovalue' '$nvalue'";
+      }
       ###dbg "Comparing $ovalue to $nvalue";
       return 1 if $ovalue ne $nvalue;
     }
