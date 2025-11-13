@@ -193,7 +193,8 @@ die $usage unless
   'verbose!' => \$verbose;
 
 my %validate_options = map { $_ => 1 } ("default", "skip", "error");
-die "Unknown validate option $validate_option\n"
+my $validate_opt_str = join(", ", sort keys %validate_options);
+die "Unknown validate option '$validate_option'\n valid options: $validate_opt_str\n"
     unless exists($validate_options{$validate_option});
 
 # check no "sentinel" file indicating this is a not-to-be-published
