@@ -895,7 +895,7 @@
 			select="extfuncs:register-included-file($label,
 				djb:get-dictionary-filename-storage($sitevalue))"/>
 
-	  <!-- Too laxy to make the 'Dictionary' part contain the site name -->
+	  <!-- Too lazy to make the 'Dictionary' part contain the site name -->
 	  <xsl:variable name="idval" select="@id"/>
 	  <xsl:variable name="titlestr" select="normalize-space($dictionary-contents//entry[@id=$idval]/title)"/>
 	  <xsl:variable name="hack-register-dictionary-link"
