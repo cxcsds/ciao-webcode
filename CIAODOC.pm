@@ -28,6 +28,7 @@ use File::Basename;
 use File::Temp;
 
 use XML::LibXML;
+use XML::LibXML::XPathContext;
 use XML::LibXSLT;
 
 # Try to support using LaTeX (use_mathjax()=0) or MathJax
@@ -56,7 +57,7 @@ my $xslt = XML::LibXSLT->new()
   or die "Error: Unable to create XML::LibXSLT instance.\n";
 
 # Set up potentially-useful functions. Ideally we would use
-# register_element but this is not available using the 
+# register_element but this is not available using the
 # installed version of XML::LibXSLT
 #
 # TODO: should read-file-if-exists report this information
@@ -107,6 +108,7 @@ my @funcs_xslt =
   qw(
      translate_file
      read_xml_file read_xml_string read_html_string
+     find_xinclude_files
      find_math_pages
     );
 my @funcs_cfg  =
@@ -118,7 +120,7 @@ my @funcs_cfg  =
     );
 my @funcs_deps =
   qw(
-     clear_dependencies get_dependencies have_dependencies 
+     clear_dependencies get_dependencies have_dependencies
      dump_dependencies write_dependencies
      identify_files_to_republish
      use_mathjax
@@ -150,7 +152,7 @@ sub check_executables (@);
 sub check_executable_runs ($$$);
 
 sub extract_filename ($);
- 
+
 sub read_xml_file ($);
 sub read_xml_string ($);
 sub read_html_string ($);
@@ -426,7 +428,7 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
 
   # Returns the DOM for the file or dies, although it may be that this
   # method already dies and I need to improve my error handling here.
-  # 
+  #
   # This routine need not be within this closure, but left here for now.
   #
   # We add the .xml suffix if it does not exist.
@@ -437,6 +439,29 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     dbg " - about to read XML file '$filename'";
     $parser->parse_file($filename)
       or die "ERROR: unable to parse XML file '$filename'\n";
+  }
+
+  # Return the unique xinclude files found in the input XML file.
+  # It returns an empty list if there are none.
+  sub find_xinclude_files ($) {
+    my $filename = shift;
+    $filename .= ".xml" unless $filename =~ /\.xml$/;
+    dbg " - about to read XML file '$filename' to find XInclude files";
+    $parser->expand_xinclude(0);
+    my $dom = $parser->parse_file($filename)
+      or die "ERROR: unable to parse XML file '$filename'\n";
+    $parser->expand_xinclude(1);
+
+    my $context = XML::LibXML::XPathContext->new($dom);
+    $context->registerNs("xi", "http://www.w3.org/2001/XInclude");
+
+    my %out = ();
+    foreach my $node ( $context->findnodes('//xi:include/@href') ) {
+	$out{$node->nodeValue} = ();
+    }
+    my $nfound = keys %out;
+    dbg "   - found $nfound XInclude file(s)";
+    return sort keys %out;
   }
 
   # As read_xml_file but use the input string as the file
@@ -508,7 +533,7 @@ sub extract_filename ($) { return (split( "/", $_[0] ))[-1]; }
     # an eval block (although left in just in case).
     # Is this a module version thing, ie only seen on
     # Sun with old code? Seems to be.
-    # 
+    #
 #    my ($results, $retval);
 #    eval {
     my $results = $sheet->transform($xml, %newparams);
@@ -1053,7 +1078,7 @@ sub get_filehash ($) {
 
 {
   my %filehash_cache = ();
-  
+
   sub clear_filehash_cache () {
     %filehash_cache = ();
   }
@@ -1198,7 +1223,7 @@ XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs
   sub get_dependencies () {
     return \%dependencies; # TODO: copy the hash
   }
-  
+
   # returns 1 if there are any dependencies (ie page has not been skipped)
   # and 0 otherwise.
   sub have_dependencies () {
@@ -1208,7 +1233,7 @@ XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs
   # Display the dependency information via dbg messages
   sub dump_dependencies() {
     dbg "dependencies:";
-    
+
     #while ( my ($key,$value) = each %dependencies ) {
     #  if (ref($value) eq "ARRAY") {
     #	dbg " key=$key vals=[@$value]";
@@ -1323,7 +1348,7 @@ XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs
       $value = $value || "";
       $el->appendText($value);
     }
-    
+
   } # sub: add_node
 
   # Given a file/directory name, return 1 if its group
@@ -1358,17 +1383,17 @@ XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs
     my $name = shift;
     my $hdeps = shift;
     my $outfile = "${storage}${name}.dep";
-    
+
     my $doc = XML::LibXML::Document->new();
     my $root = $doc->createElement("dependencies");
     $doc->setDocumentElement($root);
-    
+
     add_text_node($root, "base", "${name}.xml");
-    
+
     while (my ($key,$val) = each %$hdeps) {
       add_node $root, $key, $val;
     }
-    
+
     myrm $outfile;
     $doc->toFile($outfile, 0); # do not bother with indention
     mysetmods $outfile;
@@ -1405,7 +1430,7 @@ XML::LibXSLT->register_function("http://hea-www.harvard.edu/~dburke/xsl/extfuncs
   # decided to use RCS as this is designed to support this
   # workflow. The cost is un-needed history revisions for the
   # revdep files, but it should not be excessive.
-  # 
+  #
 
 =pod HELP
 
@@ -1484,7 +1509,7 @@ Argh: ahelp reverse dependencies are generally complicated because
     mymkdir $rcsdir unless -d $rcsdir;
 
     # If the revdep file doesn't exist, create an empty one and add it to RCS
-    #    
+    #
     my $dom;
     my $root;
     unless ( -e $fname ) {
@@ -1523,7 +1548,7 @@ Argh: ahelp reverse dependencies are generally complicated because
 	    and die "Unable to create RCS file for $fname";
 	system "ci -u -q $fname"
 	    and die "Unable to run 'ci -u -q $fname'";
-	
+
     }
 
     dbg "Reading in revdep file: $fname";
@@ -1540,7 +1565,7 @@ Argh: ahelp reverse dependencies are generally complicated because
 
       add_text_node $revdep, "store", $sfile;
       add_text_node $revdep, "user", $ufile;
-      
+
       myrm $fname;
       $dom->toFile($fname, 0);
       mysetmods $fname;
@@ -1612,7 +1637,7 @@ Argh: ahelp reverse dependencies are generally complicated because
     dbg "add_dependency: label=$label value=$value";
     $dependencies{$label} = []
       unless exists $dependencies{$label};
-    
+
     return if grep /^$value$/, @{$dependencies{$label}};
     push @{$dependencies{$label}}, $value;
   }
@@ -1660,7 +1685,7 @@ Argh: ahelp reverse dependencies are generally complicated because
     my $name = shift;
     add_dependency "import", $name;
   }
-  
+
   sub add_included_file_dependency ($$) {
     my $label = shift;
     my $filename = shift;
@@ -1798,7 +1823,7 @@ sub process_dep_file ($) {
     my $label = $node->findvalue('key');
     my $fname = $node->findvalue('value/hash/hitem[key="filename"]/value');
     my $ohash = $node->findvalue('value/hash/hitem[key="hash"]/value');
-    
+
     # As outside the publishing loop here we can, and should, cache the
     # hash calculation.
     #
@@ -1806,7 +1831,7 @@ sub process_dep_file ($) {
     dbg "Note: label=$label not found (hash is empty)" if $nhash eq "";
     dbg "Has label=$label changed hash (" . ($ohash ne $nhash) . ")";
     $changed{$label} = $fname unless $ohash eq $nhash;
-    
+
   }
 
   # Now loop through all the xpath elements for those labels that
@@ -1815,16 +1840,7 @@ sub process_dep_file ($) {
   while ( my ($label, $filename) = each %changed ) {
     dbg "Reading in from $filename";
 
-    # NOTE:
-    # For now (end of 2025) we do **NOT** expand XInclude statements
-    # because there is no guarantee that the include file has been
-    # copied over to the store. This is not ideal (e.g. what happens
-    # if the XInclude contains the element being checked), but it
-    # is what it is.
-    #
-    $parser->expand_xinclude(0);
     my $xdom = $parser->parse_file($filename);
-    $parser->expand_xinclude(1);
     my $xroot = $xdom->documentElement();
 
     foreach my $node ( $root->findnodes('//xpath/hash/hitem[key="' . $label . '"]/value/hash/hitem') ) {
@@ -1871,7 +1887,7 @@ sub identify_files_to_republish ($) {
 
   dbg " .. found " . (1 + $#out) . " files to republish";
   return \@out;
-  
+
 } # identify_files_to_republish
 
 ## End
