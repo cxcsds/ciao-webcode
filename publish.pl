@@ -296,7 +296,7 @@ if ( ! ($site =~ /caldb/)) {
     } else {
 	die "Error: version $version in the config file ($configfile) does not contain the number parameter\n";
     }
-} 
+}
 
 # as is this
 # - since we do send these to the processor then we can not let them
@@ -556,20 +556,43 @@ sub undup_stderr ($) {
 }
 
 
-# return if should_we_skip $in, @files
+# find_newest_input_time
+#   Return the "newest" file between the "xml" and "xincudes" entries,
+#   as the "last-modified" date.
+#
+sub find_newest_input_time ($$) {
+    my $in = shift;
+    my $opts = shift;
+
+    my @infiles = @{$$opts{xincludes}};
+    push @infiles, $in;
+
+    my %tms = map { $_ => (stat($_))[9] } @infiles;
+    my @newest = sort { $tms{$b} <=> $tms{$a} } (keys %tms);
+    return -M $newest[0];
+
+} # find_newest_input_time
+
+
+# return if should_we_skip $in, $opts, @files
 #
 # if $in is a scalar, then it is the name of an xml file
 # (needn't contain a trailing .xml)
 # if it's a reference, then it's a reference to the "age" (-M $foo)
 # of the file to check against
 #
+# $opts is used to send around any possible xinclude files used
+# in the file, as we want to use the newest version of $in and
+# these files **EXCEPT** when $in is a reference.
+#
 # returns 1 if we can skip processing this file
 # 0 otherwise
 #
 # uses the global variable $force
 #
-sub should_we_skip ($@) {
+sub should_we_skip ($$@) {
     my $in = shift;
+    my $opts = shift;
     my @files = @_;
 
     # don't skip if force is selected
@@ -583,7 +606,12 @@ sub should_we_skip ($@) {
 	$in =~ s/\.xml$//;
 	$in .= ".xml";
 	if (-e $in) {
-	    $intime = -M $in;
+
+	    # Look for the newest file within $in and the
+	    # xinclude files.
+	    #
+	    $intime = find_newest_input_time $in, $opts;
+
 	} else {
 	    # HACK for when the XML is created in-memory
 	    # For now we assume that we can skip these pages;
@@ -836,7 +864,7 @@ sub basic_params ($) {
 
     my $in     = $$opts{xml};
     my $outurl = $$opts{outurl};
-  
+
     my $url = "${outurl}${in}.html";
 
     my $out = {
@@ -866,7 +894,7 @@ sub basic_params ($) {
 	    mathjaxpath => $mathjaxpath,
 	    headtitlepostfix => $headtitlepostfix,
 	    texttitlepostfix => $texttitlepostfix,
-	    
+
 	    storageloc => $$opts{storageloc},
 
 	    ignoremissinglink => $ignoremissinglink,
@@ -918,7 +946,8 @@ sub xml2html_basic ($$$) {
     my @math = find_math_pages $dom;
 
     # do we need to recreate (include the equations created by any math blocks)
-    return if should_we_skip $in, @pages, map( { "${outdir}${_}.png"; } @math );
+    return if should_we_skip $in, $opts,
+	@pages, map( { "${outdir}${_}.png"; } @math );
     print "\n";
 
     # remove files [already ensured the dir exists]
@@ -953,7 +982,7 @@ sub xml2html_basic ($$$) {
 # sub begins_with ($$) {
 #     my $str = shift;
 #     my $prefix = shift;
-# 
+#
 #     return substr($str, 0, length($prefix)) eq $prefix;
 # }
 
@@ -1034,7 +1063,7 @@ sub xml2html_navbar ($) {
     }
 
     # do we need to recreate
-    return if should_we_skip $in, @pages;
+    return if should_we_skip $in, $opts, @pages;
     print "\n";
 
     # create dirs/remove files
@@ -1121,7 +1150,8 @@ sub xml2html_cscdb ($) {
     my @math = find_math_pages $dom;
 
     # do we need to recreate (include the equations created by any math blocks)
-    return if should_we_skip $in, @pages, map( { "${outdir}${_}.png"; } @math );
+    return if should_we_skip $in, $opts,
+	@pages, map( { "${outdir}${_}.png"; } @math );
     print "\n";
 
     # remove files [already ensured the dir exists]
@@ -1175,7 +1205,8 @@ sub xml2html_news ($) {
     my @math = find_math_pages $dom;
 
     # do we need to recreate (include the equations created by any math blocks)
-    return if should_we_skip $in, @pages, map( { "${outdir}${_}.png"; } @math );
+    return if should_we_skip $in, $opts,
+	@pages, map( { "${outdir}${_}.png"; } @math );
     print "\n";
 
     # remove files [already ensured the dir exists]
@@ -1198,7 +1229,7 @@ sub xml2html_news ($) {
 
     print "\nThe page can be viewed on:\n  $url\n";
     print "An updated feed was created:\n  ${outurl}feed.xml\n\n";
-    
+
 } # sub: xml2html_news
 
 
@@ -1218,7 +1249,7 @@ sub xml2html_redirect ($) {
     my $out = "${outdir}${in}.html";
 
     # do we need to recreate
-    return if should_we_skip $in, $out;
+    return if should_we_skip $in, $opts, $out;
     print "\n";
 
     myrm $out;
@@ -1347,8 +1378,8 @@ sub xml2html_multiple ($$$) {
 
     # do we need to recreate
     return
-      if should_we_skip $in, @soft,
-	map( { "${outdir}${_}.png"; } @math );
+      if should_we_skip $in, $opts,
+	@soft, map( { "${outdir}${_}.png"; } @math );
     print "\n";
 
     # create dirs/remove files
@@ -1485,7 +1516,7 @@ sub xml2html_thread ($) {
 
     @fails = $rnode->findnodes('images');
     die "ERROR: thread=$threadname contains an images block. This should be converted to inline figure blocks. See Doug for help.\n"
-      unless $#fails == -1; 
+      unless $#fails == -1;
 
     my @html = ("index.html");
 
@@ -1534,7 +1565,7 @@ sub xml2html_thread ($) {
     #
     # + need to add installation dir onto output file names
     #
-    return if should_we_skip \$time,
+    return if should_we_skip \$time, $opts,  # opts should be unused here
       map { my $a = $_; "${outdir}$a"; } @html,
 	map( { "${outdir}${_}.png"; } @math );
     print "\n";
@@ -1667,7 +1698,7 @@ sub xml2html_notebook ($) {
     die "notebook does not end in .ipynb\n" unless $nb =~ '\.ipynb\z';
 
     my @pages = ("${outdir}${in}.html", "${outdir}${nb}");
-    return if should_we_skip $in, @pages;
+    return if should_we_skip $in, $opts, @pages;
     print "\n";
 
     # If we've got this far we can remove the converted HTML file
@@ -1756,7 +1787,7 @@ sub process_changed ($$$) {
 
   return if $#$changed < 0;
   dbg "Do we need to republish anything?";
-  
+
   my @todo = ();
   foreach my $in ( @$changed ) {
     my $c = identify_files_to_republish "${storage}${in}.revdep";
@@ -1833,6 +1864,9 @@ sub process_xml ($$) {
 	    next;
 	}
 
+	my @xincludes = find_xinclude_files $in;
+	$$opts{xincludes} = \@xincludes;
+
 	# To support pygments (experimental) we need to add or augment
 	# any info/css block with the pygments stylesheet. We should
 	# make this a separate file to share between files but for now
@@ -1878,10 +1912,23 @@ sub process_xml ($$) {
 
 	# when was the file last modified?
 	# convert the date into "Day_number Month_string Year_number"
+	#
+	# We pick the newest file from $in.xml and any xinclude file.
+	# Technically we could have a change in the xinclude file that
+	# does not affect this file, but ignore this possibility.
+	#
 	{
+	    my @infiles = @xincludes;
+	    push @infiles, "$in.xml";
+
+	    sub newest { $b <=> $a };
+	    my @tms = map { (stat($_))[9] } @infiles;
+	    my @sorted_tms = sort newest @tms;
+
+	    my @tm = localtime( $sorted_tms[0] );
+
 	    my @month = qw( January February March April May June July August
 			    September October November December );
-	    my @tm = localtime( (stat("$in.xml"))[9] );
 	    $$opts{lastmod} = sprintf "%d %s %d",
 	      $tm[3], $month[$tm[4]], 1900+$tm[5];
 	    $$opts{lastmodiso} = sprintf "%4d-%02d-%02d",
@@ -1937,7 +1984,7 @@ sub process_xml ($$) {
 	    xml2html_cscdb $opts;
 	} elsif ( $root eq "relnotes" ) {
 	    die_if_icxc $root;
-	    # TODO: relnotes creates multiple files, so 
+	    # TODO: relnotes creates multiple files, so
 	    #   a) need to know about them to clean up beforehand
 	    #   b) remove the <?xml... line from the 'slugs'/included files
 	    xml2html_basic 'relnotes', 'relnotes', $opts;
@@ -1970,6 +2017,15 @@ sub process_xml ($$) {
 	  # TODO: Is there ever a case when we have no dependencies but want to publish?
 	  #       Should *not* be
 	  mycp "${in}.xml", "${published}/${in}.xml";
+
+	  # Copy over any xinclude files to the published area.
+	  # The logic is a bit unclear of why this is only done when
+	  # there are dependencies, but let's assume it's correct.
+	  #
+	  foreach my $xinclude ( @{$$opts{xincludes}} ) {
+	      dbg " - storage/published $xinclude";
+	      mycp $xinclude, "${published}/${xinclude}";
+	  }
 
 	  # Write the dependencies out after copying the file to the storage directory
 	  # since we check on the published copy existing when writing out the reverse
