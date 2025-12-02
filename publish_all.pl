@@ -40,7 +40,7 @@
 #    --excludedir is a way of specifying a set of directories that should
 #           be excluded from the search
 #    --verbose - display extra output for debugging
-#  
+#
 # Notes:
 #  - files that are checked out for editing are skipped;
 #    not 100% convinced got it right for RCS files
@@ -114,6 +114,8 @@ my @prefixes =
    "/data/da/Docs/sherpaweb/ciao416",
    "/data/da/Docs/ciaoweb/ciao417",
    "/data/da/Docs/sherpaweb/ciao417",
+   "/data/da/Docs/ciaoweb/ciao418",
+   "/data/da/Docs/sherpaweb/ciao418",
 
    "/data/da/Docs/icxcweb/sds",
 
@@ -138,9 +140,9 @@ my $ignoremissinglink = 0;
 my $validate_option = "default";
 
 die $usage unless
-  GetOptions 
+  GetOptions
     'config=s' => \$configfile,
-    'type=s' => \$type, 
+    'type=s' => \$type,
     'force!' => \$force,
     'forceforce!' => \$forceforce,
     'excludedir=s' => \$excludedirs,
@@ -213,7 +215,7 @@ my %excludedirs;
 if ( $excludedirs ne "" ) {
 
     # need at least one comma for the split
-    $excludedirs .= ",null";  
+    $excludedirs .= ",null";
     %excludedirs = map { ($_,1); } split( /,/, $excludedirs );
 
     print "Excluding directories:\n";
@@ -294,7 +296,7 @@ while ( <$pipe> ) {
     #
     my $end = scalar(@dirs);
     my $start = scalar(split "/", $prefix);
- 
+
     my $fail = 0;
     for (my $i = $start - 1; $i < $end; $i++) {
 	my $checkpath = join "/", @dirs[0 .. $i];
@@ -324,7 +326,7 @@ while ( <$pipe> ) {
     $nrej++, next if $fname =~ /^#/ or $fname =~ /^$/ or $fname =~ /~$/;
 
     # reject "._" files created by mac osx
-    $nrej++, next if $fname =~ /^\._/;     
+    $nrej++, next if $fname =~ /^\._/;
 
     # check in the threads dir
     if ( $name =~ m{/threads/} ) {
@@ -341,7 +343,7 @@ while ( <$pipe> ) {
 	  $fname eq "thread.xml"
 
 	    # need to publish redirect files during s-lang removal
-            or	    
+            or
 	  $fname eq "index.sl.xml"
             or
 	  $fname eq "index.py.xml";
