@@ -464,6 +464,19 @@ if (self == top) {
   </xsl:template> <!--* name=add-body-script -->
 
 
+  <!-- * I don't want to restrict to the known body attributes,
+       * but maybe I should.
+       * -->
+  <xsl:template name="copy-body-attributes">
+    <xsl:copy-of select="@*[name() != 'name' and
+                            name() != 'type' and
+                            name() != 'release' and
+                            name() != 'day' and
+                            name() != 'month' and
+                            name() != 'year'
+                         ]"/>
+  </xsl:template>
+
   <!--*
       * The "standard" body for a page where there's no
       * navigation bar. Breadcrumbs are added if the
@@ -489,13 +502,7 @@ if (self == top) {
     </xsl:if>
 
     <body class="nonavbar">
-      <!--*
-	  * copy the attributes of the text node into the body element
-	  * - ideally we'd just select the known supported values,
-	  *   but that's hard to set up
-      -->
-      <xsl:copy-of select="@*[name() != 'name' and
-                              name() != 'type']"/>
+      <xsl:call-template name="copy-body-attributes"/>
 
       <xsl:call-template name="add-disclaimer"/>
       <xsl:call-template name="add-body-script"/>
@@ -563,14 +570,7 @@ if (self == top) {
     </xsl:if>
 
     <body class="withnavbar">
-
-      <!--*
-	  * copy the attributes of the text node into the body element
-	  * - ideally we'd just select the known supported values,
-	  *   but that's hard to set up
-      -->
-      <xsl:copy-of select="@*[name() != 'name'  and
-                              name() != 'release']"/>
+      <xsl:call-template name="copy-body-attributes"/>
 
       <xsl:call-template name="add-disclaimer"/>
       <xsl:call-template name="add-body-script"/>
