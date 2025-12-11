@@ -835,6 +835,9 @@
 
     <div>
       <xsl:attribute name="class">admonition <xsl:value-of select="@type"/></xsl:attribute>
+      <xsl:if test="boolean(@id)">
+	<xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
+      </xsl:if>
       <div>
 	<xsl:attribute name="class"><xsl:value-of select="concat(@type, '-inner')"/></xsl:attribute>
 	<xsl:call-template name="add-admonition-image"/>
