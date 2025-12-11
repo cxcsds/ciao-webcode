@@ -98,7 +98,7 @@ XML::LibXSLT->max_depth(2000);
 
 my @funcs_util =
   qw(
-     fixme dbg check_dir mymkdir mycp myrm mysetmods
+     fixme dbg check_dir mymkdir mycp mycp_xml myrm mysetmods
      check_paths check_executables check_executable_runs
      extract_filename get_ostype
      list_ahelp_sites find_ahelp_site check_ahelp_site_valid
@@ -307,6 +307,21 @@ sub mycp ($$) {
     mysetmods $out;
 
 } # sub: mycp()
+
+# Copy an XML file (expanding out any XInclude contents).
+#
+sub mycp_xml ($$) {
+    my $in  = shift;
+    my $out = shift;
+    my $name = $_[0];
+
+    my $dom = $parser->parse_file($in);
+
+    myrm $out;
+    $dom->toFile($out, 0);
+    mysetmods $out;
+
+} # sub: mycp_xml
 
 # myrm( $fname )
 #
