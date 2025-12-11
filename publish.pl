@@ -1864,6 +1864,12 @@ sub process_xml ($$) {
 	    next;
 	}
 
+	# The xinclude files were originally searched for because they
+	# would then be copied to the $published site (if necessary),
+	# but we now copy over the file after expanding any xinclude.
+	# We still want to know about the xinclude files as we can
+	# better check for when a file needs to be republished.
+	#
 	my @xincludes = find_xinclude_files $in;
 	$$opts{xincludes} = \@xincludes;
 
@@ -2016,16 +2022,25 @@ sub process_xml ($$) {
  	  #
 	  # TODO: Is there ever a case when we have no dependencies but want to publish?
 	  #       Should *not* be
-	  mycp "${in}.xml", "${published}/${in}.xml";
+	  #
+	  # NOTE: if the input file has XInclude statements in it, should
+	  # this be reflected in the output? One way is to copy over any
+	  # XInclude files as well. The other is that we copy over the
+	  # file after processing the XInclude files.
+	  #
+	  # This needs to copy over the XInclude files as well
+	  # mycp "${in}.xml", "${published}/${in}.xml";
+	  #
+	  mycp_xml "${in}.xml", "${published}/${in}.xml";
 
 	  # Copy over any xinclude files to the published area.
 	  # The logic is a bit unclear of why this is only done when
 	  # there are dependencies, but let's assume it's correct.
 	  #
-	  foreach my $xinclude ( @{$$opts{xincludes}} ) {
-	      dbg " - storage/published $xinclude";
-	      mycp $xinclude, "${published}/${xinclude}";
-	  }
+	  ##foreach my $xinclude ( @{$$opts{xincludes}} ) {
+	  ##    dbg " - storage/published $xinclude";
+	  ##    mycp $xinclude, "${published}/${xinclude}";
+	  ##}
 
 	  # Write the dependencies out after copying the file to the storage directory
 	  # since we check on the published copy existing when writing out the reverse
