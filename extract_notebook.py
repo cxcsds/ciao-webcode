@@ -69,13 +69,16 @@ def convert(nbfile, outdir):
 
     # Write out the body
     out = os.path.join(outdir, head)
+    if os.path.exists(out):
+        os.unlink(out)
     open(out, 'w').write(body)
     print(out)
 
     # Write out the file contents
     for key, cnt in resources['outputs'].items():
-
         out = os.path.join(outdir, key)
+        if os.path.exists(out):
+            os.unlink(out)
         open(out, 'wb').write(cnt)
         print(out)
 
