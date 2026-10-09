@@ -914,7 +914,7 @@
       <xsl:with-param name="contents">
 	<a title="{$title}">
 	  <xsl:choose>
-	    <xsl:when test="($site != 'csc') or (@site = 'ciao')">
+	    <xsl:when test="($site != 'csc' and boolean(@site)=false()) or (@site = 'ciao')">
 	      <xsl:attribute name="href">
 	        <xsl:value-of select="$hrefstart"/>
 		<xsl:choose>
@@ -924,7 +924,7 @@
 	      </xsl:attribute>
 	    </xsl:when>
 
-	    <xsl:when test="($site = 'csc') or (@site = 'csc')">
+	    <xsl:when test="($site = 'csc' and boolean(@site)=false()) or (@site = 'csc')">
 	      <xsl:attribute name="href">
 	        <xsl:value-of select="$hrefstart"/>
 		<xsl:choose>
