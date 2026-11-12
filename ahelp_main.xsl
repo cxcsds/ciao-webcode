@@ -43,6 +43,10 @@
     <!--* output filename to stdout *-->
     <xsl:value-of select="$filename"/><xsl:call-template name="newline"/>
 
+    <!-- do we need to include MathJax3 here? See helper.xsl and
+	 use-mathhax/nmath/mathjaxpath values -->
+    <xsl:variable name="has-math" select="count(//EQUATION/XMLONLY) > 0"/>
+
     <!--* create document *-->
     <xsl:document href="{$filename}" method="html" media-type="text/html"
                   doctype-system="about:legacy-compat"
@@ -65,6 +69,16 @@
   background: #CCCCCC;
 }
 </style>
+
+          <xsl:if test="$has-math">
+	    <xsl:if test="$mathjaxpath = ''">
+	      <xsl:message terminate="yes">
+ ERROR: ahelp contains EQUATION/XMLONLY but mathjaxpath is unset
+              </xsl:message>
+	    </xsl:if>
+
+	    <script src="{$mathjaxpath}" id="MathJax-script" async=""/>
+          </xsl:if>
 
           <xsl:call-template name="add-sao-metadata">
 	    <xsl:with-param name="title" select="normalize-space($title)"/>
@@ -596,6 +610,11 @@
       * point of the sets (in particular if there are multiple EQUATION
       * blocks, separated by text, within a single PARA block)
       *
+      * Until CIAO 4.19 EQUATION tended just to accept #PCDATA and not
+      * XMLONLY/PASSTHRU events. It would be nice if we could handle
+      * multi-line equations this way but hard / not enough metadata to
+      * do so at this time.
+      *
       *-->
   <xsl:template match="EQUATION">
     <xsl:param name="in-para" select="0"/>
@@ -604,11 +623,24 @@
       <xsl:call-template name="end-para"/>
     </xsl:if>
 
-    <div class="ahelpequation">
-      <xsl:call-template name="ahelp-add-highlight">
-	<xsl:with-param name="contents" select="normalize-space(.)"/>
-      </xsl:call-template>
-    </div>
+    <xsl:choose>
+      <xsl:when test="boolean(XMLONLY)">
+	<div class="ahelpequation">
+	  <span class="MathJax-span">
+	    \[
+	    <xsl:value-of select="normalize-space(XMLONLY)"/>
+	    \]
+	  </span>
+	</div>
+      </xsl:when>
+      <xsl:otherwise>
+	<div class="ahelpequation">
+	  <xsl:call-template name="ahelp-add-highlight">
+	    <xsl:with-param name="contents" select="normalize-space(.)"/>
+	  </xsl:call-template>
+	</div>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <xsl:if test="$in-para = 1">
       <xsl:call-template name="start-para"/>

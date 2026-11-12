@@ -334,6 +334,11 @@ $headtitlepostfix = get_config_version( $version_config, "headtitlepostfix" )
 $texttitlepostfix = get_config_version( $version_config, "texttitlepostfix" )
   if check_config_exists( $version_config, "texttitlepostfix" );
 
+# MathJax
+my $mathjaxpath = "";
+$mathjaxpath = get_config_type( $version_config, "mathjaxpath", $type )
+  if check_config_exists( $version_config, "mathjaxpath" );
+
 # only needed for a warning in the output HTML file (to point to
 # the work directory).
 #
@@ -351,6 +356,7 @@ dbg "  storageloc=$storageloc";
 dbg "  headtitlepostfix=$headtitlepostfix";
 dbg "  texttitlepostfix=$texttitlepostfix";
 dbg "  sourcedir=$sourcedir";
+dbg "  mathjaxpath=$mathjaxpath";
 dbg "*** CONFIG DATA (end) ***";
 
 @extra =
@@ -368,6 +374,7 @@ dbg "*** CONFIG DATA (end) ***";
    headtitlepostfix => $headtitlepostfix,
    texttitlepostfix => $texttitlepostfix,
    sourcedir => $sourcedir,
+   mathjaxpath => $mathjaxpath
   );
 
 my %paramlist = @extra;

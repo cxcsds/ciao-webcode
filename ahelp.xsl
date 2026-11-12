@@ -122,6 +122,9 @@
       *-->
   <xsl:param name="seealso" select="document($seealsofile)/seealso"/>
 
+  <!-- pass through the MathJax location if needed -->
+  <xsl:param name="mathjaxpath" select='""'/>
+
   <!--*
       * max number of characters in an output "line"
       * - 'ahelp mkinstmap' suggests 72 but 'ahelp mkexpmap' suggests 71
